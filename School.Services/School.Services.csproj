@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="16.0.0" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="QRCoder" Version="1.6.0" />
+		<PackageReference Include="QuestPDF" Version="2024.12.1" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\School.Domain\School.Domain.csproj" />
+		<ProjectReference Include="..\School.Infrastructure\School.Infrastructure.csproj" />
+		<ProjectReference Include="..\School.Models\School.Models.csproj" />
+		<ProjectReference Include="..\School.Utilities\School.Utilities.csproj" /> 
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="School.Domain\**" />
+		<Compile Remove="School.Infrastructure\**" />
+		<Compile Remove="School.Models\**" />
+		<EmbeddedResource Remove="School.Domain\**" />
+		<EmbeddedResource Remove="School.Infrastructure\**" />
+		<EmbeddedResource Remove="School.Models\**" />
+		<None Remove="School.Domain\**" />
+		<None Remove="School.Infrastructure\**" />
+		<None Remove="School.Models\**" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,88 @@
+using School.Domain.Auth;
+using School.Utilities.Constants;
+using School.Utilities.Enums;
+
+namespace School.Infrastructure.Seeds
+{
+    public static class DefaultUser
+    {
+        public static List<ApplicationUser> IdentityBasicUserList()
+        {
+            // Password hash for "Password@123"
+            // Note: This is a pre-hashed password. In production, use UserManager to hash passwords.
+            var passwordHash = "AQAAAAEAACcQAAAAEBLjouNqaeiVWbN0TbXUS3+ChW3d7aQIk/BQEkWBxlrdRRngp14b0BIH0Rp65qD6mA==";
+
+            return new List<ApplicationUser>()
+            {
+                // Super Admin User
+                new ApplicationUser
+                {
+                    Id = Constants.SuperAdminUser,
+                    UserName = "superadmin",
+                    Email = "superadmin@gmail.com",
+                    FirstName = "Parvez",
+                    LastName = "Ansari",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "SUPERADMIN@GMAIL.COM",
+                    NormalizedUserName = "SUPERADMIN",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
+                },
+                // Admin User
+                new ApplicationUser
+                {
+                    Id = Constants.AdminUser,
+                    UserName = "admin",
+                    Email = "admin@gmail.com",
+                    FirstName = "Admin",
+                    LastName = "User",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "ADMIN@GMAIL.COM",
+                    NormalizedUserName = "ADMIN",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
+                },
+                // Teacher User
+                new ApplicationUser
+                {
+                    Id = Constants.TeacherUser,
+                    UserName = "teacher",
+                    Email = "teacher@gmail.com",
+                    FirstName = "Teacher",
+                    LastName = "User",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "TEACHER@GMAIL.COM",
+                    NormalizedUserName = "TEACHER",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
+                },
+                // Student User
+                new ApplicationUser
+                {
+                    Id = Constants.StudentUser,
+                    UserName = "student",
+                    Email = "student@gmail.com",
+                    FirstName = "Student",
+                    LastName = "User",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "STUDENT@GMAIL.COM",
+                    NormalizedUserName = "STUDENT",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
+                }
+            };
+        }
+    }
+}

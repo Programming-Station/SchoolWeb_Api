@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  api:
+    image: psnehi/School_api:v21
+    container_name: middleware_1
+    restart: always
+    environment: 
+      - TZ=Asia/Kolkata
+    ports:
+      - "8080:8080"
+    volumes:
+      - /usr/share/nginx/html/api/UploadedFiles:/app/UploadedFiles/ 
+      - /usr/share/nginx/html/api/Logs:/app/Logs/
+  b2b_api:
+    image: psnehi/b2b-api:v32
+    container_name: b2b_api_0
+    restart: always
+    environment: 
+      - TZ=Asia/Kolkata
+    ports:
+      - "9000:8080"
+    volumes:
+      - /usr/share/nginx/html/api/UploadedFiles:/app/UploadedFiles/
+  sbi_test:
+    image: psnehi/sbi-test:v32
+    container_name: sbi_bbps_test
+    restart: always
+    environment: 
+      - TZ=Asia/Kolkata
+    ports:
+      - "3000:8080"
+    volumes:
+      - /home/ubuntu/pointpal/sbi_logs:/app/Logs
+
+

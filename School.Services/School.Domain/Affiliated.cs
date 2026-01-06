@@ -1,0 +1,59 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using static School.Domain.BaseEntity;
+
+namespace School.Domain
+{
+    public class Affiliated : AuditEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required, MaxLength(200)]
+        public string CollegeName { get; set; } = null!;
+
+        [MaxLength(50)]
+        public string? CollegeCode { get; set; }
+
+        [MaxLength(200)]
+        public string? UniversityName { get; set; }
+
+        [MaxLength(50)]
+        public string? UniversityCode { get; set; }
+
+        // ---------- Foreign Keys ----------
+        [Required]
+        public int StateId { get; set; }
+
+        [Required]
+        public int CityId { get; set; }
+
+        // ---------- Other Fields ----------
+        public string? ImagePath { get; set; }
+
+        [MaxLength(500)]
+        public string? Address { get; set; }
+
+        [MaxLength(10)]
+        public string? Pincode { get; set; }
+
+        [MaxLength(150)]
+        public string? ContactPerson { get; set; }
+
+        [MaxLength(15)]
+        public string? MobileNo { get; set; }
+
+        [MaxLength(150)]
+        public string? Email { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
+        // ---------- Navigation Properties ----------
+        [ForeignKey(nameof(StateId))]
+        public virtual State State { get; set; } = null!; 
+        
+        //[ForeignKey(nameof(CityId))]
+        //public virtual City City { get; set; } = null!;
+
+    }
+}
