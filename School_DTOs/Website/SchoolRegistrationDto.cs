@@ -4,8 +4,7 @@ namespace School_DTOs.Website
     {
         public int Id { get; set; }
         public int StatusId { get; set; }
-        public string? StatusName { get; set; }
-        public DateTime SubmittedAt { get; set; }
+        public string? StatusName { get; set; } 
 
         // Basic Information
         public string SchoolName { get; set; } = null!;
@@ -43,9 +42,9 @@ namespace School_DTOs.Website
         public string? UserAgent { get; set; }
 
         // Audit fields
-        public DateTime? CreatedDate { get; set; }
+        public string? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public string? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
     }
 

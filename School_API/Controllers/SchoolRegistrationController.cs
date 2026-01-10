@@ -1,20 +1,17 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Models.Website;
 using School.Services.Interfaces;
-using School_DTOs;
-using School_DTOs.Website;
+using School_API.Common.Interface;
+using School_DTOs; 
 using System.Net;
 
 namespace School_API.Controllers
-{
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class SchoolRegistrationController : ControllerBase
+{ 
+    public class SchoolRegistrationController : BaseController
     {
         private readonly ISchoolRegistrationService _schoolRegistrationService;
 
-        public SchoolRegistrationController(ISchoolRegistrationService schoolRegistrationService)
+        public SchoolRegistrationController(ISchoolRegistrationService schoolRegistrationService, ICurrentUserService currentUserService):base(currentUserService)
         {
             _schoolRegistrationService = schoolRegistrationService;
         }
@@ -22,7 +19,6 @@ namespace School_API.Controllers
         /// <summary>
         /// Submit a new school registration (Public endpoint - no authentication required)
         /// </summary>
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SchoolRegistrationModel model)
         {
@@ -43,7 +39,6 @@ namespace School_API.Controllers
         /// <summary>
         /// Check if email already exists (Public endpoint)
         /// </summary>
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> CheckEmailExists([FromQuery] string email)
         {
@@ -65,7 +60,6 @@ namespace School_API.Controllers
         /// <summary>
         /// Check if mobile number already exists (Public endpoint)
         /// </summary>
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> CheckMobileExists([FromQuery] string mobile)
         {
@@ -88,7 +82,6 @@ namespace School_API.Controllers
         /// Get school registration by ID
         /// </summary>
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _schoolRegistrationService.GetSchoolRegistrationByIdAsync(id);
@@ -99,7 +92,6 @@ namespace School_API.Controllers
         /// Get all school registrations with optional filters (Admin only)
         /// </summary>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
         public async Task<IActionResult> GetAll(
             [FromQuery] string? status = null,
             [FromQuery] int? pageNumber = null,
@@ -122,8 +114,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Update school registration status (Admin only)
         /// </summary>
-        [HttpPut]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
+        [HttpPut] 
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateSchoolRegistrationStatusModel model)
         {
             if (!ModelState.IsValid)
@@ -143,8 +134,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Delete school registration (Soft delete - Admin only)
         /// </summary>
-        [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
+        [HttpDelete("{id}")] 
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _schoolRegistrationService.DeleteSchoolRegistrationAsync(id);
@@ -154,8 +144,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Update school registration (Admin only)
         /// </summary>
-        [HttpPut]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
+        [HttpPut] 
         public async Task<IActionResult> Update([FromBody] SchoolRegistrationModel model)
         {
             if (!ModelState.IsValid)
@@ -170,8 +159,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Get school registration count by status (Admin only)
         /// </summary>
-        [HttpGet("count")]
-        [Authorize(AuthenticationSchemes = "Bearer,Basic")]
+        [HttpGet("count")] 
         public async Task<IActionResult> GetCount([FromQuery] string? status = null)
         {
             var result = await _schoolRegistrationService.GetSchoolRegistrationCountAsync(status);
