@@ -1,465 +1,170 @@
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Models.Module;
-using School_DTOs;
-using School_DTOs.Module;
-using School.Utilities.Resources;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
 using School.Infrastructure.UnitOfWork;
+using School.Infrastructure.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories
 {
     public class ModuleRepository : Repository<Module>, IModuleRepository
     {
         private readonly SchoolDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ModuleRepository(DbFactory dbFactory, SchoolDbContext context) : base(dbFactory)
+        public ModuleRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<ModuleDto>> AddModuleAsync(ModuleModel model)
+        public async Task<Module> AddModuleAsync(Module entity)
         {
-            try
+            // Check if module with same route already exists
+            var existingByRoute = await DbSet.FirstOrDefaultAsync(x =>
+                               x.Route.ToLower() == entity.Route.ToLower() &&
+                               !x.IsDeleted);
+
+            if (existingByRoute != null)
             {
-                // Verify category exists
-                var categoryExists = await _context.CategoryModules
-                    .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
-
-                if (!categoryExists)
-                {
-                    return new APIResponse<ModuleDto>
-                    {
-                        Success = false,
-                        Message = "Category not found or inactive",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                var module = new Module
-                {
-                    Name = model.Name,
-                    Description = model.Description,
-                    Route = model.Route,
-                    Icon = model.Icon,
-                    CategoryModuleId = model.CategoryModuleId,
-                    Order = model.Order,
-                    IsActive = model.IsActive,
-                    CreatedBy = model.CreatedBy,
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                _context.Modules.Add(module);
-                await _context.SaveChangesAsync();
-
-                var dto = MapToDto(module);
-                return new APIResponse<ModuleDto>
-                {
-                    Success = true,
-                    Message = CommonResource.AddSuccess,
-                    StatusCode = HttpStatusCode.Created,
-                    Data = dto
-                };
+                existingByRoute.Id = 0;
+                return existingByRoute;
             }
-            catch (Exception ex)
-            {
-                return new APIResponse<ModuleDto>
-                {
-                    Success = false,
-                    Message = $"Failed to add module: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+
+            await AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return entity;
         }
 
-        public async Task<APIResponse<ModuleDto>> GetModuleByIdAsync(int id)
+        public async Task<Module> GetModuleByIdAsync(int id)
         {
-            try
-            {
-                var module = await _context.Modules
-                    .Include(m => m.CategoryModule)
-                    .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
-
-                if (module == null)
-                {
-                    return new APIResponse<ModuleDto>
-                    {
-                        Success = false,
-                        Message = "Module not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                return new APIResponse<ModuleDto>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = MapToDto(module)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<ModuleDto>
-                {
-                    Success = false,
-                    Message = $"Failed to get module: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await DbSet
+                .Include(x => x.CategoryModule)
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted) ?? new Module();
         }
 
-        public async Task<APIResponse<IEnumerable<ModuleDto>>> GetAllModulesAsync()
+        public async Task<IEnumerable<Module>> GetAllAsync()
         {
-            try
-            {
-                var modules = await _context.Modules
-                    .Where(m => !m.IsDeleted)
-                    .Include(m => m.CategoryModule)
-                    .OrderBy(m => m.Order)
-                    .ThenBy(m => m.Name)
-                    .ToListAsync();
-
-                var dtos = modules.Select(MapToDto);
-                
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = dtos
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Success = false,
-                    Message = $"Failed to get modules: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await List(expression: x => !x.IsDeleted)
+                .Include(x => x.CategoryModule)
+                .OrderBy(x => x.Order)
+                .ThenBy(x => x.Name)
+                .ToListAsync();
         }
 
-        public async Task<APIResponse> UpdateModuleAsync(ModuleModel model)
+        public async Task<int> UpdateModuleAsync(Module entity)
         {
-            try
+            Attach(entity, updatedProperties: new Expression<Func<Module, object>>[]
             {
-                var module = await _context.Modules
-                    .FirstOrDefaultAsync(m => m.Id == model.Id && !m.IsDeleted);
-
-                if (module == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Module not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                // Verify category exists
-                var categoryExists = await _context.CategoryModules
-                    .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
-
-                if (!categoryExists)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Category not found or inactive",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                module.Name = model.Name;
-                module.Description = model.Description;
-                module.Route = model.Route;
-                module.Icon = model.Icon;
-                module.CategoryModuleId = model.CategoryModuleId;
-                module.Order = model.Order;
-                module.IsActive = model.IsActive;
-                module.UpdatedBy = model.UpdatedBy;
-                module.UpdatedDate = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.UpdateSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to update module: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+                u => u.Name,
+                u => u.Description!,
+                u => u.Route,
+                u => u.Icon!,
+                u => u.CategoryModuleId,
+                u => u.Order,
+                u => u.IsActive,
+                u => u.UpdatedBy!,
+                u => u.UpdatedDate
+            });
+            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
-        public async Task<APIResponse> DeleteModuleAsync(int id)
+        public async Task<int> DeleteModuleAsync(int id)
         {
-            try
+            var result = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
+
+            if (result != null)
             {
-                var module = await _context.Modules
-                    .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
-
-                if (module == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Module not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                module.IsDeleted = true;
-                module.UpdatedDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.DeleteSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
+                result.UpdatedDate = DateTime.UtcNow;
+                Delete(result);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to delete module: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        public async Task<APIResponse> ToggleModuleStatusAsync(int id)
+        public async Task<int> ToggleModuleStatusAsync(int id)
         {
-            try
+            var entity = await _context.Modules
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+
+            if (entity != null)
             {
-                var module = await _context.Modules
-                    .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
-
-                if (module == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Module not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                module.IsActive = !module.IsActive;
-                module.UpdatedDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.UpdateSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
+                entity.IsActive = !entity.IsActive;
+                Update(entity);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to toggle module status: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        public async Task<APIResponse<IEnumerable<ModuleDto>>> GetModulesByUserIdAsync(string userId)
+        // ========== MODULE PERMISSION OPERATIONS ==========
+
+        public async Task<IEnumerable<Module>> GetModulesByUserIdAsync(string userId)
         {
-            try
-            {
-                var modules = await _context.ModulePermissions
-                    .Where(mp => mp.UserId == userId && mp.IsActive && !mp.IsDeleted)
-                    .Include(mp => mp.Module)
-                        .ThenInclude(m => m.CategoryModule)
-                    .Where(mp => mp.Module != null && !mp.Module.IsDeleted && mp.Module.IsActive)
-                    .Select(mp => mp.Module!)
-                    .OrderBy(m => m.Order)
-                    .ThenBy(m => m.Name)
-                    .Distinct()
-                    .ToListAsync();
-
-                var dtos = modules.Select(MapToDto);
-
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = dtos
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Success = false,
-                    Message = $"Failed to get user modules: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await _context.ModulePermissions
+                .Where(mp => mp.UserId == userId && mp.IsActive && !mp.IsDeleted)
+                .Include(mp => mp.Module)
+                    .ThenInclude(m => m!.CategoryModule)
+                .Where(mp => mp.Module != null && !mp.Module!.IsDeleted && mp.Module!.IsActive)
+                .Select(mp => mp.Module!)
+                .OrderBy(m => m.Order)
+                .ThenBy(m => m.Name)
+                .Distinct()
+                .ToListAsync();
         }
 
-        public async Task<APIResponse> AssignModulesToUserAsync(AssignModulesToUserModel model)
+        public async Task<int> AssignModulesToUserAsync(string userId, List<int> moduleIds, string? createdBy = null)
         {
-            try
+            // Remove existing permissions for this user (soft delete)
+            var existingPermissions = await _context.ModulePermissions
+                .Where(mp => mp.UserId == userId && !mp.IsDeleted)
+                .ToListAsync();
+
+            foreach (var perm in existingPermissions)
             {
-                // Remove existing permissions for this user
-                var existingPermissions = await _context.ModulePermissions
-                    .Where(mp => mp.UserId == model.UserId && !mp.IsDeleted)
-                    .ToListAsync();
-
-                _context.ModulePermissions.RemoveRange(existingPermissions);
-
-                // Add new permissions
-                var newPermissions = model.ModuleIds.Select(moduleId => new ModulePermission
-                {
-                    ModuleId = moduleId,
-                    UserId = model.UserId,
-                    IsActive = true,
-                    CreatedBy = model.CreatedBy,
-                    CreatedDate = DateTime.UtcNow
-                }).ToList();
-
-                _context.ModulePermissions.AddRange(newPermissions);
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = "Modules assigned successfully",
-                    StatusCode = HttpStatusCode.OK
-                };
+                perm.IsDeleted = true;
+                perm.UpdatedDate = DateTime.UtcNow;
             }
-            catch (Exception ex)
+
+            // Add new permissions
+            var newPermissions = moduleIds.Select(moduleId => new ModulePermission
             {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to assign modules: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+                ModuleId = moduleId,
+                UserId = userId,
+                IsActive = true,
+                CreatedBy = createdBy,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false
+            }).ToList();
+
+            _context.ModulePermissions.AddRange(newPermissions);
+            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
-        public async Task<APIResponse> RemoveModulePermissionAsync(int moduleId, string userId)
+        public async Task<int> RemoveModulePermissionAsync(int moduleId, string userId)
         {
-            try
+            var permission = await _context.ModulePermissions
+                .FirstOrDefaultAsync(mp => mp.ModuleId == moduleId && mp.UserId == userId && !mp.IsDeleted);
+
+            if (permission != null)
             {
-                var permission = await _context.ModulePermissions
-                    .FirstOrDefaultAsync(mp => mp.ModuleId == moduleId && mp.UserId == userId && !mp.IsDeleted);
-
-                if (permission == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Permission not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
                 permission.IsDeleted = true;
                 permission.UpdatedDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.DeleteSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to remove permission: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        public async Task<APIResponse<IEnumerable<ModulePermissionDto>>> GetModulePermissionsByUserIdAsync(string userId)
+        public async Task<IEnumerable<ModulePermission>> GetModulePermissionsByUserIdAsync(string userId)
         {
-            try
-            {
-                var permissions = await _context.ModulePermissions
-                    .Where(mp => mp.UserId == userId && !mp.IsDeleted)
-                    .Include(mp => mp.Module)
-                    .Include(mp => mp.User)
-                    .Include(mp => mp.Role)
-                    .Select(mp => new ModulePermissionDto
-                    {
-                        Id = mp.Id,
-                        ModuleId = mp.ModuleId,
-                        ModuleName = mp.Module != null ? mp.Module.Name : "",
-                        ModuleIcon = mp.Module != null ? mp.Module.Icon : null,
-                        UserId = mp.UserId,
-                        UserName = mp.User != null ? mp.User.UserName ?? "" : "",
-                        RoleId = mp.RoleId,
-                        RoleName = mp.Role != null ? mp.Role.Name : null,
-                        IsActive = mp.IsActive
-                    })
-                    .ToListAsync();
-
-                return new APIResponse<IEnumerable<ModulePermissionDto>>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = permissions
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<IEnumerable<ModulePermissionDto>>
-                {
-                    Success = false,
-                    Message = $"Failed to get permissions: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
-        }
-
-        private ModuleDto MapToDto(Module module)
-        {
-            return new ModuleDto
-            {
-                Id = module.Id,
-                Name = module.Name,
-                Description = module.Description,
-                Route = module.Route,
-                Icon = module.Icon,
-                CategoryModuleId = module.CategoryModuleId,
-                CategoryModuleName = module.CategoryModule?.Name,
-                Order = module.Order,
-                IsActive = module.IsActive,
-                CreatedDate = module.CreatedDate,
-                CreatedBy = module.CreatedBy,
-                UpdatedDate = module.UpdatedDate,
-                UpdatedBy = module.UpdatedBy
-            };
+            return await _context.ModulePermissions
+                .Where(mp => mp.UserId == userId && !mp.IsDeleted)
+                .Include(mp => mp.Module)
+                .Include(mp => mp.User)
+                .Include(mp => mp.Role)
+                .ToListAsync();
         }
     }
 }
-

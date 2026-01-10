@@ -63,9 +63,10 @@ namespace School_API.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
-            [FromQuery] string? status = null)
+            [FromQuery] string? status = null,
+            [FromQuery] string? classFilter = null)
         {
-            var result = await _studentService.GetAllStudentsAsync(pageNumber, pageSize, searchTerm, status);
+            var result = await _studentService.GetAllStudentsAsync(pageNumber, pageSize, searchTerm, status, classFilter);
             return StatusCode((int)result.StatusCode, result);
         }
 

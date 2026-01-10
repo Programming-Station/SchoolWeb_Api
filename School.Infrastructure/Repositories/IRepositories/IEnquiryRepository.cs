@@ -1,19 +1,17 @@
-using School.Models.Website;
-using School_DTOs;
-using School_DTOs.Website;
+using School.Domain.Website;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {
-    public interface IEnquiryRepository
+    public interface IEnquiryRepository : IRepository<Enquiry>
     {
-        Task<APIResponse<EnquiryDto>> AddEnquiryAsync(EnquiryModel model, string? ipAddress = null, string? userAgent = null);
-        Task<APIResponse<EnquiryDto>> GetEnquiryByIdAsync(int id);
-        Task<APIResponse<IEnumerable<EnquiryDto>>> GetAllEnquiriesAsync(int? statusId = null, int? pageNumber = null, int? pageSize = null);
-        Task<APIResponse> UpdateEnquiryStatusAsync(int id, int statusId, string? adminReply = null, string? repliedBy = null);
-        Task<APIResponse> DeleteEnquiryAsync(int id);
-        Task<APIResponse<int>> GetEnquiryCountAsync(int? statusId = null);
+        Task<Enquiry> AddEnquiryAsync(Enquiry entity);
+        Task<Enquiry> GetEnquiryByIdAsync(int id);
+        Task<IEnumerable<Enquiry>> GetAllAsync(int? statusId = null, int? pageNumber = null, int? pageSize = null);
+        Task<int> GetTotalCountAsync(int? statusId = null);
+        Task<int> UpdateEnquiryAsync(Enquiry entity);
+        Task<int> UpdateEnquiryStatusAsync(int id, int statusId, string? adminReply = null, string? repliedBy = null);
+        Task<int> DeleteEnquiryAsync(int id);
+        Task<string> GenerateEnquiryNoAsync();
     }
 }
-
-
-

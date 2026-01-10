@@ -1,18 +1,16 @@
-using School.Models.Student;
-using School_DTOs;
-using School_DTOs.Student;
+using School.Domain.Student;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {
-    public interface IStudentRepository
+    public interface IStudentRepository : IRepository<Student>
     {
-        Task<APIResponse<StudentDto>> AddStudentAsync(StudentModel model);
-        Task<APIResponse<StudentDto>> GetStudentByIdAsync(int id);
-        Task<APIResponse<StudentDto>> GetStudentByStudentIdAsync(string studentId);
-        Task<APIResponse<IEnumerable<StudentDto>>> GetAllStudentsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, string? status = null);
-        Task<APIResponse> UpdateStudentAsync(StudentModel model);
-        Task<APIResponse> DeleteStudentAsync(int id);
+        Task<Student> AddStudentAsync(Student entity);
+        Task<Student> GetStudentByIdAsync(int id);
+        Task<Student?> GetStudentByStudentIdAsync(string studentId);
+        Task<(IEnumerable<Student> Students, int TotalCount)> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, int? statusId = null, string? classFilter = null);
+        Task<int> UpdateStudentAsync(Student entity);
+        Task<int> DeleteStudentAsync(int id);
         Task<string> GenerateStudentIdAsync();
     }
 }
-

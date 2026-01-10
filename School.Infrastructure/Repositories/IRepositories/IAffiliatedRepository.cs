@@ -1,25 +1,15 @@
-using School.Models.AffiliationCollege;
-using School_DTOs;
-using School_DTOs.AffiliationCollege;
+using School.Domain;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {
-    public interface IAffiliatedRepository
+    public interface IAffiliatedRepository : IRepository<Affiliated>
     {
-        Task<APIResponse<AffiliatedDto>> AddAffiliationCollegeAsync(AffiliatedModel model);
-
-        Task<APIResponse<AffiliatedDto>> GetAffiliationCollegeByIdAsync(int id);
-
-        Task<APIResponse<IEnumerable<AffiliatedDto>>> GetAllAffiliationCollegesAsync(
-            int? stateId = null,
-            int? cityId = null,
-            bool? isActive = null
-        );
-
-        Task<APIResponse> UpdateAffiliationCollegeAsync(AffiliatedModel model);
-
-        Task<APIResponse> DeleteAffiliationCollegeAsync(int id);
-
-        Task<APIResponse> ToggleAffiliationCollegeStatusAsync(int id);
+        Task<Affiliated> AddAffiliationCollegeAsync(Affiliated entity);
+        Task<Affiliated> GetAffiliationCollegeByIdAsync(int id);
+        Task<IEnumerable<Affiliated>> GetAllAsync(int? stateId = null, int? cityId = null, bool? isActive = null);
+        Task<int> UpdateAffiliationCollegeAsync(Affiliated entity);
+        Task<int> DeleteAffiliationCollegeAsync(int id);
+        Task<int> ToggleAffiliationCollegeStatusAsync(int id);
     }
 }

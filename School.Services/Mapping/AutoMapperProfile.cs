@@ -87,48 +87,7 @@ namespace School.Services.Mapping
             // Custom mapping for Event to EventDto to format EventDate
             CreateMap<School.Domain.Event, School_DTOs.Event.EventDto>()
                 .ForMember(dest => dest.EventDate,
-                    opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));
-
-            // Custom mapping for Menu and SubMenu
-            CreateMap<School.Models.Menu.MenuModel, School.Domain.Menu>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.MenuId))
-                .ForMember(dest => dest.SubMenus, opt => opt.Ignore()); // Handled manually in service
-
-            CreateMap<School.Domain.Menu, School.Models.Menu.MenuModel>()
-                .ForMember(dest => dest.MenuId, opt => opt.MapFrom(src => src.Id));
-
-            CreateMap<School.Models.Menu.SubMenuModel, School.Domain.SubMenu>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SubMenuId));
-
-            CreateMap<School.Domain.SubMenu, School.Models.Menu.SubMenuModel>()
-                .ForMember(dest => dest.SubMenuId, opt => opt.MapFrom(src => src.Id));
-
-            // Custom mapping for Teacher - ignore User properties from Model
-            CreateMap<School.Models.Teacher.TeacherModel, School.Domain.Teacher>()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore()) // Will be set manually
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.City, opt => opt.Ignore())
-                .ForMember(dest => dest.State, opt => opt.Ignore())
-                .ForMember(dest => dest.Course, opt => opt.Ignore())
-                .ForMember(dest => dest.Faculty, opt => opt.Ignore());
-
-            // Custom mapping for Teacher to TeacherDto - User properties will be populated manually
-            CreateMap<School.Domain.Teacher, School_DTOs.Teacher.TeacherDto>()
-                .ForMember(dest => dest.FirstName, opt => opt.Ignore()) // Will be populated from User
-                .ForMember(dest => dest.LastName, opt => opt.Ignore()) // Will be populated from User
-                .ForMember(dest => dest.Email, opt => opt.Ignore()) // Will be populated from User
-                .ForMember(dest => dest.PhoneNumber, opt => opt.Ignore()) // Will be populated from User
-                .ForMember(dest => dest.Faculty, opt => opt.MapFrom(src => src.Faculty != null ? src.Faculty.Name : null))
-                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City != null ? src.City.Name : null))
-                .ForMember(dest => dest.StateName, opt => opt.MapFrom(src => src.State != null ? src.State.Name : null))
-                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : null));
-
-            // Custom mapping for StudentRegistration to StudentRegistrationDto - DateOfBirth conversion
-            CreateMap<School.Domain.Student.StudentRegistration, School_DTOs.Student.StudentRegistrationDto>()
-                .ForMember(dest => dest.DateOfBirth,
-                    opt => opt.MapFrom(src => ParseDateOfBirth(src.DateOfBirth)))
-                .ForMember(dest => dest.CourseName,
-                    opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : null));
+                    opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));  
 
         }
 

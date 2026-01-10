@@ -2,11 +2,8 @@ using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Models.AffiliationCollege;
-using School_DTOs;
-using School_DTOs.AffiliationCollege;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
+using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories
 {
@@ -21,510 +18,125 @@ namespace School.Infrastructure.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<AffiliatedDto>> AddAffiliationCollegeAsync(AffiliatedModel model)
+        public async Task<Affiliated> AddAffiliationCollegeAsync(Affiliated entity)
         {
-            try
+            // Check for duplicate CollegeCode (if provided)
+            if (!string.IsNullOrEmpty(entity.CollegeCode))
             {
-                // 1?? Check for duplicate CollegeCode (if provided)
-                if (!string.IsNullOrEmpty(model.CollegeCode))
-                {
-                    var exists = await _context.Affiliateds
-                        .AnyAsync(x => x.CollegeCode == model.CollegeCode && !x.IsDeleted);
+                var existingByCode = await DbSet.FirstOrDefaultAsync(x =>
+                                   x.CollegeCode == entity.CollegeCode &&
+                                   !x.IsDeleted);
 
-                    if (exists)
-                    {
-                        return new APIResponse<AffiliatedDto>
-                        {
-                            Success = false,
-                            Message = "College code already exists",
-                            StatusCode = HttpStatusCode.BadRequest
-                        };
-                    }
+                if (existingByCode != null)
+                {
+                    existingByCode.Id = 0;
+                    return existingByCode;
                 }
-
-                // 2?? Validate StateId is provided and valid
-                if (model.StateId <= 0)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = "StateId is required and must be greater than 0",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // 3?? Validate State exists and is active
-                var state = await _context.States
-                    .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
-
-                if (state == null)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = $"State with ID {model.StateId} not found or has been deleted",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (!state.IsActive)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = $"State '{state.Name}' is inactive. Please select an active state.",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // 4?? Validate CityId is provided and valid
-                if (model.CityId <= 0)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = "CityId is required and must be greater than 0",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // 5?? Validate City exists and belongs to State
-                var city = await _context.Cities
-                    .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
-
-                if (city == null)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = $"City with ID {model.CityId} not found or has been deleted",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (city.StateId != model.StateId)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = $"City '{city.Name}' does not belong to selected State '{state.Name}'",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (!city.IsActive)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = $"City '{city.Name}' is inactive. Please select an active city.",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // 4?? Create domain entity
-                var affiliated = new Affiliated
-                {
-                    CollegeName = model.CollegeName,
-                    CollegeCode = model.CollegeCode,
-                    UniversityName = model.UniversityName,
-                    UniversityCode = model.UniversityCode,
-                    StateId = model.StateId,
-                    CityId = model.CityId,
-                    Address = model.Address,
-                    Pincode = model.Pincode,
-                    ContactPerson = model.ContactPerson,
-                    MobileNo = model.MobileNo,
-                    Email = model.Email,
-                    ImagePath = model.ImagePath,
-                    IsActive = model.IsActive,
-                    CreatedBy = model.CreatedBy,
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                // 5?? Add to DB
-                Add(affiliated);
-                await _unitOfWork.CommitAsync();
-
-                // 6?? Reload saved entity with navigation data for DTO mapping
-                var savedEntity = await _context.Affiliateds
-                    .Include(x => x.State)
-                    //.Include(x => x.City)
-                    .FirstAsync(x => x.Id == affiliated.Id);
-
-                return new APIResponse<AffiliatedDto>
-                {
-                    Success = true,
-                    Message = "Affiliation college added successfully",
-                    StatusCode = HttpStatusCode.Created,
-                    Data = MapToDto(savedEntity)
-                };
             }
-            catch (Exception ex)
+
+            // Check if college with same name exists in same state/city
+            var existingByName = await DbSet.FirstOrDefaultAsync(x =>
+                               x.CollegeName.ToLower() == entity.CollegeName.ToLower() &&
+                               x.StateId == entity.StateId &&
+                               x.CityId == entity.CityId &&
+                               !x.IsDeleted);
+
+            if (existingByName != null)
             {
-                return new APIResponse<AffiliatedDto>
-                {
-                    Success = false,
-                    Message = $"Failed to add affiliation college: {ex.InnerException?.Message ?? ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
+                existingByName.Id = 0;
+                return existingByName;
             }
+
+            await AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return entity;
         }
 
-
-
-
-        public async Task<APIResponse<AffiliatedDto>> GetAffiliationCollegeByIdAsync(int id)
+        public async Task<Affiliated> GetAffiliationCollegeByIdAsync(int id)
         {
-            try
-            {
-                var college = await _context.Affiliateds
-                    .Include(x => x.State)
-                    //.Include(x => x.City)
-                    .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
-
-                if (college == null)
-                {
-                    return new APIResponse<AffiliatedDto>
-                    {
-                        Success = false,
-                        Message = "Affiliation college not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                return new APIResponse<AffiliatedDto>
-                {
-                    Success = true,
-                    Message = "Affiliation college fetched successfully",
-                    StatusCode = HttpStatusCode.OK,
-                    Data = MapToDto(college)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<AffiliatedDto>
-                {
-                    Success = false,
-                    Message = $"Failed to get affiliation college: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await DbSet
+                .Include(x => x.State)
+                    .ThenInclude(s => s.Cities)
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted) ?? new Affiliated();
         }
 
-        public async Task<APIResponse<IEnumerable<AffiliatedDto>>> GetAllAffiliationCollegesAsync(
-            int? stateId = null,
-            int? cityId = null,
-            bool? isActive = null)
+        public async Task<IEnumerable<Affiliated>> GetAllAsync(int? stateId = null, int? cityId = null, bool? isActive = null)
         {
-            try
+            var query = List(expression: x => !x.IsDeleted)
+                .Include(x => x.State)
+                    .ThenInclude(s => s.Cities)
+                .AsQueryable();
+
+            if (stateId.HasValue && stateId.Value > 0)
             {
-                var query = _context.Affiliateds
-                    .Include(x => x.State).ThenInclude(x => x.Cities)
-                    .Where(x => !x.IsDeleted);
-
-                if (stateId.HasValue)
-                    query = query.Where(x => x.StateId == stateId.Value);
-
-                if (cityId.HasValue)
-                    query = query.Where(x => x.CityId == cityId.Value);
-
-                if (isActive.HasValue)
-                    query = query.Where(x => x.IsActive == isActive.Value);
-
-                var list = await query
-                    .OrderBy(x => x.CollegeName)
-                    .ToListAsync();
-
-                return new APIResponse<IEnumerable<AffiliatedDto>>
-                {
-                    Success = true,
-                    Message = "Affiliation colleges fetched successfully",
-                    StatusCode = HttpStatusCode.OK,
-                    Data = list.Select(MapToDto)
-                };
+                query = query.Where(x => x.StateId == stateId.Value);
             }
-            catch (Exception ex)
+
+            if (cityId.HasValue && cityId.Value > 0)
             {
-                return new APIResponse<IEnumerable<AffiliatedDto>>
-                {
-                    Success = false,
-                    Message = $"Failed to get affiliation colleges: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
+                query = query.Where(x => x.CityId == cityId.Value);
             }
+
+            if (isActive.HasValue)
+            {
+                query = query.Where(x => x.IsActive == isActive.Value);
+            }
+
+            return await query
+                .OrderBy(x => x.CollegeName)
+                .ToListAsync();
         }
 
-        public async Task<APIResponse> UpdateAffiliationCollegeAsync(AffiliatedModel model)
+        public async Task<int> UpdateAffiliationCollegeAsync(Affiliated entity)
         {
-            try
+            Attach(entity, updatedProperties: new Expression<Func<Affiliated, object>>[]
             {
-                if (model.Id <= 0)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Affiliation college ID is required and must be greater than 0",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                var college = await _context.Affiliateds
-                    .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted);
-
-                if (college == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Affiliation college not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                // Check for duplicate CollegeCode (if provided and changed)
-                if (!string.IsNullOrEmpty(model.CollegeCode) && college.CollegeCode != model.CollegeCode)
-                {
-                    var exists = await _context.Affiliateds
-                        .AnyAsync(x => x.CollegeCode == model.CollegeCode &&
-                                       x.Id != model.Id &&
-                                       !x.IsDeleted);
-
-                    if (exists)
-                    {
-                        return new APIResponse
-                        {
-                            Success = false,
-                            Message = "College code already exists",
-                            StatusCode = HttpStatusCode.BadRequest
-                        };
-                    }
-                }
-
-                // Validate StateId is provided and valid
-                if (model.StateId <= 0)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "StateId is required and must be greater than 0",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // Validate State exists and is active
-                var state = await _context.States
-                    .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
-
-                if (state == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = $"State with ID {model.StateId} not found or has been deleted",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (!state.IsActive)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = $"State '{state.Name}' is inactive. Please select an active state.",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // Validate CityId is provided and valid
-                if (model.CityId <= 0)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "CityId is required and must be greater than 0",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                // Validate City exists and belongs to State
-                var city = await _context.Cities
-                    .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
-
-                if (city == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = $"City with ID {model.CityId} not found or has been deleted",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (city.StateId != model.StateId)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = $"City '{city.Name}' does not belong to selected State '{state.Name}'",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                if (!city.IsActive)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = $"City '{city.Name}' is inactive. Please select an active city.",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                college.CollegeName = model.CollegeName;
-                college.CollegeCode = model.CollegeCode;
-                college.UniversityName = model.UniversityName;
-                college.UniversityCode = model.UniversityCode;
-                college.StateId = model.StateId;
-                college.CityId = model.CityId;
-                college.Address = model.Address;
-                college.Pincode = model.Pincode;
-                college.ContactPerson = model.ContactPerson;
-                college.MobileNo = model.MobileNo;
-                college.Email = model.Email;
-                college.ImagePath = model.ImagePath;
-                college.IsActive = model.IsActive;
-                college.UpdatedBy = model.UpdatedBy;
-                college.UpdatedDate = DateTime.UtcNow;
-
-                Update(college);
-                await _unitOfWork.CommitAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = "Affiliation college updated successfully",
-                    StatusCode = HttpStatusCode.OK
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to update affiliation college: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+                u => u.CollegeName,
+                u => u.CollegeCode!,
+                u => u.UniversityName!,
+                u => u.UniversityCode!,
+                u => u.StateId,
+                u => u.CityId,
+                u => u.Address!,
+                u => u.Pincode!,
+                u => u.ContactPerson!,
+                u => u.MobileNo!,
+                u => u.Email!,
+                u => u.ImagePath!,
+                u => u.IsActive,
+                u => u.UpdatedBy!,
+                u => u.UpdatedDate
+            });
+            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
-        public async Task<APIResponse> DeleteAffiliationCollegeAsync(int id)
+        public async Task<int> DeleteAffiliationCollegeAsync(int id)
         {
-            try
+            var result = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
+
+            if (result != null)
             {
-                var college = await _context.Affiliateds
-                    .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
-
-                if (college == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Affiliation college not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                college.IsDeleted = true;
-                college.UpdatedDate = DateTime.UtcNow;
-
-                Delete(college);
-                await _unitOfWork.CommitAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = "Affiliation college deleted successfully",
-                    StatusCode = HttpStatusCode.OK
-                };
+                result.UpdatedDate = DateTime.UtcNow;
+                Delete(result);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to delete affiliation college: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        public async Task<APIResponse> ToggleAffiliationCollegeStatusAsync(int id)
+        public async Task<int> ToggleAffiliationCollegeStatusAsync(int id)
         {
-            try
+            var entity = await _context.Affiliateds
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+
+            if (entity != null)
             {
-                var college = await _context.Affiliateds
-                    .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
-
-                if (college == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Affiliation college not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                college.IsActive = !college.IsActive;
-                college.UpdatedDate = DateTime.UtcNow;
-
-                Update(college);
-                await _unitOfWork.CommitAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = "Affiliation college status updated successfully",
-                    StatusCode = HttpStatusCode.OK
-                };
+                entity.IsActive = !entity.IsActive;
+                Update(entity);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to toggle status: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
-        }
-
-        private AffiliatedDto MapToDto(Affiliated college)
-        {
-            return new AffiliatedDto
-            {
-                Id = college.Id,
-                CollegeName = college.CollegeName,
-                CollegeCode = college.CollegeCode ?? string.Empty,
-                UniversityName = college.UniversityName,
-                UniversityCode = college.UniversityCode,
-                StateId = college.StateId,
-                StateName = college.State?.Name ?? string.Empty,
-                CityId = college.CityId,
-                //CityName = college.City?.Name ?? string.Empty,
-                Address = college.Address,
-                Pincode = college.Pincode,
-                ContactPerson = college.ContactPerson,
-                MobileNo = college.MobileNo,
-                Email = college.Email,
-                ImagePath = college.ImagePath,
-                IsActive = college.IsActive,
-                CreatedDate = college.CreatedDate,
-                CreatedBy = college.CreatedBy,
-                UpdatedDate = college.UpdatedDate,
-                UpdatedBy = college.UpdatedBy
-            };
+            else
+                return 0;
         }
     }
 }

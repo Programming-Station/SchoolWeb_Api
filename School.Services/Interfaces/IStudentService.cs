@@ -9,7 +9,7 @@ namespace School.Services.Interfaces
         Task<APIResponse<StudentDto>> CreateStudentAsync(StudentModel model);
         Task<APIResponse<StudentDto>> GetStudentByIdAsync(int id);
         Task<APIResponse<StudentDto>> GetStudentByStudentIdAsync(string studentId);
-        Task<APIResponse<IEnumerable<StudentDto>>> GetAllStudentsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, string? status = null);
+        Task<PagedResponse<StudentDto>> GetAllStudentsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? classFilter = null);
         Task<APIResponse> UpdateStudentAsync(StudentModel model);
         Task<APIResponse> DeleteStudentAsync(int id);
         Task<APIResponse<string>> GenerateStudentIdAsync();

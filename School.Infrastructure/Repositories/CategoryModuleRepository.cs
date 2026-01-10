@@ -1,280 +1,101 @@
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Models.Module;
-using School_DTOs;
-using School_DTOs.Module;
-using School.Utilities.Resources;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
 using School.Infrastructure.UnitOfWork;
+using School.Infrastructure.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories
 {
     public class CategoryModuleRepository : Repository<CategoryModule>, ICategoryModuleRepository
     {
         private readonly SchoolDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryModuleRepository(DbFactory dbFactory, SchoolDbContext context) : base(dbFactory)
+        public CategoryModuleRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<CategoryModuleDto>> AddCategoryModuleAsync(CategoryModuleModel model)
+        public async Task<CategoryModule> AddCategoryModuleAsync(CategoryModule entity)
         {
-            try
-            {
-                var category = new CategoryModule
-                {
-                    Name = model.Name,
-                    Description = model.Description,
-                    Order = model.Order,
-                    IsActive = model.IsActive,
-                    CreatedBy = model.CreatedBy,
-                    CreatedDate = DateTime.UtcNow
-                };
+            // Check if category with same name already exists
+            var existingByName = await DbSet.FirstOrDefaultAsync(x =>
+                               x.Name.ToLower() == entity.Name.ToLower() &&
+                               !x.IsDeleted);
 
-                _context.CategoryModules.Add(category);
-                await _context.SaveChangesAsync();
-
-                var dto = MapToDto(category);
-                return new APIResponse<CategoryModuleDto>
-                {
-                    Success = true,
-                    Message = CommonResource.AddSuccess,
-                    StatusCode = HttpStatusCode.Created,
-                    Data = dto
-                };
-            }
-            catch (Exception ex)
+            if (existingByName != null)
             {
-                return new APIResponse<CategoryModuleDto>
-                {
-                    Success = false,
-                    Message = $"Failed to add category: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
+                existingByName.Id = 0;
+                return existingByName;
             }
+
+            await AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return entity;
         }
 
-        public async Task<APIResponse<CategoryModuleDto>> GetCategoryModuleByIdAsync(int id)
+        public async Task<CategoryModule> GetCategoryModuleByIdAsync(int id)
         {
-            try
-            {
-                var category = await _context.CategoryModules
-                    .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
-
-                if (category == null)
-                {
-                    return new APIResponse<CategoryModuleDto>
-                    {
-                        Success = false,
-                        Message = "Category not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                return new APIResponse<CategoryModuleDto>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = MapToDto(category)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<CategoryModuleDto>
-                {
-                    Success = false,
-                    Message = $"Failed to get category: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await FindAsync(expression: x => x.Id == id && !x.IsDeleted) ?? new CategoryModule();
         }
 
-        public async Task<APIResponse<IEnumerable<CategoryModuleDto>>> GetAllCategoryModulesAsync()
+        public async Task<IEnumerable<CategoryModule>> GetAllAsync()
         {
-            try
-            {
-                var categories = await _context.CategoryModules
-                    .Where(c => !c.IsDeleted)
-                    .OrderBy(c => c.Order)
-                    .ThenBy(c => c.Name)
-                    .ToListAsync();
-
-                var dtos = categories.Select(MapToDto);
-                
-                return new APIResponse<IEnumerable<CategoryModuleDto>>
-                {
-                    Success = true,
-                    Message = CommonResource.FetchSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                    Data = dtos
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse<IEnumerable<CategoryModuleDto>>
-                {
-                    Success = false,
-                    Message = $"Failed to get categories: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            return await List(expression: x => !x.IsDeleted)
+                .OrderBy(x => x.Order)
+                .ThenBy(x => x.Name)
+                .ToListAsync();
         }
 
-        public async Task<APIResponse> UpdateCategoryModuleAsync(CategoryModuleModel model)
+        public async Task<int> UpdateCategoryModuleAsync(CategoryModule entity)
         {
-            try
+            Attach(entity, updatedProperties: new Expression<Func<CategoryModule, object>>[]
             {
-                var category = await _context.CategoryModules
-                    .FirstOrDefaultAsync(c => c.Id == model.Id && !c.IsDeleted);
-
-                if (category == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Category not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                category.Name = model.Name;
-                category.Description = model.Description;
-                category.Order = model.Order;
-                category.IsActive = model.IsActive;
-                category.UpdatedBy = model.UpdatedBy;
-                category.UpdatedDate = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.UpdateSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
-            }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to update category: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+                u => u.Name,
+                u => u.Description!,
+                u => u.Order,
+                u => u.IsActive,
+                u => u.UpdatedBy!,
+                u => u.UpdatedDate!
+            });
+            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
-        public async Task<APIResponse> DeleteCategoryModuleAsync(int id)
+        public async Task<int> DeleteCategoryModuleAsync(int id)
         {
-            try
+            var result = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
+
+            if (result != null)
             {
-                var category = await _context.CategoryModules
-                    .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
-
-                if (category == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Category not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                // Check if category is being used by any module
-                var modulesUsingCategory = await _context.Modules
-                    .AnyAsync(m => m.CategoryModuleId == id && !m.IsDeleted);
-
-                if (modulesUsingCategory)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Cannot delete category. It is being used by one or more modules.",
-                        StatusCode = HttpStatusCode.BadRequest
-                    };
-                }
-
-                category.IsDeleted = true;
-                category.UpdatedDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.DeleteSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
+                result.UpdatedDate = DateTime.UtcNow;
+                Delete(result);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to delete category: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        public async Task<APIResponse> ToggleCategoryModuleStatusAsync(int id)
+        public async Task<int> ToggleCategoryModuleStatusAsync(int id)
         {
-            try
+            var entity = await _context.CategoryModules
+                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+
+            if (entity != null)
             {
-                var category = await _context.CategoryModules
-                    .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
-
-                if (category == null)
-                {
-                    return new APIResponse
-                    {
-                        Success = false,
-                        Message = "Category not found",
-                        StatusCode = HttpStatusCode.NotFound
-                    };
-                }
-
-                category.IsActive = !category.IsActive;
-                category.UpdatedDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.UpdateSuccess,
-                    StatusCode = HttpStatusCode.OK
-                };
+                entity.IsActive = !entity.IsActive;
+                Update(entity);
+                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = $"Failed to toggle category status: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
+            else
+                return 0;
         }
 
-        private CategoryModuleDto MapToDto(CategoryModule category)
+        public async Task<bool> IsCategoryInUseAsync(int categoryId)
         {
-            return new CategoryModuleDto
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
-                Order = category.Order,
-                IsActive = category.IsActive,
-                CreatedDate = category.CreatedDate,
-                CreatedBy = category.CreatedBy,
-                UpdatedDate = category.UpdatedDate,
-                UpdatedBy = category.UpdatedBy
-            };
+            return await _context.Modules
+                .AnyAsync(m => m.CategoryModuleId == categoryId && !m.IsDeleted);
         }
     }
 }
-

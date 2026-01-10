@@ -46,6 +46,7 @@ namespace School.Infrastructure
         public DbSet<Achievement> Achievements { get; set; } = null!;
         public DbSet<TeamMember> TeamMembers { get; set; } = null!;
         public DbSet<Enquiry> Enquiries { get; set; } = null!;
+        public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;

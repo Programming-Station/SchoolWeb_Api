@@ -1,21 +1,21 @@
+using School.Domain;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Models.Module;
-using School_DTOs;
-using School_DTOs.Module;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {
-    public interface IModuleRepository
+    public interface IModuleRepository : IRepository<Module>
     {
-        Task<APIResponse<ModuleDto>> AddModuleAsync(ModuleModel model);
-        Task<APIResponse<ModuleDto>> GetModuleByIdAsync(int id);
-        Task<APIResponse<IEnumerable<ModuleDto>>> GetAllModulesAsync();
-        Task<APIResponse> UpdateModuleAsync(ModuleModel model);
-        Task<APIResponse> DeleteModuleAsync(int id);
-        Task<APIResponse> ToggleModuleStatusAsync(int id);
-        Task<APIResponse<IEnumerable<ModuleDto>>> GetModulesByUserIdAsync(string userId);
-        Task<APIResponse> AssignModulesToUserAsync(AssignModulesToUserModel model);
-        Task<APIResponse> RemoveModulePermissionAsync(int moduleId, string userId);
-        Task<APIResponse<IEnumerable<ModulePermissionDto>>> GetModulePermissionsByUserIdAsync(string userId);
+        Task<Module> AddModuleAsync(Module entity);
+        Task<Module> GetModuleByIdAsync(int id);
+        Task<IEnumerable<Module>> GetAllAsync();
+        Task<int> UpdateModuleAsync(Module entity);
+        Task<int> DeleteModuleAsync(int id);
+        Task<int> ToggleModuleStatusAsync(int id);
+        // ModulePermission related methods
+        Task<IEnumerable<Module>> GetModulesByUserIdAsync(string userId);
+        Task<int> AssignModulesToUserAsync(string userId, List<int> moduleIds, string? createdBy = null);
+        Task<int> RemoveModulePermissionAsync(int moduleId, string userId);
+        Task<IEnumerable<ModulePermission>> GetModulePermissionsByUserIdAsync(string userId);
     }
 }
-

@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace School_DTOs.Student
 {
     public class StudentDto : BaseDto
     {
+        // Original fields
         public string StudentId { get; set; } = null!;
         public string? EnrollmentNumber { get; set; }
         public string? CourseType { get; set; }
@@ -29,9 +32,27 @@ namespace School_DTOs.Student
         public string? ClassName { get; set; }
         public string? Section { get; set; }
         public string Status { get; set; } = null!;
-        public string? Remarks { get; set; } 
+        public string? Remarks { get; set; }
+
+        // UI-compatible fields (for easier frontend integration)
+        // These fields use JsonPropertyName to match UI expectations exactly
+        [JsonPropertyName("stdId")]
+        public string StdId { get; set; } = null!;
+
+        [JsonPropertyName("gender")]
+        public string Gender { get; set; } = null!;
+
+        [JsonPropertyName("class")]
+        public string? Class { get; set; }
+
+        [JsonPropertyName("mobileNo")]
+        public string? MobileNo { get; set; }
+
+        [JsonPropertyName("totalFee")]
+        public decimal TotalFee { get; set; } = 0;
+
+        [JsonPropertyName("dueFee")]
+        public decimal DueFee { get; set; } = 0;
     }
-     
-     
 }
 

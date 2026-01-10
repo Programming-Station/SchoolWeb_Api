@@ -102,6 +102,7 @@ namespace School.Infrastructure.Repositories
                 var studentEntity = await _context.Students
                     .Include(s => s.Class)
                     .ThenInclude(c => c!.Course)
+                    .Include(s => s.Status)
                     .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
 
                 if (studentEntity == null)
@@ -141,6 +142,7 @@ namespace School.Infrastructure.Repositories
                 var studentEntity = await _context.Students
                     .Include(s => s.Class)
                     .ThenInclude(c => c!.Course)
+                    .Include(s => s.Status)
                     .FirstOrDefaultAsync(s => s.StudentId == studentId && !s.IsDeleted);
 
                 if (studentEntity == null)
@@ -173,7 +175,7 @@ namespace School.Infrastructure.Repositories
             }
         }
 
-        public async Task<APIResponse<IEnumerable<StudentDto>>> GetAllStudentsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, string? status = null)
+        public async Task<PagedResponse<StudentDto>> GetAllStudentsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, string? status = null, string? classFilter = null)
         {
             try
             {
@@ -181,6 +183,7 @@ namespace School.Infrastructure.Repositories
                     .Where(s => !s.IsDeleted)
                     .Include(s => s.Class)
                     .ThenInclude(c => c!.Course)
+                    .Include(s => s.Status)
                     .AsQueryable();
 
                 // Apply search filter
@@ -203,6 +206,12 @@ namespace School.Infrastructure.Repositories
                     query = query.Where(s => s.StatusId == (int)statusEnum);
                 }
 
+                // Apply class filter (filter by class name)
+                if (!string.IsNullOrWhiteSpace(classFilter))
+                {
+                    query = query.Where(s => s.Class != null && s.Class.Name == classFilter);
+                }
+
                 // Get total count before pagination
                 var totalCount = await query.CountAsync();
 
@@ -219,21 +228,25 @@ namespace School.Infrastructure.Repositories
                     dtos.Add(await MapToDtoAsync(studentEntity));
                 }
 
-                return new APIResponse<IEnumerable<StudentDto>>
+                return new PagedResponse<StudentDto>
                 {
                     Success = true,
                     Message = "Students fetched successfully",
                     StatusCode = HttpStatusCode.OK,
                     Data = dtos,
+                    TotalRecords = totalCount,
+                    CurrentPage = pageNumber,
+                    PageSize = pageSize
                 };
             }
             catch (Exception ex)
             {
-                return new APIResponse<IEnumerable<StudentDto>>
+                return new PagedResponse<StudentDto>
                 {
                     Success = false,
                     Message = $"Failed to get students: {ex.Message}",
-                    StatusCode = HttpStatusCode.InternalServerError
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Data = new List<StudentDto>()
                 };
             }
         }
@@ -468,11 +481,20 @@ namespace School.Infrastructure.Repositories
                 ClassId = studentEntity.ClassId,
                 ClassName = classEntity?.Name,
                 Section = classEntity?.Section,
+                Status = studentEntity.Status?.Name ?? ((DefaultStatus)studentEntity.StatusId).ToString(),
                 Remarks = studentEntity.Remarks,
                 CreatedDate = studentEntity.CreatedDate.ToString(),
                 CreatedBy = studentEntity.CreatedBy,
                 UpdatedDate = studentEntity.UpdatedDate.ToString(),
-                UpdatedBy = studentEntity.UpdatedBy
+                UpdatedBy = studentEntity.UpdatedBy,
+                // UI-compatible fields mapping
+                StdId = studentEntity.StudentId,
+                Gender = studentEntity.Gender,
+                Class = classEntity?.Name,
+                MobileNo = studentEntity.MobileNo1,
+                // Fee fields - TODO: Integrate with Fee management system when available
+                TotalFee = 0, // Will be calculated from Fee table in future
+                DueFee = 0    // Will be calculated from Fee table in future
             };
         }
     }

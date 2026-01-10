@@ -1,17 +1,16 @@
-using School.Models.Module;
-using School_DTOs;
-using School_DTOs.Module;
+using School.Domain;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {
-    public interface ICategoryModuleRepository
+    public interface ICategoryModuleRepository : IRepository<CategoryModule>
     {
-        Task<APIResponse<CategoryModuleDto>> AddCategoryModuleAsync(CategoryModuleModel model);
-        Task<APIResponse<CategoryModuleDto>> GetCategoryModuleByIdAsync(int id);
-        Task<APIResponse<IEnumerable<CategoryModuleDto>>> GetAllCategoryModulesAsync();
-        Task<APIResponse> UpdateCategoryModuleAsync(CategoryModuleModel model);
-        Task<APIResponse> DeleteCategoryModuleAsync(int id);
-        Task<APIResponse> ToggleCategoryModuleStatusAsync(int id);
+        Task<CategoryModule> AddCategoryModuleAsync(CategoryModule entity);
+        Task<CategoryModule> GetCategoryModuleByIdAsync(int id);
+        Task<IEnumerable<CategoryModule>> GetAllAsync();
+        Task<int> UpdateCategoryModuleAsync(CategoryModule entity);
+        Task<int> DeleteCategoryModuleAsync(int id);
+        Task<int> ToggleCategoryModuleStatusAsync(int id);
+        Task<bool> IsCategoryInUseAsync(int categoryId);
     }
 }
-
