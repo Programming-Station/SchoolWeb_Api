@@ -86,7 +86,7 @@ namespace School.Infrastructure.Repositories
             }
 
             return await query
-                .OrderByDescending(x => x.SubmittedAt)
+                .OrderByDescending(x => x.CreatedDate)
                 .ToListAsync();
         }
 

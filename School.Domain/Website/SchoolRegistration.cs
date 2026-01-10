@@ -6,10 +6,7 @@ namespace School.Domain.Website
     public class SchoolRegistration : AuditEntity<int>
     {
         [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+        public int Id { get; set; } 
 
         // Basic Information
         [Required]

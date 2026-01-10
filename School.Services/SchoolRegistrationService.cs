@@ -94,9 +94,7 @@ namespace School.Services
                 }
             }
 
-            entity.StatusId = statusId;
-            entity.SubmittedAt = DateTime.UtcNow;
-            entity.CreatedDate = DateTime.UtcNow;
+            entity.StatusId = statusId;  
 
             // Hash password
             var dummyUser = new ApplicationUser(); // Just for password hashing
