@@ -10,6 +10,7 @@ namespace School.Utilities.Enums
         Student,
         Employee,
         User,
+        Owner
     }
 
 

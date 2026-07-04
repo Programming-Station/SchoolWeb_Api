@@ -137,6 +137,22 @@ namespace School.Infrastructure
                     });
                 }
             }
+            // Owner Users
+            var onwerUser = allUsers.FirstOrDefault(u =>
+               u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "ONWER");
+            var ownerRole = allRoles.FirstOrDefault(r =>
+                r.NormalizedName != null && r.NormalizedName.ToUpper() == "ONWER");
+            if (onwerUser != null && ownerRole != null)
+            {
+                if (!existingUserRoles.Any(ur => ur.UserId == onwerUser.Id && ur.RoleId == ownerRole.Id))
+                {
+                    userRoleMappings.Add(new IdentityUserRole<string>
+                    {
+                        UserId = onwerUser.Id,
+                        RoleId = ownerRole.Id
+                    });
+                }
+            }
 
             if (userRoleMappings.Any())
             {

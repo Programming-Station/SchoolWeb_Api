@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Models.Website;
 using School.Services.Interfaces;
@@ -19,6 +20,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Submit a new school registration (Public endpoint - no authentication required)
         /// </summary>
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SchoolRegistrationModel model)
         {
@@ -39,6 +41,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Check if email already exists (Public endpoint)
         /// </summary>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> CheckEmailExists([FromQuery] string email)
         {
@@ -60,6 +63,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Check if mobile number already exists (Public endpoint)
         /// </summary>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> CheckMobileExists([FromQuery] string mobile)
         {
@@ -81,6 +85,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Get school registration by ID
         /// </summary>
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -91,6 +96,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Get all school registrations with optional filters (Admin only)
         /// </summary>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll(
             [FromQuery] string? status = null,
@@ -114,6 +120,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Update school registration status (Admin only)
         /// </summary>
+        [AllowAnonymous]
         [HttpPut] 
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateSchoolRegistrationStatusModel model)
         {
@@ -134,6 +141,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Delete school registration (Soft delete - Admin only)
         /// </summary>
+        [AllowAnonymous]
         [HttpDelete("{id}")] 
         public async Task<IActionResult> Delete(int id)
         {
@@ -144,6 +152,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Update school registration (Admin only)
         /// </summary>
+        [AllowAnonymous]
         [HttpPut] 
         public async Task<IActionResult> Update([FromBody] SchoolRegistrationModel model)
         {
@@ -159,6 +168,7 @@ namespace School_API.Controllers
         /// <summary>
         /// Get school registration count by status (Admin only)
         /// </summary>
+        [AllowAnonymous]
         [HttpGet("count")] 
         public async Task<IActionResult> GetCount([FromQuery] string? status = null)
         {

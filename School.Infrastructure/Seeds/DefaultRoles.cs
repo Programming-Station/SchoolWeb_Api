@@ -34,6 +34,12 @@ namespace School.Infrastructure.Seeds
                     Name = Roles.Student.ToString(),
                     NormalizedName = Roles.Student.ToString().ToUpper()
                 },
+                 new IdentityRole
+                {
+                    Id = Constants.Owner,
+                    Name = Roles.Owner.ToString(),
+                    NormalizedName = Roles.Owner.ToString().ToUpper()
+                },
             };
         }
     }

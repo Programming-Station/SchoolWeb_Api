@@ -112,6 +112,7 @@ namespace School_API
             .AddTransient<ITeacherRepository, TeacherRepository>()
             .AddTransient<IFacultyRepository, FacultyRepository>()
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
+            .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
@@ -143,6 +144,7 @@ namespace School_API
             .AddScoped<IFacultyService, FacultyService>()
             .AddScoped<IDepartmentService, DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
+            .AddScoped<IFeeTypeService, FeeTypeService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

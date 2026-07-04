@@ -5,6 +5,7 @@ using School.Domain.Auth;
 using School.Domain;
 using School.Domain.Website;
 using School.Domain.Student;
+using School.Domain.FeeManagnment;
 
 namespace School.Infrastructure
 {
@@ -51,6 +52,7 @@ namespace School.Infrastructure
         public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;
         public DbSet<Department> Departments { get; set; } = null!;
+        public DbSet<FeeType> FeeTypes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
