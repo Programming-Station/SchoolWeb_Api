@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using School.Domain.Auth;
 using School.Domain.School;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Models.School;
 using School.Services.School.ISchoolServices;
 using School.Utilities.Resources;
@@ -15,6 +14,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.Repositories.School;
 
 namespace School.Services.School
 {

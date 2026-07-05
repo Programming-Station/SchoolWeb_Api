@@ -1,6 +1,5 @@
 using AutoMapper;
 using School.Domain.School;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School.Services.School.ISchoolServices;
@@ -10,6 +9,7 @@ using School_DTOs.School;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using School.Infrastructure.Repositories.School;
 
 namespace School.Services.School
 {

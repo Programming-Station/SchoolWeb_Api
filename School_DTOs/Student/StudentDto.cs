@@ -5,6 +5,7 @@ namespace School_DTOs.Student
     public class StudentDto : BaseDto
     {
         public string StudentId { get; set; } = null!;
+        public string? ApplicationUserId { get; set; }
         public string? EnrollmentNumber { get; set; }
         public string? CourseType { get; set; }
         public string? SchoolCourse { get; set; }

@@ -8,6 +8,8 @@ namespace School.Infrastructure.Seeds
     {
         public static List<ApplicationUser> IdentityBasicUserList()
         {
+
+            // password = Admin@123
             var passwordHash = "AQAAAAEAACcQAAAAEBLjouNqaeiVWbN0TbXUS3+ChW3d7aQIk/BQEkWBxlrdRRngp14b0BIH0Rp65qD6mA==";
 
             return new List<ApplicationUser>()

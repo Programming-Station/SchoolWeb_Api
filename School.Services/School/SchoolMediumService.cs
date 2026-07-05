@@ -1,7 +1,8 @@
+using School.Infrastructure.Repositories.IRepositories;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
-using School.Infrastructure.Repositories.IRepositories;
+using School.Infrastructure.Repositories.School;
 using School.Services.School.ISchoolServices;
 using School.Utilities.Resources;
 using School_DTOs;
@@ -127,6 +128,7 @@ namespace School.Services.School
         }
     }
 }
+
 
 
 

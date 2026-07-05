@@ -28,8 +28,9 @@ namespace School.Domain
 
         public int CurrentStrength { get; set; } = 0;
 
-        [MaxLength(200)]
-        public string? ClassTeacher { get; set; }
+        public int? ClassTeacherId { get; set; }
+        [ForeignKey(nameof(ClassTeacherId))]
+        public virtual global::School.Domain.Hr.Employee? ClassTeacher { get; set; }
 
         [MaxLength(50)]
         public string? RoomNumber { get; set; }

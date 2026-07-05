@@ -20,6 +20,8 @@ namespace School.Services.Mapping
                            from destination in destinationTypes
                            where source.Name == destination.Name.Replace("Dto", "")
                               || source.Name == destination.Name.Replace("Model", "")
+                              || "Create" + source.Name == destination.Name.Replace("Dto", "")
+                              || "Update" + source.Name == destination.Name.Replace("Dto", "")
                            select (Source: source, Destination: destination);
 
 

@@ -8,6 +8,10 @@ using School.Domain.FeeManagnment;
 using School.Domain.School;
 using School.Domain.AccessControl;
 using School.Domain.Location;
+using School.Domain.Hr;
+using School.Domain.Hr.LeaveManagement;
+using School.Domain.Hr.Timesheet;
+using School.Domain.Hr.Attendance;
 using School.Infrastructure.Interfaces;
 
 namespace School.Infrastructure
@@ -56,6 +60,37 @@ namespace School.Infrastructure
         public DbSet<Department> Departments { get; set; } = null!;
         public DbSet<FeeType> FeeTypes { get; set; } = null!;
 
+        // HR Module
+        public DbSet<Designation> Designations { get; set; } = null!;
+        public DbSet<Specialization> Specializations { get; set; } = null!;
+        public DbSet<BloodGroupMaster> BloodGroupMasters { get; set; } = null!;
+        public DbSet<ReligionMaster> ReligionMasters { get; set; } = null!;
+        public DbSet<QualificationMaster> QualificationMasters { get; set; } = null!;
+        public DbSet<EmployeeCategory> EmployeeCategories { get; set; } = null!;
+        public DbSet<EmployeeType> EmployeeTypes { get; set; } = null!;
+        public DbSet<EmploymentStatus> EmploymentStatuses { get; set; } = null!;
+        public DbSet<SalaryGrade> SalaryGrades { get; set; } = null!;
+        public DbSet<ShiftMaster> ShiftMasters { get; set; } = null!;
+        public DbSet<HolidayMaster> HolidayMasters { get; set; } = null!;
+        public DbSet<WeekOff> WeekOffs { get; set; } = null!;
+        public DbSet<NoticePeriod> NoticePeriods { get; set; } = null!;
+        public DbSet<LeaveType> LeaveTypes { get; set; } = null!;
+        public DbSet<LeaveSetting> LeaveSettings { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; } = null!;
+        public DbSet<EmployeeDocument> EmployeeDocuments { get; set; } = null!;
+        public DbSet<EmployeeBankDetail> EmployeeBankDetails { get; set; } = null!;
+        public DbSet<EmployeeEducation> EmployeeEducations { get; set; } = null!;
+        public DbSet<EmployeeExperience> EmployeeExperiences { get; set; } = null!;
+        public DbSet<EmployeeSalaryDetail> EmployeeSalaryDetails { get; set; } = null!;
+        public DbSet<EmployeeDetail> EmployeeDetails { get; set; } = null!;
+        public DbSet<LeaveRequest> LeaveRequests { get; set; } = null!;
+        public DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
+        public DbSet<Attendance> Attendances { get; set; } = null!;
+        public DbSet<AttendanceLog> AttendanceLogs { get; set; } = null!;
+        public DbSet<Timesheet> Timesheets { get; set; } = null!;
+        public DbSet<TimesheetEntry> TimesheetEntries { get; set; } = null!;
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -66,6 +101,16 @@ namespace School.Infrastructure
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.Property(u => u.UserName).IsRequired().HasMaxLength(256);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasIndex(e => e.EmployeeCode).IsUnique();
+            });
+
+            modelBuilder.Entity<Student>(entity =>
+            {
+                entity.HasIndex(e => e.EnrollmentNumber).IsUnique();
             });
 
             modelBuilder.Entity<IdentityRole>(entity =>
@@ -176,10 +221,12 @@ namespace School.Infrastructure
         {
             if (typeof(BaseEntity.ITenantEntity).IsAssignableFrom(typeof(T)))
             {
+                builder.Entity<T>().HasIndex("SchoolRegistrationId", "IsDeleted");
                 builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted && (CurrentTenantId == null || ((BaseEntity.ITenantEntity)e).SchoolRegistrationId == CurrentTenantId));
             }
             else
             {
+                builder.Entity<T>().HasIndex("IsDeleted");
                 builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
             }
         }
