@@ -12,7 +12,7 @@ namespace School.Domain.Transport
         [MaxLength(50)] public string? DriverName{get;set;}
         [MaxLength(20)] public string? DriverPhone{get;set;}
         public int Capacity{get;set;}
-        [MaxLength(20)] public string Status{get;set;}=""active"";
+        [MaxLength(20)] public string Status{get;set;}="active";
         public int SchoolRegistrationId{get;set;}
         [ForeignKey(nameof(SchoolRegistrationId))] public virtual SchoolRegistration SchoolRegistration{get;set;}=null!;
     }

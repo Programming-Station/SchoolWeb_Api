@@ -11,7 +11,7 @@ namespace School.Domain.Transport
         [MaxLength(200)] public string? Description{get;set;}
         public int VehicleId{get;set;}
         [ForeignKey(nameof(VehicleId))] public virtual Vehicle Vehicle{get;set;}=null!;
-        [MaxLength(20)] public string Status{get;set;}=""active"";
+        [MaxLength(20)] public string Status{get;set;}="active";
         public int SchoolRegistrationId{get;set;}
         [ForeignKey(nameof(SchoolRegistrationId))] public virtual SchoolRegistration SchoolRegistration{get;set;}=null!;
     }
