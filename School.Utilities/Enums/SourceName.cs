@@ -9,6 +9,16 @@ namespace School.Utilities.Enums
         AcademicYear,
         AffiliationBoard,
         SchoolType,
-        SchoolMedium
+        SchoolMedium,
+        Country,
+        Module,
+        Menu,
+        SubMenu,
+        Class,
+        Department,
+        FeeType,
+        Faculty,
+        CategoryModule,
+        Affiliated
     }
 }

@@ -14,5 +14,15 @@ namespace School.Services.Interfaces
         Task<APIResponse<IEnumerable<DropdownDto>>> GetAffiliationBoardsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolTypesAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolMediumsAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetCountriesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetModulesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetMenusAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetSubMenusAsync(int menuId);
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetClassesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetDepartmentsAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetFeeTypesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetFacultiesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetCategoryModulesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetAffiliatedsAsync();
     }
 }
