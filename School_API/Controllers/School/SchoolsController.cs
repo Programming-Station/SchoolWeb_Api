@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 namespace School_API.Controllers.School
 {
-    [Authorize(Roles = "Owner,Superadmin")]
     public class SchoolsController : BaseController
     {
         private readonly ISchoolService _schoolService;

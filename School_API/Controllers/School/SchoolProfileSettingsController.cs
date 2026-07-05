@@ -8,7 +8,6 @@ using School_API.Common.Interface;
 
 namespace School_API.Controllers.School
 {
-    [Authorize(Roles = "Owner")]
     public class SchoolProfileSettingsController : BaseController
     {
         private readonly ISchoolProfileSettingService _profileSettingService;

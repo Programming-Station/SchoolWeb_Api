@@ -5,7 +5,8 @@ using School_DTOs.Payroll;
 using System.Threading.Tasks;
 namespace School_API.Controllers.Payroll
 {
-    [Route("api/[controller]")][ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class SalaryComponentController : BaseController
     {
         private readonly ISalaryComponentService _svc;
