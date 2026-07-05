@@ -13,5 +13,7 @@ namespace School.Services.Interfaces.Hr.LeaveManagement
         Task<APIResponse<object>> CreateAsync(CreateLeaveRequestDto dto, string username);
         Task<APIResponse<object>> UpdateAsync(int id, UpdateLeaveRequestDto dto, string username);
         Task<APIResponse<object>> DeleteAsync(int id, string username);
+        Task<APIResponse<object>> ApproveLeaveAsync(int id, int approverEmployeeId, string username);
+        Task<APIResponse<object>> RejectLeaveAsync(int id, int approverEmployeeId, string reason, string username);
     }
 }

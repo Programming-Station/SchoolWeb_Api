@@ -57,5 +57,21 @@ namespace School_API.Controllers.Hr.Attendance
             if (result.Success) return Ok(result);
             return StatusCode((int)result.StatusCode, result);
         }
+
+        [HttpPost("punch-in")]
+        public async Task<IActionResult> PunchIn([FromQuery] int employeeId)
+        {
+            var result = await _service.PunchInAsync(employeeId, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("punch-out")]
+        public async Task<IActionResult> PunchOut([FromQuery] int employeeId)
+        {
+            var result = await _service.PunchOutAsync(employeeId, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }

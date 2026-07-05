@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using School.Services.Hr;
+using School.Services.Interfaces.Hr;
 using School_API.Common.Interface;
 using School_DTOs.Common;
 using School_DTOs.Hr;

@@ -91,5 +91,41 @@ namespace School.Services.Hr.Attendance
             await _unitOfWork.CommitAsync();
             return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
+
+        public async Task<APIResponse<object>> PunchInAsync(int employeeId, string username)
+        {
+            var today = DateTime.UtcNow.Date;
+            var existing = await _repository.List().Where(x => x.EmployeeId == employeeId && x.AttendanceDate == today).FirstOrDefaultAsync();
+            if (existing != null) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Already punched in today" };
+
+            var entity = new global::School.Domain.Hr.Attendance.Attendance
+            {
+                EmployeeId = employeeId,
+                AttendanceDate = today,
+                CheckInTime = DateTime.UtcNow.TimeOfDay,
+                Status = "Present",
+                CreatedBy = username,
+                CreatedDate = DateTime.UtcNow
+            };
+            await _repository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Punched in successfully" };
+        }
+
+        public async Task<APIResponse<object>> PunchOutAsync(int employeeId, string username)
+        {
+            var today = DateTime.UtcNow.Date;
+            var entity = await _repository.List().Where(x => x.EmployeeId == employeeId && x.AttendanceDate == today).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "No punch in record found for today" };
+            if (entity.CheckOutTime != null) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Already punched out" };
+
+            entity.CheckOutTime = DateTime.UtcNow.TimeOfDay;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Punched out successfully" };
+        }
     }
 }

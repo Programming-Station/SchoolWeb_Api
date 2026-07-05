@@ -57,5 +57,29 @@ namespace School_API.Controllers.Hr.Timesheet
             if (result.Success) return Ok(result);
             return StatusCode((int)result.StatusCode, result);
         }
+
+        [HttpPut("{id}/submit")]
+        public async Task<IActionResult> Submit(int id)
+        {
+            var result = await _service.SubmitTimesheetAsync(id, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("{id}/approve")]
+        public async Task<IActionResult> Approve(int id, [FromQuery] int approverEmployeeId)
+        {
+            var result = await _service.ApproveTimesheetAsync(id, approverEmployeeId, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("{id}/reject")]
+        public async Task<IActionResult> Reject(int id, [FromQuery] int approverEmployeeId, [FromQuery] string reason)
+        {
+            var result = await _service.RejectTimesheetAsync(id, approverEmployeeId, reason, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }

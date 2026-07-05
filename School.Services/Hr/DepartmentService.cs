@@ -6,6 +6,7 @@ using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs.Common;
 using School_DTOs.Hr;
+using School.Services.Interfaces.Hr;
 using System;
 using System.Collections.Generic;
 using System.Linq;

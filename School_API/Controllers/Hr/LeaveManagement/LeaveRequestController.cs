@@ -57,5 +57,21 @@ namespace School_API.Controllers.Hr.LeaveManagement
             if (result.Success) return Ok(result);
             return StatusCode((int)result.StatusCode, result);
         }
+
+        [HttpPut("{id}/approve")]
+        public async Task<IActionResult> ApproveLeave(int id, [FromQuery] int approverEmployeeId)
+        {
+            var result = await _service.ApproveLeaveAsync(id, approverEmployeeId, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPut("{id}/reject")]
+        public async Task<IActionResult> RejectLeave(int id, [FromQuery] int approverEmployeeId, [FromQuery] string reason)
+        {
+            var result = await _service.RejectLeaveAsync(id, approverEmployeeId, reason, UserName);
+            if (result.Success) return Ok(result);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }

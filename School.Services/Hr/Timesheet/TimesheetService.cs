@@ -91,5 +91,56 @@ namespace School.Services.Hr.Timesheet
             await _unitOfWork.CommitAsync();
             return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
+
+        public async Task<APIResponse<object>> SubmitTimesheetAsync(int id, string username)
+        {
+            var entity = await _repository.List()
+                .Include(x => x.Entries)
+                .Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Timesheet not found" };
+            if (entity.Status != "Draft") return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Only draft timesheets can be submitted" };
+            if (!entity.Entries.Any()) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Cannot submit a timesheet with no entries" };
+
+            entity.TotalHours = entity.Entries.Sum(e => e.HoursWorked);
+            entity.Status = "Submitted";
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = $"Timesheet submitted. Total hours: {entity.TotalHours}" };
+        }
+
+        public async Task<APIResponse<object>> ApproveTimesheetAsync(int id, int approverEmployeeId, string username)
+        {
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Timesheet not found" };
+            if (entity.Status != "Submitted") return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Only submitted timesheets can be approved" };
+
+            entity.Status = "Approved";
+            entity.ApprovedById = approverEmployeeId;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Timesheet approved successfully" };
+        }
+
+        public async Task<APIResponse<object>> RejectTimesheetAsync(int id, int approverEmployeeId, string reason, string username)
+        {
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Timesheet not found" };
+            if (entity.Status != "Submitted") return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Only submitted timesheets can be rejected" };
+
+            entity.Status = "Rejected";
+            entity.ApprovedById = approverEmployeeId;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Timesheet rejected" };
+        }
     }
 }

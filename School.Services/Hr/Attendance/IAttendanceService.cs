@@ -13,5 +13,7 @@ namespace School.Services.Interfaces.Hr.Attendance
         Task<APIResponse<object>> CreateAsync(CreateAttendanceDto dto, string username);
         Task<APIResponse<object>> UpdateAsync(int id, UpdateAttendanceDto dto, string username);
         Task<APIResponse<object>> DeleteAsync(int id, string username);
+        Task<APIResponse<object>> PunchInAsync(int employeeId, string username);
+        Task<APIResponse<object>> PunchOutAsync(int employeeId, string username);
     }
 }

@@ -30,6 +30,9 @@ using School.Infrastructure.Repositories.School;
 using School.Services.Hr.Attendance;
 using School.Services.Hr.LeaveManagement;
 using School.Services.Hr.Timesheet;
+using School.Services.Interfaces.Hr.LeaveManagement;
+using School.Services.Interfaces.Hr.Attendance;
+using School.Services.Interfaces.Hr.Timesheet;
 using School.Services.Hr;
 
 namespace School_API
@@ -181,7 +184,7 @@ namespace School_API
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
             .AddScoped<IFacultyService, FacultyService>()
-            .AddScoped<IDepartmentService, School.Services.DepartmentService>()
+            .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()

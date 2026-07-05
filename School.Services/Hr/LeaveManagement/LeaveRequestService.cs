@@ -16,11 +16,13 @@ namespace School.Services.Hr.LeaveManagement
     public class LeaveRequestService : ILeaveRequestService
     {
         private readonly IRepository<global::School.Domain.Hr.LeaveManagement.LeaveRequest> _repository;
+        private readonly IRepository<global::School.Domain.Hr.LeaveManagement.LeaveBalance> _leaveBalanceRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public LeaveRequestService(IRepository<global::School.Domain.Hr.LeaveManagement.LeaveRequest> repository, IUnitOfWork unitOfWork)
+        public LeaveRequestService(IRepository<global::School.Domain.Hr.LeaveManagement.LeaveRequest> repository, IRepository<global::School.Domain.Hr.LeaveManagement.LeaveBalance> leaveBalanceRepository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _leaveBalanceRepository = leaveBalanceRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -54,7 +56,7 @@ namespace School.Services.Hr.LeaveManagement
             var entity = new global::School.Domain.Hr.LeaveManagement.LeaveRequest
             {
                 EmployeeId = dto.EmployeeId,
-                LeaveTypeId = dto.LeaveTypeId, StartDate = dto.StartDate, EndDate = dto.EndDate, TotalDays = dto.TotalDays, Reason = dto.Reason, Status = dto.Status, ApprovedById = dto.ApprovedById, Remarks = dto.Remarks,
+                LeaveTypeId = dto.LeaveTypeId, StartDate = dto.StartDate, EndDate = dto.EndDate, TotalDays = dto.TotalDays, Reason = dto.Reason, Status = "Pending", ApprovedById = dto.ApprovedById, Remarks = dto.Remarks,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };
@@ -93,6 +95,56 @@ namespace School.Services.Hr.LeaveManagement
             _repository.Delete(entity);
             await _unitOfWork.CommitAsync();
             return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
+        }
+
+        public async Task<APIResponse<object>> ApproveLeaveAsync(int id, int approverEmployeeId, string username)
+        {
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Leave request not found" };
+            if (entity.Status != "Pending") return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Only pending requests can be approved" };
+
+            
+            var leaveBalance = await _leaveBalanceRepository.List()
+                .Where(x => x.EmployeeId == entity.EmployeeId && x.LeaveTypeId == entity.LeaveTypeId && x.Year == DateTime.UtcNow.Year.ToString())
+                .FirstOrDefaultAsync();
+
+            if (leaveBalance == null || leaveBalance.AvailableLeaves < entity.TotalDays)
+            {
+                return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Insufficient leave balance" };
+            }
+
+            leaveBalance.UsedLeaves += entity.TotalDays;
+            leaveBalance.AvailableLeaves -= entity.TotalDays;
+            _leaveBalanceRepository.Update(leaveBalance);
+
+            
+            
+            
+            entity.Status = "Approved";
+            entity.ApprovedById = approverEmployeeId;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Leave approved successfully" };
+        }
+
+        public async Task<APIResponse<object>> RejectLeaveAsync(int id, int approverEmployeeId, string reason, string username)
+        {
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Leave request not found" };
+            if (entity.Status != "Pending") return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Only pending requests can be rejected" };
+
+            entity.Status = "Rejected";
+            entity.ApprovedById = approverEmployeeId;
+            entity.Remarks = reason;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Leave rejected successfully" };
         }
     }
 }

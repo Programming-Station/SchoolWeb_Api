@@ -3,7 +3,7 @@ using School_DTOs;
 using School_DTOs.Hr;
 using System.Threading.Tasks;
 
-namespace School.Services.Interfaces.Hr
+namespace School.Services.Hr
 {
     public interface IDepartmentService
     {
