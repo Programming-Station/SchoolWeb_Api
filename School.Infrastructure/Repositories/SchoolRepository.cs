@@ -11,7 +11,7 @@ using System.Text;
 
 namespace School.Infrastructure.Repositories
 {
-    public class SchoolRepository:Repository<schoolRegistion>, ISchoolRepository
+    public class SchoolRepository:Repository<SchoolRegistration>, ISchoolRepository
     {
         private readonly SchoolDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +21,7 @@ namespace School.Infrastructure.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<schoolRegistion> AddSchoolAsync(schoolRegistion entity)
+        public async Task<SchoolRegistration> AddSchoolAsync(SchoolRegistration entity)
         {
             entity = await AddAsync(entity);
             await _unitOfWork.CommitAsync();
@@ -44,19 +44,24 @@ namespace School.Infrastructure.Repositories
            
         }
 
-        public async Task<IEnumerable<schoolRegistion>> GetAllSchoolsAsync()
+        public async Task<IEnumerable<SchoolRegistration>> GetAllSchoolsAsync()
         {
             return await List(expression: x => !x.IsDeleted).ToListAsync();
         }
 
-        public async Task<schoolRegistion?> GetSchoolByIdAsync(int id)
+        public IQueryable<SchoolRegistration> GetAllSchoolsQueryable()
         {
-            return await FindAsync(expression: x => x.Id == id) ?? new schoolRegistion();
+            return List(expression: x => !x.IsDeleted);
         }
 
-        public async Task<int> UpdateSchoolAsync(schoolRegistion entity)
+        public async Task<SchoolRegistration?> GetSchoolByIdAsync(int id)
         {
-            Attach(entity, updatedProperties: new Expression<Func<schoolRegistion, object>>[]
+            return await FindAsync(expression: x => x.Id == id) ?? new SchoolRegistration();
+        }
+
+        public async Task<int> UpdateSchoolAsync(SchoolRegistration entity)
+        {
+            Attach(entity, updatedProperties: new Expression<Func<SchoolRegistration, object>>[]
             {
                   u => u.SchoolName,
                   u => u.SchoolCode,

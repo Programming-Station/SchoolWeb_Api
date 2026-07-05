@@ -7,13 +7,14 @@ namespace School.Infrastructure.Repositories.IRepositories
 {
     public interface ISchoolRepository
     {
-        Task<IEnumerable<schoolRegistion>> GetAllSchoolsAsync();
+        Task<IEnumerable<SchoolRegistration>> GetAllSchoolsAsync();
+        IQueryable<SchoolRegistration> GetAllSchoolsQueryable();
 
-        Task<schoolRegistion?> GetSchoolByIdAsync(int id);
+        Task<SchoolRegistration?> GetSchoolByIdAsync(int id);
 
-        Task<schoolRegistion> AddSchoolAsync(schoolRegistion entity);
+        Task<SchoolRegistration> AddSchoolAsync(SchoolRegistration entity);
 
-        Task<int> UpdateSchoolAsync(schoolRegistion entity);
+        Task<int> UpdateSchoolAsync(SchoolRegistration entity);
 
         Task<int> DeleteSchoolAsync(int id);
     }

@@ -1,9 +1,9 @@
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
-using School.Infrastructure.UnitOfWork.Interfaces; 
+using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using School.Domain.Location;
 
 namespace School.Infrastructure.Repositories
 {

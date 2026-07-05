@@ -11,5 +11,8 @@ namespace School.Services.Interfaces
         Task<APIResponse<IEnumerable<DropdownDto>>> GetAcademicYearAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetCoursesAsync(int id);
         Task<APIResponse<IEnumerable<RoleDto>>> GetRolesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetAffiliationBoardsAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolTypesAsync();
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolMediumsAsync();
     }
 }

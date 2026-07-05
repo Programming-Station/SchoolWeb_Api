@@ -1,6 +1,6 @@
-using School.Domain;
 using School_DTOs.Menu;
 using School.Models.Menu;
+using School.Domain.AccessControl;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {

@@ -11,8 +11,7 @@ namespace School.Services.School.ISchoolServices
     public interface ISchoolService
     {
         Task<APIResponse<SchoolRegistrationDto>> AddAsync(SchoolRegistrationModel model);
-        Task<APIResponse<IEnumerable<SchoolRegistrationDto>>> GetAllsAsync();
-
+        Task<PagedResponse<SchoolRegistrationDto>> GetAllsAsync(int pageNumber = 1, int pageSize = 10, string? searchTerm = null, bool? isActive = null);
         Task<APIResponse<SchoolRegistrationDto>> GetByIdAsync(int id);
 
        

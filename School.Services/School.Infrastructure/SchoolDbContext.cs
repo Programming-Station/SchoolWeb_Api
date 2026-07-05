@@ -5,6 +5,7 @@ using School.Domain.Auth;
 using School.Domain;
 using School.Domain.Website;
 using School.Domain.Student;
+using School.Domain.School;
 
 namespace School.Infrastructure
 {
@@ -46,6 +47,14 @@ namespace School.Infrastructure
         public DbSet<TeamMember> TeamMembers { get; set; } = null!;
         public DbSet<Enquiry> Enquiries { get; set; } = null!;
         public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+        public DbSet<AffiliationBoard> AffiliationBoards { get; set; } = null!;
+
+        
+        public DbSet<SchoolType> SchoolTypes { get; set; } = null!;
+        public DbSet<SchoolMedium> SchoolMediums { get; set; } = null!;
+        public DbSet<SchoolProfileSetting> SchoolProfileSettings { get; set; } = null!;
+        public DbSet<SchoolSubscription> SchoolSubscriptions { get; set; } = null!;
+        public DbSet<SchoolOwner> SchoolOwners { get; set; } = null!;
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;

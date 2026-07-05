@@ -30,5 +30,10 @@ namespace School_DTOs.School
 
         public bool IsActive { get; set; }
 
+        public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string ContactPersonName { get; set; }
     }
 }

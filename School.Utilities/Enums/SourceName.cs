@@ -7,5 +7,8 @@ namespace School.Utilities.Enums
         Status,
         Course,
         AcademicYear,
+        AffiliationBoard,
+        SchoolType,
+        SchoolMedium
     }
 }

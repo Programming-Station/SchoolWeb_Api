@@ -5,6 +5,9 @@ using School.Domain.Auth;
 using School.Domain;
 using School.Domain.Student;
 using School.Domain.FeeManagnment;
+using School.Domain.School;
+using School.Domain.AccessControl;
+using School.Domain.Location;
 
 namespace School.Infrastructure
 {
@@ -30,6 +33,13 @@ namespace School.Infrastructure
         public DbSet<Affiliated> Affiliateds { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
         public DbSet<StudentRegistration> StudentRegistrations { get; set; } = null!;
+        public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+        public DbSet<AffiliationBoard> AffiliationBoards { get; set; } = null!;
+        public DbSet<SchoolType> SchoolTypes { get; set; } = null!;
+        public DbSet<SchoolMedium> SchoolMediums { get; set; } = null!;
+        public DbSet<SchoolProfileSetting> SchoolProfileSettings { get; set; } = null!;
+        public DbSet<SchoolSubscription> SchoolSubscriptions { get; set; } = null!;
+        public DbSet<SchoolOwner> SchoolOwners { get; set; } = null!;
         public DbSet<StudentExperienceCertificate> StudentExperienceCertificates { get; set; } = null!;
         public DbSet<EducationalDetail> EducationalDetails { get; set; } = null!;
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
@@ -127,8 +137,22 @@ namespace School.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // Disable cascade delete globally to prevent multiple cascade paths (we use soft delete anyway)
+            var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetForeignKeys())
+                .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
-
+            foreach (var fk in cascadeFKs)
+            {
+                // Leave Identity related cascade deletes intact
+                if (fk.DeclaringEntityType.ClrType.Namespace != null &&
+                    !fk.DeclaringEntityType.ClrType.Namespace.Contains("Microsoft.AspNetCore.Identity") &&
+                    fk.DeclaringEntityType.ClrType != typeof(RefreshToken) &&
+                    fk.DeclaringEntityType.ClrType != typeof(LoginHistory))
+                {
+                    fk.DeleteBehavior = DeleteBehavior.NoAction;
+                }
+            }
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

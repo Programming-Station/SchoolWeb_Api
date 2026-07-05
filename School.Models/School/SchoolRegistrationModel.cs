@@ -42,5 +42,16 @@ namespace School.Models.School
 
         public bool IsActive { get; set; }
 
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress]
+        [StringLength(256)]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Phone Number is required.")]
+        [StringLength(20)]
+        public string PhoneNumber { get; set; }
+
+        [StringLength(100)]
+        public string ContactPersonName { get; set; }
     }
 }

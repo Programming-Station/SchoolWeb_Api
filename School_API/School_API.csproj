@@ -118,4 +118,8 @@
     <ProjectReference Include="..\School_DTOs\School_DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="uploads\Images\" />
+  </ItemGroup>
+
 </Project>

@@ -110,12 +110,20 @@ namespace School_API
             .AddTransient<IFacultyRepository, FacultyRepository>()
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
             .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
+            .AddTransient<ISchoolRepository, SchoolRepository>()
+            .AddTransient<ISchoolProfileSettingRepository, SchoolProfileSettingRepository>()
+            .AddTransient<IAffiliationBoardRepository, AffiliationBoardRepository>()
+            .AddTransient<ISchoolTypeRepository, SchoolTypeRepository>()
+            .AddTransient<ISchoolMediumRepository, SchoolMediumRepository>()
+            .AddTransient<ISchoolSubscriptionRepository, SchoolSubscriptionRepository>()
+            .AddTransient<ISchoolOwnerRepository, SchoolOwnerRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services
             .AddScoped<ICurrentUserService, CurrentUserService>()
+            .AddScoped<ITenantService, TenantService>()
             .AddHttpContextAccessor()
             .AddScoped<IJWTAuthenticationManager, JWTAuthenticationManager>()
             .AddScoped<IAccountService, AccountService>()
@@ -140,6 +148,13 @@ namespace School_API
             .AddScoped<IDepartmentService, DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolProfileSettingService, School.Services.School.SchoolProfileSettingService>()
+            .AddScoped<School.Services.School.ISchoolServices.IAffiliationBoardService, School.Services.School.AffiliationBoardService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolTypeService, School.Services.School.SchoolTypeService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolMediumService, School.Services.School.SchoolMediumService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolSubscriptionService, School.Services.School.SchoolSubscriptionService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolOwnerService, School.Services.School.SchoolOwnerService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

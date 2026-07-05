@@ -30,6 +30,27 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
+            if (!context.SchoolMediums.Any())
+            {
+                var mediums = DefaultMasterData.SchoolMediumList();
+                context.SchoolMediums.AddRange(mediums);
+                context.SaveChanges();
+            }
+
+            if (!context.SchoolTypes.Any())
+            {
+                var types = DefaultMasterData.SchoolTypeList();
+                context.SchoolTypes.AddRange(types);
+                context.SaveChanges();
+            }
+
+            if (!context.AffiliationBoards.Any())
+            {
+                var boards = DefaultMasterData.AffiliationBoardList();
+                context.AffiliationBoards.AddRange(boards);
+                context.SaveChanges();
+            }
+
             var existingCategoryNames = context.CategoryModules
                 .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
@@ -113,17 +134,17 @@ namespace School.Infrastructure
                     });
                 }
             }
-            var onwerUser = allUsers.FirstOrDefault(u =>
-               u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "ONWER");
+            var ownerUser = allUsers.FirstOrDefault(u =>
+               u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "OWNER");
             var ownerRole = allRoles.FirstOrDefault(r =>
-                r.NormalizedName != null && r.NormalizedName.ToUpper() == "ONWER");
-            if (onwerUser != null && ownerRole != null)
+                r.NormalizedName != null && r.NormalizedName.ToUpper() == "OWNER");
+            if (ownerUser != null && ownerRole != null)
             {
-                if (!existingUserRoles.Any(ur => ur.UserId == onwerUser.Id && ur.RoleId == ownerRole.Id))
+                if (!existingUserRoles.Any(ur => ur.UserId == ownerUser.Id && ur.RoleId == ownerRole.Id))
                 {
                     userRoleMappings.Add(new IdentityUserRole<string>
                     {
-                        UserId = onwerUser.Id,
+                        UserId = ownerUser.Id,
                         RoleId = ownerRole.Id
                     });
                 }

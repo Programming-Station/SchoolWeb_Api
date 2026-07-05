@@ -23,7 +23,7 @@ namespace School.Infrastructure.Repositories
         public async Task<FeeType> AddFeeTypeAsync(FeeType entity)
         {
             var existingFeeType = await DbSet.FirstOrDefaultAsync(x => x.Name.ToUpper() == entity.Name.ToLower() &&
-                                                                  x.SchoolId==entity.SchoolId);
+                                                                  x.SchoolRegistrationId==entity.SchoolRegistrationId);
             if(existingFeeType != null)
             {
                 existingFeeType.Id = 0;
@@ -38,7 +38,7 @@ namespace School.Infrastructure.Repositories
         public async Task<IEnumerable<FeeType>> GetFeeTypeBySchoolIdAsync(int? schoolId =null)
         {
             return schoolId == null ? await List(expression: x => !x.IsDeleted).ToListAsync() :
-                await List(expression: x => !x.IsDeleted && x.SchoolId == schoolId).ToListAsync();
+                await List(expression: x => !x.IsDeleted && x.SchoolRegistrationId == schoolId).ToListAsync();
         }
 
         public async Task<int> UpdateFeeTypeBySchoolIdAsync(FeeType entity)

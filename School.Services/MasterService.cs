@@ -150,10 +150,49 @@ namespace School.Services
             };
         }
 
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetAffiliationBoardsAsync()
+        {
+            var data = await _dbContext.AffiliationBoards
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .Select(x => new DropdownDto { Id = x.Id, Name = x.Name })
+                .ToListAsync();
 
+            return new APIResponse<IEnumerable<DropdownDto>>
+            {
+                Data = data,
+                Success = true,
+                StatusCode = HttpStatusCode.OK
+            };
+        }
 
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolTypesAsync()
+        {
+            var data = await _dbContext.SchoolTypes
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .Select(x => new DropdownDto { Id = x.Id, Name = x.Name })
+                .ToListAsync();
 
+            return new APIResponse<IEnumerable<DropdownDto>>
+            {
+                Data = data,
+                Success = true,
+                StatusCode = HttpStatusCode.OK
+            };
+        }
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolMediumsAsync()
+        {
+            var data = await _dbContext.SchoolMediums
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .Select(x => new DropdownDto { Id = x.Id, Name = x.Name })
+                .ToListAsync();
 
+            return new APIResponse<IEnumerable<DropdownDto>>
+            {
+                Data = data,
+                Success = true,
+                StatusCode = HttpStatusCode.OK
+            };
+        }
 
         private bool TryGetFromCache<T>(string key, out T? value)
         {

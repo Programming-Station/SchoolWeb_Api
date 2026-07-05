@@ -85,6 +85,15 @@ namespace School_API.Controllers
                 case SourceName.AcademicYear:
                     res = await _masterService.GetAcademicYearAsync();
                     break;
+                case SourceName.AffiliationBoard:
+                    res = await _masterService.GetAffiliationBoardsAsync();
+                    break;
+                case SourceName.SchoolType:
+                    res = await _masterService.GetSchoolTypesAsync();
+                    break;
+                case SourceName.SchoolMedium:
+                    res = await _masterService.GetSchoolMediumsAsync();
+                    break;
 
                 default:
                     return Ok(new APIResponse<List<DropdownDto>>
@@ -125,6 +134,26 @@ namespace School_API.Controllers
             return Ok(res);
         }         
         
+        [HttpGet]
+        public async Task<IActionResult> GetAffiliationBoards()
+        {
+            var res = await _masterService.GetAffiliationBoardsAsync();
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolTypes()
+        {
+            var res = await _masterService.GetSchoolTypesAsync();
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolMediums()
+        {
+            var res = await _masterService.GetSchoolMediumsAsync();
+            return Ok(res);
+        }
     }
 
 }

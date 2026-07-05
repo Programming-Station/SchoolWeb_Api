@@ -60,6 +60,22 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                },
+                new ApplicationUser
+                {
+                    Id = Constants.OwnerUser,
+                    UserName = "owner",
+                    Email = "owner@gmail.com",
+                    FirstName = "School",
+                    LastName = "Owner",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "OWNER@GMAIL.COM",
+                    NormalizedUserName = "OWNER",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
                 }
             };
         }

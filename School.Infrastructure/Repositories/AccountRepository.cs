@@ -118,6 +118,20 @@ namespace School.Infrastructure.Repositories
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
 
+                if (role == "SchoolOwner")
+                {
+                    var owner = await _context.SchoolOwners.FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id);
+                    if (owner == null || owner.SchoolSubscriptionId == null)
+                    {
+                        return new APIResponse<LoginResponseDto>
+                        {
+                            Message = "No active subscription found. Please renew your subscription to continue.",
+                            StatusCode = HttpStatusCode.Forbidden,
+                            Success = false
+                        };
+                    }
+                }
+
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),

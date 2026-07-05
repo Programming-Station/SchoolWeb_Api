@@ -1,5 +1,5 @@
 using AutoMapper;
-using School.Domain;
+using School.Domain.AccessControl;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.Menu;
 using School.Services.Interfaces;

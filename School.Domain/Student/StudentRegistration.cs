@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Student
@@ -104,6 +105,10 @@ namespace School.Domain.Student
         
         [ForeignKey(nameof(CourseId))]
         public virtual Course Course { get; set; } = null!; 
+
+        public int SchoolRegistrationId { get; set; }
+        [ForeignKey(nameof(SchoolRegistrationId))]
+        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
 

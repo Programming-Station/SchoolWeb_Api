@@ -1,5 +1,4 @@
 using AutoMapper;
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.Module;
 using School.Services.Interfaces;
@@ -9,6 +8,7 @@ using School_DTOs.Module;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using School.Infrastructure;
+using School.Domain.AccessControl;
 
 namespace School.Services
 {
