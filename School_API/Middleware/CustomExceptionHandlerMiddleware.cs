@@ -149,7 +149,7 @@ namespace School_API.Middleware
                 errorMessage += $" | Inner: {exception.InnerException.Message}";
             }
 
-            response.Error = new APIException(errorMessage, exception);
+            response.Error = new APIException(errorMessage ?? "An error occurred", exception);
 
             if (!isDevelopment && code == HttpStatusCode.InternalServerError)
             {

@@ -130,12 +130,7 @@ namespace School.Services
                                 c.ConstantColumn(100); // Photo
                             });
 
-                            void Cell(string title, string value)
-                            {
-                                table.Cell().Element(CellStyle).Text(title).Bold();
-                                table.Cell().Element(CellStyle).Text(value);
-                                table.Cell().Element(CellStyle); // leave photo cell blank
-                            }
+
 
                             table.Cell().Element(CellStyle).Text("Registration No").Bold();
                             table.Cell().Element(CellStyle).Text(registration.CouncilEnrollmentNo ?? $"PMCI/{registration.Id}/25");

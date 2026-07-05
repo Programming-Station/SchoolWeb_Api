@@ -30,7 +30,7 @@ namespace School.Infrastructure.Repositories
             return await FindAsync(x => x.Id == id);
         }
 
-        public async Task<int> AddAsync(AffiliationBoard entity)
+        public new async Task<int> AddAsync(AffiliationBoard entity)
         {
             await _context.Set<AffiliationBoard>().AddAsync(entity);
             return await _unitOfWork.CommitAsync();
@@ -63,4 +63,5 @@ namespace School.Infrastructure.Repositories
         }
     }
 }
+
 

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using School.Domain.Auth;
 using School.Infrastructure;
@@ -90,16 +91,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddDistributedMemoryCache();
 
-using (var tempServiceProvider = builder.Services.BuildServiceProvider())
-{
-    var loggerFactory = tempServiceProvider.GetRequiredService<ILoggerFactory>();
-    var config = new MapperConfiguration(cfg =>
-    {
-        cfg.AddProfile(new AutoMapperProfile());
-    }, loggerFactory);
-    var mapper = config.CreateMapper();
-    builder.Services.AddSingleton(mapper);
-}
+builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -195,4 +187,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
 

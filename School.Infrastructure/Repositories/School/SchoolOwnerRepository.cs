@@ -30,7 +30,7 @@ namespace School.Infrastructure.Repositories
             return await FindAsync(x => x.Id == id);
         }
 
-        public async Task<int> AddAsync(SchoolOwner entity)
+        public new async Task<int> AddAsync(SchoolOwner entity)
         {
             await _context.Set<SchoolOwner>().AddAsync(entity);
             return await _unitOfWork.CommitAsync();
@@ -68,4 +68,5 @@ namespace School.Infrastructure.Repositories
         }
     }
 }
+
 
