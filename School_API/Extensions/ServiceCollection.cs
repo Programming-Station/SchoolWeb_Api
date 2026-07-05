@@ -26,7 +26,7 @@ namespace School_API
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextPool<SchoolDbContext>(options =>
+            services.AddDbContext<SchoolDbContext>(options =>
                 options.UseSqlServer(configuration?.GetConnectionString("SchoolConnection") ?? string.Empty));
 
             services.AddScoped<Func<SchoolDbContext>>((provider) => () => provider.GetService<SchoolDbContext>()!);
