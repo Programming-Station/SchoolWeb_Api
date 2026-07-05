@@ -19,9 +19,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using School_API.Common.Interface;
 using School_API.Common;
 using School_API.Middleware;
-using School.Infrastructure.Repositories.IRepositories.Hr.LeaveManagement;
-using School.Infrastructure.Repositories.IRepositories.Hr.Attendance;
-using School.Infrastructure.Repositories.IRepositories.Hr.Timesheet;
+
+
+
 
 using School.Infrastructure.Repositories.Hr.Attendance;
 using School.Infrastructure.Repositories.Hr.LeaveManagement;

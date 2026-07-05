@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr;
@@ -10,85 +9,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using School_DTOs;
 
 namespace School.Services.Hr
 {
     public class EmployeeBankDetailService : IEmployeeBankDetailService
     {
-        private readonly IRepository<EmployeeBankDetail> _repository;
+        private readonly IRepository<global::School.Domain.Hr.EmployeeBankDetail> _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeeBankDetailService(IRepository<EmployeeBankDetail> repository, IUnitOfWork unitOfWork)
+        public EmployeeBankDetailService(IRepository<global::School.Domain.Hr.EmployeeBankDetail> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<List<EmployeeBankDetailDto>>> GetAllByEmployeeIdAsync(int employeeId)
+        public async Task<APIResponse<List<EmployeeBankDetailDto>>> GetAllByEmployeeIdAsync(int fkId)
         {
-            var data = await _repository.GetAll().Where(x => x.EmployeeId == employeeId).Select(x => new EmployeeBankDetailDto
+            var data = await _repository.List().Where(x => x.EmployeeId == fkId).Select(x => new EmployeeBankDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                BankName = x.BankName, AccountNumber = x.AccountNumber, IfscCode = x.IfscCode, Branch = x.Branch
+                BankName = x.BankName, AccountNumber = x.AccountNumber, IFSC = x.IFSC, Branch = x.Branch
             }).ToListAsync();
 
-            return new APIResponse<List<EmployeeBankDetailDto>>(HttpStatusCode.OK, "Success", data);
+            return new APIResponse<List<EmployeeBankDetailDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<EmployeeBankDetailDto>> GetByIdAsync(int id)
         {
-            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new EmployeeBankDetailDto
+            var data = await _repository.List().Where(x => x.Id == id).Select(x => new EmployeeBankDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                BankName = x.BankName, AccountNumber = x.AccountNumber, IfscCode = x.IfscCode, Branch = x.Branch
+                BankName = x.BankName, AccountNumber = x.AccountNumber, IFSC = x.IFSC, Branch = x.Branch
             }).FirstOrDefaultAsync();
 
-            if (data == null) return new APIResponse<EmployeeBankDetailDto>(HttpStatusCode.NotFound, "Not found");
-            return new APIResponse<EmployeeBankDetailDto>(HttpStatusCode.OK, "Success", data);
+            if (data == null) return new APIResponse<EmployeeBankDetailDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            return new APIResponse<EmployeeBankDetailDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<object>> CreateAsync(CreateEmployeeBankDetailDto dto, string username)
         {
-            var entity = new EmployeeBankDetail
+            var entity = new global::School.Domain.Hr.EmployeeBankDetail
             {
                 EmployeeId = dto.EmployeeId,
-                BankName = dto.BankName, AccountNumber = dto.AccountNumber, IfscCode = dto.IfscCode, Branch = dto.Branch,
+                BankName = dto.BankName, AccountNumber = dto.AccountNumber, IFSC = dto.IFSC, Branch = dto.Branch,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
         }
 
         public async Task<APIResponse<object>> UpdateAsync(int id, UpdateEmployeeBankDetailDto dto, string username)
         {
-            if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            if (id != dto.Id) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Id mismatch" };
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
 
             entity.EmployeeId = dto.EmployeeId;
             entity.BankName = dto.BankName;
             entity.AccountNumber = dto.AccountNumber;
-            entity.IfscCode = dto.IfscCode;
+            entity.IFSC = dto.IFSC;
             entity.Branch = dto.Branch;
             entity.UpdatedBy = username;
             entity.UpdatedDate = DateTime.UtcNow;
 
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Updated successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
         }
 
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
-            _repository.Remove(entity);
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            _repository.Delete(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Deleted successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
     }
 }

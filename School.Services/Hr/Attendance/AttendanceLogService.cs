@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain.Hr.Attendance;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.Attendance;
@@ -10,48 +9,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using School_DTOs;
 
 namespace School.Services.Hr.Attendance
 {
     public class AttendanceLogService : IAttendanceLogService
     {
-        private readonly IRepository<AttendanceLog> _repository;
+        private readonly IRepository<global::School.Domain.Hr.Attendance.AttendanceLog> _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AttendanceLogService(IRepository<AttendanceLog> repository, IUnitOfWork unitOfWork)
+        public AttendanceLogService(IRepository<global::School.Domain.Hr.Attendance.AttendanceLog> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<List<AttendanceLogDto>>> GetAllByEmployeeIdAsync(int foreignKeyId)
+        public async Task<APIResponse<List<AttendanceLogDto>>> GetAllByEmployeeIdAsync(int fkId)
         {
-            var data = await _repository.GetAll().Where(x => x.EmployeeId == foreignKeyId).Select(x => new AttendanceLogDto
+            var data = await _repository.List().Where(x => x.EmployeeId == fkId).Select(x => new AttendanceLogDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
                 LogTime = x.LogTime, LogType = x.LogType, Source = x.Source, DeviceId = x.DeviceId
             }).ToListAsync();
 
-            return new APIResponse<List<AttendanceLogDto>>(HttpStatusCode.OK, "Success", data);
+            return new APIResponse<List<AttendanceLogDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<AttendanceLogDto>> GetByIdAsync(int id)
         {
-            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new AttendanceLogDto
+            var data = await _repository.List().Where(x => x.Id == id).Select(x => new AttendanceLogDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
                 LogTime = x.LogTime, LogType = x.LogType, Source = x.Source, DeviceId = x.DeviceId
             }).FirstOrDefaultAsync();
 
-            if (data == null) return new APIResponse<AttendanceLogDto>(HttpStatusCode.NotFound, "Not found");
-            return new APIResponse<AttendanceLogDto>(HttpStatusCode.OK, "Success", data);
+            if (data == null) return new APIResponse<AttendanceLogDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            return new APIResponse<AttendanceLogDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<object>> CreateAsync(CreateAttendanceLogDto dto, string username)
         {
-            var entity = new AttendanceLog
+            var entity = new global::School.Domain.Hr.Attendance.AttendanceLog
             {
                 EmployeeId = dto.EmployeeId,
                 LogTime = dto.LogTime, LogType = dto.LogType, Source = dto.Source, DeviceId = dto.DeviceId,
@@ -60,14 +60,14 @@ namespace School.Services.Hr.Attendance
             };
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
         }
 
         public async Task<APIResponse<object>> UpdateAsync(int id, UpdateAttendanceLogDto dto, string username)
         {
-            if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            if (id != dto.Id) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Id mismatch" };
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
 
             entity.EmployeeId = dto.EmployeeId;
             entity.LogTime = dto.LogTime;
@@ -79,16 +79,16 @@ namespace School.Services.Hr.Attendance
 
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Updated successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
         }
 
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
-            _repository.Remove(entity);
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            _repository.Delete(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Deleted successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
     }
 }

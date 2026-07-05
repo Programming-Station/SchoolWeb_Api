@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr;
@@ -10,86 +9,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using School_DTOs;
 
 namespace School.Services.Hr
 {
     public class EmployeeDetailService : IEmployeeDetailService
     {
-        private readonly IRepository<EmployeeDetail> _repository;
+        private readonly IRepository<global::School.Domain.Hr.EmployeeDetail> _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeeDetailService(IRepository<EmployeeDetail> repository, IUnitOfWork unitOfWork)
+        public EmployeeDetailService(IRepository<global::School.Domain.Hr.EmployeeDetail> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<List<EmployeeDetailDto>>> GetAllByEmployeeIdAsync(int employeeId)
+        public async Task<APIResponse<List<EmployeeDetailDto>>> GetAllByEmployeeIdAsync(int fkId)
         {
-            var data = await _repository.GetAll().Where(x => x.EmployeeId == employeeId).Select(x => new EmployeeDetailDto
+            var data = await _repository.List().Where(x => x.EmployeeId == fkId).Select(x => new EmployeeDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                FatherName = x.FatherName, MotherName = x.MotherName, SpouseName = x.SpouseName, AadhaarNumber = x.AadhaarNumber, PanNumber = x.PanNumber
+                FatherName = x.FatherName, MotherName = x.MotherName, AadhaarNumber = x.AadhaarNumber, PANNumber = x.PANNumber
             }).ToListAsync();
 
-            return new APIResponse<List<EmployeeDetailDto>>(HttpStatusCode.OK, "Success", data);
+            return new APIResponse<List<EmployeeDetailDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<EmployeeDetailDto>> GetByIdAsync(int id)
         {
-            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new EmployeeDetailDto
+            var data = await _repository.List().Where(x => x.Id == id).Select(x => new EmployeeDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                FatherName = x.FatherName, MotherName = x.MotherName, SpouseName = x.SpouseName, AadhaarNumber = x.AadhaarNumber, PanNumber = x.PanNumber
+                FatherName = x.FatherName, MotherName = x.MotherName, AadhaarNumber = x.AadhaarNumber, PANNumber = x.PANNumber
             }).FirstOrDefaultAsync();
 
-            if (data == null) return new APIResponse<EmployeeDetailDto>(HttpStatusCode.NotFound, "Not found");
-            return new APIResponse<EmployeeDetailDto>(HttpStatusCode.OK, "Success", data);
+            if (data == null) return new APIResponse<EmployeeDetailDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            return new APIResponse<EmployeeDetailDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<object>> CreateAsync(CreateEmployeeDetailDto dto, string username)
         {
-            var entity = new EmployeeDetail
+            var entity = new global::School.Domain.Hr.EmployeeDetail
             {
                 EmployeeId = dto.EmployeeId,
-                FatherName = dto.FatherName, MotherName = dto.MotherName, SpouseName = dto.SpouseName, AadhaarNumber = dto.AadhaarNumber, PanNumber = dto.PanNumber,
+                FatherName = dto.FatherName, MotherName = dto.MotherName, AadhaarNumber = dto.AadhaarNumber, PANNumber = dto.PANNumber,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
         }
 
         public async Task<APIResponse<object>> UpdateAsync(int id, UpdateEmployeeDetailDto dto, string username)
         {
-            if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            if (id != dto.Id) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Id mismatch" };
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
 
             entity.EmployeeId = dto.EmployeeId;
             entity.FatherName = dto.FatherName;
             entity.MotherName = dto.MotherName;
-            entity.SpouseName = dto.SpouseName;
-            entity.AadhaarNumber = dto.AadhaarNumber;
-            entity.PanNumber = dto.PanNumber;
+                        entity.AadhaarNumber = dto.AadhaarNumber;
+            entity.PANNumber = dto.PANNumber;
             entity.UpdatedBy = username;
             entity.UpdatedDate = DateTime.UtcNow;
 
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Updated successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
         }
 
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
-            _repository.Remove(entity);
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            _repository.Delete(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Deleted successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
     }
 }

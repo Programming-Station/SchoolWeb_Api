@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain;
+using School.Domain.Hr;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr;
@@ -30,12 +31,12 @@ namespace School.Services.Hr
 
         public async Task<APIResponse<PagedResponse<DepartmentDto>>> GetAllAsync(PaginationFilterDto filter)
         {
-            var query = _repository.GetAll().Include(x => x.Faculty).AsNoTracking();
+            var query = _repository.List().Include(x => x.Faculty).AsNoTracking();
             if (!string.IsNullOrEmpty(filter.SearchText))
                 query = query.Where(x => x.Name.Contains(filter.SearchText) || (x.Code != null && x.Code.Contains(filter.SearchText)));
 
-            if (!string.IsNullOrEmpty(filter.Status))
-                query = query.Where(x => x.Status == filter.Status);
+            // if (!string.IsNullOrEmpty(filter.Status))
+                // query = query.Where(x => x.Status == filter.Status);
 
             var totalRecords = await query.CountAsync();
             var data = await query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Name)
@@ -54,12 +55,12 @@ namespace School.Services.Hr
                 })
                 .ToListAsync();
 
-            return new APIResponse<PagedResponse<DepartmentDto>>(HttpStatusCode.OK, "Success", new PagedResponse<DepartmentDto>(data, totalRecords, filter.PageNumber, filter.PageSize));
+            return new APIResponse<PagedResponse<DepartmentDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = new PagedResponse<DepartmentDto> { Data = data, TotalRecords = totalRecords, CurrentPage = filter.PageNumber, PageSize = filter.PageSize } };
         }
 
         public async Task<APIResponse<DepartmentDto>> GetByIdAsync(int id)
         {
-            var data = await _repository.GetAll().Include(x => x.Faculty).Where(x => x.Id == id).Select(x => new DepartmentDto
+            var data = await _repository.List().Include(x => x.Faculty).Where(x => x.Id == id).Select(x => new DepartmentDto
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -72,8 +73,8 @@ namespace School.Services.Hr
             }).FirstOrDefaultAsync();
 
             if (data == null)
-                return new APIResponse<DepartmentDto>(HttpStatusCode.NotFound, "Not found");
-            return new APIResponse<DepartmentDto>(HttpStatusCode.OK, "Success", data);
+                return new APIResponse<DepartmentDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            return new APIResponse<DepartmentDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
         }
 
         public async Task<APIResponse<object>> CreateAsync(CreateDepartmentDto dto, string username)
@@ -91,14 +92,14 @@ namespace School.Services.Hr
             };
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
         }
 
         public async Task<APIResponse<object>> UpdateAsync(int id, UpdateDepartmentDto dto, string username)
         {
-            if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            if (id != dto.Id) return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Id mismatch" };
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
 
             entity.Name = dto.Name;
             entity.Code = dto.Code;
@@ -111,28 +112,28 @@ namespace School.Services.Hr
 
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Updated successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
         }
 
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
-            _repository.Remove(entity);
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
+            _repository.Delete(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Deleted successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
 
         public async Task<APIResponse<object>> ToggleStatusAsync(int id, string username)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            var entity = await _repository.List().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
             entity.Status = entity.Status == "active" ? "inactive" : "active";
             entity.UpdatedBy = username;
             entity.UpdatedDate = DateTime.UtcNow;
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            return new APIResponse<object>(HttpStatusCode.OK, "Status toggled successfully");
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Status toggled successfully" };
         }
     }
 }
