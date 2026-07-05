@@ -7,8 +7,10 @@ using School.Infrastructure.JWTAuthenticationManager;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.Repositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
+using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School.Services;
+using School_API.Filters;
 using School.Infrastructure.UnitOfWork;
 using School_API;
 using School.Infrastructure;
@@ -124,6 +126,7 @@ namespace School_API
             return services
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<ITenantService, TenantService>()
+            .AddScoped<IPermissionService, PermissionService>()
             .AddHttpContextAccessor()
             .AddScoped<IJWTAuthenticationManager, JWTAuthenticationManager>()
             .AddScoped<IAccountService, AccountService>()
@@ -202,4 +205,7 @@ namespace School_API
         }
     }
 }
+
+
+
 

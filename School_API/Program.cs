@@ -120,7 +120,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         MaxFailedAccessAttempts = Convert.ToInt32(appSettings?.InvalidAllowedLoginAttempts ?? "5")
     };
 
-    options.SignIn.RequireConfirmedEmail = false; // Set to true in production
+    options.SignIn.RequireConfirmedEmail = true;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<SchoolDbContext>()
@@ -189,9 +189,10 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<SchoolDbContext>();
 
-    dbContext.Database.EnsureCreated();
+    dbContext.Database.Migrate();
 
     DbInitializer.Seed(dbContext);
 }
 
 app.Run();
+

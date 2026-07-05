@@ -132,13 +132,20 @@ namespace School.Infrastructure.Repositories
                     }
                 }
 
-                var claims = new[]
+                var claimsList = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName! ?? user.Email!),
                     new Claim(ClaimTypes.Email, user.Email ?? ""),
                     new Claim(ClaimTypes.Role, role)
                 };
+
+                if (user.SchoolRegistrationId.HasValue)
+                {
+                    claimsList.Add(new Claim("TenantId", user.SchoolRegistrationId.Value.ToString()));
+                }
+
+                var claims = claimsList.ToArray();
 
                 var authResponse = await _jWTAuthenticationManager.Authenticate(user.Id ?? user.Email!, claims);
 
@@ -322,13 +329,20 @@ namespace School.Infrastructure.Repositories
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
 
-                var claims = new[]
+                var claimsList = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName ?? user.Email!),
                     new Claim(ClaimTypes.Email, user.Email ?? ""),
                     new Claim(ClaimTypes.Role, role)
                 };
+
+                if (user.SchoolRegistrationId.HasValue)
+                {
+                    claimsList.Add(new Claim("TenantId", user.SchoolRegistrationId.Value.ToString()));
+                }
+
+                var claims = claimsList.ToArray();
 
                 var authResponse = await _jWTAuthenticationManager.Authenticate(user.Id ?? user.Email!, claims);
 

@@ -7,7 +7,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
-    public class SchoolOwner : AuditEntity<int>
+    public class SchoolOwner : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -39,3 +39,4 @@ namespace School.Domain.School
         public bool IsLocked { get; set; }
     }
 }
+

@@ -4,7 +4,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
-    public class SchoolProfileSetting : AuditEntity<int>
+    public class SchoolProfileSetting : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -37,3 +37,4 @@ namespace School.Domain.School
         public virtual SchoolMedium? PrimaryMedium { get; set; }
     }
 }
+

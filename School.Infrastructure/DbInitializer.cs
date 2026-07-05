@@ -1,4 +1,6 @@
 using School.Domain;
+using School.Domain.Location;
+using School.Domain.School;
 using School.Domain.Auth;
 using School.Infrastructure.Seeds;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +13,11 @@ namespace School.Infrastructure
         public static void Seed(SchoolDbContext context)
         {
             var existingRoleNames = context.Roles
-                .Select(r => r.NormalizedName.ToUpper())
+                .Select(r => r.NormalizedName != null ? r.NormalizedName.ToUpper() : string.Empty)
                 .ToList();
             var defaultRoles = DefaultRoles.IdentityRoleList();
             var newRoles = defaultRoles
-                .Where(r => !existingRoleNames.Contains(r.NormalizedName.ToUpper()))
+                .Where(r => r.NormalizedName != null && !existingRoleNames.Contains(r.NormalizedName.ToUpper()))
                 .ToList();
             if (newRoles.Any())
             {
@@ -66,7 +68,7 @@ namespace School.Infrastructure
             }
 
             var existingUserEmails = context.Users
-                .Select(u => u.NormalizedEmail.ToUpper())
+                .Select(u => u.NormalizedEmail != null ? u.NormalizedEmail.ToUpper() : string.Empty)
                 .ToList();
             var defaultUsers = DefaultUser.IdentityBasicUserList();
             var newUsers = defaultUsers
@@ -155,6 +157,94 @@ namespace School.Infrastructure
                 context.UserRoles.AddRange(userRoleMappings);
                 context.SaveChanges();
             }
+
+            DefaultLocationData.SeedAsync(context).Wait();
+
+            if (!context.States.Any())
+            {
+                var countryId = context.Countries.First().Id;
+                var state = new State { Name = "Maharashtra", StateCode = "MH", CountryId = countryId, IsActive = true };
+                context.States.Add(state);
+                context.SaveChanges();
+            }
+
+            if (!context.Cities.Any())
+            {
+                var stateId = context.States.First().Id;
+                var city = new City { Name = "Mumbai", CityCode = "MUM", StateId = stateId, IsActive = true };
+                context.Cities.Add(city);
+                context.SaveChanges();
+            }
+
+            if (!context.SchoolRegistrations.Any())
+            {
+                var defaultState = context.States.First();
+                var defaultCity = context.Cities.First();
+                var defaultMedium = context.SchoolMediums.FirstOrDefault()?.Id ?? 1;
+                var defaultType = context.SchoolTypes.FirstOrDefault()?.Id ?? 1;
+                var defaultBoard = context.AffiliationBoards.FirstOrDefault()?.Id ?? 1;
+
+                var school = new SchoolRegistration
+                {
+                    SchoolName = "Default School",
+                    SchoolCode = "DEF001",
+                    Address = "123 Default Street",
+                    Email = "info@defaultschool.com",
+                    PhoneNumber = "1234567890",
+                    CityId = defaultCity.Id,
+                    StateId = defaultState.Id,
+                    IsActive = true,
+                    RegistrationDate = DateTime.UtcNow,
+                    ContactPersonName = "School Owner",
+                    ApprovalStatus = "Approved",
+                    SubDomain = "default",
+                    AffiliationBoardId = defaultBoard,
+                    SchoolTypeId = defaultType
+                };
+                context.SchoolRegistrations.Add(school);
+                context.SaveChanges();
+
+                var schoolOwnerUser = context.Users.FirstOrDefault(u => u.NormalizedUserName == "OWNER");
+                if (schoolOwnerUser != null)
+                {
+                    var owner = new SchoolOwner
+                    {
+                        SchoolRegistrationId = school.Id,
+                        ApplicationUserId = schoolOwnerUser.Id,
+                        StatusId = 1,
+                        EmailVerified = true,
+                        MobileVerified = true,
+                        IsLocked = false
+                    };
+                    context.SchoolOwners.Add(owner);
+
+                    var subscription = new SchoolSubscription
+                    {
+                        SchoolRegistrationId = school.Id,
+                        SubscriptionPlanId = 1,
+                        StartDate = DateTime.UtcNow,
+                        EndDate = DateTime.UtcNow.AddYears(1),
+                        AmountPaid = 0,
+                        PaymentStatus = "Free",
+                        IsActive = true
+                    };
+                    context.SchoolSubscriptions.Add(subscription);
+                    
+                    var profileSetting = new SchoolProfileSetting
+                    {
+                        SchoolRegistrationId = school.Id,
+                        Tagline = "A Great Place to Learn",
+                        PrimaryMediumId = defaultMedium
+                    };
+                    context.SchoolProfileSettings.Add(profileSetting);
+
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
+
+
+
+

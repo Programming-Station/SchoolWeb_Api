@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
-    public class SchoolSubscription : AuditEntity<int>
+    public class SchoolSubscription : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -30,3 +30,4 @@ namespace School.Domain.School
         public bool IsActive { get; set; } = true;
     }
 }
+

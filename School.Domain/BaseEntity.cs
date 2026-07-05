@@ -11,6 +11,11 @@ namespace School.Domain
         {
         }
 
+        public interface ITenantEntity
+        {
+            int SchoolRegistrationId { get; set; }
+        }
+
         public interface IAuditEntity
         {
             DateTime? CreatedDate { get; set; }

@@ -9,7 +9,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.FeeManagnment
 {
-    public class FeeType : AuditEntity<int>
+    public class FeeType : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -24,3 +24,4 @@ namespace School.Domain.FeeManagnment
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+

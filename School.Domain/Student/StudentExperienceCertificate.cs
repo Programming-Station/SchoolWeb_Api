@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Student
 {
-    public class StudentExperienceCertificate : AuditEntity<int>
+    public class StudentExperienceCertificate : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; } 
@@ -25,4 +25,5 @@ namespace School.Domain.Student
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+
 

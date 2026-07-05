@@ -68,7 +68,8 @@ namespace School.Services.School
                         FirstName = string.IsNullOrWhiteSpace(model.ContactPersonName) ? "School Admin" : model.ContactPersonName,
                         LastName = string.Empty,
                         IsDefaultPassword = true,
-                        PasswordUpdatedOn = null
+                        PasswordUpdatedOn = null,
+                        SchoolRegistrationId = entity.Id
                     };
 
                     var result = await _userManager.CreateAsync(user, "SchoolAdmin@123");

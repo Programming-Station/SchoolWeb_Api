@@ -8,13 +8,18 @@ using School.Domain.FeeManagnment;
 using School.Domain.School;
 using School.Domain.AccessControl;
 using School.Domain.Location;
+using School.Infrastructure.Interfaces;
 
 namespace School.Infrastructure
 {
     public class SchoolDbContext : IdentityDbContext<ApplicationUser>
     {
-        public SchoolDbContext(DbContextOptions<SchoolDbContext> options) : base(options)
+        private readonly ITenantService _tenantService;
+        public int? CurrentTenantId => _tenantService?.GetTenantId();
+
+        public SchoolDbContext(DbContextOptions<SchoolDbContext> options, ITenantService tenantService = null) : base(options)
         {
+            _tenantService = tenantService;
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
@@ -30,6 +35,7 @@ namespace School.Infrastructure
         public DbSet<Class> Classes { get; set; } = null!;
         public DbSet<City> Cities { get; set; } = null!;
         public DbSet<State> States { get; set; } = null!;
+        public DbSet<Country> Countries { get; set; } = null!;
         public DbSet<Affiliated> Affiliateds { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
         public DbSet<StudentRegistration> StudentRegistrations { get; set; } = null!;
@@ -168,7 +174,14 @@ namespace School.Infrastructure
 
         private void SetGlobalQueryFilterForSoftDelete<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
         {
-            builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+            if (typeof(BaseEntity.ITenantEntity).IsAssignableFrom(typeof(T)))
+            {
+                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted && (CurrentTenantId == null || ((BaseEntity.ITenantEntity)e).SchoolRegistrationId == CurrentTenantId));
+            }
+            else
+            {
+                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+            }
         }
 
 
@@ -177,4 +190,7 @@ namespace School.Infrastructure
 
     }
 }
+
+
+
 

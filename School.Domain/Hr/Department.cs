@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static School.Domain.BaseEntity;
+using School.Domain.School;
 
 namespace School.Domain
 {
-    public class Department : AuditEntity<int>
+    public class Department : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -28,6 +29,10 @@ namespace School.Domain
 
         [ForeignKey(nameof(FacultyId))]
         public virtual Faculty Faculty { get; set; } = null!;
+        public int SchoolRegistrationId { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(SchoolRegistrationId))]
+        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+
 

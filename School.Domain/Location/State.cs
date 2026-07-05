@@ -14,6 +14,9 @@ namespace School.Domain.Location
 
         [MaxLength(1000)]
         public string? Description { get; set; }
+        public int CountryId { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(CountryId))]
+        public virtual Country Country { get; set; } = null!;
 
         public bool IsActive { get; set; } = true;
         public virtual ICollection<City> Cities { get; set; } = new List<City>();

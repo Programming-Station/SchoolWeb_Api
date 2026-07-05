@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Infrastructure;
 
@@ -11,9 +12,11 @@ using School.Infrastructure;
 namespace School.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260705102108_AddCountryTable")]
+    partial class AddCountryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -670,9 +673,6 @@ namespace School.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -1038,9 +1038,6 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1055,8 +1052,6 @@ namespace School.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FacultyId");
-
-                    b.HasIndex("SchoolRegistrationId");
 
                     b.ToTable("Departments");
                 });
@@ -1153,9 +1148,6 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1168,8 +1160,6 @@ namespace School.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
 
                     b.ToTable("Faculties");
                 });
@@ -2400,29 +2390,10 @@ namespace School.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Faculty");
-
-                    b.Navigation("SchoolRegistration");
                 });
 
             modelBuilder.Entity("School.Domain.Event", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Faculty", b =>
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()

@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain
 {
-    public class AcademicYear : AuditEntity<int>
+    public class AcademicYear : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -31,4 +31,5 @@ namespace School.Domain
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+
 
