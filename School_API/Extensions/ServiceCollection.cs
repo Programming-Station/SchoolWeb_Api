@@ -136,7 +136,7 @@ namespace School_API
             .AddScoped(typeof(IHrMasterService<>), typeof(School.Services.Hr.HrMasterService<>))
             
             // Leave Management
-            .AddTransient<IHolidayMasterRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.HolidayMasterRepository>()
+
             .AddTransient<ILeaveBalanceRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveBalanceRepository>()
             .AddTransient<ILeaveRequestRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveRequestRepository>()
             .AddTransient<ILeaveSettingRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveSettingRepository>()
@@ -144,13 +144,13 @@ namespace School_API
             
             // Attendance
             .AddTransient<IAttendanceRepository, School.Infrastructure.Repositories.Hr.Attendance.AttendanceRepository>()
-            .AddTransient<IAttendanceLogRepository, School.Infrastructure.Repositories.Hr.Attendance.AttendanceLogRepository>()
+
             .AddTransient<IShiftMasterRepository, School.Infrastructure.Repositories.Hr.Attendance.ShiftMasterRepository>()
             .AddTransient<IWeekOffRepository, School.Infrastructure.Repositories.Hr.Attendance.WeekOffRepository>()
             
             // Timesheet
             .AddTransient<ITimesheetRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetRepository>()
-            .AddTransient<ITimesheetEntryRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetEntryRepository>()
+
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
@@ -181,7 +181,7 @@ namespace School_API
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
             .AddScoped<IFacultyService, FacultyService>()
-            .AddScoped<IDepartmentService, DepartmentService>()
+            .AddScoped<IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()
@@ -192,7 +192,7 @@ namespace School_API
             .AddScoped<School.Services.School.ISchoolServices.ISchoolSubscriptionService, School.Services.School.SchoolSubscriptionService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolOwnerService, School.Services.School.SchoolOwnerService>()
             // Leave Management
-            .AddScoped<IHolidayMasterService, School.Services.Hr.LeaveManagement.HolidayMasterService>()
+
             .AddScoped<ILeaveBalanceService, School.Services.Hr.LeaveManagement.LeaveBalanceService>()
             .AddScoped<ILeaveRequestService, School.Services.Hr.LeaveManagement.LeaveRequestService>()
             .AddScoped<ILeaveSettingService, School.Services.Hr.LeaveManagement.LeaveSettingService>()
@@ -200,7 +200,7 @@ namespace School_API
             
             // Attendance
             .AddScoped<IAttendanceService, School.Services.Hr.Attendance.AttendanceService>()
-            .AddScoped<IAttendanceLogService, School.Services.Hr.Attendance.AttendanceLogService>()
+
             .AddScoped<IShiftMasterService, School.Services.Hr.Attendance.ShiftMasterService>()
             .AddScoped<IWeekOffService, School.Services.Hr.Attendance.WeekOffService>()
             

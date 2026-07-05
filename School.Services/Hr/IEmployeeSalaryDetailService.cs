@@ -4,7 +4,7 @@ using School_DTOs.Hr;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace School.Services.Interfaces.Hr
+namespace School.Services.Hr
 {
     public interface IEmployeeSalaryDetailService
     {

@@ -4,7 +4,6 @@ using School.Domain;
 using School.Domain.Hr;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Services.Interfaces.Hr;
 using School_DTOs.Common;
 using School_DTOs.Hr;
 using System;
