@@ -8,7 +8,7 @@ using School_API.Common.Interface;
 
 namespace School_API.Controllers.School
 {
-    [Authorize(Roles = "Owner,Superadmin")]
+    
     public class SchoolSubscriptionsController : BaseController
     {
         private readonly ISchoolSubscriptionService _service;

@@ -25,31 +25,43 @@ namespace School.Infrastructure
                 context.SaveChanges(); // Save to get role IDs
             }
 
-            if (!context.Statuses.Any())
+            // Seed Statuses
+            var existingStatusNames = context.Statuses.Select(s => s.Name).ToHashSet();
+            var defaultStatuses = DefaultStatusList.StatusList();
+            var newStatuses = defaultStatuses.Where(s => !existingStatusNames.Contains(s.Name)).ToList();
+            if (newStatuses.Any())
             {
-                List<Status> statuses = DefaultStatusList.StatusList();
-                context.Statuses.AddRange(statuses);
+                context.Statuses.AddRange(newStatuses);
                 context.SaveChanges();
             }
 
-            if (!context.SchoolMediums.Any())
+            // Seed SchoolMediums
+            var existingMediumNames = context.SchoolMediums.Select(m => m.Name).ToHashSet();
+            var defaultMediums = DefaultMasterData.SchoolMediumList();
+            var newMediums = defaultMediums.Where(m => !existingMediumNames.Contains(m.Name)).ToList();
+            if (newMediums.Any())
             {
-                var mediums = DefaultMasterData.SchoolMediumList();
-                context.SchoolMediums.AddRange(mediums);
+                context.SchoolMediums.AddRange(newMediums);
                 context.SaveChanges();
             }
 
-            if (!context.SchoolTypes.Any())
+            // Seed SchoolTypes
+            var existingTypeNames = context.SchoolTypes.Select(t => t.Name).ToHashSet();
+            var defaultTypes = DefaultMasterData.SchoolTypeList();
+            var newTypes = defaultTypes.Where(t => !existingTypeNames.Contains(t.Name)).ToList();
+            if (newTypes.Any())
             {
-                var types = DefaultMasterData.SchoolTypeList();
-                context.SchoolTypes.AddRange(types);
+                context.SchoolTypes.AddRange(newTypes);
                 context.SaveChanges();
             }
 
-            if (!context.AffiliationBoards.Any())
+            // Seed AffiliationBoards
+            var existingBoardNames = context.AffiliationBoards.Select(b => b.Name).ToHashSet();
+            var defaultBoards = DefaultMasterData.AffiliationBoardList();
+            var newBoards = defaultBoards.Where(b => !existingBoardNames.Contains(b.Name)).ToList();
+            if (newBoards.Any())
             {
-                var boards = DefaultMasterData.AffiliationBoardList();
-                context.AffiliationBoards.AddRange(boards);
+                context.AffiliationBoards.AddRange(newBoards);
                 context.SaveChanges();
             }
 
@@ -176,71 +188,7 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            if (!context.SchoolRegistrations.Any())
-            {
-                var defaultState = context.States.First();
-                var defaultCity = context.Cities.First();
-                var defaultMedium = context.SchoolMediums.FirstOrDefault()?.Id ?? 1;
-                var defaultType = context.SchoolTypes.FirstOrDefault()?.Id ?? 1;
-                var defaultBoard = context.AffiliationBoards.FirstOrDefault()?.Id ?? 1;
-
-                var school = new SchoolRegistration
-                {
-                    SchoolName = "Default School",
-                    SchoolCode = "DEF001",
-                    Address = "123 Default Street",
-                    Email = "info@defaultschool.com",
-                    PhoneNumber = "1234567890",
-                    CityId = defaultCity.Id,
-                    StateId = defaultState.Id,
-                    IsActive = true,
-                    RegistrationDate = DateTime.UtcNow,
-                    ContactPersonName = "School Owner",
-                    ApprovalStatus = "Approved",
-                    SubDomain = "default",
-                    AffiliationBoardId = defaultBoard,
-                    SchoolTypeId = defaultType
-                };
-                context.SchoolRegistrations.Add(school);
-                context.SaveChanges();
-
-                var schoolOwnerUser = context.Users.FirstOrDefault(u => u.NormalizedUserName == "OWNER");
-                if (schoolOwnerUser != null)
-                {
-                    var owner = new SchoolOwner
-                    {
-                        SchoolRegistrationId = school.Id,
-                        ApplicationUserId = schoolOwnerUser.Id,
-                        StatusId = 1,
-                        EmailVerified = true,
-                        MobileVerified = true,
-                        IsLocked = false
-                    };
-                    context.SchoolOwners.Add(owner);
-
-                    var subscription = new SchoolSubscription
-                    {
-                        SchoolRegistrationId = school.Id,
-                        SubscriptionPlanId = 1,
-                        StartDate = DateTime.UtcNow,
-                        EndDate = DateTime.UtcNow.AddYears(1),
-                        AmountPaid = 0,
-                        PaymentStatus = "Free",
-                        IsActive = true
-                    };
-                    context.SchoolSubscriptions.Add(subscription);
-                    
-                    var profileSetting = new SchoolProfileSetting
-                    {
-                        SchoolRegistrationId = school.Id,
-                        Tagline = "A Great Place to Learn",
-                        PrimaryMediumId = defaultMedium
-                    };
-                    context.SchoolProfileSettings.Add(profileSetting);
-
-                    context.SaveChanges();
-                }
-            }
+            DefaultSchoolData.SeedAsync(context).Wait();
         }
     }
 }

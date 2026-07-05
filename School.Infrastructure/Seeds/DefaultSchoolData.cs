@@ -10,17 +10,48 @@ namespace School.Infrastructure.Seeds
     {
         public static async Task SeedAsync(SchoolDbContext context)
         {
-            if (!context.SchoolRegistrations.Any())
+            // Seed Affiliation Boards if missing
+            var existingBoards = await context.AffiliationBoards.Select(b => b.Name).ToHashSetAsync();
+            var defaultBoards = new[] { "CBSE", "ICSE", "State Board", "IB" };
+            var boardsToAdd = defaultBoards.Where(b => !existingBoards.Contains(b)).Select(b => new AffiliationBoard { Name = b }).ToList();
+            if (boardsToAdd.Any())
             {
-                var defaultState = context.States.FirstOrDefault();
-                var defaultCity = context.Cities.FirstOrDefault();
-                var defaultMedium = context.SchoolMediums.FirstOrDefault()?.Id ?? 1;
-                var defaultType = context.SchoolTypes.FirstOrDefault()?.Id ?? 1;
-                var defaultBoard = context.AffiliationBoards.FirstOrDefault()?.Id ?? 1;
+                context.AffiliationBoards.AddRange(boardsToAdd);
+                await context.SaveChangesAsync();
+            }
+
+            // Seed School Mediums if missing
+            var existingMediums = await context.SchoolMediums.Select(m => m.Name).ToHashSetAsync();
+            var defaultMediums = new[] { "English", "Hindi", "Gujarati", "Marathi", "Urdu" };
+            var mediumsToAdd = defaultMediums.Where(m => !existingMediums.Contains(m)).Select(m => new SchoolMedium { Name = m }).ToList();
+            if (mediumsToAdd.Any())
+            {
+                context.SchoolMediums.AddRange(mediumsToAdd);
+                await context.SaveChangesAsync();
+            }
+
+            // Seed School Types if missing
+            var existingTypes = await context.SchoolTypes.Select(t => t.Name).ToHashSetAsync();
+            var defaultTypes = new[] { "Co-Education", "Boys Only", "Girls Only" };
+            var typesToAdd = defaultTypes.Where(t => !existingTypes.Contains(t)).Select(t => new SchoolType { Name = t }).ToList();
+            if (typesToAdd.Any())
+            {
+                context.SchoolTypes.AddRange(typesToAdd);
+                await context.SaveChangesAsync();
+            }
+
+            var school = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001");
+            if (school == null)
+            {
+                var defaultState = await context.States.FirstOrDefaultAsync();
+                var defaultCity = await context.Cities.FirstOrDefaultAsync();
+                var defaultMedium = (await context.SchoolMediums.FirstOrDefaultAsync(m => m.Name == "English"))?.Id ?? (await context.SchoolMediums.FirstOrDefaultAsync())?.Id ?? 1;
+                var defaultType = (await context.SchoolTypes.FirstOrDefaultAsync(t => t.Name == "Co-Education"))?.Id ?? (await context.SchoolTypes.FirstOrDefaultAsync())?.Id ?? 1;
+                var defaultBoard = (await context.AffiliationBoards.FirstOrDefaultAsync(b => b.Name == "CBSE"))?.Id ?? (await context.AffiliationBoards.FirstOrDefaultAsync())?.Id ?? 1;
 
                 if (defaultState == null || defaultCity == null) return;
 
-                var school = new SchoolRegistration
+                school = new SchoolRegistration
                 {
                     SchoolName = "Default School",
                     SchoolCode = "DEF001",
@@ -39,9 +70,13 @@ namespace School.Infrastructure.Seeds
                 };
                 context.SchoolRegistrations.Add(school);
                 await context.SaveChangesAsync();
+            }
 
-                var schoolOwnerUser = context.Users.FirstOrDefault(u => u.NormalizedUserName == "OWNER");
-                if (schoolOwnerUser != null)
+            var schoolOwnerUser = await context.Users.FirstOrDefaultAsync(u => u.NormalizedUserName == "OWNER");
+            if (schoolOwnerUser != null)
+            {
+                var ownerExists = await context.SchoolOwners.AnyAsync(o => o.SchoolRegistrationId == school.Id && o.ApplicationUserId == schoolOwnerUser.Id);
+                if (!ownerExists)
                 {
                     var owner = new SchoolOwner
                     {
@@ -53,7 +88,11 @@ namespace School.Infrastructure.Seeds
                         IsLocked = false
                     };
                     context.SchoolOwners.Add(owner);
+                }
 
+                var subExists = await context.SchoolSubscriptions.AnyAsync(s => s.SchoolRegistrationId == school.Id);
+                if (!subExists)
+                {
                     var subscription = new SchoolSubscription
                     {
                         SchoolRegistrationId = school.Id,
@@ -65,7 +104,12 @@ namespace School.Infrastructure.Seeds
                         IsActive = true
                     };
                     context.SchoolSubscriptions.Add(subscription);
-                    
+                }
+                
+                var profileExists = await context.SchoolProfileSettings.AnyAsync(s => s.SchoolRegistrationId == school.Id);
+                if (!profileExists)
+                {
+                    var defaultMedium = (await context.SchoolMediums.FirstOrDefaultAsync())?.Id ?? 1;
                     var profileSetting = new SchoolProfileSetting
                     {
                         SchoolRegistrationId = school.Id,
@@ -73,9 +117,9 @@ namespace School.Infrastructure.Seeds
                         PrimaryMediumId = defaultMedium
                     };
                     context.SchoolProfileSettings.Add(profileSetting);
-
-                    await context.SaveChangesAsync();
                 }
+
+                await context.SaveChangesAsync();
             }
         }
     }
