@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using School_DTOs;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Payroll;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
@@ -36,3 +37,4 @@ namespace School.Services.Payroll
         public async Task<APIResponse<object>> MarkAsPaidAsync(int id,string username){var e=await _repo.List().Where(x=>x.Id==id).FirstOrDefaultAsync();if(e==null)return new APIResponse<object>{StatusCode=HttpStatusCode.NotFound,Message="Not found"};if(e.Status!="Processed")return new APIResponse<object>{StatusCode=HttpStatusCode.BadRequest,Message="Only processed payrolls can be marked as paid"};e.Status="Paid";e.UpdatedBy=username;e.UpdatedDate=DateTime.UtcNow;_repo.Update(e);await _uow.CommitAsync();return new APIResponse<object>{StatusCode=HttpStatusCode.OK,Message="Payroll marked as paid"};}
     }
 }
+

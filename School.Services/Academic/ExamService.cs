@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using School_DTOs;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
@@ -35,3 +36,4 @@ namespace School.Services.Academic
         public async Task<APIResponse<object>> DeleteAsync(int id,string username){var e=await _repo.List().Where(x=>x.Id==id).FirstOrDefaultAsync();if(e==null)return new APIResponse<object>{StatusCode=HttpStatusCode.NotFound,Message="Not found"};_repo.Delete(e);await _uow.CommitAsync();return new APIResponse<object>{StatusCode=HttpStatusCode.OK,Message="Deleted successfully"};}
     }
 }
+

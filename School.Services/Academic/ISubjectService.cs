@@ -1,4 +1,5 @@
-﻿using School_DTOs.Academic;
+using School_DTOs;
+using School_DTOs.Academic;
 using School_DTOs.Common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -14,3 +15,4 @@ namespace School.Services.Interfaces.Academic
         Task<APIResponse<object>> DeleteAsync(int id, string username);
     }
 }
+

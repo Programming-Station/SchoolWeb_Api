@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static School.Domain.BaseEntity;
 using School.Domain.School;
@@ -12,7 +12,7 @@ namespace School.Domain.Academic
         [MaxLength(50)] public string? ExamType { get; set; }     // Midterm, Final, Quiz
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        [MaxLength(20)] public string Status { get; set; } = ""Scheduled"";
+        [MaxLength(20)] public string Status { get; set; } = "Scheduled";
         [MaxLength(500)] public string? Description { get; set; }
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
@@ -20,3 +20,4 @@ namespace School.Domain.Academic
         public virtual ICollection<ExamResult> Results { get; set; } = new List<ExamResult>();
     }
 }
+

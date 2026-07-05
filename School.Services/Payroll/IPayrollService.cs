@@ -1,4 +1,5 @@
-﻿using School_DTOs.Payroll;
+using School_DTOs;
+using School_DTOs.Payroll;
 using School_DTOs.Common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -23,3 +24,4 @@ namespace School.Services.Interfaces.Payroll
         Task<APIResponse<object>> MarkAsPaidAsync(int id, string username);
     }
 }
+

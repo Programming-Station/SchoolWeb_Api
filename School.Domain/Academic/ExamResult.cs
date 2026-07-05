@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static School.Domain.BaseEntity;
 using School.Domain.School;
@@ -17,9 +17,9 @@ namespace School.Domain.Academic
         public int SubjectId { get; set; }
         [ForeignKey(nameof(SubjectId))] 
         public virtual Subject Subject { get; set; } = null!;
-        [Column(TypeName = ""decimal(5, 2)"")]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal MarksObtained { get; set; }
-        [Column(TypeName=""decimal(5,2)"")]
+        [Column(TypeName="decimal(5,2)")]
         public decimal TotalMarks { get; set; }
         [MaxLength(5)] public string? Grade { get; set; }
         [MaxLength(20)] public string Status { get; set; } = "Pass";
@@ -28,3 +28,4 @@ namespace School.Domain.Academic
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+
