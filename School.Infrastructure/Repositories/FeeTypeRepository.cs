@@ -47,7 +47,7 @@ namespace School.Infrastructure.Repositories
             Attach(entity, updatedProperties: new Expression<Func<FeeType, object>>[]
             {
                 u => u.Name!,
-                u=> u.School!,
+              
                 u=>u.Name!,
                 u=>u.description!,
                 u=>u.UpdatedBy!,

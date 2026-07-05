@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
 using School.Domain;
-using School.Domain.Website;
 using School.Domain.Student;
 using School.Domain.FeeManagnment;
 
@@ -36,18 +35,7 @@ namespace School.Infrastructure
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
 
         // Website Management Entities
-        public DbSet<SliderImage> SliderImages { get; set; } = null!;
-        public DbSet<HeroSection> HeroSections { get; set; } = null!;
-        public DbSet<NoticeBar> NoticeBars { get; set; } = null!;
-        public DbSet<WelcomeSection> WelcomeSections { get; set; } = null!;
-        public DbSet<AboutSection> AboutSections { get; set; } = null!;
-        public DbSet<AboutPage> AboutPages { get; set; } = null!;
-        public DbSet<ContactInfo> ContactInfos { get; set; } = null!;
-        public DbSet<GalleryImage> GalleryImages { get; set; } = null!;
-        public DbSet<Achievement> Achievements { get; set; } = null!;
-        public DbSet<TeamMember> TeamMembers { get; set; } = null!;
-        public DbSet<Enquiry> Enquiries { get; set; } = null!;
-        public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+      
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;

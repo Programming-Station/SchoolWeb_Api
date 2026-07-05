@@ -10,8 +10,4 @@
     <ProjectReference Include="..\School.Utilities\School.Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

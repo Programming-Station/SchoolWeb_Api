@@ -133,20 +133,7 @@ namespace School.Infrastructure.Repositories
 
                 activities.AddRange(recentRegistrations);
 
-                // Get recent enquiries
-                var recentEnquiries = await _context.Enquiries
-                    .Where(e => !e.IsDeleted)
-                    .OrderByDescending(e => e.CreatedDate)
-                    .Take(count / 2)
-                    .Select(e => new ActivityDto
-                    {
-                        Action = $"New enquiry received - {e.Name}",
-                        Time = GetTimeAgo(e.CreatedDate ?? DateTime.UtcNow),
-                        Type = "enquiry"
-                    })
-                    .ToListAsync();
-
-                activities.AddRange(recentEnquiries);
+              
 
                 // Get recent events
                 var recentEvents = await _context.Events

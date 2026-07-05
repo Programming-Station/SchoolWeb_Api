@@ -99,14 +99,13 @@ namespace School_API
             .AddTransient<ICourseRepository, CourseRepository>()
             .AddTransient<IClassRepository, ClassRepository>()
             .AddTransient<IStudentRepository, StudentRepository>()
-            .AddTransient<IWebsiteRepository, WebsiteRepository>()
+         
             .AddTransient<ICityRepository, CityRepository>()
             .AddTransient<IStateRepository, StateRepository>()
             .AddTransient<IAffiliatedRepository, AffiliatedRepository>()
             .AddScoped<IStudentRegistrationRepository, StudentRegistrationRepository>()
             .AddTransient<IAcademicYearRepository, AcademicYearRepository>()
-            .AddTransient<IEnquiryRepository, EnquiryRepository>()
-            .AddTransient<ISchoolRegistrationRepository, SchoolRegistrationRepository>()
+       
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<IDashboardRepository, DashboardRepository>()
             .AddTransient<ITeacherRepository, TeacherRepository>()
@@ -128,7 +127,7 @@ namespace School_API
             .AddScoped<ICourseService, CourseService>()
             .AddScoped<IClassService, ClassService>()
             .AddScoped<IStudentService, StudentService>()
-            .AddScoped<IWebsiteService, WebsiteService>()
+           
             .AddScoped<IImageService, ImageService>()
             .AddScoped<ICityService, CityService>()
             .AddScoped<IStateService, StateService>()
@@ -136,8 +135,7 @@ namespace School_API
             .AddScoped<IMasterService, MasterService>()
             .AddScoped<IStudentRegistrationService, StudentRegistrationService>()
             .AddScoped<IAcademicYearService, AcademicYearService>()
-            .AddScoped<IEnquiryService, EnquiryService>()
-            .AddScoped<ISchoolRegistrationService, SchoolRegistrationService>()
+           
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
             .AddScoped<ITeacherService, TeacherService>()

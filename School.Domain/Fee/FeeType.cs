@@ -1,4 +1,4 @@
-﻿using School.Domain.Website;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.FeeManagnment
 {
-    public class FeeType: AuditEntity<int>
+    public class FeeType : AuditEntity<int>
     {
         [Key]
         public int Id { get; set; }
@@ -18,7 +18,8 @@ namespace School.Domain.FeeManagnment
         public string description { get; set; }
         public bool IsActive { get; set; } = true;
         public int SchoolId { get; set; }
-        [ForeignKey(nameof(SchoolId))]
-        public virtual SchoolRegistration School { get; set; }
+      
+
+
     }
 }
