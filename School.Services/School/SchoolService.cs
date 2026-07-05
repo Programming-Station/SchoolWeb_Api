@@ -97,10 +97,10 @@ namespace School.Services.School
                         var subscription = new SchoolSubscription
                         {
                             SchoolRegistrationId = entity.Id,
-                            SubscriptionPlan = "Free Trial",
+                            SubscriptionPlanId = 1, // Default Plan
                             StartDate = DateTime.UtcNow,
                             EndDate = DateTime.UtcNow.AddMonths(1),
-                            Amount = 0,
+                            AmountPaid = 0,
                             PaymentStatus = "Free",
                             IsActive = true
                         };
