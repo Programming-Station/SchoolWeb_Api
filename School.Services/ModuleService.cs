@@ -27,7 +27,6 @@ namespace School.Services
 
         public async Task<APIResponse<ModuleDto>> AddModuleAsync(ModuleModel model)
         {
-            // Validate CategoryModuleId exists and is active
             var categoryExists = await _context.CategoryModules
                 .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
 
@@ -41,12 +40,10 @@ namespace School.Services
                 };
             }
 
-            // Map Model to Entity
             var entity = _mapper.Map<Module>(model);
             entity.CreatedBy = model.CreatedBy;
             entity.CreatedDate = DateTime.UtcNow;
 
-            // Trim string fields
             entity.Name = entity.Name?.Trim() ?? "";
             entity.Description = entity.Description?.Trim();
             entity.Route = entity.Route?.Trim() ?? "";
@@ -66,7 +63,6 @@ namespace School.Services
             }
             else if (entity != null && entity.Id > 0)
             {
-                // Reload with CategoryModule navigation property
                 var savedEntity = await _moduleRepository.GetModuleByIdAsync(entity.Id);
                 return new APIResponse<ModuleDto>
                 {
@@ -158,7 +154,6 @@ namespace School.Services
                 };
             }
 
-            // Validate CategoryModuleId exists and is active
             var categoryExists = await _context.CategoryModules
                 .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
 
@@ -172,7 +167,6 @@ namespace School.Services
                 };
             }
 
-            // Update properties from model
             existingEntity.Name = model.Name.Trim();
             existingEntity.Description = model.Description?.Trim();
             existingEntity.Route = model.Route.Trim();
@@ -345,7 +339,6 @@ namespace School.Services
         {
             var dto = _mapper.Map<ModuleDto>(entity);
 
-            // Map CategoryModuleName from navigation property
             dto.CategoryModuleName = entity.CategoryModule?.Name;
 
             return dto;

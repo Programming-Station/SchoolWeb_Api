@@ -36,7 +36,6 @@ namespace School_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Get IP address from request
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             if (string.IsNullOrEmpty(model.IpAddress))
             {
@@ -67,7 +66,6 @@ namespace School_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Get IP address from request
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             if (string.IsNullOrEmpty(model.IpAddress))
             {
@@ -98,7 +96,6 @@ namespace School_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Get IP address from request
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             if (string.IsNullOrEmpty(model.IpAddress))
             {
@@ -204,7 +201,6 @@ namespace School_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLoginHistory([FromQuery] LoginHistoryFilter filter)
         {
-            // Validate filter (BaseFilter.Validate() is called in repository)
             var result = await _accountService.GetLoginHistoryAsync(filter);
             
             if (result.Success)

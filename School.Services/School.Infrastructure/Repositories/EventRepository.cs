@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<Event> AddEventAsync(Event entity)
         {
-            // Check if event with same title and date already exists
             var existingEvent = await DbSet.FirstOrDefaultAsync(x =>
                                x.Title.ToLower() == entity.Title.ToLower() &&
                                x.EventDate.Date == entity.EventDate.Date &&
@@ -32,7 +31,6 @@ namespace School.Infrastructure.Repositories
                 return existingEvent;
             }
 
-            // Set IsUpcoming based on EventDate
             entity.IsUpcoming = entity.EventDate.Date >= DateTime.Today;
 
             await AddAsync(entity);
@@ -60,7 +58,6 @@ namespace School.Infrastructure.Repositories
 
             if (upcomingOnly == true)
             {
-                // Get only upcoming events (EventDate >= Today)
                 return await List(expression: x => !x.IsDeleted && x.EventDate.Date >= today && x.IsActive)
                     .OrderBy(x => x.EventDate)
                     .ToListAsync();
@@ -95,7 +92,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> UpdateEventAsync(Event entity)
         {
-            // Update IsUpcoming based on EventDate
             entity.IsUpcoming = entity.EventDate.Date >= DateTime.Today;
 
             Attach(entity, updatedProperties: new Expression<Func<Event, object>>[]

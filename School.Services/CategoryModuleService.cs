@@ -23,12 +23,10 @@ namespace School.Services
 
         public async Task<APIResponse<CategoryModuleDto>> AddCategoryModuleAsync(CategoryModuleModel model)
         {
-            // Map Model to Entity
             var entity = _mapper.Map<CategoryModule>(model);
             entity.CreatedBy = model.CreatedBy;
             entity.CreatedDate = DateTime.UtcNow;
 
-            // Trim string fields
             entity.Name = entity.Name?.Trim() ?? "";
             entity.Description = entity.Description?.Trim();
 
@@ -136,7 +134,6 @@ namespace School.Services
                 };
             }
 
-            // Update properties from model
             existingEntity.Name = model.Name.Trim();
             existingEntity.Description = model.Description?.Trim();
             existingEntity.Order = model.Order;
@@ -166,7 +163,6 @@ namespace School.Services
 
         public async Task<APIResponse> DeleteCategoryModuleAsync(int id)
         {
-            // Check if category is being used by any module
             var isInUse = await _categoryModuleRepository.IsCategoryInUseAsync(id);
             if (isInUse)
             {

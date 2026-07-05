@@ -1,4 +1,4 @@
-﻿using Azure.Core;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
 using School.Infrastructure.Repositories.IRepositories;

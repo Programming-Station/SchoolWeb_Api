@@ -15,14 +15,12 @@ namespace School.Utilities.Security
         /// </summary>
         public static string EncryptRequest<T>(T requestObject, IEncryptionService encryptionService)
         {
-            // Serialize object to JSON
             var json = JsonSerializer.Serialize(requestObject, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = false
             });
 
-            // Encrypt the JSON string
             return encryptionService.Encrypt(json);
         }
 
@@ -31,10 +29,8 @@ namespace School.Utilities.Security
         /// </summary>
         public static T? DecryptResponse<T>(string encryptedResponse, IEncryptionService encryptionService)
         {
-            // Decrypt the response
             var decryptedJson = encryptionService.Decrypt(encryptedResponse);
 
-            // Deserialize to object
             return JsonSerializer.Deserialize<T>(decryptedJson, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<Student> AddStudentAsync(Student entity)
         {
-            // Check if StudentId already exists
             if (!string.IsNullOrEmpty(entity.StudentId))
             {
                 var existingByStudentId = await DbSet.FirstOrDefaultAsync(x =>
@@ -72,7 +71,6 @@ namespace School.Infrastructure.Repositories
                 .Include(x => x.Course)
                 .AsQueryable();
 
-            // Apply search filter
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
@@ -85,22 +83,18 @@ namespace School.Infrastructure.Repositories
                 );
             }
 
-            // Apply status filter
             if (statusId.HasValue && statusId.Value > 0)
             {
                 query = query.Where(s => s.StatusId == statusId.Value);
             }
 
-            // Apply class filter (filter by class name)
             if (!string.IsNullOrWhiteSpace(classFilter))
             {
                 query = query.Where(s => s.Class != null && s.Class.Name == classFilter);
             }
 
-            // Get total count before pagination
             var totalCount = await query.CountAsync();
 
-            // Apply pagination
             var students = await query
                 .OrderByDescending(s => s.CreatedDate)
                 .Skip((pageNumber - 1) * pageSize)
@@ -132,11 +126,9 @@ namespace School.Infrastructure.Repositories
 
         public async Task<string> GenerateStudentIdAsync()
         {
-            // Get the current year
             var currentYear = DateTime.Now.Year;
             var yearPrefix = currentYear.ToString().Substring(2, 2); // Last 2 digits of year
 
-            // Get the last student ID for this year
             var lastStudent = await _context.Students
                 .Where(s => s.StudentId.StartsWith($"STU{yearPrefix}"))
                 .OrderByDescending(s => s.StudentId)
@@ -145,7 +137,6 @@ namespace School.Infrastructure.Repositories
             int nextNumber = 1;
             if (lastStudent != null)
             {
-                // Extract the number from the last student ID (e.g., STU24001 -> 1)
                 var lastNumberStr = lastStudent.StudentId.Substring(5); // Skip "STU24"
                 if (int.TryParse(lastNumberStr, out int lastNumber))
                 {
@@ -153,11 +144,8 @@ namespace School.Infrastructure.Repositories
                 }
             }
 
-            // Format: STU + Year (2 digits) + Sequential Number (4 digits)
-            // Example: STU24001, STU24002, etc.
             var studentId = $"STU{yearPrefix}{nextNumber:D4}";
 
-            // Ensure uniqueness (in case of race condition)
             var exists = await _context.Students.AnyAsync(s => s.StudentId == studentId);
             int retryCount = 0;
             while (exists && retryCount < 10) // Max 10 retries

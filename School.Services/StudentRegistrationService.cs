@@ -23,7 +23,6 @@ namespace School.Services
 
         public async Task<APIResponse<StudentRegistrationDto>> AddStudentRegistrationAsync(StudentRegistrationModel model)
         {
-            // Check if mobile already exists
             var existsByMobile = await _studentRegistrationRepository.ExistsByMobileAsync(model.Mobile);
             if (existsByMobile)
             {
@@ -35,7 +34,6 @@ namespace School.Services
                 };
             }
 
-            // Check if Aadhaar already exists
             var existsByAadhaar = await _studentRegistrationRepository.ExistsByAadhaarAsync(model.AadhaarNumber);
             if (existsByAadhaar)
             {
@@ -52,12 +50,10 @@ namespace School.Services
             entity.RegistrationStatus = model.RegistrationStatus ?? "pending";
             entity.PaymentStatus = model.PaymentStatus ?? "pending";
 
-            // Map educational details - loop through and add only those with data
             if (model.EducationalDetails != null && model.EducationalDetails.Any() && entity.EducationalDetails == null)
             {
                 foreach (var eduDetail in model.EducationalDetails)
                 {
-                    // Only add if ExamName is provided (required field)
                     if (!string.IsNullOrWhiteSpace(eduDetail.ExamName))
                     {
                         entity.EducationalDetails.Add(new EducationalDetail
@@ -74,12 +70,10 @@ namespace School.Services
                 }
             }
 
-            // Map experience certificates - loop through and add only those with data
             if (model.ExperienceCertificates != null && model.ExperienceCertificates.Any() && entity.ExperienceCertificates == null)
             {
                 foreach (var expCert in model.ExperienceCertificates)
                 {
-                    // Only add if at least one field is provided
                     if (!string.IsNullOrWhiteSpace(expCert.Experience) ||
                         !string.IsNullOrWhiteSpace(expCert.HospitalLabName) ||
                         expCert.FromDate.HasValue)
@@ -185,7 +179,6 @@ namespace School.Services
 
         public async Task<APIResponse> UpdateStudentRegistrationAsync(StudentRegistrationModel model)
         {
-            // Check if mobile already exists (excluding current record)
             if (model.Id > 0)
             {
                 var existsByMobile = await _studentRegistrationRepository.ExistsByMobileAsync(model.Mobile, model.Id);
@@ -199,7 +192,6 @@ namespace School.Services
                     };
                 }
 
-                // Check if Aadhaar already exists (excluding current record)
                 var existsByAadhaar = await _studentRegistrationRepository.ExistsByAadhaarAsync(model.AadhaarNumber, model.Id);
                 if (existsByAadhaar)
                 {

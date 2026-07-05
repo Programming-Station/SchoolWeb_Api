@@ -4,7 +4,6 @@ namespace School_DTOs.Student
 {
     public class StudentDto : BaseDto
     {
-        // Original fields
         public string StudentId { get; set; } = null!;
         public string? EnrollmentNumber { get; set; }
         public string? CourseType { get; set; }
@@ -34,8 +33,6 @@ namespace School_DTOs.Student
         public string Status { get; set; } = null!;
         public string? Remarks { get; set; }
 
-        // UI-compatible fields (for easier frontend integration)
-        // These fields use JsonPropertyName to match UI expectations exactly
         [JsonPropertyName("stdId")]
         public string StdId { get; set; } = null!;
 

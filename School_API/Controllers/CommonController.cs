@@ -28,7 +28,6 @@ namespace School_API.Controllers
                 });
             }
 
-            // Get folderName from form data if not provided as parameter
             if (string.IsNullOrWhiteSpace(folderName) && Request.Form.ContainsKey("folderName"))
             {
                 folderName = Request.Form["folderName"].ToString();
@@ -59,7 +58,6 @@ namespace School_API.Controllers
                 });
             }
 
-            // Decode the path if it's URL encoded
             var decodedPath = Uri.UnescapeDataString(path);
             
             var filePath = _imageService.GetImageFilePath(decodedPath);

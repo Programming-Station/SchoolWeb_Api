@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using School.Domain;
 using School.Domain.FeeManagnment;
@@ -61,10 +61,8 @@ namespace School.Services
 
         public async Task<APIResponse<IEnumerable<FeeTypeDto>>> GetFeeTypesBySchoolIdAsync(int schoolId)
         {
-            // STEP 1: Repository call
             var result = await _feeTypeRepository.GetFeeTypeBySchoolIdAsync(schoolId);
 
-            // STEP 2: Check data
             if (result != null && result.Any())
             {
                 return new APIResponse<IEnumerable<FeeTypeDto>>

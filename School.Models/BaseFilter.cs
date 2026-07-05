@@ -67,7 +67,6 @@ namespace School.Models
             else
                 SortDirection = SortDirection.ToLower() == "desc" ? "desc" : "asc";
 
-            // Validate date range
             if (FromDate.HasValue && ToDate.HasValue && FromDate > ToDate)
             {
                 var temp = FromDate;

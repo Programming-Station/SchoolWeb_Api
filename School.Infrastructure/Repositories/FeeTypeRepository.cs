@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
@@ -22,7 +22,6 @@ namespace School.Infrastructure.Repositories
         }
         public async Task<FeeType> AddFeeTypeAsync(FeeType entity)
         {
-            // check for dublicates FeeType Name
             var existingFeeType = await DbSet.FirstOrDefaultAsync(x => x.Name.ToUpper() == entity.Name.ToLower() &&
                                                                   x.SchoolId==entity.SchoolId);
             if(existingFeeType != null)

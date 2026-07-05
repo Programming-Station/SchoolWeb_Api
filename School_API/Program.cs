@@ -12,9 +12,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-// Add services to the container
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
@@ -32,7 +30,6 @@ builder.Services
    .AddSessionWithOptions()
    .AddAuthentication(builder.Configuration)
    .AddCorsPolicy(builder.Configuration);
-// Learn more about configuring Swagger/OpenAPI
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -93,8 +90,6 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddDistributedMemoryCache();
 
-// AutoMapper Configuration for version 16.0.0 (requires ILoggerFactory)
-// Create a temporary service provider to get ILoggerFactory
 using (var tempServiceProvider = builder.Services.BuildServiceProvider())
 {
     var loggerFactory = tempServiceProvider.GetRequiredService<ILoggerFactory>();
@@ -105,11 +100,9 @@ using (var tempServiceProvider = builder.Services.BuildServiceProvider())
     var mapper = config.CreateMapper();
     builder.Services.AddSingleton(mapper);
 }
-// Add Identity
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Password settings
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = true;
@@ -117,11 +110,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 12; // Enhanced from 8
     options.Password.RequiredUniqueChars = 2;
 
-    // User settings
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 
-    // Lockout settings
     options.Lockout = new LockoutOptions()
     {
         AllowedForNewUsers = true,
@@ -129,21 +120,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         MaxFailedAccessAttempts = Convert.ToInt32(appSettings?.InvalidAllowedLoginAttempts ?? "5")
     };
 
-    // Sign-in settings
     options.SignIn.RequireConfirmedEmail = false; // Set to true in production
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<SchoolDbContext>()
 .AddDefaultTokenProviders();
 
-// Configure API behavior
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
  
 
-// Request size limits
 builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 10485760; // 10MB
@@ -154,11 +142,8 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 
 var app = builder.Build();
 
-// IMPORTANT: Exception handler should be early in pipeline to catch all exceptions
-// It also handles CORS headers manually for error responses
 app.UseCustomExceptionHandler();
 
-// Force HTTPS in production
 if (app.Environment.IsProduction() && appSettings?.RequireHttps == true)
 {
     app.UseHsts();
@@ -169,20 +154,15 @@ else if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-// Static files
 app.UseStaticFiles();
 
-// Routing
 app.UseRouting();
 
-// CORS
 app.UseCors("CorsPolicy");
 
-// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Cookie policy
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
@@ -190,9 +170,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
     MinimumSameSitePolicy = SameSiteMode.Strict
 });
 
-// Session
 app.UseSession();
-// Swagger
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
@@ -205,18 +183,14 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 }
  
 
-// Map controllers
 app.MapControllers();
 
-// Seed database with initial data
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<SchoolDbContext>();
 
-    // Ensure database is created
     dbContext.Database.EnsureCreated();
 
-    // Seed initial data (Roles, Users, Status, etc.)
     DbInitializer.Seed(dbContext);
 }
 

@@ -77,7 +77,6 @@ namespace School_API
                     },
                     OnTokenValidated = context =>
                     {
-                        // Additional token validation logic can be added here
                         return Task.CompletedTask;
                     }
                 };
@@ -108,7 +107,6 @@ namespace School_API
        
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<IDashboardRepository, DashboardRepository>()
-            .AddTransient<ITeacherRepository, TeacherRepository>()
             .AddTransient<IFacultyRepository, FacultyRepository>()
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
             .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
@@ -138,7 +136,6 @@ namespace School_API
            
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
-            .AddScoped<ITeacherService, TeacherService>()
             .AddScoped<IFacultyService, FacultyService>()
             .AddScoped<IDepartmentService, DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
@@ -175,7 +172,6 @@ namespace School_API
             }
             else
             {
-                // Fallback to allow all for development (should be restricted in production)
                 services.AddCors(options =>
                 {
                     options.AddPolicy("CorsPolicy", builder =>

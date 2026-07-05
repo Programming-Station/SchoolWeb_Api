@@ -28,7 +28,6 @@ namespace School.Utilities
             var allChars = "";
             var password = new StringBuilder();
 
-            // Add at least one character from each required category
             if (passwordOptions.RequireDigit)
             {
                 password.Append(digits[_random.Next(digits.Length)]);
@@ -53,17 +52,14 @@ namespace School.Utilities
                 allChars += symbols;
             }
 
-            // fallback if no specific requirement
             if (string.IsNullOrEmpty(allChars))
                 allChars = digits + lowers + uppers + symbols;
 
-            // Fill remaining characters to reach exactly RequiredLength
             while (password.Length < passwordOptions.RequiredLength + 2)
             {
                 password.Append(allChars[_random.Next(allChars.Length)]);
             }
 
-            // Shuffle to avoid predictable pattern
             return new string(password.ToString()
                 .OrderBy(_ => _random.Next())
                 .ToArray());

@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<Affiliated> AddAffiliationCollegeAsync(Affiliated entity)
         {
-            // Check for duplicate CollegeCode (if provided)
             if (!string.IsNullOrEmpty(entity.CollegeCode))
             {
                 var existingByCode = await DbSet.FirstOrDefaultAsync(x =>
@@ -34,7 +33,6 @@ namespace School.Infrastructure.Repositories
                 }
             }
 
-            // Check if college with same name exists in same state/city
             var existingByName = await DbSet.FirstOrDefaultAsync(x =>
                                x.CollegeName.ToLower() == entity.CollegeName.ToLower() &&
                                x.StateId == entity.StateId &&

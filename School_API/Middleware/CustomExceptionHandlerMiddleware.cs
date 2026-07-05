@@ -29,7 +29,6 @@ namespace School_API.Middleware
         {
             try
             {
-                // Swagger authentication check
                 if (context.Request.Path.StartsWithSegments("/swagger"))
                 {
                     string? authHeader = context.Request.Headers["Authorization"];
@@ -84,7 +83,6 @@ namespace School_API.Middleware
             var requestId = context.TraceIdentifier;
             var isDevelopment = _environment.IsDevelopment();
 
-            // Determine HTTP status code and message based on exception type
             switch (exception)
             {
                 case UnauthorizedAccessException:
@@ -140,16 +138,12 @@ namespace School_API.Middleware
                     break;
             }
 
-            // Build error response
             response.StatusCode = code;
             response.Success = false;
             response.RequestId = requestId;
-            //response.Timestamp = DateTime.UtcNow;
 
-            // Create error details
             var errorMessage = exception.Message;
             
-            // Include inner exception message if available
             if (exception.InnerException != null)
             {
                 errorMessage += $" | Inner: {exception.InnerException.Message}";
@@ -157,27 +151,22 @@ namespace School_API.Middleware
 
             response.Error = new APIException(errorMessage, exception);
 
-            // Don't expose stack trace in production unless it's a known error type
             if (!isDevelopment && code == HttpStatusCode.InternalServerError)
             {
                 response.Error.StackTrace = null;
                 response.Message = "An internal server error occurred. Please try again later.";
             }
 
-            // Ensure response hasn't started
             if (!context.Response.HasStarted)
             {
                 context.Response.StatusCode = (int)code;
                 context.Response.ContentType = "application/json; charset=utf-8";
 
-                // Ensure CORS headers are present if CORS is enabled
-                // This is important for error responses to work with CORS
                 if (!context.Response.Headers.ContainsKey("Access-Control-Allow-Origin"))
                 {
                     var origin = context.Request.Headers["Origin"].ToString();
                     if (!string.IsNullOrEmpty(origin))
                     {
-                        // Check if origin is in allowed list, or allow if CORS is enabled and origin exists
                         if (_appSettings?.EnableCors == true)
                         {
                             var allowedOrigins = _appSettings.AllowedOrigins;
@@ -188,13 +177,11 @@ namespace School_API.Middleware
                             }
                             else if (allowedOrigins == null || allowedOrigins.Count == 0)
                             {
-                                // Fallback: allow origin if no restrictions
                                 context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
                             }
                         }
                         else
                         {
-                            // If CORS is disabled, still allow for development
                             if (_environment.IsDevelopment())
                             {
                                 context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
@@ -203,7 +190,6 @@ namespace School_API.Middleware
                     }
                 }
 
-                // Serialize and write response
                 var jsonOptions = new JsonSerializerOptions
                 {
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

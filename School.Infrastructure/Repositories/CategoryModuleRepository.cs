@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<CategoryModule> AddCategoryModuleAsync(CategoryModule entity)
         {
-            // Check if category with same name already exists
             var existingByName = await DbSet.FirstOrDefaultAsync(x =>
                                x.Name.ToLower() == entity.Name.ToLower() &&
                                !x.IsDeleted);

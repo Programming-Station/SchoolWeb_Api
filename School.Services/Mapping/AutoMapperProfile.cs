@@ -7,14 +7,11 @@ namespace School.Services.Mapping
         public AutoMapperProfile()
         { 
 
-            //CreateMap<SubMenu, SubMenuModel>().ReverseMap(); 
-            //var currentAssembly = Assembly.GetExecutingAssembly(); // Current project
 
             var domainAssembly = Assembly.Load("School.Domain");  // Domain project assembly
             var dtoAssembly = Assembly.Load("School_DTOs");        // DTO project assembly
             var modelAssembly = Assembly.Load("School.Models");   // Models project assembly
 
-            // Get all exported types from the assemblies
             var sourceTypes = domainAssembly.GetExportedTypes();      // Domain types
             var destinationTypes = dtoAssembly.GetExportedTypes()     // DTO types
                 .Concat(modelAssembly.GetExportedTypes());            // Models types
@@ -75,17 +72,9 @@ namespace School.Services.Mapping
 
                 }
             }
-            //CreateMap<Domain.MasterEntities.VehicleMaster.VehicleModel, VehicleModelDto>()
-            //   .ForMember(dest => dest.CreatedDate, // The property in VehicleModelDto
-            //               opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm ss tt")
-            //                                                                 : string.Empty) // Handle null values gracefully
-            //          );
              
-            //.ForMember(dest => dest.userDetails, opt => opt.MapFrom(src => src.ApplicationUser)).ReverseMap();
-            //CreateMap<ApplicationUser, UserDetailsDto>();
 
-            // Custom mapping for Event to EventDto to format EventDate
-            CreateMap<School.Domain.Event, School_DTOs.Event.EventDto>()
+            CreateMap<global::School.Domain.Event, global::School_DTOs.Event.EventDto>()
                 .ForMember(dest => dest.EventDate,
                     opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));  
 

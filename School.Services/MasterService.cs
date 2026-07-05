@@ -60,7 +60,6 @@ namespace School.Services
                     };
                 }
 
-                // save to cache
                 _cache.SetString(key, JsonSerializer.Serialize(entity));
             }
 
@@ -110,7 +109,6 @@ namespace School.Services
                     };
                 }
 
-                // save to cache
                 _cache.SetString(key, JsonSerializer.Serialize(entity));
             }
 
@@ -140,7 +138,6 @@ namespace School.Services
                     };
                 }
 
-                // save to cache
                 _cache.SetString(key, JsonSerializer.Serialize(entity));
             }
 
@@ -154,45 +151,9 @@ namespace School.Services
         }
 
 
-        //public async Task<APIResponse<IEnumerable<DropdownDto>>> GetEmployeeAsync(string roleName)
-        //{
-        //    //var enity = await _dbContext.Users
-        //    //                 .Where(u => u.StatusId == (int)DefaultStatus.Verified
-        //    //                             && u.UserRoles.Any(ur => ur.Role.Name == "Admin"))
-        //    //                 .Select(u => new DropdownDto
-        //    //                 {
-        //    //                     Name = UtilityHellper.FullName(u.FirstName, u.LastName),
-        //    //                     UserId = u.Id
 
-        //    //                 })
-        //    //                 .ToListAsync(); 
 
-        //    var enity = await (from u in _dbContext.Users
-        //                       join ur in _dbContext.UserRoles on u.Id equals ur.UserId
-        //                       join r in _dbContext.Roles on ur.RoleId equals r.Id
-        //                       where r.Name == roleName
-        //                       select new DropdownDto
-        //                       {
-        //                           Name = UtilityHellper.FullName(u.FirstName, u.LastName),
-        //                           UserId = u.Id
-        //                       }).ToListAsync();
 
-        //    if (enity != null)
-        //        return new APIResponse<IEnumerable<DropdownDto>>
-        //        {
-        //            Data = enity,
-        //            Message = CommonResource.FetchSuccess,
-        //            Success = true,
-        //            StatusCode = HttpStatusCode.OK
-        //        };
-        //    else
-        //        return new APIResponse<IEnumerable<DropdownDto>>
-        //        {
-        //            Message = CommonResource.FetchFailed,
-        //            Success = false,
-        //            StatusCode = HttpStatusCode.OK
-        //        };
-        //}
 
         private bool TryGetFromCache<T>(string key, out T? value)
         {

@@ -15,7 +15,6 @@ namespace School.Domain.Student
         [Key]
         public int Id { get; set; }
 
-        // Academic Information
         [Required]
         [MaxLength(50)]
         public string AcademicYear { get; set; } = string.Empty;
@@ -27,7 +26,6 @@ namespace School.Domain.Student
         [MaxLength(200)]
         public string InstituteName { get; set; } = string.Empty;
 
-        // Course Information 
         [Required]
         [MaxLength(50)]
         public string CourseType { get; set; } = string.Empty; // School or UNIVERSITY
@@ -39,7 +37,6 @@ namespace School.Domain.Student
         [MaxLength(10)]
         public string PassYear { get; set; } = string.Empty;
 
-        // Personal Information
         [Required]
         [MaxLength(200)]
         public string FullName { get; set; } = string.Empty;
@@ -62,7 +59,6 @@ namespace School.Domain.Student
         [MaxLength(10)]
         public string? BloodGroup { get; set; }
 
-        // Address
         [Required]
         [MaxLength(500)]
         public string PermanentAddress { get; set; } = string.Empty;
@@ -70,7 +66,6 @@ namespace School.Domain.Student
         [Required, MaxLength(10)] 
         public string PinCode { get; set; } = string.Empty;
 
-        // Contact Information
         [Required, MaxLength(15)] 
         public string Mobile { get; set; } = string.Empty;
         
@@ -84,11 +79,9 @@ namespace School.Domain.Student
         [Required, MaxLength(12)] 
         public string AadhaarNumber { get; set; } = string.Empty;
 
-        // Photo
         [MaxLength(2000)]
         public string? PassportPhoto { get; set; } // Base64 or file path
 
-        // Payment Information
         [Required]
         [MaxLength(20)]
         public string PaymentStatus { get; set; } = "pending"; // pending, completed, failed
@@ -99,7 +92,6 @@ namespace School.Domain.Student
         [Column(TypeName = "decimal(18,2)")]
         public decimal? PaymentAmount { get; set; }
 
-        // Registration Status
         [Required]
         [MaxLength(20)]
         public string RegistrationStatus { get; set; } = "pending"; // pending, approved, rejected, under_review
@@ -107,7 +99,6 @@ namespace School.Domain.Student
         [MaxLength(1000)]
         public string? Remarks { get; set; }
 
-        // Navigation Properties
         public virtual ICollection<StudentExperienceCertificate> ExperienceCertificates { get; set; } = new List<StudentExperienceCertificate>();
         public virtual ICollection<EducationalDetail> EducationalDetails { get; set; } = new List<EducationalDetail>();
         

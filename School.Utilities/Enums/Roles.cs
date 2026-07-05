@@ -6,9 +6,7 @@ namespace School.Utilities.Enums
     {
         SuperAdmin,
         Admin,
-        Teacher,
         Student,
-        Employee,
         User,
         Owner
     }

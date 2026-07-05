@@ -29,7 +29,6 @@ namespace School.Infrastructure.Repositories
         private readonly IHttpContextAccessor _accessor;
         private readonly SchoolDbContext _context;
 
-        // In-memory OTP storage (In production, use Redis or database)
         private static readonly Dictionary<string, (string OTP, DateTime Expiry)> _otpStorage = new();
 
         public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
@@ -51,10 +50,8 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Convert userId to email format if it doesn't contain @
                 var email = model.UserId.Contains('@') ? model.UserId : $"{model.UserId}";
 
-                // Find user by email or username
                 var user = await _userManager.FindByEmailAsync(email);
                 if (user == null)
                 {
@@ -71,7 +68,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Check if account is locked
                 if (user.LockoutEndDate.HasValue && user.LockoutEndDate.Value > DateTime.Now)
                 {
                     return new APIResponse<LoginResponseDto>
@@ -82,15 +78,12 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Verify password
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
                 if (!result.Succeeded)
                 {
-                    // Increment failed login attempts
                     user.FailedLoginAttempts++;
 
-                    // Lock account after 5 failed attempts
                     if (user.FailedLoginAttempts >= 5)
                     {
                         user.LockoutEndDate = DateTime.Now.AddMinutes(30);
@@ -115,7 +108,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Reset failed login attempts on successful login
                 user.FailedLoginAttempts = 0;
                 user.LastLoginDate = DateTime.Now;
                 user.LastLoginIpAddress = model.IpAddress;
@@ -123,11 +115,9 @@ namespace School.Infrastructure.Repositories
 
                 await _userManager.UpdateAsync(user);
 
-                // Get user roles
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
 
-                // Generate JWT token
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -138,7 +128,6 @@ namespace School.Infrastructure.Repositories
 
                 var authResponse = await _jWTAuthenticationManager.Authenticate(user.Id ?? user.Email!, claims);
 
-                // Save login history
                 var loginHistory = new LoginHistory
                 {
                     UserId = user.Id!,
@@ -197,7 +186,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Check if it's email or mobile
                 bool isEmail = model.EmailOrMobile.Contains('@');
                 ApplicationUser? user = null;
 
@@ -207,7 +195,6 @@ namespace School.Infrastructure.Repositories
                 }
                 else
                 {
-                    // Find user by phone number
                     user = await FindAsync(expression: x => x.PhoneNumber == model.EmailOrMobile);
                 }
 
@@ -221,16 +208,12 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Generate 6-digit OTP
                 var random = new Random();
                 var otp = random.Next(100000, 999999).ToString();
 
-                // Store OTP with expiry (5 minutes)
                 var expiry = DateTime.Now.AddMinutes(5);
                 _otpStorage[model.EmailOrMobile] = (otp, expiry);
 
-                // TODO: Send OTP via email or SMS
-                // For now, we'll just return it in the response (remove this in production)
                 Console.WriteLine($"OTP for {model.EmailOrMobile}: {otp}");
 
                 return new APIResponse<OTPResponseDto>
@@ -260,7 +243,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Check if OTP exists
                 if (!_otpStorage.ContainsKey(model.EmailOrMobile))
                 {
                     return new APIResponse<LoginResponseDto>
@@ -273,7 +255,6 @@ namespace School.Infrastructure.Repositories
 
                 var (storedOtp, expiry) = _otpStorage[model.EmailOrMobile];
 
-                // Check if OTP is expired
                 if (DateTime.Now > expiry)
                 {
                     _otpStorage.Remove(model.EmailOrMobile);
@@ -285,7 +266,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Verify OTP
                 if (storedOtp != model.OTP)
                 {
                     return new APIResponse<LoginResponseDto>
@@ -296,10 +276,8 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Remove used OTP
                 _otpStorage.Remove(model.EmailOrMobile);
 
-                // Find user
                 bool isEmail = model.EmailOrMobile.Contains('@');
                 ApplicationUser? user = null;
 
@@ -322,17 +300,14 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Update login information
                 user.LastLoginDate = DateTime.Now;
                 user.LastLoginIpAddress = model.IpAddress;
 
                 await _userManager.UpdateAsync(user);
 
-                // Get user roles
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
 
-                // Generate JWT token
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -343,7 +318,6 @@ namespace School.Infrastructure.Repositories
 
                 var authResponse = await _jWTAuthenticationManager.Authenticate(user.Id ?? user.Email!, claims);
 
-                // Save login history
                 var loginHistory = new LoginHistory
                 {
                     UserId = user.Id!,
@@ -402,7 +376,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Find active login sessions for this user
                 var activeSessions = _context.LoginHistories
                     .Where(lh => lh.UserId == userId && lh.IsActive)
                     .ToList();
@@ -420,7 +393,6 @@ namespace School.Infrastructure.Repositories
                 var logoutTime = DateTime.Now;
                 var logoutReason = string.IsNullOrEmpty(model.LogoutReason) ? "Manual" : model.LogoutReason;
 
-                // If SessionId provided, logout specific session
                 if (!string.IsNullOrEmpty(model.SessionId))
                 {
                     var session = activeSessions.FirstOrDefault(s => s.SessionId == model.SessionId);
@@ -434,7 +406,6 @@ namespace School.Infrastructure.Repositories
                 }
                 else
                 {
-                    // Logout all active sessions for this user
                     foreach (var session in activeSessions)
                     {
                         session.LogoutTime = logoutTime;
@@ -573,7 +544,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<PagedResponse<LoginHistoryDto>> GetLoginHistoryAsync(LoginHistoryFilter filter)
         {
-            // Validate filter
             filter.Validate();
 
             var query = _context.LoginHistories
@@ -585,7 +555,6 @@ namespace School.Infrastructure.Repositories
                 query = query.Where(lh => lh.IsActive == filter.IsActive.Value);
             }
 
-            // Date range filter
             if (filter.FromDate.HasValue)
             {
                 query = query.Where(lh => lh.LoginTime >= filter.FromDate.Value);
@@ -597,7 +566,6 @@ namespace School.Infrastructure.Repositories
                 query = query.Where(lh => lh.LoginTime < toDate);
             }
 
-            // Search filter - search in username, email, full name, IP address
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 var searchTerm = filter.Search.ToLower();
@@ -610,7 +578,6 @@ namespace School.Infrastructure.Repositories
                 );
             }
 
-            // Apply LoginHistoryFilter specific filters
             if (!string.IsNullOrEmpty(filter.UserId))
             {
                 query = query.Where(lh => lh.UserId == filter.UserId);
@@ -636,7 +603,6 @@ namespace School.Infrastructure.Repositories
                 query = query.Where(lh => lh.DeviceType != null && lh.DeviceType.Contains(filter.DeviceType));
             }
 
-            // Apply sorting
             if (!string.IsNullOrWhiteSpace(filter.OrderBy))
             {
                 var sortDirection = filter.SortDirection?.ToLower() == "desc";
@@ -659,14 +625,11 @@ namespace School.Infrastructure.Repositories
             }
             else
             {
-                // Default sort by login time descending
                 query = query.OrderByDescending(lh => lh.LoginTime);
             }
 
-            // Get total count before pagination
             var totalCount = await query.CountAsync();
 
-            // Apply pagination
             var loginHistories = await query
                 .Skip((filter.PageIndex - 1) * filter.PageSize)
                 .Take(filter.PageSize)
@@ -721,7 +684,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Find the role by name
                 var role = await _roleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
@@ -734,13 +696,11 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Get all user IDs with this role
                 var userIds = _context.UserRoles
                     .Where(ur => ur.RoleId == role.Id)
                     .Select(ur => ur.UserId)
                     .ToList();
 
-                // Get users with their roles
                 var users = await _context.Users
                     .Where(u => userIds.Contains(u.Id) && u.IsActive)
                     .Select(u => new UserDto

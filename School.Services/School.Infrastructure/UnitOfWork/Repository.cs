@@ -102,7 +102,6 @@ namespace School.Infrastructure.UnitOfWork
         public IQueryable<T> List(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = DbSet;
-            // Include related entities
             foreach (var include in includes)
             {
                 query = query.Include(include);
@@ -127,7 +126,6 @@ namespace School.Infrastructure.UnitOfWork
         public async Task<T?> FindAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = DbSet;
-            // Include related entities
             foreach (var include in includes)
             {
                 query = query.Include(include);

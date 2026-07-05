@@ -10,7 +10,6 @@ namespace School.Infrastructure
     {
         public static void Seed(SchoolDbContext context)
         {
-            // Seed Roles - Check by NormalizedName to avoid duplicates
             var existingRoleNames = context.Roles
                 .Select(r => r.NormalizedName.ToUpper())
                 .ToList();
@@ -24,7 +23,6 @@ namespace School.Infrastructure
                 context.SaveChanges(); // Save to get role IDs
             }
 
-            // Seed Statuses
             if (!context.Statuses.Any())
             {
                 List<Status> statuses = DefaultStatusList.StatusList();
@@ -32,7 +30,6 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            // Seed CategoryModules - Check by Name to avoid duplicates
             var existingCategoryNames = context.CategoryModules
                 .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
@@ -47,7 +44,6 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            // Seed Users - Check by NormalizedEmail to avoid duplicates
             var existingUserEmails = context.Users
                 .Select(u => u.NormalizedEmail.ToUpper())
                 .ToList();
@@ -61,7 +57,6 @@ namespace School.Infrastructure
                 context.SaveChanges(); // Save to get user IDs
             }
 
-            // Seed User Roles - Map using actual database IDs
             var allUsers = context.Users.ToList();
             var allRoles = context.Roles.ToList();
             var existingUserRoles = context.UserRoles
@@ -70,7 +65,6 @@ namespace School.Infrastructure
 
             var userRoleMappings = new List<IdentityUserRole<string>>();
 
-            // SuperAdmin User -> SuperAdmin Role
             var superAdminUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "SUPERADMIN");
             var superAdminRole = allRoles.FirstOrDefault(r => 
@@ -87,7 +81,6 @@ namespace School.Infrastructure
                 }
             }
 
-            // Admin User -> Admin Role
             var adminUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "ADMIN");
             var adminRole = allRoles.FirstOrDefault(r => 
@@ -104,24 +97,7 @@ namespace School.Infrastructure
                 }
             }
 
-            // Teacher User -> Teacher Role
-            var teacherUser = allUsers.FirstOrDefault(u => 
-                u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "TEACHER");
-            var teacherRole = allRoles.FirstOrDefault(r => 
-                r.NormalizedName != null && r.NormalizedName.ToUpper() == "TEACHER");
-            if (teacherUser != null && teacherRole != null)
-            {
-                if (!existingUserRoles.Any(ur => ur.UserId == teacherUser.Id && ur.RoleId == teacherRole.Id))
-                {
-                    userRoleMappings.Add(new IdentityUserRole<string>
-                    {
-                        UserId = teacherUser.Id,
-                        RoleId = teacherRole.Id
-                    });
-                }
-            }
 
-            // Student User -> Student Role
             var studentUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "STUDENT");
             var studentRole = allRoles.FirstOrDefault(r => 
@@ -137,7 +113,6 @@ namespace School.Infrastructure
                     });
                 }
             }
-            // Owner Users
             var onwerUser = allUsers.FirstOrDefault(u =>
                u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "ONWER");
             var ownerRole = allRoles.FirstOrDefault(r =>

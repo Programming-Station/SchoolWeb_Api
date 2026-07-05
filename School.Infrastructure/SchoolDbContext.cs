@@ -34,10 +34,8 @@ namespace School.Infrastructure
         public DbSet<EducationalDetail> EducationalDetails { get; set; } = null!;
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
 
-        // Website Management Entities
       
         public DbSet<Event> Events { get; set; } = null!;
-        public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;
         public DbSet<Department> Departments { get; set; } = null!;
         public DbSet<FeeType> FeeTypes { get; set; } = null!;
@@ -46,7 +44,6 @@ namespace School.Infrastructure
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure ApplicationUser
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable(name: "Users");
@@ -55,7 +52,6 @@ namespace School.Infrastructure
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
             });
 
-            // Configure Identity tables
             modelBuilder.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "Roles");
@@ -86,27 +82,6 @@ namespace School.Infrastructure
                 entity.ToTable("UserTokens");
             });
 
-            // Configure Teacher-ApplicationUser relationship
-            modelBuilder.Entity<Teacher>(entity =>
-            {
-                entity.HasOne(t => t.User)
-                    .WithMany()
-                    .HasForeignKey(t => t.UserId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
-            });
-            modelBuilder.Entity<Teacher>()
-                .HasOne(t => t.State)
-                .WithMany()
-                .HasForeignKey(t => t.StateId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Teacher>()
-                .HasOne(t => t.City)
-                .WithMany()
-                .HasForeignKey(t => t.CityId)
-                .OnDelete(DeleteBehavior.Cascade);
-            // Configure RefreshToken
             modelBuilder.Entity<RefreshToken>(entity =>
             {
                 entity.ToTable("RefreshTokens");
@@ -117,7 +92,6 @@ namespace School.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure LoginHistory
             modelBuilder.Entity<LoginHistory>(entity =>
             {
                 entity.ToTable("LoginHistories");
@@ -153,14 +127,9 @@ namespace School.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure Website Entities
-            //ConfigureWebsiteEntities(modelBuilder);
 
 
-            // Seed Data - Using DbInitializer.Seed() in Program.cs instead
-            // SeedData(modelBuilder);
 
-            // Apply global query filters for soft delete
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(School.Domain.BaseEntity.IDeleteEntity).IsAssignableFrom(entityType.ClrType))
@@ -178,53 +147,10 @@ namespace School.Infrastructure
             builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
         }
 
-        // Seed Data method - Using DbInitializer.Seed() in Program.cs instead
-        // private void SeedData(ModelBuilder modelBuilder)
-        // {
-        //     // Seed Roles
-        //     List<IdentityRole> roles = DefaultRoles.IdentityRoleList();
-        //     modelBuilder.Entity<IdentityRole>().HasData(roles);
-        //
-        //     // Seed Status
-        //     List<Status> statuses = DefaultStatusList.StatusList();
-        //     modelBuilder.Entity<Status>().HasData(statuses);
-        //
-        //     // Seed Users
-        //     List<ApplicationUser> users = DefaultUser.IdentityBasicUserList();
-        //     modelBuilder.Entity<ApplicationUser>().HasData(users);
-        //
-        //     // Map User to Role
-        //     var identityUserRoles = MappingUserRole.IdentityUserRoleList();
-        //     modelBuilder.Entity<IdentityUserRole<string>>().HasData(identityUserRoles);
-        // }
 
-        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        //{
-        //    UpdateAuditFields();
-        //    return base.SaveChangesAsync(cancellationToken);
-        //}
 
-        //private void UpdateAuditFields()
-        //{
-        //    var entries = ChangeTracker.Entries()
-        //        .Where(e => e.Entity is B2B.Domain.BaseEntity.IAuditEntity && 
-        //                   (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        //    foreach (var entry in entries)
-        //    {
-        //        var entity = (B2B.Domain.BaseEntity.IAuditEntity)entry.Entity;
-        //        var now = DateTime.Now;
 
-        //        if (entry.State == EntityState.Added)
-        //        {
-        //            entity.CreatedDate = now;
-        //        }
-        //        else if (entry.State == EntityState.Modified)
-        //        {
-        //            entity.UpdatedDate = now;
-        //        }
-        //    }
-        //}
     }
 }
 

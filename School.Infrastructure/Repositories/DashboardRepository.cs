@@ -22,7 +22,6 @@ namespace School.Infrastructure.Repositories
             {
                 var dashboard = new DashboardDto();
 
-                // Get all stats in parallel
                 var statsTask = GetDashboardStatsAsync();
                 var activitiesTask = GetRecentActivitiesAsync(10);
                 var registrationsTask = GetRecentRegistrationsAsync(10);
@@ -64,30 +63,24 @@ namespace School.Infrastructure.Repositories
             {
                 var stats = new DashboardStatsDto();
 
-                // Total Students
                 stats.TotalStudents = await _context.Students
                     .Where(s => !s.IsDeleted)
                     .CountAsync();
 
-                // Faculty Members - Currently not implemented, set to 0
                 stats.FacultyMembers = 0;
 
-                // Active Courses
                 stats.ActiveCourses = await _context.Courses
                     .Where(c => !c.IsDeleted)
                     .CountAsync();
 
-                // Departments (Affiliated Colleges)
                 stats.Departments = await _context.Affiliateds
                     .Where(a => !a.IsDeleted)
                     .CountAsync();
 
-                // Pending Approvals (Student Registrations with pending status)
                 stats.PendingApprovals = await _context.StudentRegistrations
                     .Where(sr => !sr.IsDeleted && sr.RegistrationStatus.ToLower() == "pending")
                     .CountAsync();
 
-                // Exams Scheduled (Upcoming Events)
                 var today = DateTime.UtcNow.Date;
                 stats.ExamsScheduled = await _context.Events
                     .Where(e => !e.IsDeleted && e.IsActive && e.EventDate >= today)
@@ -118,7 +111,6 @@ namespace School.Infrastructure.Repositories
             {
                 var activities = new List<ActivityDto>();
 
-                // Get recent student registrations
                 var recentRegistrations = await _context.StudentRegistrations
                     .Where(sr => !sr.IsDeleted)
                     .OrderByDescending(sr => sr.CreatedDate)
@@ -135,7 +127,6 @@ namespace School.Infrastructure.Repositories
 
               
 
-                // Get recent events
                 var recentEvents = await _context.Events
                     .Where(e => !e.IsDeleted && e.IsActive)
                     .OrderByDescending(e => e.CreatedDate)
@@ -150,7 +141,6 @@ namespace School.Infrastructure.Repositories
 
                 activities.AddRange(recentEvents);
 
-                // Sort by time (most recent first) and take top count
                 activities = activities
                     .OrderByDescending(a => a.Time)
                     .Take(count)
@@ -260,7 +250,6 @@ namespace School.Infrastructure.Repositories
                 var lastMonth = currentMonth == 1 ? 12 : currentMonth - 1;
                 var lastMonthYear = currentMonth == 1 ? currentYear - 1 : currentYear;
 
-                // Get current month fee collection
                 var currentMonthTotal = await _context.StudentRegistrations
                     .Where(sr => !sr.IsDeleted && 
                                  sr.PaymentStatus.ToLower() == "completed" &&
@@ -269,7 +258,6 @@ namespace School.Infrastructure.Repositories
                                  sr.CreatedDate.Value.Year == currentYear)
                     .SumAsync(sr => sr.PaymentAmount ?? 0);
 
-                // Get last month fee collection
                 var lastMonthTotal = await _context.StudentRegistrations
                     .Where(sr => !sr.IsDeleted &&
                                  sr.PaymentStatus.ToLower() == "completed" &&
@@ -278,13 +266,11 @@ namespace School.Infrastructure.Repositories
                                  sr.CreatedDate.Value.Year == lastMonthYear)
                     .SumAsync(sr => sr.PaymentAmount ?? 0);
 
-                // Get pending payments
                 var pendingTotal = await _context.StudentRegistrations
                     .Where(sr => !sr.IsDeleted &&
                                  sr.PaymentStatus.ToLower() == "pending")
                     .SumAsync(sr => sr.PaymentAmount ?? 0);
 
-                // Calculate growth percentage
                 double growth = 0;
                 if (lastMonthTotal > 0)
                 {
@@ -326,16 +312,11 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Since attendance is not implemented in the system yet,
-                // we'll return default values or calculate based on available data
-                // For now, returning a placeholder implementation
 
                 var totalStudents = await _context.Students
                     .Where(s => !s.IsDeleted)
                     .CountAsync();
 
-                // Placeholder: Assuming 87% attendance rate
-                // In a real system, this would come from an Attendance table
                 var present = (int)(totalStudents * 0.87);
                 var absent = totalStudents - present;
                 var attendanceRate = totalStudents > 0 ? 87.0 : 0.0;
@@ -366,7 +347,6 @@ namespace School.Infrastructure.Repositories
             }
         }
 
-        // Helper methods
         private string GetTimeAgo(DateTime dateTime)
         {
             var timeSpan = DateTime.UtcNow - dateTime;
@@ -391,8 +371,6 @@ namespace School.Infrastructure.Repositories
 
         private string FormatEventTime(DateTime eventDate)
         {
-            // For all-day events, you might want to check if there's a specific time field
-            // For now, assuming events have specific times
             var startTime = eventDate.ToString("h:mm tt");
             var endTime = eventDate.AddHours(3).ToString("h:mm tt"); // Assuming 3-hour duration
             return $"{startTime} - {endTime}";

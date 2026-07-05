@@ -1,4 +1,4 @@
-﻿using School.Domain.School;
+using School.Domain.School;
 using School.Models.School;
 using School_DTOs;
 using School_DTOs.School;
@@ -10,7 +10,6 @@ namespace School.Services.School.ISchoolServices
 {
     public interface ISchoolService
     {
-        // Define methods for school-related data access operations
         Task<APIResponse<SchoolRegistrationDto>> AddAsync(SchoolRegistrationModel model);
         Task<APIResponse<IEnumerable<SchoolRegistrationDto>>> GetAllsAsync();
 

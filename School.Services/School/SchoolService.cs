@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using School.Domain.School;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.School;

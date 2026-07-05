@@ -7,7 +7,6 @@ namespace School.Models.Student
     {
         public int Id { get; set; }
 
-        // Academic Information
         [Required(ErrorMessage = "Academic Year is required")]
         [MaxLength(50)]
         [NoScript]
@@ -22,7 +21,6 @@ namespace School.Models.Student
         [NoScript]
         public string InstituteName { get; set; } = string.Empty;
 
-        // Course Information
         [Required(ErrorMessage = "Course Type is required")]
         [MaxLength(50)]
         public string CourseType { get; set; } = string.Empty;
@@ -34,7 +32,6 @@ namespace School.Models.Student
         [MaxLength(10)]
         public string PassYear { get; set; } = string.Empty;
 
-        // Personal Information
         [Required(ErrorMessage = "Full Name is required")]
         [MaxLength(200)]
         [NoScript]
@@ -60,7 +57,6 @@ namespace School.Models.Student
         [MaxLength(10)]
         public string? BloodGroup { get; set; }
 
-        // Address
         [Required(ErrorMessage = "Permanent Address is required")]
         [MaxLength(500)]
         [NoScript]
@@ -71,7 +67,6 @@ namespace School.Models.Student
         [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Pin Code must be 6 digits")]
         public string PinCode { get; set; } = string.Empty;
 
-        // Contact Information
         [Required(ErrorMessage = "Mobile Number is required")]
         [MaxLength(15)]
         [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Mobile Number must be 10 digits")]
@@ -90,29 +85,23 @@ namespace School.Models.Student
         [RegularExpression(@"^[0-9]{12}$", ErrorMessage = "Aadhaar Number must be 12 digits")]
         public string AadhaarNumber { get; set; } = string.Empty;
 
-        // Photo
         [MaxLength(2000)]
         public string? PassportPhoto { get; set; }
 
-        // Payment Information
         [MaxLength(20)]
         public string PaymentStatus { get; set; } = "pending";
         [MaxLength(100)]
         public string? PaymentTransactionId { get; set; }
         public decimal? PaymentAmount { get; set; }
 
-        // Registration Status
         [MaxLength(20)]
         public string RegistrationStatus { get; set; } = "pending";
         [MaxLength(1000)]
         [NoScript]
         public string? Remarks { get; set; }
-        // Educational Details 
         public List<EducationalDetailModel> EducationalDetails { get; set; } = new List<EducationalDetailModel>();
-        // Experience Certificates
         public List<StudentExperienceCertificateModel> ExperienceCertificates { get; set; } = new List<StudentExperienceCertificateModel>();
 
-        // Audit fields
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
     }

@@ -24,7 +24,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Verify category exists
                 var categoryExists = await _context.CategoryModules
                     .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
 
@@ -160,7 +159,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Verify category exists
                 var categoryExists = await _context.CategoryModules
                     .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
 
@@ -322,14 +320,12 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Remove existing permissions for this user
                 var existingPermissions = await _context.ModulePermissions
                     .Where(mp => mp.UserId == model.UserId && !mp.IsDeleted)
                     .ToListAsync();
 
                 _context.ModulePermissions.RemoveRange(existingPermissions);
 
-                // Add new permissions
                 var newPermissions = model.ModuleIds.Select(moduleId => new ModulePermission
                 {
                     ModuleId = moduleId,

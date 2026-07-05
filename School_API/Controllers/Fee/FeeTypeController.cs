@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using School.Models.Fee;
 using School.Services.Interfaces;
 using School_API.Common.Interface;

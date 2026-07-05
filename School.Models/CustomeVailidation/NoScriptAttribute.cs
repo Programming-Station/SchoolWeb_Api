@@ -9,7 +9,6 @@ namespace School.Models.CustomeVailidation
         {
             if (value is string strValue)
             {
-                // Regex to check for script tags or HTML tags
                 var scriptRegex = new Regex(@"<script.*?>.*?</script>|<.*?>", RegexOptions.IgnoreCase);
                 if (scriptRegex.IsMatch(strValue))
                 {

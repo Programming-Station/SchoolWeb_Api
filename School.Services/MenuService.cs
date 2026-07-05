@@ -21,13 +21,11 @@ namespace School.Services
             _mapper = mapper;
         }
 
-        // ========== MENU OPERATIONS ==========
 
         public async Task<APIResponse<MenuDto>> AddMenuAsync(MenuModel model)
         {
             var entity = _mapper.Map<Menu>(model);
             
-            // Map submenus if provided
             if (model.SubMenus != null && model.SubMenus.Any())
             {
                 entity.SubMenus = model.SubMenus
@@ -63,7 +61,6 @@ namespace School.Services
             }
             else if (entity != null && entity.Id > 0)
             {
-                // Reload menu with submenus
                 var savedMenu = await _menuRepository.GetMenuByIdAsync(entity.Id);
                 return new APIResponse<MenuDto>
                 {
@@ -134,7 +131,6 @@ namespace School.Services
 
         public async Task<APIResponse> UpdateMenuAsync(MenuModel model)
         {
-            // Get existing menu to preserve audit fields
             var existingMenu = await _menuRepository.GetMenuByIdAsync(model.MenuId);
             
             if (existingMenu == null || existingMenu.Id == 0)
@@ -146,13 +142,11 @@ namespace School.Services
                 };
             }
 
-            // Map model to entity, preserving existing audit fields
             var entity = _mapper.Map<Menu>(model);
             entity.CreatedBy = existingMenu.CreatedBy;
             entity.CreatedDate = existingMenu.CreatedDate;
             entity.UpdatedDate = DateTime.Now;
 
-            // Map submenus
             if (model.SubMenus != null && model.SubMenus.Any())
             {
                 entity.SubMenus = model.SubMenus
@@ -245,7 +239,6 @@ namespace School.Services
             }
         }
 
-        // ========== SUBMENU OPERATIONS ==========
 
         public async Task<APIResponse<SubMenuDto>> AddSubMenuAsync(SubMenuModel model)
         {
@@ -398,7 +391,6 @@ namespace School.Services
             }
         }
 
-        // ========== MENU PERMISSION OPERATIONS ==========
 
         public async Task<APIResponse> GiveMenuPermissionAsync(MenuPermissionModel model)
         {
