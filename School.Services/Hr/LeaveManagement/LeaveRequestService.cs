@@ -1,13 +1,98 @@
-using School.Infrastructure.Repositories.Hr.LeaveManagement;
+using Microsoft.EntityFrameworkCore;
+using School.Domain.Hr.LeaveManagement;
+using School.Infrastructure.Repositories.IRepositories;
+using School.Infrastructure.UnitOfWork.Interfaces;
+using School.Services.Interfaces.Hr.LeaveManagement;
+using School_DTOs.Common;
+using School_DTOs.Hr.LeaveManagement;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace School.Services.Hr.LeaveManagement
 {
     public class LeaveRequestService : ILeaveRequestService
     {
-        private readonly ILeaveRequestRepository _repository;
-        public LeaveRequestService(ILeaveRequestRepository repository)
+        private readonly IRepository<LeaveRequest> _repository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public LeaveRequestService(IRepository<LeaveRequest> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<APIResponse<List<LeaveRequestDto>>> GetAllByEmployeeIdAsync(int foreignKeyId)
+        {
+            var data = await _repository.GetAll().Where(x => x.EmployeeId == foreignKeyId).Select(x => new LeaveRequestDto
+            {
+                Id = x.Id,
+                EmployeeId = x.EmployeeId,
+                LeaveTypeId = x.LeaveTypeId, StartDate = x.StartDate, EndDate = x.EndDate, TotalDays = x.TotalDays, Reason = x.Reason, Status = x.Status, ApprovedById = x.ApprovedById, Remarks = x.Remarks
+            }).ToListAsync();
+
+            return new APIResponse<List<LeaveRequestDto>>(HttpStatusCode.OK, "Success", data);
+        }
+
+        public async Task<APIResponse<LeaveRequestDto>> GetByIdAsync(int id)
+        {
+            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new LeaveRequestDto
+            {
+                Id = x.Id,
+                EmployeeId = x.EmployeeId,
+                LeaveTypeId = x.LeaveTypeId, StartDate = x.StartDate, EndDate = x.EndDate, TotalDays = x.TotalDays, Reason = x.Reason, Status = x.Status, ApprovedById = x.ApprovedById, Remarks = x.Remarks
+            }).FirstOrDefaultAsync();
+
+            if (data == null) return new APIResponse<LeaveRequestDto>(HttpStatusCode.NotFound, "Not found");
+            return new APIResponse<LeaveRequestDto>(HttpStatusCode.OK, "Success", data);
+        }
+
+        public async Task<APIResponse<object>> CreateAsync(CreateLeaveRequestDto dto, string username)
+        {
+            var entity = new LeaveRequest
+            {
+                EmployeeId = dto.EmployeeId,
+                LeaveTypeId = dto.LeaveTypeId, StartDate = dto.StartDate, EndDate = dto.EndDate, TotalDays = dto.TotalDays, Reason = dto.Reason, Status = dto.Status, ApprovedById = dto.ApprovedById, Remarks = dto.Remarks,
+                CreatedBy = username,
+                CreatedDate = DateTime.UtcNow
+            };
+            await _repository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
+        }
+
+        public async Task<APIResponse<object>> UpdateAsync(int id, UpdateLeaveRequestDto dto, string username)
+        {
+            if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+
+            entity.EmployeeId = dto.EmployeeId;
+            entity.LeaveTypeId = dto.LeaveTypeId;
+            entity.StartDate = dto.StartDate;
+            entity.EndDate = dto.EndDate;
+            entity.TotalDays = dto.TotalDays;
+            entity.Reason = dto.Reason;
+            entity.Status = dto.Status;
+            entity.ApprovedById = dto.ApprovedById;
+            entity.Remarks = dto.Remarks;
+            entity.UpdatedBy = username;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object>(HttpStatusCode.OK, "Updated successfully");
+        }
+
+        public async Task<APIResponse<object>> DeleteAsync(int id, string username)
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
+            _repository.Remove(entity);
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<object>(HttpStatusCode.OK, "Deleted successfully");
         }
     }
 }

@@ -1,60 +1,60 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain.Hr.Timesheet;
+using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Services.Interfaces.Hr.Timesheet;
+using School.Services.Interfaces.Hr;
 using School_DTOs.Common;
-using School_DTOs.Hr.Timesheet;
+using School_DTOs.Hr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace School.Services.Hr.Timesheet
+namespace School.Services.Hr
 {
-    public class TimesheetService : ITimesheetService
+    public class EmployeeBankDetailService : IEmployeeBankDetailService
     {
-        private readonly IRepository<Timesheet> _repository;
+        private readonly IRepository<EmployeeBankDetail> _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public TimesheetService(IRepository<Timesheet> repository, IUnitOfWork unitOfWork)
+        public EmployeeBankDetailService(IRepository<EmployeeBankDetail> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<APIResponse<List<TimesheetDto>>> GetAllByEmployeeIdAsync(int foreignKeyId)
+        public async Task<APIResponse<List<EmployeeBankDetailDto>>> GetAllByEmployeeIdAsync(int employeeId)
         {
-            var data = await _repository.GetAll().Where(x => x.EmployeeId == foreignKeyId).Select(x => new TimesheetDto
+            var data = await _repository.GetAll().Where(x => x.EmployeeId == employeeId).Select(x => new EmployeeBankDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, ApprovedById = x.ApprovedById, TotalHours = x.TotalHours
+                BankName = x.BankName, AccountNumber = x.AccountNumber, IfscCode = x.IfscCode, Branch = x.Branch
             }).ToListAsync();
 
-            return new APIResponse<List<TimesheetDto>>(HttpStatusCode.OK, "Success", data);
+            return new APIResponse<List<EmployeeBankDetailDto>>(HttpStatusCode.OK, "Success", data);
         }
 
-        public async Task<APIResponse<TimesheetDto>> GetByIdAsync(int id)
+        public async Task<APIResponse<EmployeeBankDetailDto>> GetByIdAsync(int id)
         {
-            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new TimesheetDto
+            var data = await _repository.GetAll().Where(x => x.Id == id).Select(x => new EmployeeBankDetailDto
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, ApprovedById = x.ApprovedById, TotalHours = x.TotalHours
+                BankName = x.BankName, AccountNumber = x.AccountNumber, IfscCode = x.IfscCode, Branch = x.Branch
             }).FirstOrDefaultAsync();
 
-            if (data == null) return new APIResponse<TimesheetDto>(HttpStatusCode.NotFound, "Not found");
-            return new APIResponse<TimesheetDto>(HttpStatusCode.OK, "Success", data);
+            if (data == null) return new APIResponse<EmployeeBankDetailDto>(HttpStatusCode.NotFound, "Not found");
+            return new APIResponse<EmployeeBankDetailDto>(HttpStatusCode.OK, "Success", data);
         }
 
-        public async Task<APIResponse<object>> CreateAsync(CreateTimesheetDto dto, string username)
+        public async Task<APIResponse<object>> CreateAsync(CreateEmployeeBankDetailDto dto, string username)
         {
-            var entity = new Timesheet
+            var entity = new EmployeeBankDetail
             {
                 EmployeeId = dto.EmployeeId,
-                StartDate = dto.StartDate, EndDate = dto.EndDate, Status = dto.Status, ApprovedById = dto.ApprovedById, TotalHours = dto.TotalHours,
+                BankName = dto.BankName, AccountNumber = dto.AccountNumber, IfscCode = dto.IfscCode, Branch = dto.Branch,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };
@@ -63,18 +63,17 @@ namespace School.Services.Hr.Timesheet
             return new APIResponse<object>(HttpStatusCode.OK, "Created successfully");
         }
 
-        public async Task<APIResponse<object>> UpdateAsync(int id, UpdateTimesheetDto dto, string username)
+        public async Task<APIResponse<object>> UpdateAsync(int id, UpdateEmployeeBankDetailDto dto, string username)
         {
             if (id != dto.Id) return new APIResponse<object>(HttpStatusCode.BadRequest, "Id mismatch");
             var entity = await _repository.GetByIdAsync(id);
             if (entity == null) return new APIResponse<object>(HttpStatusCode.NotFound, "Not found");
 
             entity.EmployeeId = dto.EmployeeId;
-            entity.StartDate = dto.StartDate;
-            entity.EndDate = dto.EndDate;
-            entity.Status = dto.Status;
-            entity.ApprovedById = dto.ApprovedById;
-            entity.TotalHours = dto.TotalHours;
+            entity.BankName = dto.BankName;
+            entity.AccountNumber = dto.AccountNumber;
+            entity.IfscCode = dto.IfscCode;
+            entity.Branch = dto.Branch;
             entity.UpdatedBy = username;
             entity.UpdatedDate = DateTime.UtcNow;
 
