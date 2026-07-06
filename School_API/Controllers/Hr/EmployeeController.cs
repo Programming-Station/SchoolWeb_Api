@@ -3,12 +3,13 @@ using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_DTOs.Hr;
 using School_DTOs.Common;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace School_API.Controllers.Hr
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class EmployeeController : BaseController
     {
         private readonly IEmployeeService _employeeService;
@@ -21,18 +22,14 @@ namespace School_API.Controllers.Hr
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromForm] CreateEmployeeDto model)
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeDto model)
         {
-            // Note: If using FromForm, ensure files are handled in the service layer
             var result = await _employeeService.CreateEmployeeAsync(model, UserName);
-            if (result.Success)
-                return StatusCode((int)result.StatusCode, result);
-
             return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateEmployee([FromForm] UpdateEmployeeDto model)
+        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDto model)
         {
             var result = await _employeeService.UpdateEmployeeAsync(model, UserName);
             if (result.Success)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace School_API.Controllers.Hr
 {
-    [ApiController]
+    
     public abstract class HrController<TEntity> : BaseController where TEntity : class, global::School.Domain.BaseEntity.IAuditEntity<int>, global::School.Domain.BaseEntity.ITenantEntity
     {
         private readonly IHrMasterService<TEntity> _masterService;

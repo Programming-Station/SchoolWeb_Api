@@ -189,6 +189,7 @@ namespace School.Infrastructure
             }
 
             DefaultSchoolData.SeedAsync(context).Wait();
+            DefaultHrData.SeedAsync(context).Wait();
         }
     }
 }
