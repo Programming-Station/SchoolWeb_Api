@@ -190,6 +190,9 @@ namespace School.Infrastructure
 
             DefaultSchoolData.SeedAsync(context).Wait();
             DefaultHrData.SeedAsync(context).Wait();
+            DefaultCourseData.SeedAsync(context).Wait();
+            DefaultClassData.SeedAsync(context).Wait();
+            DefaultStudentData.SeedAsync(context).Wait();
         }
     }
 }

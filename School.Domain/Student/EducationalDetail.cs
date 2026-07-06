@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain.Student
 {
-    public class EducationalDetail
+    public class EducationalDetail :AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }

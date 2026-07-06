@@ -163,5 +163,45 @@ namespace School.Infrastructure.Repositories
 
             return studentId;
         }
+
+        public async Task<string> GenerateEnrollmentNumberAsync()
+        {
+            var currentYear = DateTime.Now.Year;
+            var yearPrefix = currentYear.ToString().Substring(2, 2); // Last 2 digits of year
+
+            var lastStudent = await _context.Students
+                .Where(s => s.EnrollmentNumber != null && s.EnrollmentNumber.StartsWith($"ENR{yearPrefix}"))
+                .OrderByDescending(s => s.EnrollmentNumber)
+                .FirstOrDefaultAsync();
+
+            int nextNumber = 1;
+            if (lastStudent != null && lastStudent.EnrollmentNumber != null)
+            {
+                var lastNumberStr = lastStudent.EnrollmentNumber.Substring(5); // Skip "ENR26"
+                if (int.TryParse(lastNumberStr, out int lastNumber))
+                {
+                    nextNumber = lastNumber + 1;
+                }
+            }
+
+            var enrollmentNumber = $"ENR{yearPrefix}{nextNumber:D4}";
+
+            var exists = await _context.Students.AnyAsync(s => s.EnrollmentNumber == enrollmentNumber);
+            int retryCount = 0;
+            while (exists && retryCount < 10) // Max 10 retries
+            {
+                nextNumber++;
+                enrollmentNumber = $"ENR{yearPrefix}{nextNumber:D4}";
+                exists = await _context.Students.AnyAsync(s => s.EnrollmentNumber == enrollmentNumber);
+                retryCount++;
+            }
+
+            if (exists)
+            {
+                return "";
+            }
+
+            return enrollmentNumber;
+        }
     }
 }

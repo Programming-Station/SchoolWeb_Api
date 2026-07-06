@@ -62,6 +62,21 @@ namespace School.Services
                     }
                 }
 
+                string enrollmentNumber = model.EnrollmentNumber;
+                if (string.IsNullOrWhiteSpace(enrollmentNumber))
+                {
+                    enrollmentNumber = await _studentRepository.GenerateEnrollmentNumberAsync();
+                    if (string.IsNullOrWhiteSpace(enrollmentNumber))
+                    {
+                        return new APIResponse<StudentDto>
+                        {
+                            Success = false,
+                            Message = "Failed to generate Enrollment Number",
+                            StatusCode = HttpStatusCode.InternalServerError
+                        };
+                    }
+                }
+
                 var entity = _mapper.Map<Student>(model);
                 
                 if (entity.CourseId <= 0)
@@ -96,6 +111,7 @@ namespace School.Services
                 }
 
                 entity.StudentId = studentId;
+                entity.EnrollmentNumber = enrollmentNumber;
                 entity.StatusId = (int)DefaultStatus.Created;
                 entity.CreatedBy = model.CreatedBy;
                 entity.CreatedDate = DateTime.UtcNow;

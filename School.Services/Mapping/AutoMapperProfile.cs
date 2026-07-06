@@ -27,6 +27,10 @@ namespace School.Services.Mapping
 
             foreach (var (source, destination) in mappings)
             {
+                if (source.Name == "Employee" && destination.Name == "EmployeeDto")
+                {
+                    continue;
+                }
                 if (destination.Name.Contains("Dto"))
                 {
                     var createdDateProp = destination.GetProperty("CreatedDate");
@@ -83,6 +87,23 @@ namespace School.Services.Mapping
             CreateMap<global::School.Domain.School.SchoolOwner, global::School_DTOs.School.SchoolOwnerDto>()
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.SchoolRegistration != null ? src.SchoolRegistration.SchoolName : string.Empty))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.ApplicationUser != null ? src.ApplicationUser.UserName : string.Empty));
+
+            CreateMap<global::School.Domain.Student.StudentRegistration, global::School_DTOs.Student.StudentRegistrationDto>()
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => ParseDateOfBirth(src.DateOfBirth)))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hr.Employee, global::School_DTOs.Hr.EmployeeDto>()
+                .ForMember(dest => dest.FatherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.FatherName : null))
+                .ForMember(dest => dest.MotherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.MotherName : null))
+                .ForMember(dest => dest.AadhaarNumber, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.AadhaarNumber : null))
+                .ForMember(dest => dest.PANNumber, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.PANNumber : null))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.Address : null))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.City : null))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.State : null))
+                .ForMember(dest => dest.PinCode, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.PinCode : null))
+                .ForMember(dest => dest.BloodGroup, opt => opt.MapFrom(src => src.EmployeeDetail != null && src.EmployeeDetail.BloodGroup != null ? src.EmployeeDetail.BloodGroup.Name : null))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
+                .ForMember(dest => dest.DesignationName, opt => opt.MapFrom(src => src.Designation != null ? src.Designation.Name : string.Empty));
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

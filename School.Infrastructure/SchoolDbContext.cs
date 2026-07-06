@@ -217,6 +217,38 @@ namespace School.Infrastructure
             }
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SetTenantId();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override int SaveChanges()
+        {
+            SetTenantId();
+            return base.SaveChanges();
+        }
+
+        private void SetTenantId()
+        {
+            var tenantId = CurrentTenantId;
+            if (!tenantId.HasValue) return;
+
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    if (entry.Entity is BaseEntity.ITenantEntity tenantEntity)
+                    {
+                        if (tenantEntity.SchoolRegistrationId == 0)
+                        {
+                            tenantEntity.SchoolRegistrationId = tenantId.Value;
+                        }
+                    }
+                }
+            }
+        }
+
         private void SetGlobalQueryFilterForSoftDelete<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
         {
             if (typeof(BaseEntity.ITenantEntity).IsAssignableFrom(typeof(T)))

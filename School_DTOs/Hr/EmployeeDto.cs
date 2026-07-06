@@ -27,6 +27,15 @@ namespace School_DTOs.Hr
         public string? SpecializationName { get; set; }
         public decimal Experience { get; set; }
         public string? Qualification { get; set; }
+        public string? FatherName { get; set; }
+        public string? MotherName { get; set; }
+        public string? PinCode { get; set; }
+        public string? AadhaarNumber { get; set; }
+        public string? PANNumber { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? BloodGroup { get; set; }
     }
 
     public class CreateEmployeeDto
@@ -44,6 +53,9 @@ namespace School_DTOs.Hr
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
+        public string? PinCode { get; set; }
+        public string? FatherName { get; set; }
+        public string? MotherName { get; set; }
         public string Status { get; set; } = "active";
         public DateTime JoiningDate { get; set; }
         public decimal Experience { get; set; } = 0;

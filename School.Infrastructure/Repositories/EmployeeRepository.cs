@@ -30,6 +30,7 @@ namespace School.Infrastructure.Repositories
                 .Include(e => e.Educations)
                 .Include(e => e.Experiences)
                 .Include(e => e.SalaryDetails)
+                .Include(e => e.EmployeeDetail)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 

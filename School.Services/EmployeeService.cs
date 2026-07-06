@@ -57,6 +57,20 @@ namespace School.Services
                 string generatedCode = "EMP" + DateTime.Now.ToString("yyyyMMddHHmmss");
                 entity.EmployeeCode = generatedCode;
 
+                entity.EmployeeDetail = new EmployeeDetail
+                {
+                    FatherName = model.FatherName,
+                    MotherName = model.MotherName,
+                    PinCode = model.PinCode,
+                    AadhaarNumber = model.AadhaarNumber,
+                    PANNumber = model.PANNumber,
+                    Address = model.Address,
+                    City = model.City,
+                    State = model.State,
+                    CreatedBy = username,
+                    CreatedDate = DateTime.Now
+                };
+
                 await _employeeRepository.AddAsync(entity);
                 await _unitOfWork.CommitAsync();
 
@@ -113,6 +127,36 @@ namespace School.Services
                 _mapper.Map(model, existingEntity);
                 existingEntity.UpdatedBy = username;
                 existingEntity.UpdatedDate = DateTime.Now;
+
+                if (existingEntity.EmployeeDetail == null)
+                {
+                    existingEntity.EmployeeDetail = new EmployeeDetail
+                    {
+                        FatherName = model.FatherName,
+                        MotherName = model.MotherName,
+                        PinCode = model.PinCode,
+                        AadhaarNumber = model.AadhaarNumber,
+                        PANNumber = model.PANNumber,
+                        Address = model.Address,
+                        City = model.City,
+                        State = model.State,
+                        CreatedBy = username,
+                        CreatedDate = DateTime.Now
+                    };
+                }
+                else
+                {
+                    existingEntity.EmployeeDetail.FatherName = model.FatherName;
+                    existingEntity.EmployeeDetail.MotherName = model.MotherName;
+                    existingEntity.EmployeeDetail.PinCode = model.PinCode;
+                    existingEntity.EmployeeDetail.AadhaarNumber = model.AadhaarNumber;
+                    existingEntity.EmployeeDetail.PANNumber = model.PANNumber;
+                    existingEntity.EmployeeDetail.Address = model.Address;
+                    existingEntity.EmployeeDetail.City = model.City;
+                    existingEntity.EmployeeDetail.State = model.State;
+                    existingEntity.EmployeeDetail.UpdatedBy = username;
+                    existingEntity.EmployeeDetail.UpdatedDate = DateTime.Now;
+                }
 
                 _employeeRepository.Update(existingEntity);
                 await _unitOfWork.CommitAsync();

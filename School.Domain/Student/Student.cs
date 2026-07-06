@@ -13,6 +13,8 @@ namespace School.Domain.Student
         [Required]
         [MaxLength(50)]
         public string StudentId { get; set; } = string.Empty;
+         [MaxLength(50)]
+        public string? EnrollmentNumber { get; set; }
 
         [MaxLength(450)]
         public string? ApplicationUserId { get; set; }
@@ -20,8 +22,7 @@ namespace School.Domain.Student
         [ForeignKey(nameof(ApplicationUserId))]
         public virtual global::School.Domain.Auth.ApplicationUser? ApplicationUser { get; set; }
 
-        [MaxLength(50)]
-        public string? EnrollmentNumber { get; set; }
+       
 
         [Required, MaxLength(20)]
         public string CourseType { get; set; } = null!;
