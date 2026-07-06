@@ -68,6 +68,7 @@ namespace School.Infrastructure.Repositories
                   u => u.EstablishedYear,
                   u => u.Address,
                   u => u.Pincode,
+                  u => u.CountryId,
                   u => u.StateId,
                   u => u.CityId,
                   u => u.Logo,

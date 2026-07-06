@@ -45,11 +45,11 @@ namespace School.Services
         }
         public async Task<APIResponse<IEnumerable<DropdownDto>>> GetStatesAsync(int id)
         {
-            string key = "States";
+            string key = $"States_{id}";
 
             if (!TryGetFromCache<IEnumerable<DropdownDto>>(key, out var result) || result == null)
             {
-                var entity = await _dbContext.States.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.StateCode }).ToListAsync();
+                var entity = await _dbContext.States.Where(x => !x.IsDeleted && x.CountryId == id).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.StateCode }).ToListAsync();
                 if (entity == null || !entity.Any())
                 {
                     return new APIResponse<IEnumerable<DropdownDto>>
@@ -61,6 +61,7 @@ namespace School.Services
                 }
 
                 _cache.SetString(key, JsonSerializer.Serialize(entity));
+                result = entity;
             }
 
             return new APIResponse<IEnumerable<DropdownDto>>

@@ -29,16 +29,20 @@ namespace School.Services.School
         {
             try
             {
-                var query = _repo.GetAllQueryable();
+                IQueryable<SchoolOwner> query = _repo.GetAllQueryable()
+                    .Include(x => x.SchoolRegistration)
+                    .Include(x => x.ApplicationUser);
 
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    // No name property in SchoolOwner
+                    searchTerm = searchTerm.ToLower();
+                    query = query.Where(x => x.SchoolRegistration.SchoolName.ToLower().Contains(searchTerm) 
+                                          || x.ApplicationUser.UserName.ToLower().Contains(searchTerm));
                 }
 
                 if (isActive.HasValue)
                 {
-                    // No IsActive property in SchoolOwner (only IsLocked exists)
+                    query = query.Where(x => x.IsLocked == !isActive.Value);
                 }
 
                 var totalCount = await query.CountAsync();
@@ -71,7 +75,10 @@ namespace School.Services.School
         {
             try
             {
-                var entity = await _repo.GetByIdAsync(id);
+                var entity = await _repo.GetAllQueryable()
+                    .Include(x => x.SchoolRegistration)
+                    .Include(x => x.ApplicationUser)
+                    .FirstOrDefaultAsync(x => x.Id == id);
                 if (entity == null) return new APIResponse<SchoolOwnerDto> { Success = false, StatusCode = HttpStatusCode.NotFound };
                 return new APIResponse<SchoolOwnerDto> { Success = true, StatusCode = HttpStatusCode.OK, Data = _mapper.Map<SchoolOwnerDto>(entity) };
             }

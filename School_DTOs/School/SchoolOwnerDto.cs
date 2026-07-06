@@ -16,6 +16,8 @@ namespace School_DTOs.School
         public string? LastLoginIp { get; set; }
         public int FailedLoginAttempt { get; set; }
         public bool IsLocked { get; set; }
+        public string? SchoolName { get; set; }
+        public string? UserName { get; set; }
     }
 
     public class SchoolOwnerModel

@@ -46,6 +46,9 @@ namespace School.Domain.School
         public string? Address { get; set; }
         public string? Pincode { get; set; }
 
+        public int CountryId { get; set; }
+        public virtual Country Country { get; set; } = null!;
+
         public int StateId { get; set; }
         public virtual State State { get; set; } = null!;
 

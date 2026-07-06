@@ -60,6 +60,7 @@ namespace School.Infrastructure.Seeds
                     PhoneNumber = "1234567890",
                     CityId = defaultCity.Id,
                     StateId = defaultState.Id,
+                    CountryId = defaultState.CountryId,
                     IsActive = true,
                     RegistrationDate = DateTime.UtcNow,
                     ContactPersonName = "School Owner",

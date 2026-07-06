@@ -28,17 +28,22 @@ namespace School.Models.School
         [StringLength(10)]
         public string Pincode { get; set; }
 
+        [Required(ErrorMessage = "Country is required.")]
+        public int CountryId { get; set; }
+
+        public string? CountryName { get; set; }
+
         [Required]
         public int StateId { get; set; }
 
-        public string StateName { get; set; }
+        public string? StateName { get; set; }
 
         [Required]
         public int CityId { get; set; }
 
-        public string CityName { get; set; }
+        public string? CityName { get; set; }
 
-        public string Logo { get; set; }
+        public string? Logo { get; set; }
 
         public bool IsActive { get; set; }
 
@@ -52,6 +57,6 @@ namespace School.Models.School
         public string PhoneNumber { get; set; }
 
         [StringLength(100)]
-        public string ContactPersonName { get; set; }
+        public string? ContactPersonName { get; set; }
     }
 }

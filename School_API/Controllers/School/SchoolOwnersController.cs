@@ -8,7 +8,6 @@ using School_API.Common.Interface;
 
 namespace School_API.Controllers.School
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class SchoolOwnersController : BaseController
     {
