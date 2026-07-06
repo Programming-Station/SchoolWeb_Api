@@ -31,6 +31,10 @@ namespace School.Services.Mapping
                 {
                     continue;
                 }
+                if (source.Name == "SchoolRegistration" && (destination.Name == "SchoolRegistrationModel" || destination.Name == "SchoolRegistrationDto"))
+                {
+                    continue;
+                }
                 if (destination.Name.Contains("Dto"))
                 {
                     var createdDateProp = destination.GetProperty("CreatedDate");
@@ -104,6 +108,18 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.BloodGroup, opt => opt.MapFrom(src => src.EmployeeDetail != null && src.EmployeeDetail.BloodGroup != null ? src.EmployeeDetail.BloodGroup.Name : null))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
                 .ForMember(dest => dest.DesignationName, opt => opt.MapFrom(src => src.Designation != null ? src.Designation.Name : string.Empty));
+
+            CreateMap<global::School.Domain.School.SchoolRegistration, global::School.Models.School.SchoolRegistrationModel>();
+            CreateMap<global::School.Models.School.SchoolRegistrationModel, global::School.Domain.School.SchoolRegistration>()
+                .ForMember(dest => dest.City, opt => opt.Ignore())
+                .ForMember(dest => dest.State, opt => opt.Ignore())
+                .ForMember(dest => dest.Country, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolProfileSetting, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolSubscriptions, opt => opt.Ignore())
+                .ForMember(dest => dest.AffiliationBoard, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolType, opt => opt.Ignore());
+
+            CreateMap<global::School.Domain.School.SchoolRegistration, global::School_DTOs.School.SchoolRegistrationDto>();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)
