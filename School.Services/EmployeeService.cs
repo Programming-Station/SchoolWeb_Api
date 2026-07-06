@@ -26,19 +26,22 @@ namespace School.Services
         private readonly IMapper _mapper;
         private readonly ILogger<EmployeeService> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
 
         public EmployeeService(
             IEmployeeRepository employeeRepository,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             ILogger<EmployeeService> logger,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IEmailService emailService)
         {
             _employeeRepository = employeeRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<EmployeeDto>> CreateEmployeeAsync(CreateEmployeeDto model, string username)
@@ -93,6 +96,9 @@ namespace School.Services
                     entity.ApplicationUserId = user.Id;
                     _employeeRepository.Update(entity);
                     await _unitOfWork.CommitAsync();
+
+                    // Send Welcome Email using template
+                    await _emailService.SendWelcomeEmailAsync(model.Email, generatedCode, "School@123", "Approved");
                 }
                 else
                 {

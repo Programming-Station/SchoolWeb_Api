@@ -34,6 +34,8 @@ using School.Services.Interfaces.Hr.LeaveManagement;
 using School.Services.Interfaces.Hr.Attendance;
 using School.Services.Interfaces.Hr.Timesheet;
 using School.Services.Hr;
+using School.Services.Interfaces.Payroll;
+using School.Services.Interfaces.Academic;
 
 namespace School_API
 {
@@ -156,9 +158,23 @@ namespace School_API
 
             ;
         }
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddMemoryCache();
+
+            // Bind Encryption Config
+            services.Configure<School.Utilities.Security.EncryptionConfig>(configuration.GetSection("EncryptionConfig"));
+            services.AddScoped<School.Utilities.Security.IEncryptionService, School.Utilities.Security.AESEncryptionService>();
+
+            // Email Background Queue Services
+            services.AddSingleton<IEmailQueue, EmailQueue>();
+            services.AddHostedService<EmailQueueProcessor>();
+
             return services
+            .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
+            .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
+            .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
+            .AddScoped<IEmailService, EmailService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<ITenantService, TenantService>()
             .AddScoped<IPermissionService, PermissionService>()
@@ -210,6 +226,16 @@ namespace School_API
             // Timesheet
             .AddScoped<ITimesheetService, School.Services.Hr.Timesheet.TimesheetService>()
             .AddScoped<ITimesheetEntryService, School.Services.Hr.Timesheet.TimesheetEntryService>()
+
+            // Payroll
+            .AddScoped<ISalaryComponentService, School.Services.Payroll.SalaryComponentService>()
+            .AddScoped<IPayrollRunService, School.Services.Payroll.PayrollRunService>()
+
+            // Academic
+            .AddScoped<School.Services.Interfaces.Academic.IExamService, School.Services.Academic.ExamService>()
+            .AddScoped<IExamResultService, School.Services.Academic.ExamResultService>()
+            .AddScoped<School.Services.Interfaces.Academic.ISubjectService, School.Services.Academic.SubjectService>()
+            .AddScoped<School.Services.Interfaces.Academic.ITimetableSlotService, School.Services.Academic.TimetableSlotService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

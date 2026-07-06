@@ -14,11 +14,13 @@ namespace School.Services
     {
         private readonly IStudentRegistrationRepository _studentRegistrationRepository;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public StudentRegistrationService(IStudentRegistrationRepository studentRegistrationRepository, IMapper mapper)
+        public StudentRegistrationService(IStudentRegistrationRepository studentRegistrationRepository, IMapper mapper, IEmailService emailService)
         {
             _studentRegistrationRepository = studentRegistrationRepository;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<StudentRegistrationDto>> AddStudentRegistrationAsync(StudentRegistrationModel model)
@@ -313,6 +315,21 @@ namespace School.Services
             var result = await _studentRegistrationRepository.UpdateStudentRegistrationAsync(entity);
             if (result > 0)
             {
+                if (!string.IsNullOrEmpty(entity.Email))
+                {
+                    var statusLower = dto.RegistrationStatus.ToLower();
+                    if (statusLower == "rejected" || statusLower == "reject")
+                    {
+                        var placeholders = new Dictionary<string, string>
+                        {
+                            { "StudentName", entity.FullName },
+                            { "Reason", dto.Remarks ?? "Your application does not meet the criteria." },
+                            { "EditLink", $"http://localhost:4200/student-registration/edit/{entity.Id}" }
+                        };
+                        await _emailService.SendGenericTemplateAsync(entity.Email, "RegistrationRejected", placeholders);
+                    }
+                }
+
                 return new APIResponse
                 {
                     StatusCode = HttpStatusCode.OK,

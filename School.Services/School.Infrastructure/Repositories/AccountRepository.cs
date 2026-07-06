@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using School_DTOs;
 using School.Utilities.Resources;
 using Microsoft.EntityFrameworkCore;
+using School.Services.Interfaces;
 
 namespace School.Infrastructure.Repositories
 {
@@ -28,13 +29,14 @@ namespace School.Infrastructure.Repositories
         private readonly IJWTAuthenticationManager _jWTAuthenticationManager;
         private readonly IHttpContextAccessor _accessor;
         private readonly SchoolDbContext _context;
+        private readonly IEmailService _emailService;
 
         private static readonly Dictionary<string, (string OTP, DateTime Expiry)> _otpStorage = new();
 
         public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
          IOptions<AppSettings> appSetting, IJWTAuthenticationManager jWTAuthenticationManager,
         IHttpContextAccessor accessor, DbFactory dbFactory, IUnitOfWork unitOfWork,
-        RoleManager<IdentityRole> roleManager, SchoolDbContext context) : base(dbFactory)
+        RoleManager<IdentityRole> roleManager, SchoolDbContext context, IEmailService emailService) : base(dbFactory)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -44,6 +46,7 @@ namespace School.Infrastructure.Repositories
             _accessor = accessor;
             _roleManager = roleManager;
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<LoginResponseDto>> LoginAsync(LoginModel model)
@@ -215,6 +218,12 @@ namespace School.Infrastructure.Repositories
                 _otpStorage[model.EmailOrMobile] = (otp, expiry);
 
                 Console.WriteLine($"OTP for {model.EmailOrMobile}: {otp}");
+
+                if (isEmail && !string.IsNullOrEmpty(user.Email))
+                {
+                    string recipientName = !string.IsNullOrEmpty(user.FirstName) ? user.FirstName : user.UserName ?? "User";
+                    await _emailService.SendOtpAsync(user.Email, recipientName, otp);
+                }
 
                 return new APIResponse<OTPResponseDto>
                 {
@@ -500,6 +509,13 @@ namespace School.Infrastructure.Repositories
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                string resetLink = $"http://localhost:4200/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+                string recipientName = !string.IsNullOrEmpty(user.FirstName) ? user.FirstName : user.UserName ?? "User";
+                await _emailService.SendForgotPasswordAsync(user.Email, recipientName, resetLink);
+            }
 
             return new APIResponse<ForgotPasswordDto>
             {

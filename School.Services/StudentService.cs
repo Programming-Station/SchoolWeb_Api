@@ -19,12 +19,14 @@ namespace School.Services
         private readonly IStudentRepository _studentRepository;
         private readonly IMapper _mapper;
         private readonly SchoolDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public StudentService(IStudentRepository studentRepository, IMapper mapper, SchoolDbContext context)
+        public StudentService(IStudentRepository studentRepository, IMapper mapper, SchoolDbContext context, IEmailService emailService)
         {
             _studentRepository = studentRepository;
             _mapper = mapper;
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<StudentDto>> CreateStudentAsync(StudentModel model)
@@ -132,6 +134,25 @@ namespace School.Services
                 {
                     var savedEntity = await _studentRepository.GetStudentByIdAsync(entity.Id);
                     var dto = await MapToDtoAsync(savedEntity);
+
+                    var user = savedEntity?.ApplicationUser;
+                    if (user == null && savedEntity != null && !string.IsNullOrEmpty(savedEntity.ApplicationUserId))
+                    {
+                        user = await _context.Users.FindAsync(savedEntity.ApplicationUserId);
+                    }
+
+                    if (user != null && !string.IsNullOrEmpty(user.Email))
+                    {
+                        string recipientName = !string.IsNullOrEmpty(user.FirstName) ? user.FirstName : (savedEntity?.Name ?? "Student");
+                        var placeholders = new Dictionary<string, string>
+                        {
+                            { "UserName", recipientName },
+                            { "UserId", savedEntity?.StudentId ?? "" },
+                            { "Password", "ChangeOnLogin@123" },
+                            { "Status", "Registered" }
+                        };
+                        await _emailService.SendGenericTemplateAsync(user.Email, "Created", placeholders);
+                    }
 
                     return new APIResponse<StudentDto>
                     {

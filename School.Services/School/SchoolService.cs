@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Infrastructure.Repositories.School;
+using School.Services.Interfaces;
 
 namespace School.Services.School
 {
@@ -26,6 +27,7 @@ namespace School.Services.School
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ISchoolOwnerRepository _schoolOwnerRepo;
         private readonly ISchoolSubscriptionRepository _schoolSubscriptionRepo;
+        private readonly IEmailService _emailService;
 
         public SchoolService(
             ISchoolRepository schoolRepo, 
@@ -33,7 +35,8 @@ namespace School.Services.School
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ISchoolOwnerRepository schoolOwnerRepo,
-            ISchoolSubscriptionRepository schoolSubscriptionRepo)
+            ISchoolSubscriptionRepository schoolSubscriptionRepo,
+            IEmailService emailService)
         {
             _schoolRepo = schoolRepo;
             _mapper = mapper;  
@@ -41,6 +44,7 @@ namespace School.Services.School
             _roleManager = roleManager;
             _schoolOwnerRepo = schoolOwnerRepo;
             _schoolSubscriptionRepo = schoolSubscriptionRepo;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<SchoolRegistrationDto>> AddAsync(SchoolRegistrationModel model)
@@ -68,6 +72,8 @@ namespace School.Services.School
                         FirstName = string.IsNullOrWhiteSpace(model.ContactPersonName) ? "School Admin" : model.ContactPersonName,
                         LastName = string.Empty,
                         IsDefaultPassword = true,
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
                         PasswordUpdatedOn = null,
                         SchoolRegistrationId = entity.Id
                     };
@@ -82,14 +88,30 @@ namespace School.Services.School
                         }
                         await _userManager.AddToRoleAsync(user, "SchoolAdmin");
 
+                        // Send school approval email using domain-accurate template
+                        if (!string.IsNullOrEmpty(user.Email))
+                        {
+                            await _emailService.SendGenericTemplateAsync(user.Email, "School Approved", new Dictionary<string, string>
+                            {
+                                { "SchoolName", entity.SchoolName },
+                                { "SchoolCode", entity.SchoolCode },
+                                { "Email", entity.Email },
+                                { "PhoneNumber", entity.PhoneNumber },
+                                { "ContactPersonName", model.ContactPersonName ?? "Admin" },
+                                { "Password", "SchoolAdmin@123" },
+                                { "LoginUrl", entity.WebsiteUrl ?? "#" },
+                                { "CurrentDate", DateTime.UtcNow.ToString("dd MMM yyyy") }
+                            });
+                        }
+
                         // Create SchoolOwner
                         var owner = new SchoolOwner
                         {
                             SchoolRegistrationId = entity.Id,
                             ApplicationUserId = user.Id,
                             StatusId = 1, // Assuming 1 is Active status ID
-                            EmailVerified = false,
-                            MobileVerified = false,
+                            EmailVerified = true,
+                            MobileVerified = true,
                             IsLocked = false
                         };
                         await _schoolOwnerRepo.AddAsync(owner);

@@ -27,7 +27,7 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services
    .AddDatabase(builder.Configuration)
    .AddRepositories()
-   .AddServices()
+    .AddServices(builder.Configuration)
    .AddSessionWithOptions()
    .AddAuthentication(builder.Configuration)
    .AddCorsPolicy(builder.Configuration);
@@ -180,10 +180,11 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<SchoolDbContext>();
+    var encryptionService = scope.ServiceProvider.GetRequiredService<School.Utilities.Security.IEncryptionService>();
 
     dbContext.Database.Migrate();
 
-    DbInitializer.Seed(dbContext);
+    DbInitializer.Seed(dbContext, encryptionService);
 }
 
 app.Run();

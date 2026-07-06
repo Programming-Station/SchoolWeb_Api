@@ -8,14 +8,25 @@ namespace School.Services
     public class TenantService : ITenantService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private int? _overriddenTenantId;
 
         public TenantService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public void SetTenantId(int tenantId)
+        {
+            _overriddenTenantId = tenantId;
+        }
+
         public int? GetTenantId()
         {
+            if (_overriddenTenantId.HasValue)
+            {
+                return _overriddenTenantId.Value;
+            }
+
             var user = _httpContextAccessor.HttpContext?.User;
             if (user == null) return null;
 

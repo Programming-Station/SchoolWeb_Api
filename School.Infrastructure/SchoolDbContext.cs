@@ -13,6 +13,7 @@ using School.Domain.Hr.LeaveManagement;
 using School.Domain.Hr.Timesheet;
 using School.Domain.Hr.Attendance;
 using School.Infrastructure.Interfaces;
+using School.Domain.Email;
 
 namespace School.Infrastructure
 {
@@ -53,6 +54,10 @@ namespace School.Infrastructure
         public DbSet<StudentExperienceCertificate> StudentExperienceCertificates { get; set; } = null!;
         public DbSet<EducationalDetail> EducationalDetails { get; set; } = null!;
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
+        public DbSet<EmailServerSetting> EmailServerSettings { get; set; } = null!;
+        public DbSet<EmailTemplate> EmailTemplates { get; set; } = null!;
+        public DbSet<EmailBranding> EmailBrandings { get; set; } = null!;
+        public DbSet<EmailLog> EmailLogs { get; set; } = null!;
 
       
         public DbSet<Event> Events { get; set; } = null!;
