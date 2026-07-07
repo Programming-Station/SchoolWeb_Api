@@ -225,6 +225,7 @@ namespace School.Infrastructure
             // ─── 5. Dependent Domain Seeding ─────────────────────────────────────────
             DefaultAccessControlData.SeedAsync(context).Wait();
             DefaultHrData.SeedAsync(context).Wait();
+            DefaultAcademicYearData.SeedAsync(context).Wait();
             DefaultCourseData.SeedAsync(context).Wait();
             DefaultClassData.SeedAsync(context).Wait();
             DefaultStudentData.SeedAsync(context).Wait();

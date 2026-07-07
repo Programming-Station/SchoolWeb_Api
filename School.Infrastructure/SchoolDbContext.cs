@@ -14,6 +14,7 @@ using School.Domain.Hr.Timesheet;
 using School.Domain.Hr.Attendance;
 using School.Infrastructure.Interfaces;
 using School.Domain.Email;
+using School.Domain.Academic;
 
 namespace School.Infrastructure
 {
@@ -58,8 +59,12 @@ namespace School.Infrastructure
         public DbSet<EmailTemplate> EmailTemplates { get; set; } = null!;
         public DbSet<EmailBranding> EmailBrandings { get; set; } = null!;
         public DbSet<EmailLog> EmailLogs { get; set; } = null!;
+        
+        public DbSet<Subject> Subjects { get; set; } = null!;
+        public DbSet<Exam> Exams { get; set; } = null!;
+        public DbSet<ExamResult> ExamResults { get; set; } = null!;
+        public DbSet<TimetableSlot> TimetableSlots { get; set; } = null!;
 
-      
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;
         public DbSet<Department> Departments { get; set; } = null!;

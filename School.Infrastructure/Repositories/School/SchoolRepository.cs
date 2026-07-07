@@ -1,7 +1,6 @@
 using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
-using School.Infrastructure.Repositories.School;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using System;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace School.Infrastructure.Repositories
+namespace School.Infrastructure.Repositories.School
 {
     public class SchoolRepository:Repository<SchoolRegistration>, ISchoolRepository
     {
