@@ -4,7 +4,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
 {
-    public class Module : AuditEntity<int>
+    public class Module : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -32,6 +32,8 @@ namespace School.Domain.AccessControl
         public int Order { get; set; } = 0;
         
         public bool IsActive { get; set; } = true; 
+
+        public int SchoolRegistrationId { get; set; }
     }
 }
 

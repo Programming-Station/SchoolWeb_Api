@@ -35,6 +35,12 @@ namespace School.Infrastructure.Seeds
                     Name = Roles.Owner.ToString(),
                     NormalizedName = Roles.Owner.ToString().ToUpper()
                 },
+                new IdentityRole
+                {
+                    Id = Constants.Employee,
+                    Name =Roles.Employee.ToString(),
+                    NormalizedName = Roles.Employee.ToString().ToUpper()
+                },
             };
         }
     }

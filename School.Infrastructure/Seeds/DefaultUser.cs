@@ -78,6 +78,22 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                },
+                new ApplicationUser
+                {
+                    Id = Constants.EmployeeUser,
+                    UserName = "employee",
+                    Email = "employee@gmail.com",
+                    FirstName = "Employee",
+                    LastName = "User",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "EMPLOYEE@GMAIL.COM",
+                    NormalizedUserName = "EMPLOYEE",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
                 }
             };
         }

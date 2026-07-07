@@ -25,6 +25,11 @@ namespace School.Infrastructure.Seeds
                     RoleId = Constants.Student,
                     UserId = Constants.StudentUser
                 },
+                new IdentityUserRole<string>
+                {
+                    RoleId = Constants.Employee,
+                    UserId = Constants.EmployeeUser
+                },
             };
         }
     }

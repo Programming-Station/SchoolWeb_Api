@@ -6,7 +6,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
 {
-    public class ModulePermission : AuditEntity<int>
+    public class ModulePermission : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -31,6 +31,8 @@ namespace School.Domain.AccessControl
         public virtual IdentityRole? Role { get; set; }
         
         public bool IsActive { get; set; } = true; 
+
+        public int SchoolRegistrationId { get; set; }
     }
 }
 

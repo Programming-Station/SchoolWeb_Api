@@ -8,7 +8,8 @@ namespace School.Utilities.Enums
         Admin,
         Student,
         User,
-        Owner
+        Owner,
+        Employee
     }
 
 
