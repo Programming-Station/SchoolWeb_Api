@@ -5,7 +5,6 @@ using School.Domain.Auth;
 using School.Infrastructure.Seeds;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 using School.Domain.Email;
 using School.Utilities.Security;
 
@@ -15,6 +14,7 @@ namespace School.Infrastructure
     {
         public static void Seed(SchoolDbContext context, IEncryptionService encryptionService)
         {
+            // ─── 1. Core Lookups & Configuration ─────────────────────────────────────
             var existingRoleNames = context.Roles
                 .Select(r => r.NormalizedName != null ? r.NormalizedName.ToUpper() : string.Empty)
                 .ToList();
@@ -25,10 +25,9 @@ namespace School.Infrastructure
             if (newRoles.Any())
             {
                 context.Roles.AddRange(newRoles);
-                context.SaveChanges(); // Save to get role IDs
+                context.SaveChanges();
             }
 
-            // Seed Statuses
             var existingStatusNames = context.Statuses.Select(s => s.Name).ToHashSet();
             var defaultStatuses = DefaultStatusList.StatusList();
             var newStatuses = defaultStatuses.Where(s => !existingStatusNames.Contains(s.Name)).ToList();
@@ -38,7 +37,6 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            // Seed SchoolMediums
             var existingMediumNames = context.SchoolMediums.Select(m => m.Name).ToHashSet();
             var defaultMediums = DefaultMasterData.SchoolMediumList();
             var newMediums = defaultMediums.Where(m => !existingMediumNames.Contains(m.Name)).ToList();
@@ -48,7 +46,6 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            // Seed SchoolTypes
             var existingTypeNames = context.SchoolTypes.Select(t => t.Name).ToHashSet();
             var defaultTypes = DefaultMasterData.SchoolTypeList();
             var newTypes = defaultTypes.Where(t => !existingTypeNames.Contains(t.Name)).ToList();
@@ -58,7 +55,6 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            // Seed AffiliationBoards
             var existingBoardNames = context.AffiliationBoards.Select(b => b.Name).ToHashSet();
             var defaultBoards = DefaultMasterData.AffiliationBoardList();
             var newBoards = defaultBoards.Where(b => !existingBoardNames.Contains(b.Name)).ToList();
@@ -68,6 +64,34 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
+            // ─── 2. Location & School Seeding (Run early to resolve foreign keys) ──────
+            DefaultLocationData.SeedAsync(context).Wait();
+
+            if (!context.States.Any())
+            {
+                var countryId = context.Countries.First().Id;
+                var state = new State { Name = "Maharashtra", StateCode = "MH", CountryId = countryId, IsActive = true };
+                context.States.Add(state);
+                context.SaveChanges();
+            }
+
+            if (!context.Cities.Any())
+            {
+                var stateId = context.States.First().Id;
+                var city = new City { Name = "Mumbai", CityCode = "MUM", StateId = stateId, IsActive = true };
+                context.Cities.Add(city);
+                context.SaveChanges();
+            }
+
+            DefaultSchoolData.SeedAsync(context).Wait();
+
+            // Resolve Default School Registration ID for subsequent seeding steps
+            var defaultSchool = context.SchoolRegistrations.FirstOrDefault(s => s.SchoolCode == "DPSVAR001") 
+                                ?? context.SchoolRegistrations.FirstOrDefault(s => s.SchoolCode == "DEF001") 
+                                ?? context.SchoolRegistrations.FirstOrDefault();
+            int defaultSchoolId = defaultSchool?.Id ?? 1;
+
+            // ─── 3. Category Modules Seeding (Assign correct SchoolRegistrationId) ───
             var existingCategoryNames = context.CategoryModules
                 .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
@@ -78,21 +102,30 @@ namespace School.Infrastructure
                 .ToList();
             if (newCategories.Any())
             {
+                foreach (var cat in newCategories)
+                {
+                    cat.SchoolRegistrationId = defaultSchoolId;
+                }
                 context.CategoryModules.AddRange(newCategories);
                 context.SaveChanges();
             }
 
+            // ─── 4. Users & Roles Seeding ────────────────────────────────────────────
             var existingUserEmails = context.Users
                 .Select(u => u.NormalizedEmail != null ? u.NormalizedEmail.ToUpper() : string.Empty)
-                .ToList();
+                .ToHashSet();
+            var existingUserNames = context.Users
+                .Select(u => u.NormalizedUserName != null ? u.NormalizedUserName.ToUpper() : string.Empty)
+                .ToHashSet();
             var defaultUsers = DefaultUser.IdentityBasicUserList();
             var newUsers = defaultUsers
-                .Where(u => u.NormalizedEmail != null && !existingUserEmails.Contains(u.NormalizedEmail.ToUpper()))
+                .Where(u => u.NormalizedEmail != null && !existingUserEmails.Contains(u.NormalizedEmail.ToUpper())
+                         && u.NormalizedUserName != null && !existingUserNames.Contains(u.NormalizedUserName.ToUpper()))
                 .ToList();
             if (newUsers.Any())
             {
                 context.Users.AddRange(newUsers);
-                context.SaveChanges(); // Save to get user IDs
+                context.SaveChanges();
             }
 
             var allUsers = context.Users.ToList();
@@ -135,7 +168,6 @@ namespace School.Infrastructure
                 }
             }
 
-
             var studentUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "STUDENT");
             var studentRole = allRoles.FirstOrDefault(r => 
@@ -151,6 +183,7 @@ namespace School.Infrastructure
                     });
                 }
             }
+
             var ownerUser = allUsers.FirstOrDefault(u =>
                u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "OWNER");
             var ownerRole = allRoles.FirstOrDefault(r =>
@@ -189,39 +222,15 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
-            DefaultLocationData.SeedAsync(context).Wait();
-
-            if (!context.States.Any())
-            {
-                var countryId = context.Countries.First().Id;
-                var state = new State { Name = "Maharashtra", StateCode = "MH", CountryId = countryId, IsActive = true };
-                context.States.Add(state);
-                context.SaveChanges();
-            }
-
-            if (!context.Cities.Any())
-            {
-                var stateId = context.States.First().Id;
-                var city = new City { Name = "Mumbai", CityCode = "MUM", StateId = stateId, IsActive = true };
-                context.Cities.Add(city);
-                context.SaveChanges();
-            }
-
-            DefaultSchoolData.SeedAsync(context).Wait();
+            // ─── 5. Dependent Domain Seeding ─────────────────────────────────────────
             DefaultAccessControlData.SeedAsync(context).Wait();
             DefaultHrData.SeedAsync(context).Wait();
             DefaultCourseData.SeedAsync(context).Wait();
             DefaultClassData.SeedAsync(context).Wait();
             DefaultStudentData.SeedAsync(context).Wait();
 
-            // Retrieve default school registration to set SchoolRegistrationId
-            var defaultSchool = context.SchoolRegistrations.FirstOrDefault(s => s.SchoolCode == "DEF001");
-            int defaultSchoolId = defaultSchool?.Id ?? 1;
+            // Seed all Email data (SMTP settings, templates, branding) via consolidated seed
+            DefaultEmailData.SeedAsync(context, encryptionService).Wait();
         }
     }
 }
-
-
-
-
-

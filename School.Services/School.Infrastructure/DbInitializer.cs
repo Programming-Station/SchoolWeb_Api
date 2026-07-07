@@ -45,11 +45,15 @@ namespace School.Infrastructure
             }
 
             var existingUserEmails = context.Users
-                .Select(u => u.NormalizedEmail.ToUpper())
-                .ToList();
+                .Select(u => u.NormalizedEmail != null ? u.NormalizedEmail.ToUpper() : string.Empty)
+                .ToHashSet();
+            var existingUserNames = context.Users
+                .Select(u => u.NormalizedUserName != null ? u.NormalizedUserName.ToUpper() : string.Empty)
+                .ToHashSet();
             var defaultUsers = DefaultUser.IdentityBasicUserList();
             var newUsers = defaultUsers
-                .Where(u => u.NormalizedEmail != null && !existingUserEmails.Contains(u.NormalizedEmail.ToUpper()))
+                .Where(u => u.NormalizedEmail != null && !existingUserEmails.Contains(u.NormalizedEmail.ToUpper())
+                         && u.NormalizedUserName != null && !existingUserNames.Contains(u.NormalizedUserName.ToUpper()))
                 .ToList();
             if (newUsers.Any())
             {
