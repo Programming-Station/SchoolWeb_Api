@@ -214,6 +214,12 @@ namespace School.Infrastructure.Seeds
             var allDbMenus = await context.Menus.Where(m => m.SchoolRegistrationId == defaultSchoolId).ToListAsync();
             var allDbSubMenus = await context.SubMenus.Where(s => s.SchoolRegistrationId == defaultSchoolId).ToListAsync();
 
+            var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "ADMIN");
+            var ownerRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
+
+            string adminRoleId = adminRole?.Id ?? Constants.Admin;
+            string ownerRoleId = ownerRole?.Id ?? Constants.Owner;
+
             // Admin Role Permissions
             foreach (var menu in allDbMenus)
             {
@@ -222,14 +228,14 @@ namespace School.Infrastructure.Seeds
                 {
                     foreach (var sm in subMenus)
                     {
-                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == Constants.Admin && p.SchoolRegistrationId == defaultSchoolId);
+                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
                         if (!hasPerm)
                         {
                             context.MenuPermessions.Add(new MenuPermession
                             {
                                 MenuId = menu.Id,
                                 SubMenuId = sm.Id,
-                                RoleId = Constants.Admin,
+                                RoleId = adminRoleId,
                                 IsVisible = true,
                                 SchoolRegistrationId = defaultSchoolId,
                                 CreatedBy = "System",
@@ -240,14 +246,14 @@ namespace School.Infrastructure.Seeds
                 }
                 else
                 {
-                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == Constants.Admin && p.SchoolRegistrationId == defaultSchoolId);
+                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
                     if (!hasPerm)
                     {
                         context.MenuPermessions.Add(new MenuPermession
                         {
                             MenuId = menu.Id,
                             SubMenuId = null,
-                            RoleId = Constants.Admin,
+                            RoleId = adminRoleId,
                             IsVisible = true,
                             SchoolRegistrationId = defaultSchoolId,
                             CreatedBy = "System",
@@ -265,14 +271,14 @@ namespace School.Infrastructure.Seeds
                 {
                     foreach (var sm in subMenus)
                     {
-                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == Constants.Owner && p.SchoolRegistrationId == defaultSchoolId);
+                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
                         if (!hasPerm)
                         {
                             context.MenuPermessions.Add(new MenuPermession
                             {
                                 MenuId = menu.Id,
                                 SubMenuId = sm.Id,
-                                RoleId = Constants.Owner,
+                                RoleId = ownerRoleId,
                                 IsVisible = true,
                                 SchoolRegistrationId = defaultSchoolId,
                                 CreatedBy = "System",
@@ -283,14 +289,14 @@ namespace School.Infrastructure.Seeds
                 }
                 else
                 {
-                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == Constants.Owner && p.SchoolRegistrationId == defaultSchoolId);
+                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
                     if (!hasPerm)
                     {
                         context.MenuPermessions.Add(new MenuPermession
                         {
                             MenuId = menu.Id,
                             SubMenuId = null,
-                            RoleId = Constants.Owner,
+                            RoleId = ownerRoleId,
                             IsVisible = true,
                             SchoolRegistrationId = defaultSchoolId,
                             CreatedBy = "System",
