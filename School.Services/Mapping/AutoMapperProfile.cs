@@ -120,6 +120,30 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.SchoolType, opt => opt.Ignore());
 
             CreateMap<global::School.Domain.School.SchoolRegistration, global::School_DTOs.School.SchoolRegistrationDto>();
+
+            CreateMap<global::School.Domain.Hr.Recruitment.JobPosting, global::School_DTOs.Hr.JobPostingDto>()
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hr.Recruitment.JobApplication, global::School_DTOs.Hr.JobApplicationDto>()
+                .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.JobPosting != null ? src.JobPosting.Title : string.Empty))
+                .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate != null ? src.Candidate.FullName : string.Empty))
+                .ForMember(dest => dest.CandidateEmail, opt => opt.MapFrom(src => src.Candidate != null ? src.Candidate.Email : string.Empty))
+                .ForMember(dest => dest.CandidatePhone, opt => opt.MapFrom(src => src.Candidate != null ? src.Candidate.Phone : string.Empty))
+                .ForMember(dest => dest.CandidateResumePath, opt => opt.MapFrom(src => src.Candidate != null ? src.Candidate.ResumePath : null));
+
+            CreateMap<global::School.Domain.Hr.Performance.PerformanceReview, global::School_DTOs.Hr.PerformanceReviewDto>()
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty))
+                .ForMember(dest => dest.Designation, opt => opt.MapFrom(src => src.Employee != null && src.Employee.Designation != null ? src.Employee.Designation.Name : string.Empty))
+                .ForMember(dest => dest.ReviewerName, opt => opt.MapFrom(src => src.Reviewer != null ? (src.Reviewer.FirstName + " " + src.Reviewer.LastName) : string.Empty));
+
+            CreateMap<global::School.Domain.Hr.Training.TrainingEnrollment, global::School_DTOs.Hr.TrainingEnrollmentDto>()
+                .ForMember(dest => dest.TrainingTitle, opt => opt.MapFrom(src => src.TrainingProgram != null ? src.TrainingProgram.Title : string.Empty))
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty));
+
+            CreateMap<global::School.Domain.Hr.Assets.AssetAssignment, global::School_DTOs.Hr.AssetAssignmentDto>()
+                .ForMember(dest => dest.AssetName, opt => opt.MapFrom(src => src.SchoolAsset != null ? src.SchoolAsset.Name : string.Empty))
+                .ForMember(dest => dest.AssetCode, opt => opt.MapFrom(src => src.SchoolAsset != null ? src.SchoolAsset.AssetCode : string.Empty))
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty));
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

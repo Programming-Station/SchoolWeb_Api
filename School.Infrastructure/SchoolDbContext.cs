@@ -15,6 +15,10 @@ using School.Domain.Hr.Attendance;
 using School.Infrastructure.Interfaces;
 using School.Domain.Email;
 using School.Domain.Academic;
+using School.Domain.Hr.Recruitment;
+using School.Domain.Hr.Performance;
+using School.Domain.Hr.Training;
+using School.Domain.Hr.Assets;
 
 namespace School.Infrastructure
 {
@@ -98,6 +102,17 @@ namespace School.Infrastructure
         public DbSet<Attendance> Attendances { get; set; } = null!;
         public DbSet<AttendanceLog> AttendanceLogs { get; set; } = null!;
         public DbSet<Timesheet> Timesheets { get; set; } = null!;
+
+        // Expanded HRMS entities
+        public DbSet<JobPosting> JobPostings { get; set; } = null!;
+        public DbSet<Candidate> Candidates { get; set; } = null!;
+        public DbSet<JobApplication> JobApplications { get; set; } = null!;
+        public DbSet<PerformanceReview> PerformanceReviews { get; set; } = null!;
+        public DbSet<KpiMetric> KpiMetrics { get; set; } = null!;
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; } = null!;
+        public DbSet<TrainingEnrollment> TrainingEnrollments { get; set; } = null!;
+        public DbSet<SchoolAsset> SchoolAssets { get; set; } = null!;
+        public DbSet<AssetAssignment> AssetAssignments { get; set; } = null!;
         public DbSet<TimesheetEntry> TimesheetEntries { get; set; } = null!;
 
 

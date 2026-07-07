@@ -22,10 +22,6 @@ using School_API.Middleware;
 using School.Infrastructure.Repositories.AccessControl;
 using School.Services.AccessControl;
 using School.Services.AccessControl.Interfaces;
-
-
-
-
 using School.Infrastructure.Repositories.Hr.Attendance;
 using School.Infrastructure.Repositories.Hr.LeaveManagement;
 using School.Infrastructure.Repositories.Hr.Timesheet;
@@ -172,7 +168,7 @@ namespace School_API
             
             // Timesheet
             .AddTransient<ITimesheetRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetRepository>()
-
+            .AddTransient<IHrmsExpansionRepository, HrmsExpansionRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -263,6 +259,7 @@ namespace School_API
             .AddScoped<IExamResultService, School.Services.Academic.ExamResultService>()
             .AddScoped<School.Services.Interfaces.Academic.ISubjectService, School.Services.Academic.SubjectService>()
             .AddScoped<School.Services.Interfaces.Academic.ITimetableSlotService, School.Services.Academic.TimetableSlotService>()
+            .AddScoped<IHrmsExpansionService, HrmsExpansionService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
