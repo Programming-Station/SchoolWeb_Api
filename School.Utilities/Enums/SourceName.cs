@@ -19,6 +19,25 @@ namespace School.Utilities.Enums
         FeeType,
         Faculty,
         CategoryModule,
-        Affiliated
+        Affiliated,
+        Designation,
+        Employee,
+        EmployeeCategory,
+        EmployeeType,
+        EmploymentStatus,
+        SalaryGrade,
+        BloodGroupMaster,
+        QualificationMaster,
+        ReligionMaster,
+        Specialization,
+        JobPosting,
+        Candidate,
+        JobApplication,
+        PerformanceReview,
+        KpiMetric,
+        TrainingProgram,
+        TrainingEnrollment,
+        SchoolAsset,
+        AssetAssignment
     }
 }
