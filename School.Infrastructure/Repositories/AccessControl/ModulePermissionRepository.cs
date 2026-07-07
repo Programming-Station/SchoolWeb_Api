@@ -106,10 +106,17 @@ namespace School.Infrastructure.Repositories.AccessControl
                 perm.UpdatedDate = DateTime.UtcNow;
             }
 
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var defaultSchool = await _context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DPSVAR001")
+                                ?? await _context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001")
+                                ?? await _context.SchoolRegistrations.FirstOrDefaultAsync();
+            int schoolRegistrationId = user?.SchoolRegistrationId ?? defaultSchool?.Id ?? 1;
+
             var newPermissions = moduleIds.Select(moduleId => new ModulePermission
             {
                 ModuleId = moduleId,
                 UserId = userId,
+                SchoolRegistrationId = schoolRegistrationId,
                 IsActive = true,
                 CreatedBy = createdBy,
                 CreatedDate = DateTime.UtcNow,

@@ -144,6 +144,11 @@ namespace School.Infrastructure.Repositories.AccessControl
                 await _context.SaveChangesAsync();
             }
 
+            var defaultSchool = await _context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DPSVAR001")
+                                ?? await _context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001")
+                                ?? await _context.SchoolRegistrations.FirstOrDefaultAsync();
+            int schoolRegistrationId = _context.CurrentTenantId ?? defaultSchool?.Id ?? 1;
+
             List<MenuPermession> menuPermessions = new List<MenuPermession>();
 
             foreach (var item in model.menuPermissions)
@@ -157,6 +162,7 @@ namespace School.Infrastructure.Repositories.AccessControl
                         IsVisible = true,
                         MenuId = item.Id,
                         SubMenuId = null,
+                        SchoolRegistrationId = schoolRegistrationId,
                         CreatedBy = model.CreateedBy,
                         CreatedDate = DateTime.UtcNow
                     });
@@ -173,6 +179,7 @@ namespace School.Infrastructure.Repositories.AccessControl
                              IsVisible = true,
                              MenuId = item.Id,
                              SubMenuId = x.Id,
+                             SchoolRegistrationId = schoolRegistrationId,
                              CreatedBy = model.CreateedBy,
                              CreatedDate = DateTime.UtcNow
                          }));
