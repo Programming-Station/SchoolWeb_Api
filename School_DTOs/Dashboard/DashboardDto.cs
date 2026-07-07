@@ -5,12 +5,19 @@ namespace School_DTOs.Dashboard
 {
     public class DashboardDto
     {
+        public DashboardWelcomeDto Welcome { get; set; } = new DashboardWelcomeDto();
         public DashboardStatsDto Stats { get; set; } = new DashboardStatsDto();
         public List<ActivityDto> RecentActivities { get; set; } = new List<ActivityDto>();
         public List<RecentRegistrationDto> RecentRegistrations { get; set; } = new List<RecentRegistrationDto>();
         public List<UpcomingEventDto> UpcomingEvents { get; set; } = new List<UpcomingEventDto>();
         public FeeCollectionDto FeeCollection { get; set; } = new FeeCollectionDto();
         public AttendanceStatsDto AttendanceStats { get; set; } = new AttendanceStatsDto();
+
+        // Resource summaries
+        public DashboardLibraryDto Library { get; set; } = new DashboardLibraryDto();
+        public DashboardTransportDto Transport { get; set; } = new DashboardTransportDto();
+        public DashboardHostelDto Hostel { get; set; } = new DashboardHostelDto();
+        public DashboardSystemStatusDto SystemStatus { get; set; } = new DashboardSystemStatusDto();
 
         // Extended lists and widgets
         public List<RecentAdmissionDto> RecentAdmissions { get; set; } = new List<RecentAdmissionDto>();
@@ -82,6 +89,16 @@ namespace School_DTOs.Dashboard
         public decimal Collected { get; set; }
         public decimal Pending { get; set; }
         public double Growth { get; set; } // Percentage growth from last month
+
+        // Expanded owner finance metrics
+        public decimal TotalIncome { get; set; }
+        public decimal MonthlyIncome { get; set; }
+        public decimal TodayCollection { get; set; }
+        public decimal PendingCollection { get; set; }
+        public decimal OverdueFees { get; set; }
+        public decimal ScholarshipAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal RefundAmount { get; set; }
     }
 
     public class AttendanceStatsDto
@@ -164,5 +181,53 @@ namespace School_DTOs.Dashboard
         public List<ChartDataPoint<string, decimal>> MonthlyFeeCollection { get; set; } = new List<ChartDataPoint<string, decimal>>();
         public List<ChartDataPoint<string, int>> EmployeeGrowth { get; set; } = new List<ChartDataPoint<string, int>>();
         public List<ChartDataPoint<string, int>> StudentGrowth { get; set; } = new List<ChartDataPoint<string, int>>();
+        
+        // Owner specific trends
+        public List<ChartDataPoint<string, decimal>> RevenueTrend { get; set; } = new List<ChartDataPoint<string, decimal>>();
+        public List<ChartDataPoint<string, decimal>> FeeCollectionTrend { get; set; } = new List<ChartDataPoint<string, decimal>>();
+    }
+
+    public class DashboardWelcomeDto
+    {
+        public string SchoolLogo { get; set; } = string.Empty;
+        public string SchoolName { get; set; } = string.Empty;
+        public string OwnerName { get; set; } = string.Empty;
+        public string AcademicSession { get; set; } = string.Empty;
+        public string SubscriptionPlan { get; set; } = string.Empty;
+        public string SubscriptionStatus { get; set; } = string.Empty;
+        public string ExpiryDate { get; set; } = string.Empty;
+        public string LastLogin { get; set; } = string.Empty;
+    }
+
+    public class DashboardLibraryDto
+    {
+        public int TotalBooks { get; set; }
+        public int IssuedBooks { get; set; }
+        public int ReturnedToday { get; set; }
+        public int OverdueBooks { get; set; }
+    }
+
+    public class DashboardTransportDto
+    {
+        public int VehiclesCount { get; set; }
+        public int DriversCount { get; set; }
+        public int RoutesCount { get; set; }
+        public int TransportStudentsCount { get; set; }
+    }
+
+    public class DashboardHostelDto
+    {
+        public int RoomsCount { get; set; }
+        public int OccupiedBeds { get; set; }
+        public int AvailableBeds { get; set; }
+        public int HostelStudentsCount { get; set; }
+    }
+
+    public class DashboardSystemStatusDto
+    {
+        public string DatabaseStatus { get; set; } = "Healthy";
+        public string ApiStatus { get; set; } = "Healthy";
+        public string ApplicationVersion { get; set; } = "v1.2.0-LTS";
+        public string LastBackup { get; set; } = string.Empty;
     }
 }

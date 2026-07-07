@@ -135,6 +135,9 @@ namespace School_API
        
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<IDashboardRepository, DashboardRepository>()
+            .AddTransient<ISuperAdminDashboardRepository, SuperAdminDashboardRepository>()
+            .AddTransient<IEmployeeDashboardRepository, EmployeeDashboardRepository>()
+            .AddTransient<IStudentDashboardRepository, StudentDashboardRepository>()
             .AddTransient<IFacultyRepository, FacultyRepository>()
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
             .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
@@ -220,6 +223,9 @@ namespace School_API
            
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
+            .AddScoped<ISuperAdminDashboardService, SuperAdminDashboardService>()
+            .AddScoped<IEmployeeDashboardService, EmployeeDashboardService>()
+            .AddScoped<IStudentDashboardService, StudentDashboardService>()
             .AddScoped<IFacultyService, FacultyService>()
             .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
