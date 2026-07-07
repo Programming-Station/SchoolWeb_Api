@@ -1,9 +1,9 @@
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using School.Domain.AccessControl;
 
 namespace School.Infrastructure.Repositories
 {
@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<Module> AddModuleAsync(Module entity)
         {
-            // Check if module with same route already exists
             var existingByRoute = await DbSet.FirstOrDefaultAsync(x =>
                                x.Route.ToLower() == entity.Route.ToLower() &&
                                !x.IsDeleted);
@@ -98,7 +97,6 @@ namespace School.Infrastructure.Repositories
                 return 0;
         }
 
-        // ========== MODULE PERMISSION OPERATIONS ==========
 
         public async Task<IEnumerable<Module>> GetModulesByUserIdAsync(string userId)
         {
@@ -116,7 +114,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> AssignModulesToUserAsync(string userId, List<int> moduleIds, string? createdBy = null)
         {
-            // Remove existing permissions for this user (soft delete)
             var existingPermissions = await _context.ModulePermissions
                 .Where(mp => mp.UserId == userId && !mp.IsDeleted)
                 .ToListAsync();
@@ -127,7 +124,6 @@ namespace School.Infrastructure.Repositories
                 perm.UpdatedDate = DateTime.UtcNow;
             }
 
-            // Add new permissions
             var newPermissions = moduleIds.Select(moduleId => new ModulePermission
             {
                 ModuleId = moduleId,

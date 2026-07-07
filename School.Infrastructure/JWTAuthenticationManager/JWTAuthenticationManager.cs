@@ -66,7 +66,6 @@ namespace School.Infrastructure.JWTAuthenticationManager
                 obj.Token = token;
                 obj.ReplacedByToken = refreshTokenValue;
                 obj.Revoked = DateTime.Now;
-                //obj.IsRevoked = false;
                 obj.Expires = DateTime.Now.AddMinutes(_appSetting.ExpireTime);
                 Update(obj);
 

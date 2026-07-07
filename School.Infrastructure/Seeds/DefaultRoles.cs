@@ -22,17 +22,18 @@ namespace School.Infrastructure.Seeds
                     Name = Roles.Admin.ToString(),
                     NormalizedName = Roles.Admin.ToString().ToUpper()
                 },
-                new IdentityRole
-                {
-                    Id = Constants.Teacher,
-                    Name = Roles.Teacher.ToString(),
-                    NormalizedName = Roles.Teacher.ToString().ToUpper()
-                },
+
                 new IdentityRole
                 {
                     Id = Constants.Student,
                     Name = Roles.Student.ToString(),
                     NormalizedName = Roles.Student.ToString().ToUpper()
+                },
+                 new IdentityRole
+                {
+                    Id = Constants.Owner,
+                    Name = Roles.Owner.ToString(),
+                    NormalizedName = Roles.Owner.ToString().ToUpper()
                 },
             };
         }

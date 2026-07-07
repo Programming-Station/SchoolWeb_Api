@@ -1,4 +1,3 @@
-using School.Domain;
 using School_DTOs.Menu;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
@@ -6,6 +5,7 @@ using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Models.Menu;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using School.Domain.AccessControl;
 
 namespace School.Infrastructure.Repositories
 {
@@ -20,11 +20,9 @@ namespace School.Infrastructure.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        // ========== MENU OPERATIONS ==========
 
         public async Task<Menu> AddMenuAsync(Menu entity)
         {
-            // Check for duplicate menu name
             var existingMenu = await DbSet.FirstOrDefaultAsync(x =>
                                x.MenuName.ToLower() == entity.MenuName.ToLower() &&
                                !x.IsDeleted);
@@ -35,15 +33,12 @@ namespace School.Infrastructure.Repositories
                 return existingMenu;
             }
 
-            // Temporarily store submenus and clear them from entity
             var subMenus = entity.SubMenus?.ToList();
             entity.SubMenus = null;
 
-            // Add menu first
             await AddAsync(entity);
             await _unitOfWork.CommitAsync();
 
-            // Add submenus with correct MenuId
             if (subMenus != null && subMenus.Any())
             {
                 foreach (var subMenu in subMenus)
@@ -56,7 +51,6 @@ namespace School.Infrastructure.Repositories
                 }
                 await _unitOfWork.CommitAsync();
                 
-                // Reload menu with submenus
                 entity = await GetMenuByIdAsync(entity.Id);
             }
 
@@ -82,7 +76,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> UpdateMenuAsync(Menu entity)
         {
-            // Get existing menu with submenus
             var existingMenu = await _context.Menus
                 .Include(x => x.SubMenus)
                 .FirstOrDefaultAsync(x => x.Id == entity.Id && !x.IsDeleted);
@@ -90,7 +83,6 @@ namespace School.Infrastructure.Repositories
             if (existingMenu == null)
                 return 0;
 
-            // Update menu properties
             existingMenu.MenuName = entity.MenuName;
             existingMenu.URL = entity.URL;
             existingMenu.Priority = entity.Priority;
@@ -101,16 +93,13 @@ namespace School.Infrastructure.Repositories
             existingMenu.UpdatedBy = entity.UpdatedBy;
             existingMenu.UpdatedDate = DateTime.Now;
 
-            // Handle submenus
             if (entity.SubMenus != null && entity.SubMenus.Any())
             {
-                // Get IDs of submenus to keep
                 var subMenuIdsToKeep = entity.SubMenus
                     .Where(sm => sm.Id > 0)
                     .Select(sm => sm.Id)
                     .ToList();
 
-                // Soft delete submenus that are not in the update list
                 var subMenusToDelete = existingMenu.SubMenus
                     .Where(sm => !subMenuIdsToKeep.Contains(sm.Id))
                     .ToList();
@@ -122,12 +111,10 @@ namespace School.Infrastructure.Repositories
                     subMenu.UpdatedBy = entity.UpdatedBy;
                 }
 
-                // Update existing submenus or add new ones
                 foreach (var subMenuDto in entity.SubMenus)
                 {
                     if (subMenuDto.Id > 0)
                     {
-                        // Update existing submenu
                         var existingSubMenu = existingMenu.SubMenus
                             .FirstOrDefault(sm => sm.Id == subMenuDto.Id);
 
@@ -148,7 +135,6 @@ namespace School.Infrastructure.Repositories
                     }
                     else
                     {
-                        // Add new submenu
                         var newSubMenu = new SubMenu
                         {
                             MenuId = entity.Id,
@@ -170,7 +156,6 @@ namespace School.Infrastructure.Repositories
             }
             else
             {
-                // If no submenus provided, soft delete all existing submenus
                 foreach (var subMenu in existingMenu.SubMenus.Where(sm => !sm.IsDeleted))
                 {
                     subMenu.IsDeleted = true;
@@ -189,11 +174,9 @@ namespace School.Infrastructure.Repositories
 
             if (result != null)
             {
-                // Soft delete menu and all its submenus
                 result.UpdatedDate = DateTime.Now;
                 result.IsDeleted = true;
 
-                // Soft delete all submenus
                 if (result.SubMenus != null)
                 {
                     foreach (var subMenu in result.SubMenus.Where(sm => !sm.IsDeleted))
@@ -226,7 +209,6 @@ namespace School.Infrastructure.Repositories
                 return 0;
         }
 
-        // ========== SUBMENU OPERATIONS ==========
 
         public async Task<SubMenu> AddSubMenuAsync(SubMenu entity)
         {
@@ -305,7 +287,6 @@ namespace School.Infrastructure.Repositories
                 return 0;
         }
 
-        // ========== MENU PERMISSION OPERATIONS ==========
 
         public async Task<MenuPermissionsDto> GetMenuPermissionAsync(string? roleId)
         {
@@ -352,7 +333,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> GiveMenuPermissionAsync(MenuPermissionModel model)
         {
-            // Remove existing permissions for this role
             var existingPermissions = await _context.MenuPermessions
                 .Where(x => x.RoleId == model.RoleId && !x.IsDeleted)
                 .ToListAsync();
@@ -367,7 +347,6 @@ namespace School.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
 
-            // Add new permissions
             List<MenuPermession> menuPermessions = new List<MenuPermession>();
 
             foreach (var item in model.menuPermissions)
@@ -387,7 +366,6 @@ namespace School.Infrastructure.Repositories
                     });
                 }
 
-                // Add submenu permissions
                 if (item.SubMenus != null && item.SubMenus.Any())
                 {
                     menuPermessions.AddRange(item.SubMenus

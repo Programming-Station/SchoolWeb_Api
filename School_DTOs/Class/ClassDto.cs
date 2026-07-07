@@ -10,7 +10,8 @@ namespace School_DTOs.Class
         public string AcademicYear { get; set; } = null!;
         public int Capacity { get; set; }
         public int CurrentStrength { get; set; }
-        public string? ClassTeacher { get; set; }
+        public int? ClassTeacherId { get; set; }
+        public string? ClassTeacherName { get; set; }
         public string? RoomNumber { get; set; }
         public string Status { get; set; } = null!; 
     }

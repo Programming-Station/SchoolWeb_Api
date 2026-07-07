@@ -7,14 +7,11 @@ namespace School.Services.Mapping
         public AutoMapperProfile()
         { 
 
-            //CreateMap<SubMenu, SubMenuModel>().ReverseMap(); 
-            //var currentAssembly = Assembly.GetExecutingAssembly(); // Current project
 
             var domainAssembly = Assembly.Load("School.Domain");  // Domain project assembly
             var dtoAssembly = Assembly.Load("School_DTOs");        // DTO project assembly
             var modelAssembly = Assembly.Load("School.Models");   // Models project assembly
 
-            // Get all exported types from the assemblies
             var sourceTypes = domainAssembly.GetExportedTypes();      // Domain types
             var destinationTypes = dtoAssembly.GetExportedTypes()     // DTO types
                 .Concat(modelAssembly.GetExportedTypes());            // Models types
@@ -23,11 +20,21 @@ namespace School.Services.Mapping
                            from destination in destinationTypes
                            where source.Name == destination.Name.Replace("Dto", "")
                               || source.Name == destination.Name.Replace("Model", "")
+                              || "Create" + source.Name == destination.Name.Replace("Dto", "")
+                              || "Update" + source.Name == destination.Name.Replace("Dto", "")
                            select (Source: source, Destination: destination);
 
 
             foreach (var (source, destination) in mappings)
             {
+                if (source.Name == "Employee" && destination.Name == "EmployeeDto")
+                {
+                    continue;
+                }
+                if (source.Name == "SchoolRegistration" && (destination.Name == "SchoolRegistrationModel" || destination.Name == "SchoolRegistrationDto"))
+                {
+                    continue;
+                }
                 if (destination.Name.Contains("Dto"))
                 {
                     var createdDateProp = destination.GetProperty("CreatedDate");
@@ -75,20 +82,44 @@ namespace School.Services.Mapping
 
                 }
             }
-            //CreateMap<Domain.MasterEntities.VehicleMaster.VehicleModel, VehicleModelDto>()
-            //   .ForMember(dest => dest.CreatedDate, // The property in VehicleModelDto
-            //               opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm ss tt")
-            //                                                                 : string.Empty) // Handle null values gracefully
-            //          );
              
-            //.ForMember(dest => dest.userDetails, opt => opt.MapFrom(src => src.ApplicationUser)).ReverseMap();
-            //CreateMap<ApplicationUser, UserDetailsDto>();
 
-            // Custom mapping for Event to EventDto to format EventDate
-            CreateMap<School.Domain.Event, School_DTOs.Event.EventDto>()
+            CreateMap<global::School.Domain.Event, global::School_DTOs.Event.EventDto>()
                 .ForMember(dest => dest.EventDate,
                     opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));  
 
+            CreateMap<global::School.Domain.School.SchoolOwner, global::School_DTOs.School.SchoolOwnerDto>()
+                .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.SchoolRegistration != null ? src.SchoolRegistration.SchoolName : string.Empty))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.ApplicationUser != null ? src.ApplicationUser.UserName : string.Empty));
+
+            CreateMap<global::School.Domain.Student.StudentRegistration, global::School_DTOs.Student.StudentRegistrationDto>()
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => ParseDateOfBirth(src.DateOfBirth)))
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hr.Employee, global::School_DTOs.Hr.EmployeeDto>()
+                .ForMember(dest => dest.FatherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.FatherName : null))
+                .ForMember(dest => dest.MotherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.MotherName : null))
+                .ForMember(dest => dest.AadhaarNumber, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.AadhaarNumber : null))
+                .ForMember(dest => dest.PANNumber, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.PANNumber : null))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.Address : null))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.City : null))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.State : null))
+                .ForMember(dest => dest.PinCode, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.PinCode : null))
+                .ForMember(dest => dest.BloodGroup, opt => opt.MapFrom(src => src.EmployeeDetail != null && src.EmployeeDetail.BloodGroup != null ? src.EmployeeDetail.BloodGroup.Name : null))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
+                .ForMember(dest => dest.DesignationName, opt => opt.MapFrom(src => src.Designation != null ? src.Designation.Name : string.Empty));
+
+            CreateMap<global::School.Domain.School.SchoolRegistration, global::School.Models.School.SchoolRegistrationModel>();
+            CreateMap<global::School.Models.School.SchoolRegistrationModel, global::School.Domain.School.SchoolRegistration>()
+                .ForMember(dest => dest.City, opt => opt.Ignore())
+                .ForMember(dest => dest.State, opt => opt.Ignore())
+                .ForMember(dest => dest.Country, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolProfileSetting, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolSubscriptions, opt => opt.Ignore())
+                .ForMember(dest => dest.AffiliationBoard, opt => opt.Ignore())
+                .ForMember(dest => dest.SchoolType, opt => opt.Ignore());
+
+            CreateMap<global::School.Domain.School.SchoolRegistration, global::School_DTOs.School.SchoolRegistrationDto>();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

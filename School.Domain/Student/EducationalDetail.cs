@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain.Student
 {
-    public class EducationalDetail
+    public class EducationalDetail :AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }
@@ -19,6 +21,10 @@ namespace School.Domain.Student
         [ForeignKey(nameof(StudentRegistrationId))]
         public virtual StudentRegistration? StudentRegistration { get; set; }
 
+        public int SchoolRegistrationId { get; set; }
+        [ForeignKey(nameof(SchoolRegistrationId))]
+        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
     }
 }
+
 

@@ -385,7 +385,6 @@ namespace School_API.Controllers
             }
             try
             {
-                // Get base URL for QR code
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
                 var pdfBytes = await _pdfCertificateService.GenerateRegistrationCertificateAsync(registrationResponse.Data, baseUrl);
                 

@@ -7,8 +7,10 @@ using School.Infrastructure.JWTAuthenticationManager;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.Repositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
+using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School.Services;
+using School_API.Filters;
 using School.Infrastructure.UnitOfWork;
 using School_API;
 using School.Infrastructure;
@@ -18,13 +20,30 @@ using School_API.Common.Interface;
 using School_API.Common;
 using School_API.Middleware;
 
+
+
+
+using School.Infrastructure.Repositories.Hr.Attendance;
+using School.Infrastructure.Repositories.Hr.LeaveManagement;
+using School.Infrastructure.Repositories.Hr.Timesheet;
+using School.Infrastructure.Repositories.School;
+using School.Services.Hr.Attendance;
+using School.Services.Hr.LeaveManagement;
+using School.Services.Hr.Timesheet;
+using School.Services.Interfaces.Hr.LeaveManagement;
+using School.Services.Interfaces.Hr.Attendance;
+using School.Services.Interfaces.Hr.Timesheet;
+using School.Services.Hr;
+using School.Services.Interfaces.Payroll;
+using School.Services.Interfaces.Academic;
+
 namespace School_API
 {
     public static class ServiceCollection
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextPool<SchoolDbContext>(options =>
+            services.AddDbContext<SchoolDbContext>(options =>
                 options.UseSqlServer(configuration?.GetConnectionString("SchoolConnection") ?? string.Empty));
 
             services.AddScoped<Func<SchoolDbContext>>((provider) => () => provider.GetService<SchoolDbContext>()!);
@@ -77,7 +96,6 @@ namespace School_API
                     },
                     OnTokenValidated = context =>
                     {
-                        // Additional token validation logic can be added here
                         return Task.CompletedTask;
                     }
                 };
@@ -99,25 +117,67 @@ namespace School_API
             .AddTransient<ICourseRepository, CourseRepository>()
             .AddTransient<IClassRepository, ClassRepository>()
             .AddTransient<IStudentRepository, StudentRepository>()
-            .AddTransient<IWebsiteRepository, WebsiteRepository>()
+         
             .AddTransient<ICityRepository, CityRepository>()
             .AddTransient<IStateRepository, StateRepository>()
             .AddTransient<IAffiliatedRepository, AffiliatedRepository>()
             .AddScoped<IStudentRegistrationRepository, StudentRegistrationRepository>()
             .AddTransient<IAcademicYearRepository, AcademicYearRepository>()
-            .AddTransient<IEnquiryRepository, EnquiryRepository>()
-            .AddTransient<ISchoolRegistrationRepository, SchoolRegistrationRepository>()
+       
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<IDashboardRepository, DashboardRepository>()
-            .AddTransient<ITeacherRepository, TeacherRepository>()
             .AddTransient<IFacultyRepository, FacultyRepository>()
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
+            .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
+            .AddTransient<ISchoolRepository, SchoolRepository>()
+            .AddTransient<ISchoolProfileSettingRepository, SchoolProfileSettingRepository>()
+            .AddTransient<IAffiliationBoardRepository, AffiliationBoardRepository>()
+            .AddTransient<ISchoolTypeRepository, SchoolTypeRepository>()
+            .AddTransient<ISchoolMediumRepository, SchoolMediumRepository>()
+            .AddTransient<ISchoolSubscriptionRepository, SchoolSubscriptionRepository>()
+            .AddTransient<ISchoolOwnerRepository, SchoolOwnerRepository>()
+            .AddTransient<IEmployeeRepository, EmployeeRepository>()
+            // HR Master Generic
+            .AddScoped(typeof(IHrMasterService<>), typeof(School.Services.Hr.HrMasterService<>))
+            
+            // Leave Management
+
+            .AddTransient<ILeaveBalanceRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveBalanceRepository>()
+            .AddTransient<ILeaveRequestRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveRequestRepository>()
+            .AddTransient<ILeaveSettingRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveSettingRepository>()
+            .AddTransient<ILeaveTypeRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveTypeRepository>()
+            
+            // Attendance
+            .AddTransient<IAttendanceRepository, School.Infrastructure.Repositories.Hr.Attendance.AttendanceRepository>()
+
+            .AddTransient<IShiftMasterRepository, School.Infrastructure.Repositories.Hr.Attendance.ShiftMasterRepository>()
+            .AddTransient<IWeekOffRepository, School.Infrastructure.Repositories.Hr.Attendance.WeekOffRepository>()
+            
+            // Timesheet
+            .AddTransient<ITimesheetRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetRepository>()
+
             ;
         }
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddMemoryCache();
+
+            // Bind Encryption Config
+            services.Configure<School.Utilities.Security.EncryptionConfig>(configuration.GetSection("EncryptionConfig"));
+            services.AddScoped<School.Utilities.Security.IEncryptionService, School.Utilities.Security.AESEncryptionService>();
+
+            // Email Background Queue Services
+            services.AddSingleton<IEmailQueue, EmailQueue>();
+            services.AddHostedService<EmailQueueProcessor>();
+
             return services
+            .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
+            .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
+            .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
+            .AddScoped<IEmailService, EmailService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
+            .AddScoped<ITenantService, TenantService>()
+            .AddScoped<IPermissionService, PermissionService>()
             .AddHttpContextAccessor()
             .AddScoped<IJWTAuthenticationManager, JWTAuthenticationManager>()
             .AddScoped<IAccountService, AccountService>()
@@ -127,7 +187,8 @@ namespace School_API
             .AddScoped<ICourseService, CourseService>()
             .AddScoped<IClassService, ClassService>()
             .AddScoped<IStudentService, StudentService>()
-            .AddScoped<IWebsiteService, WebsiteService>()
+            .AddScoped<IEmployeeService, EmployeeService>()
+           
             .AddScoped<IImageService, ImageService>()
             .AddScoped<ICityService, CityService>()
             .AddScoped<IStateService, StateService>()
@@ -135,14 +196,46 @@ namespace School_API
             .AddScoped<IMasterService, MasterService>()
             .AddScoped<IStudentRegistrationService, StudentRegistrationService>()
             .AddScoped<IAcademicYearService, AcademicYearService>()
-            .AddScoped<IEnquiryService, EnquiryService>()
-            .AddScoped<ISchoolRegistrationService, SchoolRegistrationService>()
+           
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
-            .AddScoped<ITeacherService, TeacherService>()
             .AddScoped<IFacultyService, FacultyService>()
-            .AddScoped<IDepartmentService, DepartmentService>()
+            .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
+            .AddScoped<IFeeTypeService, FeeTypeService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolProfileSettingService, School.Services.School.SchoolProfileSettingService>()
+            .AddScoped<School.Services.School.ISchoolServices.IAffiliationBoardService, School.Services.School.AffiliationBoardService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolTypeService, School.Services.School.SchoolTypeService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolMediumService, School.Services.School.SchoolMediumService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolSubscriptionService, School.Services.School.SchoolSubscriptionService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISchoolOwnerService, School.Services.School.SchoolOwnerService>()
+            // Leave Management
+
+            .AddScoped<ILeaveBalanceService, School.Services.Hr.LeaveManagement.LeaveBalanceService>()
+            .AddScoped<ILeaveRequestService, School.Services.Hr.LeaveManagement.LeaveRequestService>()
+            .AddScoped<ILeaveSettingService, School.Services.Hr.LeaveManagement.LeaveSettingService>()
+            .AddScoped<ILeaveTypeService, School.Services.Hr.LeaveManagement.LeaveTypeService>()
+            
+            // Attendance
+            .AddScoped<IAttendanceService, School.Services.Hr.Attendance.AttendanceService>()
+
+            .AddScoped<IShiftMasterService, School.Services.Hr.Attendance.ShiftMasterService>()
+            .AddScoped<IWeekOffService, School.Services.Hr.Attendance.WeekOffService>()
+            
+            // Timesheet
+            .AddScoped<ITimesheetService, School.Services.Hr.Timesheet.TimesheetService>()
+            .AddScoped<ITimesheetEntryService, School.Services.Hr.Timesheet.TimesheetEntryService>()
+
+            // Payroll
+            .AddScoped<ISalaryComponentService, School.Services.Payroll.SalaryComponentService>()
+            .AddScoped<IPayrollRunService, School.Services.Payroll.PayrollRunService>()
+
+            // Academic
+            .AddScoped<School.Services.Interfaces.Academic.IExamService, School.Services.Academic.ExamService>()
+            .AddScoped<IExamResultService, School.Services.Academic.ExamResultService>()
+            .AddScoped<School.Services.Interfaces.Academic.ISubjectService, School.Services.Academic.SubjectService>()
+            .AddScoped<School.Services.Interfaces.Academic.ITimetableSlotService, School.Services.Academic.TimetableSlotService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
@@ -175,7 +268,6 @@ namespace School_API
             }
             else
             {
-                // Fallback to allow all for development (should be restricted in production)
                 services.AddCors(options =>
                 {
                     options.AddPolicy("CorsPolicy", builder =>
@@ -191,4 +283,11 @@ namespace School_API
         }
     }
 }
+
+
+
+
+
+
+
 

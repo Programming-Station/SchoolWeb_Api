@@ -25,7 +25,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // 1?? Check for duplicate CollegeCode (if provided)
                 if (!string.IsNullOrEmpty(model.CollegeCode))
                 {
                     var exists = await _context.Affiliateds
@@ -42,7 +41,6 @@ namespace School.Infrastructure.Repositories
                     }
                 }
 
-                // 2?? Validate StateId is provided and valid
                 if (model.StateId <= 0)
                 {
                     return new APIResponse<AffiliatedDto>
@@ -53,7 +51,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // 3?? Validate State exists and is active
                 var state = await _context.States
                     .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
 
@@ -77,7 +74,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // 4?? Validate CityId is provided and valid
                 if (model.CityId <= 0)
                 {
                     return new APIResponse<AffiliatedDto>
@@ -88,7 +84,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // 5?? Validate City exists and belongs to State
                 var city = await _context.Cities
                     .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
 
@@ -122,7 +117,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // 4?? Create domain entity
                 var affiliated = new Affiliated
                 {
                     CollegeName = model.CollegeName,
@@ -142,14 +136,11 @@ namespace School.Infrastructure.Repositories
                     CreatedDate = DateTime.UtcNow
                 };
 
-                // 5?? Add to DB
                 Add(affiliated);
                 await _unitOfWork.CommitAsync();
 
-                // 6?? Reload saved entity with navigation data for DTO mapping
                 var savedEntity = await _context.Affiliateds
                     .Include(x => x.State)
-                    //.Include(x => x.City)
                     .FirstAsync(x => x.Id == affiliated.Id);
 
                 return new APIResponse<AffiliatedDto>
@@ -180,7 +171,6 @@ namespace School.Infrastructure.Repositories
             {
                 var college = await _context.Affiliateds
                     .Include(x => x.State)
-                    //.Include(x => x.City)
                     .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
                 if (college == null)
@@ -282,7 +272,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Check for duplicate CollegeCode (if provided and changed)
                 if (!string.IsNullOrEmpty(model.CollegeCode) && college.CollegeCode != model.CollegeCode)
                 {
                     var exists = await _context.Affiliateds
@@ -301,7 +290,6 @@ namespace School.Infrastructure.Repositories
                     }
                 }
 
-                // Validate StateId is provided and valid
                 if (model.StateId <= 0)
                 {
                     return new APIResponse
@@ -312,7 +300,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Validate State exists and is active
                 var state = await _context.States
                     .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
 
@@ -336,7 +323,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Validate CityId is provided and valid
                 if (model.CityId <= 0)
                 {
                     return new APIResponse
@@ -347,7 +333,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Validate City exists and belongs to State
                 var city = await _context.Cities
                     .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
 
@@ -512,7 +497,6 @@ namespace School.Infrastructure.Repositories
                 StateId = college.StateId,
                 StateName = college.State?.Name ?? string.Empty,
                 CityId = college.CityId,
-                //CityName = college.City?.Name ?? string.Empty,
                 Address = college.Address,
                 Pincode = college.Pincode,
                 ContactPerson = college.ContactPerson,

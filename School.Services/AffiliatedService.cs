@@ -27,7 +27,6 @@ namespace School.Services
 
         public async Task<APIResponse<AffiliatedDto>> AddAffiliationCollegeAsync(AffiliatedModel model)
         {
-            // Validate StateId is provided and valid
             if (model.StateId <= 0)
             {
                 return new APIResponse<AffiliatedDto>
@@ -38,7 +37,6 @@ namespace School.Services
                 };
             }
 
-            // Validate State exists and is active
             var state = await _context.States
                 .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
 
@@ -62,7 +60,6 @@ namespace School.Services
                 };
             }
 
-            // Validate CityId is provided and valid
             if (model.CityId <= 0)
             {
                 return new APIResponse<AffiliatedDto>
@@ -73,7 +70,6 @@ namespace School.Services
                 };
             }
 
-            // Validate City exists and belongs to State
             var city = await _context.Cities
                 .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
 
@@ -107,7 +103,6 @@ namespace School.Services
                 };
             }
 
-            // Check for duplicate CollegeCode (if provided)
             if (!string.IsNullOrEmpty(model.CollegeCode))
             {
                 var existingCode = await _context.Affiliateds
@@ -124,12 +119,10 @@ namespace School.Services
                 }
             }
 
-            // Map Model to Entity
             var entity = _mapper.Map<Affiliated>(model);
             entity.CreatedBy = model.CreatedBy;
             entity.CreatedDate = DateTime.UtcNow;
 
-            // Trim string fields
             entity.CollegeName = entity.CollegeName?.Trim() ?? "";
             entity.CollegeCode = entity.CollegeCode?.Trim();
             entity.UniversityName = entity.UniversityName?.Trim();
@@ -154,7 +147,6 @@ namespace School.Services
             }
             else if (entity != null && entity.Id > 0)
             {
-                // Reload with State navigation property
                 var savedEntity = await _affiliatedRepository.GetAffiliationCollegeByIdAsync(entity.Id);
                 return new APIResponse<AffiliatedDto>
                 {
@@ -236,7 +228,6 @@ namespace School.Services
                 };
             }
 
-            // Check for duplicate CollegeCode (if provided and changed)
             var existingEntity = await _affiliatedRepository.GetAffiliationCollegeByIdAsync(model.Id);
             if (existingEntity == null || existingEntity.Id == 0)
             {
@@ -263,10 +254,8 @@ namespace School.Services
                 }
             }
 
-            // Validate StateId and CityId if changed
             if (model.StateId != existingEntity.StateId || model.CityId != existingEntity.CityId)
             {
-                // Validate State exists and is active
                 var state = await _context.States
                     .FirstOrDefaultAsync(s => s.Id == model.StateId && !s.IsDeleted);
 
@@ -280,7 +269,6 @@ namespace School.Services
                     };
                 }
 
-                // Validate City exists and belongs to State
                 var city = await _context.Cities
                     .FirstOrDefaultAsync(c => c.Id == model.CityId && !c.IsDeleted);
 
@@ -295,7 +283,6 @@ namespace School.Services
                 }
             }
 
-            // Update properties from model
             existingEntity.CollegeName = model.CollegeName.Trim();
             existingEntity.CollegeCode = model.CollegeCode?.Trim();
             existingEntity.UniversityName = model.UniversityName?.Trim();
@@ -372,10 +359,8 @@ namespace School.Services
         {
             var dto = _mapper.Map<AffiliatedDto>(entity);
 
-            // Map StateName from navigation property
             dto.StateName = entity.State?.Name ?? "";
 
-            // Map CityName - get from Cities through State (loaded via ThenInclude)
             if (entity.State != null && entity.State.Cities != null && entity.State.Cities.Any())
             {
                 var city = entity.State.Cities.FirstOrDefault(c => c.Id == entity.CityId);

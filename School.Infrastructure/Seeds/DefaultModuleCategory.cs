@@ -1,4 +1,4 @@
-using School.Domain;
+using School.Domain.AccessControl;
 using School.Utilities.Enums;
 
 namespace School.Infrastructure.Seeds

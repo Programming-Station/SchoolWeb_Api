@@ -1,4 +1,4 @@
-using School.Domain;
+using School.Domain.Location;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {

@@ -13,13 +13,6 @@ namespace School.Infrastructure.UnitOfWork
             _dbFactory = dbFactory;
         }
 
-        //public async Task BeginTransactionAsync()
-        //{
-        //    if (_transaction == null)
-        //    {
-        //        _transaction = await _dbFactory.DbContext.Database.BeginTransactionAsync();
-        //    }
-        //}
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _dbFactory.DbContext.Database.BeginTransactionAsync();

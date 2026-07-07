@@ -24,6 +24,7 @@ namespace School.Domain.Auth
         public string? LastLoginIpAddress { get; set; }
         public int FailedLoginAttempts { get; set; } = 0;
         public DateTime? LockoutEndDate { get; set; }
+        public int? SchoolRegistrationId { get; set; }
     }
 }
 

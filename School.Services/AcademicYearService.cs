@@ -23,7 +23,6 @@ namespace School.Services
 
         public async Task<APIResponse<AcademicYearDto>> AddAcademicYearAsync(AcademicYearModel model)
         {
-            // Validate date range
             if (model.StartDate >= model.EndDate)
             {
                 return new APIResponse<AcademicYearDto>
@@ -151,7 +150,6 @@ namespace School.Services
 
         public async Task<APIResponse> UpdateAcademicYearAsync(AcademicYearModel model)
         {
-            // Validate date range
             if (model.StartDate >= model.EndDate)
             {
                 return new APIResponse

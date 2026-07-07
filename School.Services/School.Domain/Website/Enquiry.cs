@@ -42,24 +42,20 @@ namespace School.Domain.Website
         [MaxLength(10)]
         public string? PinCode { get; set; }
 
-        // Course/Service interested in (optional)
         public int? CourseId { get; set; }
 
         [MaxLength(200)]
         public string? CourseName { get; set; }
 
-        // ---------- Navigation Properties ----------
         [ForeignKey(nameof(CourseId))]
         public virtual School.Domain.Course? Course { get; set; }
 
-        // Enquiry Status
         [Required]
         public int StatusId { get; set; } // Will be set programmatically, default to "New" status if not provided
 
         [ForeignKey(nameof(StatusId))]
         public virtual School.Domain.Status? Status { get; set; }
 
-        // Response/Reply from admin
         [MaxLength(2000)]
         public string? AdminReply { get; set; }
 
@@ -68,11 +64,9 @@ namespace School.Domain.Website
         [MaxLength(200)]
         public string? RepliedBy { get; set; }
 
-        // IP Address for tracking
         [MaxLength(50)]
         public string? IpAddress { get; set; }
 
-        // User Agent
         [MaxLength(500)]
         public string? UserAgent { get; set; }
     }

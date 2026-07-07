@@ -23,7 +23,6 @@ namespace School_API.Controllers
             _moduleService = moduleService;
             _categoryModuleService = categoryModuleService;
         }
-        // ========== MENU ENDPOINTS ==========
 
         /// <summary>
         /// Create a new menu
@@ -95,7 +94,6 @@ namespace School_API.Controllers
             return Ok(res);
         }
 
-        // ========== SUBMENU ENDPOINTS ==========
 
         /// <summary>
         /// Create a new submenu
@@ -157,7 +155,6 @@ namespace School_API.Controllers
             return Ok(res);
         }
 
-        // ========== MENU PERMISSION ENDPOINTS ==========
         [HttpPost]
         public async Task<IActionResult> GiveMenuPermission([FromBody] MenuPermissionModel model)
         {
@@ -176,7 +173,6 @@ namespace School_API.Controllers
             return Ok(res);
         }
 
-        // ========== Module Endpoints ==========
 
         /// <summary>
         /// Create a new module (Super Admin only)
@@ -303,7 +299,6 @@ namespace School_API.Controllers
             return Ok(res);
         }
 
-        // ========== Category Module Endpoints ==========
 
         /// <summary>
         /// Create a new category module (Super Admin only)

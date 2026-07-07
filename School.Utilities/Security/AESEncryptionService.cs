@@ -29,7 +29,6 @@ namespace School.Utilities.Security
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
 
-            // Derive key and IV from password and salt
             var key = DeriveKey(_settings.EncryptionKey, salt);
             var iv = DeriveIV(_settings.EncryptionKey, salt);
 
@@ -46,8 +45,6 @@ namespace School.Utilities.Security
 
             var encrypted = msEncrypt.ToArray();
 
-            // Combine salt + encrypted data
-            // Salt is Base64 encoded, so we need to store its length
             var saltBytes = Encoding.UTF8.GetBytes(salt);
             var saltLengthBytes = BitConverter.GetBytes(saltBytes.Length);
             var combined = new byte[saltLengthBytes.Length + saltBytes.Length + encrypted.Length];
@@ -55,13 +52,10 @@ namespace School.Utilities.Security
             Buffer.BlockCopy(saltBytes, 0, combined, saltLengthBytes.Length, saltBytes.Length);
             Buffer.BlockCopy(encrypted, 0, combined, saltLengthBytes.Length + saltBytes.Length, encrypted.Length);
 
-            // Base64 encode
             var encryptedBase64 = Convert.ToBase64String(combined);
 
-            // Generate signature
             var signature = GenerateSignature(encryptedBase64);
 
-            // Return: signature:encryptedData
             return $"{signature}:{encryptedBase64}";
         }
 
@@ -70,7 +64,6 @@ namespace School.Utilities.Security
             if (string.IsNullOrEmpty(cipherText))
                 throw new ArgumentNullException(nameof(cipherText));
 
-            // Split signature and encrypted data
             var parts = cipherText.Split(':');
             if (parts.Length != 2)
                 throw new ArgumentException("Invalid encrypted format. Expected 'signature:encryptedData'");
@@ -78,16 +71,13 @@ namespace School.Utilities.Security
             var receivedSignature = parts[0];
             var encryptedBase64 = parts[1];
 
-            // Verify signature
             if (!VerifySignature(encryptedBase64, receivedSignature))
             {
                 throw new CryptographicException("Signature verification failed. Data may have been tampered with.");
             }
 
-            // Decode from Base64
             var combined = Convert.FromBase64String(encryptedBase64);
 
-            // Extract salt length (first 4 bytes)
             if (combined.Length < 4)
                 throw new ArgumentException("Invalid encrypted data format");
 
@@ -95,16 +85,13 @@ namespace School.Utilities.Security
             if (combined.Length < 4 + saltLength)
                 throw new ArgumentException("Invalid encrypted data format");
 
-            // Extract salt
             var saltBytes = new byte[saltLength];
             Buffer.BlockCopy(combined, 4, saltBytes, 0, saltLength);
             var extractedSalt = Encoding.UTF8.GetString(saltBytes);
 
-            // Extract encrypted data
             var encrypted = new byte[combined.Length - 4 - saltLength];
             Buffer.BlockCopy(combined, 4 + saltLength, encrypted, 0, encrypted.Length);
 
-            // Use provided salt or extracted salt
             var saltToUse = salt ?? extractedSalt;
 
             using var aes = Aes.Create();
@@ -113,7 +100,6 @@ namespace School.Utilities.Security
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
 
-            // Derive key and IV
             var key = DeriveKey(_settings.EncryptionKey, saltToUse);
             var iv = DeriveIV(_settings.EncryptionKey, saltToUse);
 

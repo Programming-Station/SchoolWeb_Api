@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<StudentRegistration> AddStudentRegistrationAsync(StudentRegistration entity)
         {
-            // Check if registration already exists with same mobile
             var existingByMobile = await DbSet.FirstOrDefaultAsync(x =>
                                x.Mobile == entity.Mobile &&
                                !x.IsDeleted);
@@ -31,7 +30,6 @@ namespace School.Infrastructure.Repositories
                 return existingByMobile;
             }
 
-            // Check if registration already exists with same Aadhaar
             var existingByAadhaar = await DbSet.FirstOrDefaultAsync(x =>
                                x.AadhaarNumber == entity.AadhaarNumber &&
                                !x.IsDeleted);
@@ -67,7 +65,6 @@ namespace School.Infrastructure.Repositories
                 .Include(x => x.Course)
                 .AsQueryable();
 
-            // Apply search filter
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 query = query.Where(x =>
@@ -78,7 +75,6 @@ namespace School.Infrastructure.Repositories
                     x.InstituteName.Contains(searchTerm));
             }
 
-            // Apply status filter
             if (!string.IsNullOrWhiteSpace(status))
             {
                 query = query.Where(x => x.RegistrationStatus == status);
@@ -95,7 +91,6 @@ namespace School.Infrastructure.Repositories
         {
             var query = List(expression: x => !x.IsDeleted).AsQueryable();
 
-            // Apply search filter
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 query = query.Where(x =>
@@ -106,7 +101,6 @@ namespace School.Infrastructure.Repositories
                     x.InstituteName.Contains(searchTerm));
             }
 
-            // Apply status filter
             if (!string.IsNullOrWhiteSpace(status))
             {
                 query = query.Where(x => x.RegistrationStatus == status);

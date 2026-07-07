@@ -8,13 +8,10 @@ namespace School.Infrastructure.Seeds
     {
         public static List<ApplicationUser> IdentityBasicUserList()
         {
-            // Password hash for "Password@123"
-            // Note: This is a pre-hashed password. In production, use UserManager to hash passwords.
             var passwordHash = "AQAAAAEAACcQAAAAEBLjouNqaeiVWbN0TbXUS3+ChW3d7aQIk/BQEkWBxlrdRRngp14b0BIH0Rp65qD6mA==";
 
             return new List<ApplicationUser>()
             {
-                // Super Admin User
                 new ApplicationUser
                 {
                     Id = Constants.SuperAdminUser,
@@ -31,7 +28,6 @@ namespace School.Infrastructure.Seeds
                     IsDefaultPassword = false,
                     IsActive = true,
                 },
-                // Admin User
                 new ApplicationUser
                 {
                     Id = Constants.AdminUser,
@@ -48,7 +44,6 @@ namespace School.Infrastructure.Seeds
                     IsDefaultPassword = false,
                     IsActive = true,
                 },
-                // Teacher User
                 new ApplicationUser
                 {
                     Id = Constants.TeacherUser,
@@ -65,7 +60,6 @@ namespace School.Infrastructure.Seeds
                     IsDefaultPassword = false,
                     IsActive = true,
                 },
-                // Student User
                 new ApplicationUser
                 {
                     Id = Constants.StudentUser,

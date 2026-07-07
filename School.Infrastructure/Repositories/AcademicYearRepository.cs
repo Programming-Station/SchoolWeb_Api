@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<AcademicYear> AddAcademicYearAsync(AcademicYear entity)
         {
-            // Check if year name already exists
             var existingYear = await DbSet.FirstOrDefaultAsync(x =>
                                x.YearName.ToLower() == entity.YearName.ToLower() &&
                                !x.IsDeleted);
@@ -30,19 +29,8 @@ namespace School.Infrastructure.Repositories
                 return new AcademicYear { Id = 0 }; // Return entity with Id = 0 to indicate duplicate name
             }
 
-            // Check for overlapping dates
-            //var overlappingYear = await _context.AcademicYears
-            //    .AnyAsync(ay => !ay.IsDeleted &&
-            //        ((entity.StartDate >= ay.StartDate && entity.StartDate <= ay.EndDate) ||
-            //         (entity.EndDate >= ay.StartDate && entity.EndDate <= ay.EndDate) ||
-            //         (entity.StartDate <= ay.StartDate && entity.EndDate >= ay.EndDate)));
 
-            //if (overlappingYear)
-            //{
-            //    return new AcademicYear { Id = -1 }; // Return entity with Id = -1 to indicate overlapping dates
-            //}
 
-            // If setting as current, unset other current years
             if (entity.IsCurrent)
             {
                 var currentYears = await _context.AcademicYears
@@ -68,7 +56,6 @@ namespace School.Infrastructure.Repositories
 
             if (result != null)
             {
-                // Check if academic year is current
                 if (result.IsCurrent)
                 {
                     return -1; // Return -1 to indicate cannot delete current year
@@ -118,7 +105,6 @@ namespace School.Infrastructure.Repositories
                     return -1; // Return -1 to indicate cannot set inactive year as current
                 }
 
-                // Unset all other current years
                 var currentYears = await _context.AcademicYears
                     .Where(ay => ay.IsCurrent && !ay.IsDeleted && ay.Id != id)
                     .ToListAsync();
@@ -130,7 +116,6 @@ namespace School.Infrastructure.Repositories
                     Update(year);
                 }
 
-                // Set this as current
                 entity.IsCurrent = true;
                 entity.UpdatedDate = DateTime.Now;
                 Update(entity);
@@ -157,7 +142,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> UpdateAcademicYearAsync(AcademicYear entity)
         {
-            // Check if year name already exists for another academic year
             var existingYear = await _context.AcademicYears
                 .FirstOrDefaultAsync(ay => ay.YearName.ToLower() == entity.YearName.ToLower() && 
                     ay.Id != entity.Id && !ay.IsDeleted);
@@ -167,7 +151,6 @@ namespace School.Infrastructure.Repositories
                 return -1; // Return -1 to indicate duplicate name
             }
 
-            // Check for overlapping dates (excluding current record)
             var overlappingYear = await _context.AcademicYears
                 .AnyAsync(ay => !ay.IsDeleted && ay.Id != entity.Id &&
                     ((entity.StartDate >= ay.StartDate && entity.StartDate <= ay.EndDate) ||
@@ -179,7 +162,6 @@ namespace School.Infrastructure.Repositories
                 return -2; // Return -2 to indicate overlapping dates
             }
 
-            // If setting as current, unset other current years
             if (entity.IsCurrent)
             {
                 var currentYears = await _context.AcademicYears

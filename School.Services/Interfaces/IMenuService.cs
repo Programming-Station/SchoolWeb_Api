@@ -6,7 +6,6 @@ namespace School.Services.Interfaces
 {
     public interface IMenuService
     {
-        // Menu operations
         Task<APIResponse<MenuDto>> AddMenuAsync(MenuModel model);
         Task<APIResponse<MenuDto>> GetMenuByIdAsync(int menuId);
         Task<APIResponse<IEnumerable<MenuDto>>> GetAllMenusAsync();
@@ -14,14 +13,12 @@ namespace School.Services.Interfaces
         Task<APIResponse> DeleteMenuAsync(int menuId);
         Task<APIResponse> ToggleMenuStatusAsync(int menuId);
 
-        // SubMenu operations
         Task<APIResponse<SubMenuDto>> AddSubMenuAsync(SubMenuModel model);
         Task<APIResponse<SubMenuDto>> GetSubMenuByIdAsync(int subMenuId);
         Task<APIResponse<IEnumerable<SubMenuDto>>> GetSubMenusByMenuIdAsync(int menuId);
         Task<APIResponse> UpdateSubMenuAsync(SubMenuModel model);
         Task<APIResponse> DeleteSubMenuAsync(int subMenuId);
 
-        // Menu Permission operations
         Task<APIResponse> GiveMenuPermissionAsync(MenuPermissionModel model);
         Task<APIResponse<MenuPermissionsDto>> GetMenuPermissionAsync(string? roleId);
     }

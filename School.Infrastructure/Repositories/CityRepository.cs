@@ -1,22 +1,20 @@
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
-using School.Infrastructure.UnitOfWork.Interfaces; 
+using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using School.Domain.Location;
 
 namespace School.Infrastructure.Repositories
 {
 
     public class CityRepository : Repository<City>, ICityRepository
     {
-        private readonly SchoolDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CityRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork)
+        public CityRepository(DbFactory dbFactory,IUnitOfWork unitOfWork)
             : base(dbFactory)
         {
-            _context = context;
             _unitOfWork = unitOfWork;
         }
         public async Task<City> AddCityAsync(City entity)
@@ -39,8 +37,7 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> DeleteCityAsync(int id)
         {
-            var entity = await _context.Cities
-                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+            var entity = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
 
             var result = await FindAsync(expression: x => x.Id == id);
 
@@ -70,8 +67,7 @@ namespace School.Infrastructure.Repositories
 
         public async Task<int> ToggleCityStatusAsync(int id)
         {
-            var entity = await _context.Cities
-                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+            var entity = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
 
             if (entity != null)
             {

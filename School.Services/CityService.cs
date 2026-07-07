@@ -1,5 +1,5 @@
 using AutoMapper;
-using School.Domain;
+using School.Domain.Location;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.City;
 using School.Services.Interfaces;

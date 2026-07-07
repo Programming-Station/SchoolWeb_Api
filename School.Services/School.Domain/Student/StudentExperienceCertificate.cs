@@ -16,7 +16,6 @@ namespace School.Domain.Student
         public string? TotalDuration { get; set; }
         public string? Certificate { get; set; } // Base64 or file path
 
-        // Navigation Property
         [ForeignKey(nameof(StudentRegistrationId))]
         public virtual StudentRegistration? StudentRegistration { get; set; }
     }

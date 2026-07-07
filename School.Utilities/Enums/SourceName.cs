@@ -7,5 +7,18 @@ namespace School.Utilities.Enums
         Status,
         Course,
         AcademicYear,
+        AffiliationBoard,
+        SchoolType,
+        SchoolMedium,
+        Country,
+        Module,
+        Menu,
+        SubMenu,
+        Class,
+        Department,
+        FeeType,
+        Faculty,
+        CategoryModule,
+        Affiliated
     }
 }

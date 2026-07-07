@@ -3,15 +3,28 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
 using School.Domain;
-using School.Domain.Website;
 using School.Domain.Student;
+using School.Domain.FeeManagnment;
+using School.Domain.School;
+using School.Domain.AccessControl;
+using School.Domain.Location;
+using School.Domain.Hr;
+using School.Domain.Hr.LeaveManagement;
+using School.Domain.Hr.Timesheet;
+using School.Domain.Hr.Attendance;
+using School.Infrastructure.Interfaces;
+using School.Domain.Email;
 
 namespace School.Infrastructure
 {
     public class SchoolDbContext : IdentityDbContext<ApplicationUser>
     {
-        public SchoolDbContext(DbContextOptions<SchoolDbContext> options) : base(options)
+        private readonly ITenantService _tenantService;
+        public int? CurrentTenantId => _tenantService?.GetTenantId();
+
+        public SchoolDbContext(DbContextOptions<SchoolDbContext> options, ITenantService tenantService = null) : base(options)
         {
+            _tenantService = tenantService;
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
@@ -27,36 +40,66 @@ namespace School.Infrastructure
         public DbSet<Class> Classes { get; set; } = null!;
         public DbSet<City> Cities { get; set; } = null!;
         public DbSet<State> States { get; set; } = null!;
+        public DbSet<Country> Countries { get; set; } = null!;
         public DbSet<Affiliated> Affiliateds { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
         public DbSet<StudentRegistration> StudentRegistrations { get; set; } = null!;
+        public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+        public DbSet<AffiliationBoard> AffiliationBoards { get; set; } = null!;
+        public DbSet<SchoolType> SchoolTypes { get; set; } = null!;
+        public DbSet<SchoolMedium> SchoolMediums { get; set; } = null!;
+        public DbSet<SchoolProfileSetting> SchoolProfileSettings { get; set; } = null!;
+        public DbSet<SchoolSubscription> SchoolSubscriptions { get; set; } = null!;
+        public DbSet<SchoolOwner> SchoolOwners { get; set; } = null!;
         public DbSet<StudentExperienceCertificate> StudentExperienceCertificates { get; set; } = null!;
         public DbSet<EducationalDetail> EducationalDetails { get; set; } = null!;
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
+        public DbSet<EmailServerSetting> EmailServerSettings { get; set; } = null!;
+        public DbSet<EmailTemplate> EmailTemplates { get; set; } = null!;
+        public DbSet<EmailBranding> EmailBrandings { get; set; } = null!;
+        public DbSet<EmailLog> EmailLogs { get; set; } = null!;
 
-        // Website Management Entities
-        public DbSet<SliderImage> SliderImages { get; set; } = null!;
-        public DbSet<HeroSection> HeroSections { get; set; } = null!;
-        public DbSet<NoticeBar> NoticeBars { get; set; } = null!;
-        public DbSet<WelcomeSection> WelcomeSections { get; set; } = null!;
-        public DbSet<AboutSection> AboutSections { get; set; } = null!;
-        public DbSet<AboutPage> AboutPages { get; set; } = null!;
-        public DbSet<ContactInfo> ContactInfos { get; set; } = null!;
-        public DbSet<GalleryImage> GalleryImages { get; set; } = null!;
-        public DbSet<Achievement> Achievements { get; set; } = null!;
-        public DbSet<TeamMember> TeamMembers { get; set; } = null!;
-        public DbSet<Enquiry> Enquiries { get; set; } = null!;
-        public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+      
         public DbSet<Event> Events { get; set; } = null!;
-        public DbSet<Teacher> Teachers { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;
         public DbSet<Department> Departments { get; set; } = null!;
+        public DbSet<FeeType> FeeTypes { get; set; } = null!;
+
+        // HR Module
+        public DbSet<Designation> Designations { get; set; } = null!;
+        public DbSet<Specialization> Specializations { get; set; } = null!;
+        public DbSet<BloodGroupMaster> BloodGroupMasters { get; set; } = null!;
+        public DbSet<ReligionMaster> ReligionMasters { get; set; } = null!;
+        public DbSet<QualificationMaster> QualificationMasters { get; set; } = null!;
+        public DbSet<EmployeeCategory> EmployeeCategories { get; set; } = null!;
+        public DbSet<EmployeeType> EmployeeTypes { get; set; } = null!;
+        public DbSet<EmploymentStatus> EmploymentStatuses { get; set; } = null!;
+        public DbSet<SalaryGrade> SalaryGrades { get; set; } = null!;
+        public DbSet<ShiftMaster> ShiftMasters { get; set; } = null!;
+        public DbSet<HolidayMaster> HolidayMasters { get; set; } = null!;
+        public DbSet<WeekOff> WeekOffs { get; set; } = null!;
+        public DbSet<NoticePeriod> NoticePeriods { get; set; } = null!;
+        public DbSet<LeaveType> LeaveTypes { get; set; } = null!;
+        public DbSet<LeaveSetting> LeaveSettings { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; } = null!;
+        public DbSet<EmployeeDocument> EmployeeDocuments { get; set; } = null!;
+        public DbSet<EmployeeBankDetail> EmployeeBankDetails { get; set; } = null!;
+        public DbSet<EmployeeEducation> EmployeeEducations { get; set; } = null!;
+        public DbSet<EmployeeExperience> EmployeeExperiences { get; set; } = null!;
+        public DbSet<EmployeeSalaryDetail> EmployeeSalaryDetails { get; set; } = null!;
+        public DbSet<EmployeeDetail> EmployeeDetails { get; set; } = null!;
+        public DbSet<LeaveRequest> LeaveRequests { get; set; } = null!;
+        public DbSet<LeaveBalance> LeaveBalances { get; set; } = null!;
+        public DbSet<Attendance> Attendances { get; set; } = null!;
+        public DbSet<AttendanceLog> AttendanceLogs { get; set; } = null!;
+        public DbSet<Timesheet> Timesheets { get; set; } = null!;
+        public DbSet<TimesheetEntry> TimesheetEntries { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure ApplicationUser
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable(name: "Users");
@@ -65,7 +108,16 @@ namespace School.Infrastructure
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
             });
 
-            // Configure Identity tables
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasIndex(e => e.EmployeeCode).IsUnique();
+            });
+
+            modelBuilder.Entity<Student>(entity =>
+            {
+                entity.HasIndex(e => e.EnrollmentNumber).IsUnique();
+            });
+
             modelBuilder.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "Roles");
@@ -96,27 +148,6 @@ namespace School.Infrastructure
                 entity.ToTable("UserTokens");
             });
 
-            // Configure Teacher-ApplicationUser relationship
-            modelBuilder.Entity<Teacher>(entity =>
-            {
-                entity.HasOne(t => t.User)
-                    .WithMany()
-                    .HasForeignKey(t => t.UserId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
-            });
-            modelBuilder.Entity<Teacher>()
-                .HasOne(t => t.State)
-                .WithMany()
-                .HasForeignKey(t => t.StateId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Teacher>()
-                .HasOne(t => t.City)
-                .WithMany()
-                .HasForeignKey(t => t.CityId)
-                .OnDelete(DeleteBehavior.Cascade);
-            // Configure RefreshToken
             modelBuilder.Entity<RefreshToken>(entity =>
             {
                 entity.ToTable("RefreshTokens");
@@ -127,7 +158,6 @@ namespace School.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure LoginHistory
             modelBuilder.Entity<LoginHistory>(entity =>
             {
                 entity.ToTable("LoginHistories");
@@ -163,14 +193,23 @@ namespace School.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure Website Entities
-            //ConfigureWebsiteEntities(modelBuilder);
+            // Disable cascade delete globally to prevent multiple cascade paths (we use soft delete anyway)
+            var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetForeignKeys())
+                .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
+            foreach (var fk in cascadeFKs)
+            {
+                // Leave Identity related cascade deletes intact
+                if (fk.DeclaringEntityType.ClrType.Namespace != null &&
+                    !fk.DeclaringEntityType.ClrType.Namespace.Contains("Microsoft.AspNetCore.Identity") &&
+                    fk.DeclaringEntityType.ClrType != typeof(RefreshToken) &&
+                    fk.DeclaringEntityType.ClrType != typeof(LoginHistory))
+                {
+                    fk.DeleteBehavior = DeleteBehavior.NoAction;
+                }
+            }
 
-            // Seed Data - Using DbInitializer.Seed() in Program.cs instead
-            // SeedData(modelBuilder);
-
-            // Apply global query filters for soft delete
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(School.Domain.BaseEntity.IDeleteEntity).IsAssignableFrom(entityType.ClrType))
@@ -183,58 +222,59 @@ namespace School.Infrastructure
             }
         }
 
-        private void SetGlobalQueryFilterForSoftDelete<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+            SetTenantId();
+            return base.SaveChangesAsync(cancellationToken);
         }
 
-        // Seed Data method - Using DbInitializer.Seed() in Program.cs instead
-        // private void SeedData(ModelBuilder modelBuilder)
-        // {
-        //     // Seed Roles
-        //     List<IdentityRole> roles = DefaultRoles.IdentityRoleList();
-        //     modelBuilder.Entity<IdentityRole>().HasData(roles);
-        //
-        //     // Seed Status
-        //     List<Status> statuses = DefaultStatusList.StatusList();
-        //     modelBuilder.Entity<Status>().HasData(statuses);
-        //
-        //     // Seed Users
-        //     List<ApplicationUser> users = DefaultUser.IdentityBasicUserList();
-        //     modelBuilder.Entity<ApplicationUser>().HasData(users);
-        //
-        //     // Map User to Role
-        //     var identityUserRoles = MappingUserRole.IdentityUserRoleList();
-        //     modelBuilder.Entity<IdentityUserRole<string>>().HasData(identityUserRoles);
-        // }
+        public override int SaveChanges()
+        {
+            SetTenantId();
+            return base.SaveChanges();
+        }
 
-        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        //{
-        //    UpdateAuditFields();
-        //    return base.SaveChangesAsync(cancellationToken);
-        //}
+        private void SetTenantId()
+        {
+            var tenantId = CurrentTenantId;
+            if (!tenantId.HasValue) return;
 
-        //private void UpdateAuditFields()
-        //{
-        //    var entries = ChangeTracker.Entries()
-        //        .Where(e => e.Entity is B2B.Domain.BaseEntity.IAuditEntity && 
-        //                   (e.State == EntityState.Added || e.State == EntityState.Modified));
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    if (entry.Entity is BaseEntity.ITenantEntity tenantEntity)
+                    {
+                        if (tenantEntity.SchoolRegistrationId == 0)
+                        {
+                            tenantEntity.SchoolRegistrationId = tenantId.Value;
+                        }
+                    }
+                }
+            }
+        }
 
-        //    foreach (var entry in entries)
-        //    {
-        //        var entity = (B2B.Domain.BaseEntity.IAuditEntity)entry.Entity;
-        //        var now = DateTime.Now;
+        private void SetGlobalQueryFilterForSoftDelete<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
+        {
+            if (typeof(BaseEntity.ITenantEntity).IsAssignableFrom(typeof(T)))
+            {
+                builder.Entity<T>().HasIndex("SchoolRegistrationId", "IsDeleted");
+                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted && (CurrentTenantId == null || ((BaseEntity.ITenantEntity)e).SchoolRegistrationId == CurrentTenantId));
+            }
+            else
+            {
+                builder.Entity<T>().HasIndex("IsDeleted");
+                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+            }
+        }
 
-        //        if (entry.State == EntityState.Added)
-        //        {
-        //            entity.CreatedDate = now;
-        //        }
-        //        else if (entry.State == EntityState.Modified)
-        //        {
-        //            entity.UpdatedDate = now;
-        //        }
-        //    }
-        //}
+
+
+
+
     }
 }
+
+
+
 

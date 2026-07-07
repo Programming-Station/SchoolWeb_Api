@@ -37,11 +37,8 @@ namespace School_API.Middleware
                 var username = credentials[0];
                 var password = credentials[1];
 
-                // Validate credentials (should be replaced with proper user validation)
                 var basicAuthUsername = "B2BUser";
                 var basicAuthPassword = "B2B@2025!Secure";
-                //var basicAuthUsername = Environment.GetEnvironmentVariable("BASIC_AUTH_USERNAME") ?? "B2BUser";
-                //var basicAuthPassword = Environment.GetEnvironmentVariable("BASIC_AUTH_PASSWORD") ?? "B2B@2025!Secure";
 
                 if (username == basicAuthUsername && password == basicAuthPassword)
                 {

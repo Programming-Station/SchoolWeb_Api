@@ -8,13 +8,12 @@ namespace School.Infrastructure.Seeds
     {
         public static List<ApplicationUser> IdentityBasicUserList()
         {
-            // Password hash for "Password@123"
-            // Note: This is a pre-hashed password. In production, use UserManager to hash passwords.
+
+            // password = Admin@123
             var passwordHash = "AQAAAAEAACcQAAAAEBLjouNqaeiVWbN0TbXUS3+ChW3d7aQIk/BQEkWBxlrdRRngp14b0BIH0Rp65qD6mA==";
 
             return new List<ApplicationUser>()
             {
-                // Super Admin User
                 new ApplicationUser
                 {
                     Id = Constants.SuperAdminUser,
@@ -31,7 +30,6 @@ namespace School.Infrastructure.Seeds
                     IsDefaultPassword = false,
                     IsActive = true,
                 },
-                // Admin User
                 new ApplicationUser
                 {
                     Id = Constants.AdminUser,
@@ -48,24 +46,7 @@ namespace School.Infrastructure.Seeds
                     IsDefaultPassword = false,
                     IsActive = true,
                 },
-                // Teacher User
-                new ApplicationUser
-                {
-                    Id = Constants.TeacherUser,
-                    UserName = "teacher",
-                    Email = "teacher@gmail.com",
-                    FirstName = "Teacher",
-                    LastName = "User",
-                    EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
-                    PasswordHash = passwordHash,
-                    NormalizedEmail = "TEACHER@GMAIL.COM",
-                    NormalizedUserName = "TEACHER",
-                    StatusId = (int)DefaultStatus.Verified,
-                    IsDefaultPassword = false,
-                    IsActive = true,
-                },
-                // Student User
+
                 new ApplicationUser
                 {
                     Id = Constants.StudentUser,
@@ -78,6 +59,22 @@ namespace School.Infrastructure.Seeds
                     PasswordHash = passwordHash,
                     NormalizedEmail = "STUDENT@GMAIL.COM",
                     NormalizedUserName = "STUDENT",
+                    StatusId = (int)DefaultStatus.Verified,
+                    IsDefaultPassword = false,
+                    IsActive = true,
+                },
+                new ApplicationUser
+                {
+                    Id = Constants.OwnerUser,
+                    UserName = "owner",
+                    Email = "owner@gmail.com",
+                    FirstName = "School",
+                    LastName = "Owner",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PasswordHash = passwordHash,
+                    NormalizedEmail = "OWNER@GMAIL.COM",
+                    NormalizedUserName = "OWNER",
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,

@@ -33,4 +33,10 @@
 		<None Remove="School.Models\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Interfaces\Hr\Attendance\" />
+	  <Folder Include="Interfaces\Hr\LeaveManagement\" />
+	  <Folder Include="Interfaces\Hr\Timesheet\" />
+	</ItemGroup>
+
 </Project>

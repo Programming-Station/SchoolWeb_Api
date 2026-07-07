@@ -185,7 +185,6 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // Check if category is being used by any module
                 var modulesUsingCategory = await _context.Modules
                     .AnyAsync(m => m.CategoryModuleId == id && !m.IsDeleted);
 

@@ -12,5 +12,6 @@ namespace School.Infrastructure.Repositories.IRepositories
         Task<int> UpdateStudentAsync(Student entity);
         Task<int> DeleteStudentAsync(int id);
         Task<string> GenerateStudentIdAsync();
+        Task<string> GenerateEnrollmentNumberAsync();
     }
 }

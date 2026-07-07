@@ -14,16 +14,17 @@ namespace School.Services
     {
         private readonly IStudentRegistrationRepository _studentRegistrationRepository;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public StudentRegistrationService(IStudentRegistrationRepository studentRegistrationRepository, IMapper mapper)
+        public StudentRegistrationService(IStudentRegistrationRepository studentRegistrationRepository, IMapper mapper, IEmailService emailService)
         {
             _studentRegistrationRepository = studentRegistrationRepository;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<APIResponse<StudentRegistrationDto>> AddStudentRegistrationAsync(StudentRegistrationModel model)
         {
-            // Check if mobile already exists
             var existsByMobile = await _studentRegistrationRepository.ExistsByMobileAsync(model.Mobile);
             if (existsByMobile)
             {
@@ -35,7 +36,6 @@ namespace School.Services
                 };
             }
 
-            // Check if Aadhaar already exists
             var existsByAadhaar = await _studentRegistrationRepository.ExistsByAadhaarAsync(model.AadhaarNumber);
             if (existsByAadhaar)
             {
@@ -52,12 +52,10 @@ namespace School.Services
             entity.RegistrationStatus = model.RegistrationStatus ?? "pending";
             entity.PaymentStatus = model.PaymentStatus ?? "pending";
 
-            // Map educational details - loop through and add only those with data
             if (model.EducationalDetails != null && model.EducationalDetails.Any() && entity.EducationalDetails == null)
             {
                 foreach (var eduDetail in model.EducationalDetails)
                 {
-                    // Only add if ExamName is provided (required field)
                     if (!string.IsNullOrWhiteSpace(eduDetail.ExamName))
                     {
                         entity.EducationalDetails.Add(new EducationalDetail
@@ -74,12 +72,10 @@ namespace School.Services
                 }
             }
 
-            // Map experience certificates - loop through and add only those with data
             if (model.ExperienceCertificates != null && model.ExperienceCertificates.Any() && entity.ExperienceCertificates == null)
             {
                 foreach (var expCert in model.ExperienceCertificates)
                 {
-                    // Only add if at least one field is provided
                     if (!string.IsNullOrWhiteSpace(expCert.Experience) ||
                         !string.IsNullOrWhiteSpace(expCert.HospitalLabName) ||
                         expCert.FromDate.HasValue)
@@ -185,7 +181,6 @@ namespace School.Services
 
         public async Task<APIResponse> UpdateStudentRegistrationAsync(StudentRegistrationModel model)
         {
-            // Check if mobile already exists (excluding current record)
             if (model.Id > 0)
             {
                 var existsByMobile = await _studentRegistrationRepository.ExistsByMobileAsync(model.Mobile, model.Id);
@@ -199,7 +194,6 @@ namespace School.Services
                     };
                 }
 
-                // Check if Aadhaar already exists (excluding current record)
                 var existsByAadhaar = await _studentRegistrationRepository.ExistsByAadhaarAsync(model.AadhaarNumber, model.Id);
                 if (existsByAadhaar)
                 {
@@ -321,6 +315,21 @@ namespace School.Services
             var result = await _studentRegistrationRepository.UpdateStudentRegistrationAsync(entity);
             if (result > 0)
             {
+                if (!string.IsNullOrEmpty(entity.Email))
+                {
+                    var statusLower = dto.RegistrationStatus.ToLower();
+                    if (statusLower == "rejected" || statusLower == "reject")
+                    {
+                        var placeholders = new Dictionary<string, string>
+                        {
+                            { "StudentName", entity.FullName },
+                            { "Reason", dto.Remarks ?? "Your application does not meet the criteria." },
+                            { "EditLink", $"http://localhost:4200/student-registration/edit/{entity.Id}" }
+                        };
+                        await _emailService.SendGenericTemplateAsync(entity.Email, "RegistrationRejected", placeholders);
+                    }
+                }
+
                 return new APIResponse
                 {
                     StatusCode = HttpStatusCode.OK,

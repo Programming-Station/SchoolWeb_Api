@@ -50,7 +50,6 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                // Get course name if CourseId is provided
                 string? courseName = null;
                 if (model.CourseId.HasValue && model.CourseId.Value > 0)
                 {
@@ -59,7 +58,6 @@ namespace School.Infrastructure.Repositories
                     courseName = course?.Name;
                 }
 
-                // Get or set StatusId - if not provided or invalid, find "New" status by name
                 int statusId = model.StatusId;
                 if (statusId <= 0)
                 {
@@ -71,26 +69,22 @@ namespace School.Infrastructure.Repositories
                     }
                     else
                     {
-                        // Fallback: use first status if "New" doesn't exist
                         var firstStatus = await _context.Statuses.FirstOrDefaultAsync();
                         statusId = firstStatus?.Id ?? 14;
                     }
                 }
                 else
                 {
-                    // Validate that the provided StatusId exists
                     var statusExists = await _context.Statuses
                         .AnyAsync(s => s.Id == statusId);
                     if (!statusExists)
                     {
-                        // If provided StatusId doesn't exist, find "New" status
                         var newStatus = await _context.Statuses
                             .FirstOrDefaultAsync(s => s.Name.ToLower() == "new");
                         statusId = newStatus?.Id ?? 1;
                     }
                 }
 
-                // ?? AUTO GENERATE ENQUIRY NO
                 var enquiryNo = await GenerateEnquiryNoAsync();
                 var enquiry = new Enquiry
                 {
@@ -115,7 +109,6 @@ namespace School.Infrastructure.Repositories
                 Add(enquiry);
                 await _unitOfWork.CommitAsync();
 
-                // Reload with Status navigation property
                 var savedEnquiry = await _context.Enquiries
                     .Include(e => e.Status)
                     .FirstOrDefaultAsync(e => e.Id == enquiry.Id);
@@ -190,7 +183,6 @@ namespace School.Infrastructure.Repositories
                     query = query.Where(e => e.StatusId == statusId.Value);
                 }
 
-                // Apply pagination if provided
                 if (pageNumber.HasValue && pageSize.HasValue && pageNumber.Value > 0 && pageSize.Value > 0)
                 {
                     var skip = (pageNumber.Value - 1) * pageSize.Value;

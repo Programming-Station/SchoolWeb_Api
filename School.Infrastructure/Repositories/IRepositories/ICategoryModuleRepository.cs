@@ -1,4 +1,4 @@
-using School.Domain;
+using School.Domain.AccessControl;
 using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories

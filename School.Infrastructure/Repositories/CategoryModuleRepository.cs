@@ -1,9 +1,9 @@
-using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using School.Domain.AccessControl;
 
 namespace School.Infrastructure.Repositories
 {
@@ -20,7 +20,6 @@ namespace School.Infrastructure.Repositories
 
         public async Task<CategoryModule> AddCategoryModuleAsync(CategoryModule entity)
         {
-            // Check if category with same name already exists
             var existingByName = await DbSet.FirstOrDefaultAsync(x =>
                                x.Name.ToLower() == entity.Name.ToLower() &&
                                !x.IsDeleted);
