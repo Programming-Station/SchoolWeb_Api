@@ -44,7 +44,7 @@ namespace School.Services.Mapping
                     {
                         var mapConfig = CreateMap(source, destination);
                         
-                        if (createdDateProp != null)
+                        if (createdDateProp != null && createdDateProp.PropertyType == typeof(string))
                         {
                             mapConfig.ForMember("CreatedDate",
                                 opt => opt.MapFrom((src, dest, destMember, context) =>
@@ -52,12 +52,12 @@ namespace School.Services.Mapping
                                     var createdDate = src.GetType().GetProperty("CreatedDate")?.GetValue(src);
                                     return createdDate is DateTime dateTime
                                         ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
-                                        : string.Empty;
+                                        : null;
                                 }
                             ));
                         }
                         
-                        if (updatedDateProp != null)
+                        if (updatedDateProp != null && updatedDateProp.PropertyType == typeof(string))
                         {
                             mapConfig.ForMember("UpdatedDate",
                                 opt => opt.MapFrom((src, dest, destMember, context) =>
@@ -65,7 +65,7 @@ namespace School.Services.Mapping
                                     var updatedDate = src.GetType().GetProperty("UpdatedDate")?.GetValue(src);
                                     return updatedDate is DateTime dateTime
                                         ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
-                                        : string.Empty;
+                                        : null;
                                 }
                             ));
                         }
