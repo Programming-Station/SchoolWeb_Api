@@ -217,9 +217,6 @@ namespace School.Infrastructure
             // Retrieve default school registration to set SchoolRegistrationId
             var defaultSchool = context.SchoolRegistrations.FirstOrDefault(s => s.SchoolCode == "DEF001");
             int defaultSchoolId = defaultSchool?.Id ?? 1;
-
-            // Seed all Email data (SMTP settings, templates, branding) via consolidated seed
-            DefaultEmailData.SeedAsync(context, encryptionService).Wait();
         }
     }
 }

@@ -39,6 +39,9 @@ using School.Services.Interfaces.Hr.Timesheet;
 using School.Services.Hr;
 using School.Services.Interfaces.Payroll;
 using School.Services.Interfaces.Academic;
+using School.Infrastructure.Repositories.Email;
+using School.Services.Email;
+using School.Services.Interfaces.Email;
 
 namespace School_API
 {
@@ -143,6 +146,11 @@ namespace School_API
             .AddTransient<ISchoolSubscriptionRepository, SchoolSubscriptionRepository>()
             .AddTransient<ISchoolOwnerRepository, SchoolOwnerRepository>()
             .AddTransient<IEmployeeRepository, EmployeeRepository>()
+            // Email Module Repositories
+            .AddTransient<IEmailServerSettingRepository, EmailServerSettingRepository>()
+            .AddTransient<IEmailTemplateRepository, EmailTemplateRepository>()
+            .AddTransient<IEmailBrandingRepository, EmailBrandingRepository>()
+            .AddTransient<IEmailLogRepository, EmailLogRepository>()
             // HR Master Generic
             .AddScoped(typeof(IHrMasterService<>), typeof(School.Services.Hr.HrMasterService<>))
             
@@ -181,6 +189,10 @@ namespace School_API
             .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
             .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
             .AddScoped<IEmailService, EmailService>()
+            .AddScoped<IEmailServerSettingService, EmailServerSettingService>()
+            .AddScoped<IEmailTemplateService, EmailTemplateService>()
+            .AddScoped<IEmailBrandingService, EmailBrandingService>()
+            .AddScoped<IEmailLogService, EmailLogService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<ITenantService, TenantService>()
             .AddScoped<IPermissionService, PermissionService>()
