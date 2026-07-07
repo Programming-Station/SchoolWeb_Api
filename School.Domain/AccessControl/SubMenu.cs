@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
@@ -36,6 +37,9 @@ namespace School.Domain.AccessControl
         public int MenuId { get; set; }
 
         public int SchoolRegistrationId { get; set; }
+
+        [ForeignKey(nameof(SchoolRegistrationId))]
+        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
 
         [ForeignKey("MenuId")]
         public virtual Menu? MainMenu { get; set; }

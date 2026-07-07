@@ -1,102 +1,84 @@
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork;
-using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using School.Domain.AccessControl;
+using School.Infrastructure.UnitOfWork;
 
-namespace School.Infrastructure.Repositories
+namespace School.Infrastructure.Repositories.AccessControl
 {
-    public class ModuleRepository : Repository<Module>, IModuleRepository
+    public class ModulePermissionRepository : Repository<ModulePermission>, IModulePermissionRepository
     {
         private readonly SchoolDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ModuleRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
+        public ModulePermissionRepository(DbFactory dbFactory, SchoolDbContext context) : base(dbFactory)
         {
             _context = context;
-            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Module> AddModuleAsync(Module entity)
+        public async Task<ModulePermission> AddModulePermissionAsync(ModulePermission entity)
         {
-            var existingByRoute = await DbSet.FirstOrDefaultAsync(x =>
-                               x.Route.ToLower() == entity.Route.ToLower() &&
-                               !x.IsDeleted);
+            var alreadyExists = await DbSet.AnyAsync(x => x.ModuleId == entity.ModuleId && x.UserId == entity.UserId && !x.IsDeleted);
+            if (alreadyExists) return new ModulePermission { Id = 0 };
 
-            if (existingByRoute != null)
-            {
-                existingByRoute.Id = 0;
-                return existingByRoute;
-            }
-
+            entity.IsDeleted = false;
             await AddAsync(entity);
-            await _unitOfWork.CommitAsync();
+            await _context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<Module> GetModuleByIdAsync(int id)
+        public async Task<ModulePermission> GetModulePermissionByIdAsync(int id)
         {
             return await DbSet
-                .Include(x => x.CategoryModule)
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted) ?? new Module();
+                .Include(x => x.Module)
+                .Include(x => x.User)
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted) ?? new ModulePermission();
         }
 
-        public async Task<IEnumerable<Module>> GetAllAsync()
+        public async Task<IEnumerable<ModulePermission>> GetAllModulePermissionsAsync()
         {
-            return await List(expression: x => !x.IsDeleted)
-                .Include(x => x.CategoryModule)
-                .OrderBy(x => x.Order)
-                .ThenBy(x => x.Name)
+            return await DbSet
+                .Include(x => x.Module)
+                .Include(x => x.User)
+                .Include(x => x.Role)
+                .Where(x => !x.IsDeleted)
                 .ToListAsync();
         }
 
-        public async Task<int> UpdateModuleAsync(Module entity)
+        public async Task<int> UpdateModulePermissionAsync(ModulePermission entity)
         {
-            Attach(entity, updatedProperties: new Expression<Func<Module, object>>[]
-            {
-                u => u.Name,
-                u => u.Description!,
-                u => u.Route,
-                u => u.Icon!,
-                u => u.CategoryModuleId,
-                u => u.Order,
-                u => u.IsActive,
-                u => u.UpdatedBy!,
-                u => u.UpdatedDate
-            });
-            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
+            var existing = await DbSet.FirstOrDefaultAsync(x => x.Id == entity.Id && !x.IsDeleted);
+            if (existing == null) return 0;
+
+            existing.ModuleId = entity.ModuleId;
+            existing.UserId = entity.UserId;
+            existing.RoleId = entity.RoleId;
+            existing.IsActive = entity.IsActive;
+            existing.UpdatedBy = entity.UpdatedBy;
+            existing.UpdatedDate = DateTime.UtcNow;
+
+            Update(existing);
+            return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteModuleAsync(int id)
+        public async Task<int> DeleteModulePermissionAsync(int id)
         {
-            var result = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
-
-            if (result != null)
-            {
-                result.UpdatedDate = DateTime.UtcNow;
-                Delete(result);
-                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
-            }
-            else
-                return 0;
+            var entity = await FindAsync(x => x.Id == id && !x.IsDeleted);
+            if (entity == null) return 0;
+            Delete(entity);
+            return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> ToggleModuleStatusAsync(int id)
+        public async Task<int> ToggleModulePermissionStatusAsync(int id)
         {
-            var entity = await _context.Modules
-                .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
-
+            var entity = await DbSet.FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
             if (entity != null)
             {
                 entity.IsActive = !entity.IsActive;
+                entity.UpdatedDate = DateTime.UtcNow;
                 Update(entity);
-                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return await _context.SaveChangesAsync();
             }
-            else
-                return 0;
+            return 0;
         }
-
 
         public async Task<IEnumerable<Module>> GetModulesByUserIdAsync(string userId)
         {
@@ -135,7 +117,7 @@ namespace School.Infrastructure.Repositories
             }).ToList();
 
             _context.ModulePermissions.AddRange(newPermissions);
-            return await _unitOfWork.CommitAsync().ConfigureAwait(false);
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> RemoveModulePermissionAsync(int moduleId, string userId)
@@ -147,10 +129,9 @@ namespace School.Infrastructure.Repositories
             {
                 permission.IsDeleted = true;
                 permission.UpdatedDate = DateTime.UtcNow;
-                return await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return await _context.SaveChangesAsync();
             }
-            else
-                return 0;
+            return 0;
         }
 
         public async Task<IEnumerable<ModulePermission>> GetModulePermissionsByUserIdAsync(string userId)

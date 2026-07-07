@@ -1,7 +1,7 @@
 using School.Domain.AccessControl;
 using School.Infrastructure.UnitOfWork.Interfaces;
 
-namespace School.Infrastructure.Repositories.IRepositories
+namespace School.Infrastructure.Repositories.AccessControl
 {
     public interface ICategoryModuleRepository : IRepository<CategoryModule>
     {
@@ -11,6 +11,5 @@ namespace School.Infrastructure.Repositories.IRepositories
         Task<int> UpdateCategoryModuleAsync(CategoryModule entity);
         Task<int> DeleteCategoryModuleAsync(int id);
         Task<int> ToggleCategoryModuleStatusAsync(int id);
-        Task<bool> IsCategoryInUseAsync(int categoryId);
     }
 }

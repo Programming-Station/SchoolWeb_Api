@@ -1,14 +1,14 @@
 using AutoMapper;
 using School.Domain.AccessControl;
-using School.Infrastructure.Repositories.IRepositories;
+using School.Infrastructure.Repositories.AccessControl;
 using School.Models.Module;
-using School.Services.Interfaces;
+using School.Services.AccessControl.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Module;
 using System.Net;
 
-namespace School.Services
+namespace School.Services.AccessControl
 {
     public class CategoryModuleService : ICategoryModuleService
     {
@@ -119,7 +119,7 @@ namespace School.Services
                 return new APIResponse
                 {
                     Success = false,
-                    Message = "Invalid category ID",
+                    Message = "Invalid category module ID",
                     StatusCode = HttpStatusCode.BadRequest,
                 };
             }
@@ -163,17 +163,6 @@ namespace School.Services
 
         public async Task<APIResponse> DeleteCategoryModuleAsync(int id)
         {
-            var isInUse = await _categoryModuleRepository.IsCategoryInUseAsync(id);
-            if (isInUse)
-            {
-                return new APIResponse
-                {
-                    Success = false,
-                    Message = "Cannot delete category. It is being used by one or more modules.",
-                    StatusCode = HttpStatusCode.BadRequest
-                };
-            }
-
             int changes = await _categoryModuleRepository.DeleteCategoryModuleAsync(id);
             if (changes > 0)
                 return new APIResponse

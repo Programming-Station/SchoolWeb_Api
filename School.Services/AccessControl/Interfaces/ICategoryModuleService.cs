@@ -2,7 +2,7 @@ using School.Models.Module;
 using School_DTOs;
 using School_DTOs.Module;
 
-namespace School.Services.Interfaces
+namespace School.Services.AccessControl.Interfaces
 {
     public interface ICategoryModuleService
     {
@@ -14,4 +14,3 @@ namespace School.Services.Interfaces
         Task<APIResponse> ToggleCategoryModuleStatusAsync(int id);
     }
 }
-

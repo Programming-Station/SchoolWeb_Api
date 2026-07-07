@@ -1,36 +1,36 @@
 using AutoMapper;
-using School.Infrastructure.Repositories.IRepositories;
+using School.Domain.AccessControl;
+using School.Infrastructure.Repositories.AccessControl;
 using School.Models.Module;
-using School.Services.Interfaces;
+using School.Services.AccessControl.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Module;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
-using School.Infrastructure;
-using School.Domain.AccessControl;
 
-namespace School.Services
+namespace School.Services.AccessControl
 {
     public class ModuleService : IModuleService
     {
         private readonly IModuleRepository _moduleRepository;
+        private readonly ICategoryModuleRepository _categoryModuleRepository;
         private readonly IMapper _mapper;
-        private readonly SchoolDbContext _context;
 
-        public ModuleService(IModuleRepository moduleRepository, IMapper mapper, SchoolDbContext context)
+        public ModuleService(
+            IModuleRepository moduleRepository, 
+            ICategoryModuleRepository categoryModuleRepository,
+            IMapper mapper)
         {
             _moduleRepository = moduleRepository;
+            _categoryModuleRepository = categoryModuleRepository;
             _mapper = mapper;
-            _context = context;
         }
 
         public async Task<APIResponse<ModuleDto>> AddModuleAsync(ModuleModel model)
         {
-            var categoryExists = await _context.CategoryModules
-                .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
+            var category = await _categoryModuleRepository.GetCategoryModuleByIdAsync(model.CategoryModuleId);
 
-            if (!categoryExists)
+            if (category == null || category.Id == 0 || !category.IsActive)
             {
                 return new APIResponse<ModuleDto>
                 {
@@ -154,10 +154,8 @@ namespace School.Services
                 };
             }
 
-            var categoryExists = await _context.CategoryModules
-                .AnyAsync(c => c.Id == model.CategoryModuleId && !c.IsDeleted && c.IsActive);
-
-            if (!categoryExists)
+            var category = await _categoryModuleRepository.GetCategoryModuleByIdAsync(model.CategoryModuleId);
+            if (category == null || category.Id == 0 || !category.IsActive)
             {
                 return new APIResponse
                 {
@@ -233,114 +231,10 @@ namespace School.Services
                 };
         }
 
-        public async Task<APIResponse<IEnumerable<ModuleDto>>> GetModulesByUserIdAsync(string userId)
-        {
-            var result = await _moduleRepository.GetModulesByUserIdAsync(userId);
-
-            if (result != null && result.Any())
-            {
-                var dtos = result.Select(MapToDto);
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Data = dtos,
-                    Message = CommonResource.FetchSuccess,
-                    Success = true,
-                    StatusCode = HttpStatusCode.OK,
-                };
-            }
-            else
-            {
-                return new APIResponse<IEnumerable<ModuleDto>>
-                {
-                    Message = CommonResource.RecordNotFound,
-                    StatusCode = HttpStatusCode.OK,
-                };
-            }
-        }
-
-        public async Task<APIResponse> AssignModulesToUserAsync(AssignModulesToUserModel model)
-        {
-            int result = await _moduleRepository.AssignModulesToUserAsync(model.UserId, model.ModuleIds, model.CreatedBy);
-            if (result > 0)
-            {
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = "Modules assigned successfully",
-                    StatusCode = HttpStatusCode.OK,
-                };
-            }
-            else
-            {
-                return new APIResponse
-                {
-                    Message = "Failed to assign modules",
-                    StatusCode = HttpStatusCode.BadRequest,
-                };
-            }
-        }
-
-        public async Task<APIResponse> RemoveModulePermissionAsync(int moduleId, string userId)
-        {
-            int changes = await _moduleRepository.RemoveModulePermissionAsync(moduleId, userId);
-            if (changes > 0)
-                return new APIResponse
-                {
-                    Success = true,
-                    Message = CommonResource.DeleteSuccess,
-                    StatusCode = HttpStatusCode.OK,
-                };
-            else
-                return new APIResponse
-                {
-                    Message = CommonResource.DeleteFailed,
-                    StatusCode = HttpStatusCode.BadRequest,
-                };
-        }
-
-        public async Task<APIResponse<IEnumerable<ModulePermissionDto>>> GetModulePermissionsByUserIdAsync(string userId)
-        {
-            var permissions = await _moduleRepository.GetModulePermissionsByUserIdAsync(userId);
-
-            if (permissions != null && permissions.Any())
-            {
-                var dtos = permissions.Select(p => new ModulePermissionDto
-                {
-                    Id = p.Id,
-                    ModuleId = p.ModuleId,
-                    ModuleName = p.Module?.Name ?? "",
-                    ModuleIcon = p.Module?.Icon,
-                    UserId = p.UserId,
-                    UserName = p.User?.UserName ?? "",
-                    RoleId = p.RoleId,
-                    RoleName = p.Role?.Name,
-                    IsActive = p.IsActive
-                });
-
-                return new APIResponse<IEnumerable<ModulePermissionDto>>
-                {
-                    Data = dtos,
-                    Message = CommonResource.FetchSuccess,
-                    Success = true,
-                    StatusCode = HttpStatusCode.OK,
-                };
-            }
-            else
-            {
-                return new APIResponse<IEnumerable<ModulePermissionDto>>
-                {
-                    Message = CommonResource.RecordNotFound,
-                    StatusCode = HttpStatusCode.OK,
-                };
-            }
-        }
-
         private ModuleDto MapToDto(Module entity)
         {
             var dto = _mapper.Map<ModuleDto>(entity);
-
             dto.CategoryModuleName = entity.CategoryModule?.Name;
-
             return dto;
         }
     }

@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using School_API.Common.Interface;
 using School_API.Common;
 using School_API.Middleware;
+using School.Infrastructure.Repositories.AccessControl;
+using School.Services.AccessControl;
+using School.Services.AccessControl.Interfaces;
 
 
 
@@ -112,7 +115,10 @@ namespace School_API
             .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
             .AddTransient<IAccountRepository, AccountRepository>()
             .AddTransient<IMenuRepository, MenuRepository>()
+            .AddTransient<ISubMenuRepository, SubMenuRepository>()
+            .AddTransient<IMenuPermessionRepository, MenuPermessionRepository>()
             .AddTransient<IModuleRepository, ModuleRepository>()
+            .AddTransient<IModulePermissionRepository, ModulePermissionRepository>()
             .AddTransient<ICategoryModuleRepository, CategoryModuleRepository>()
             .AddTransient<ICourseRepository, CourseRepository>()
             .AddTransient<IClassRepository, ClassRepository>()
@@ -182,7 +188,10 @@ namespace School_API
             .AddScoped<IJWTAuthenticationManager, JWTAuthenticationManager>()
             .AddScoped<IAccountService, AccountService>()
             .AddScoped<IMenuService, MenuService>()
+            .AddScoped<ISubMenuService, SubMenuService>()
+            .AddScoped<IMenuPermessionService, MenuPermessionService>()
             .AddScoped<IModuleService, ModuleService>()
+            .AddScoped<IModulePermissionService, ModulePermissionService>()
             .AddScoped<ICategoryModuleService, CategoryModuleService>()
             .AddScoped<ICourseService, CourseService>()
             .AddScoped<IClassService, ClassService>()
