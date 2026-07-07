@@ -218,65 +218,12 @@ namespace School.Infrastructure
             var defaultSchool = context.SchoolRegistrations.FirstOrDefault(s => s.SchoolCode == "DEF001");
             int defaultSchoolId = defaultSchool?.Id ?? 1;
 
-            if (!context.EmailServerSettings.Any())
-            {
-                var settings = DefaultEmailServerSetting.GetAllEmailServerSetting();
-                foreach (var setting in settings)
-                {
-                    setting.SchoolRegistrationId = defaultSchoolId;
-                    // Encrypt password before seeding
-                    setting.Password = encryptionService.Encrypt(setting.Password);
-                }
-                context.EmailServerSettings.AddRange(settings);
-                context.SaveChanges();
-            }
-
-            // Incremental seeding: insert any template not yet present (keyed by TemplateName)
-            var allTemplates = DefaultEmailTemplate.GetAllEmailTemplate();
-            var existingNames = context.EmailTemplates
-                .Select(t => t.TemplateName)
-                .ToHashSet();
-            var newTemplates = allTemplates
-                .Where(t => !existingNames.Contains(t.TemplateName))
-                .ToList();
-            if (newTemplates.Count > 0)
-            {
-                foreach (var template in newTemplates)
-                {
-                    template.SchoolRegistrationId = defaultSchoolId;
-                }
-                context.EmailTemplates.AddRange(newTemplates);
-                context.SaveChanges();
-            }
-
-            // Seed default EmailBranding details if missing
-            if (!context.EmailBrandings.Any())
-            {
-                var branding = new EmailBranding
-                {
-                    SchoolRegistrationId = defaultSchoolId,
-                    ThemeColor = "#1e3a8a", // Navy Blue
-                    HeaderHtml = @"<div style=""background-color: #1e3a8a; padding: 20px; text-align: center; border-radius: 4px 4px 0 0;"">
-                                    <h1 style=""color: #ffffff; margin: 0; font-family: Arial, sans-serif;"">{{SchoolName}}</h1>
-                                   </div>",
-                    FooterHtml = @"<div style=""background-color: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; font-size: 12px; border-radius: 0 0 4px 4px; border-top: 1px solid #e5e7eb;"">
-                                    <p style=""margin: 0 0 8px 0;"">This is an automated notification from {{SchoolName}}.</p>
-                                    <p style=""margin: 0;"">{{SchoolAddress}} | Support: {{SupportEmail}} | Phone: {{SupportPhone}}</p>
-                                    <p style=""margin: 8px 0 0 0;"">&copy; {{CurrentYear}} {{SchoolName}}. All rights reserved.</p>
-                                   </div>",
-                    SupportEmail = defaultSchool?.Email ?? "support@schoolsaas.com",
-                    SupportPhone = defaultSchool?.PhoneNumber ?? "1234567890",
-                    PrincipalName = defaultSchool?.ContactPersonName ?? "Principal",
-                    CreatedBy = "System",
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                context.EmailBrandings.Add(branding);
-                context.SaveChanges();
-            }
+            // Seed all Email data (SMTP settings, templates, branding) via consolidated seed
+            DefaultEmailData.SeedAsync(context, encryptionService).Wait();
         }
     }
 }
+
 
 
 
