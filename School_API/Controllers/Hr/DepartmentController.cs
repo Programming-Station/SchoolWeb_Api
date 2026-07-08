@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace School_API.Controllers.Hr
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentService _service;
