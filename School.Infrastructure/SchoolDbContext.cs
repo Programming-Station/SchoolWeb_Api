@@ -19,6 +19,8 @@ using School.Domain.Hr.Recruitment;
 using School.Domain.Hr.Performance;
 using School.Domain.Hr.Training;
 using School.Domain.Hr.Assets;
+using School.Domain.Payroll;
+using School.Domain.Transport;
 
 namespace School.Infrastructure
 {
@@ -114,6 +116,13 @@ namespace School.Infrastructure
         public DbSet<SchoolAsset> SchoolAssets { get; set; } = null!;
         public DbSet<AssetAssignment> AssetAssignments { get; set; } = null!;
         public DbSet<TimesheetEntry> TimesheetEntries { get; set; } = null!;
+
+        // Payroll
+        public DbSet<SalaryComponent> SalaryComponents { get; set; } = null!;
+
+        // Transport
+        public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
+        public DbSet<Vehicle> Vehicles { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

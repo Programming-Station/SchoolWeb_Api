@@ -327,5 +327,191 @@ namespace School.Services
             else
                 return new APIResponse<IEnumerable<DropdownDto>> { Message = CommonResource.RecordNotFound, Success = false, StatusCode = HttpStatusCode.OK };
         }
+
+        // ─── HR Master dropdowns ─────────────────────────────────────────────────
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetDesignationsAsync()
+        {
+            var entity = await _dbContext.Designations.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetEmployeesAsync()
+        {
+            var entity = await _dbContext.Employees.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.FirstName + " " + x.LastName, Id = x.Id, Code = x.EmployeeCode }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetEmployeeCategoriesAsync()
+        {
+            var entity = await _dbContext.EmployeeCategories.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetEmployeeTypesAsync()
+        {
+            var entity = await _dbContext.EmployeeTypes.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetEmploymentStatusesAsync()
+        {
+            var entity = await _dbContext.EmploymentStatuses.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSalaryGradesAsync()
+        {
+            var entity = await _dbContext.SalaryGrades.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetBloodGroupMastersAsync()
+        {
+            var entity = await _dbContext.BloodGroupMasters.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetQualificationMastersAsync()
+        {
+            var entity = await _dbContext.QualificationMasters.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetReligionMastersAsync()
+        {
+            var entity = await _dbContext.ReligionMasters.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSpecializationsAsync()
+        {
+            var entity = await _dbContext.Specializations.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetShiftMastersAsync()
+        {
+            var entity = await _dbContext.ShiftMasters.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetHolidayMastersAsync()
+        {
+            var entity = await _dbContext.HolidayMasters.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetWeekOffsAsync()
+        {
+            var entity = await _dbContext.WeekOffs.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetNoticePeriodsAsync()
+        {
+            var entity = await _dbContext.NoticePeriods.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetLeaveTypesAsync()
+        {
+            var entity = await _dbContext.LeaveTypes.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetLeaveSettingsAsync()
+        {
+            var entity = await _dbContext.LeaveSettings.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetJobPostingsAsync()
+        {
+            var entity = await _dbContext.JobPostings.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Title, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetCandidatesAsync()
+        {
+            var entity = await _dbContext.Candidates.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.FullName, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetJobApplicationsAsync()
+        {
+            var entity = await _dbContext.JobApplications.Where(x => !x.IsDeleted)
+                .Select(x => new DropdownDto { Name = x.Candidate.FullName + " - " + x.JobPosting.Title, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetPerformanceReviewsAsync()
+        {
+            var entity = await _dbContext.PerformanceReviews.Where(x => !x.IsDeleted)
+                .Select(x => new DropdownDto { Name = x.Employee.FirstName + " " + x.Employee.LastName + " (" + x.ReviewDate.Year + ")", Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetKpiMetricsAsync()
+        {
+            var entity = await _dbContext.KpiMetrics.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetTrainingProgramsAsync()
+        {
+            var entity = await _dbContext.TrainingPrograms.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Title, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetTrainingEnrollmentsAsync()
+        {
+            var entity = await _dbContext.TrainingEnrollments.Where(x => !x.IsDeleted)
+                .Select(x => new DropdownDto { Name = x.Employee.FirstName + " " + x.Employee.LastName + " - " + x.TrainingProgram.Title, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolAssetsAsync()
+        {
+            var entity = await _dbContext.SchoolAssets.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.AssetCode }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetAssetAssignmentsAsync()
+        {
+            var entity = await _dbContext.AssetAssignments.Where(x => !x.IsDeleted)
+                .Select(x => new DropdownDto { Name = x.SchoolAsset.Name + " → " + x.Employee.FirstName + " " + x.Employee.LastName, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        // ─── Academic ────────────────────────────────────────────────────────────
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSubjectsAsync()
+        {
+            var entity = await _dbContext.Subjects.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.Code }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        // ─── Payroll ─────────────────────────────────────────────────────────────
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetSalaryComponentsAsync()
+        {
+            var entity = await _dbContext.SalaryComponents.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        // ─── Transport ───────────────────────────────────────────────────────────
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetTransportRoutesAsync()
+        {
+            var entity = await _dbContext.TransportRoutes.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.RouteName, Id = x.Id }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetVehiclesAsync()
+        {
+            var entity = await _dbContext.Vehicles.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.RegistrationNumber }).ToListAsync();
+            return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
     }
 }

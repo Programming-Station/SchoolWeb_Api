@@ -38,6 +38,20 @@ namespace School.Utilities.Enums
         TrainingProgram,
         TrainingEnrollment,
         SchoolAsset,
-        AssetAssignment
+        AssetAssignment,
+        // Attendance / HR
+        ShiftMaster,
+        HolidayMaster,
+        WeekOff,
+        NoticePeriod,
+        LeaveType,
+        LeaveSetting,
+        // Academic
+        Subject,
+        // Payroll
+        SalaryComponent,
+        // Transport
+        TransportRoute,
+        Vehicle
     }
 }
