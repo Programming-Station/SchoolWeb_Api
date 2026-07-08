@@ -19,7 +19,7 @@ namespace School.Infrastructure.Repositories.AccessControl
             if (alreadyExists) return new ModulePermission { Id = 0 };
 
             entity.IsDeleted = false;
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }

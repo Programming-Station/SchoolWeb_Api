@@ -30,7 +30,7 @@ namespace School.Infrastructure.Repositories
                 existingCourse.Id = 0;
                 return existingCourse;
             }
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }

@@ -33,7 +33,7 @@ namespace School.Infrastructure.Repositories
 
             entity.IsUpcoming = entity.EventDate.Date >= DateTime.Today;
 
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }

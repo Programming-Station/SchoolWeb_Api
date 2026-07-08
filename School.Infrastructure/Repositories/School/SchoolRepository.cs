@@ -22,7 +22,7 @@ namespace School.Infrastructure.Repositories.School
 
         public async Task<SchoolRegistration> AddSchoolAsync(SchoolRegistration entity)
         {
-            entity = await AddAsync(entity);
+            entity = await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
           

@@ -30,7 +30,7 @@ namespace School.Infrastructure.Repositories
                 existingState.Id = 0;
                 return existingState;
             }
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }

@@ -27,7 +27,7 @@ namespace School.Infrastructure.Repositories.AccessControl
             }
 
             entity.IsDeleted = false;
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
