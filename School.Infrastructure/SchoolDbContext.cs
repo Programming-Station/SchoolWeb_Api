@@ -124,6 +124,19 @@ namespace School.Infrastructure
         public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
 
+        // Admission Module
+        public DbSet<Campus> Campuses { get; set; } = null!;
+        public DbSet<EducationLevel> EducationLevels { get; set; } = null!;
+        public DbSet<YearSemester> YearSemesters { get; set; } = null!;
+        public DbSet<Program> Programs { get; set; } = null!;
+        public DbSet<Branch> Branches { get; set; } = null!;
+        public DbSet<Batch> Batches { get; set; } = null!;
+        public DbSet<AdmissionFormConfig> AdmissionFormConfigs { get; set; } = null!;
+        public DbSet<AdmissionRule> AdmissionRules { get; set; } = null!;
+        public DbSet<FeeStructure> FeeStructures { get; set; } = null!;
+        public DbSet<FeeStructureItem> FeeStructureItems { get; set; } = null!;
+        public DbSet<AdmissionApplication> AdmissionApplications { get; set; } = null!;
+        public DbSet<AdmissionAuditLog> AdmissionAuditLogs { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

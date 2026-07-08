@@ -28,7 +28,7 @@ namespace School.Infrastructure.Repositories
                 existingCity.Id = 0;
                 return existingCity;
             }
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
 

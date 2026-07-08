@@ -20,7 +20,7 @@ namespace School.Infrastructure.Repositories
 
         public async Task<Class> AddClassAsync(Class entity)
         {
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }

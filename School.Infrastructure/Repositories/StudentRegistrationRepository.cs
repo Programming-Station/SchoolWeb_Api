@@ -40,7 +40,7 @@ namespace School.Infrastructure.Repositories
                 return existingByAadhaar;
             }
 
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }

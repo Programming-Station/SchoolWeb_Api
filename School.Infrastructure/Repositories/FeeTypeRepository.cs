@@ -29,7 +29,7 @@ namespace School.Infrastructure.Repositories
                 existingFeeType.Id = 0;
                 return existingFeeType;
             }
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
 

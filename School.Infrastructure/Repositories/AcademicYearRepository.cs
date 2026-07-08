@@ -45,7 +45,7 @@ namespace School.Infrastructure.Repositories
                 }
             }
 
-            await AddAsync(entity);
+            await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
         }
