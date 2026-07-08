@@ -38,6 +38,7 @@ namespace School.Services
         private readonly IAdmissionApplicationRepository _applicationRepository;
         private readonly IFeeStructureRepository _feeStructureRepository;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public AdmissionService(
             ICampusRepository campusRepository,
@@ -50,7 +51,8 @@ namespace School.Services
             IAdmissionRuleRepository ruleRepository,
             IAdmissionApplicationRepository applicationRepository,
             IFeeStructureRepository feeStructureRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IEmailService emailService)
         {
             _campusRepository = campusRepository;
             _educationLevelRepository = educationLevelRepository;
@@ -63,6 +65,7 @@ namespace School.Services
             _applicationRepository = applicationRepository;
             _feeStructureRepository = feeStructureRepository;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         #region Campus CRUD
@@ -647,6 +650,18 @@ namespace School.Services
                 DetailsJson = "Application submitted for review."
             });
 
+            // Send Application Submission Email
+            if (!string.IsNullOrEmpty(entity.Email))
+            {
+                var emailPlaceholders = new Dictionary<string, string>
+                {
+                    { "CandidateName", entity.FullName },
+                    { "ApplicationNo", entity.ApplicationNo },
+                    { "RegistrationNo", entity.RegistrationNo ?? string.Empty }
+                };
+                _emailService.QueueTemplateEmail(entity.Email, "Admission Application Submitted", emailPlaceholders);
+            }
+
             var resultDto = _mapper.Map<AdmissionApplicationDto>(await _applicationRepository.GetByIdAsync(entity.Id));
             return new APIResponse<AdmissionApplicationDto> { Success = true, Data = resultDto, StatusCode = HttpStatusCode.OK, Message = "Application submitted successfully" };
         }
@@ -764,6 +779,19 @@ namespace School.Services
                 PerformedDate = DateTime.Now,
                 DetailsJson = $"Status changed to {dto.Status}. Remarks: {dto.Remarks}"
             });
+
+            // Send Application Status Update Email
+            if (!string.IsNullOrEmpty(entity.Email))
+            {
+                var emailPlaceholders = new Dictionary<string, string>
+                {
+                    { "CandidateName", entity.FullName },
+                    { "ApplicationNo", entity.ApplicationNo },
+                    { "Status", entity.Status },
+                    { "Remarks", entity.Remarks ?? "No remarks provided." }
+                };
+                _emailService.QueueTemplateEmail(entity.Email, "Admission Status Updated", emailPlaceholders);
+            }
 
             return new APIResponse { Success = true, StatusCode = HttpStatusCode.OK, Message = "Application status updated successfully" };
         }

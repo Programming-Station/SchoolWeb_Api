@@ -82,6 +82,41 @@ namespace School.Infrastructure.Seeds
                 context.EmailTemplates.AddRange(newTemplates);
                 await context.SaveChangesAsync();
             }
+
+            // 4. Seed Admission Module Templates
+            if (!existingNames.Contains("Admission Application Submitted"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "Admission Application Submitted",
+                    Subject = "Admission Application Received - {{ApplicationNo}}",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;""><h2 style=""color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px;"">Application Submitted Successfully</h2><p>Dear <strong>{{CandidateName}}</strong>,</p><p>Thank you for choosing our institution! We have successfully received your admission application.</p><div style=""background-color: #1e293b; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #475569;""><table style=""width: 100%; border-collapse: collapse;""><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Application Number:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{ApplicationNo}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Registration Number:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{RegistrationNo}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Status:</strong></td><td style=""color: #38bdf8; padding: 5px 0;""><strong>Under Review</strong></td></tr></table></div><p>Our admission verification team is currently verifying your details and credentials. You can log in to the Student Panel to track your verification checklist, status updates, and next actions.</p><p style=""margin-top: 30px; font-size: 12px; color: #64748b; text-align: center;"">This is an automated notification. Please do not reply directly to this email.</p></div>",
+                    Placeholder = "{{CandidateName}}, {{ApplicationNo}}, {{RegistrationNo}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
+            if (!existingNames.Contains("Admission Status Updated"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "Admission Status Updated",
+                    Subject = "Admission Application Status Update - {{ApplicationNo}}",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;""><h2 style=""color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px;"">Admission Status Notification</h2><p>Dear <strong>{{CandidateName}}</strong>,</p><p>There is an update on your admission application with reference number <strong>{{ApplicationNo}}</strong>.</p><div style=""background-color: #1e293b; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #475569;""><table style=""width: 100%; border-collapse: collapse;""><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Current Status:</strong></td><td style=""color: #f8fafc; padding: 5px 0; font-size: 16px;""><strong>{{Status}}</strong></td></tr><tr><td style=""color: #94a3b8; padding: 5px 0; vertical-align: top;""><strong>Remarks:</strong></td><td style=""color: #cbd5e1; padding: 5px 0;"">{{Remarks}}</td></tr></table></div><p>Please log in to your admission portal page to view detailed information and complete any pending tasks if required.</p><p style=""margin-top: 30px; font-size: 12px; color: #64748b; text-align: center;"">This is an automated notification. Please do not reply directly to this email.</p></div>",
+                    Placeholder = "{{CandidateName}}, {{ApplicationNo}}, {{Status}}, {{Remarks}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }
