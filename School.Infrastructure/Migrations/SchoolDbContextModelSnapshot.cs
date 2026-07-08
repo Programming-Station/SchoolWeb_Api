@@ -209,7 +209,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Exams");
+                    b.ToTable("Exams", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Academic.ExamResult", b =>
@@ -272,7 +272,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("ExamResults");
+                    b.ToTable("ExamResults", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Academic.Subject", b =>
@@ -326,7 +326,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Academic.TimetableSlot", b =>
@@ -388,7 +388,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("TimetableSlots");
+                    b.ToTable("TimetableSlots", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AcademicYear", b =>
@@ -442,7 +442,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("AcademicYears");
+                    b.ToTable("AcademicYears", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.CategoryModule", b =>
@@ -490,7 +490,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("CategoryModules");
+                    b.ToTable("CategoryModules", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.Menu", b =>
@@ -550,7 +550,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.MenuPermession", b =>
@@ -603,7 +603,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SubMenuId");
 
-                    b.ToTable("MenuPermessions");
+                    b.ToTable("MenuPermessions", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.Module", b =>
@@ -665,7 +665,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Modules", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.ModulePermission", b =>
@@ -719,7 +719,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ModulePermissions");
+                    b.ToTable("ModulePermissions", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.AccessControl.SubMenu", b =>
@@ -788,7 +788,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("SubMenus");
+                    b.ToTable("SubMenus", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Affiliated", b =>
@@ -872,7 +872,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("Affiliateds");
+                    b.ToTable("Affiliateds", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Auth.ApplicationUser", b =>
@@ -1144,6 +1144,123 @@ namespace School.Infrastructure.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
+            modelBuilder.Entity("School.Domain.Batch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("Batches", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.Branch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("Branches", (string)null);
+                });
+
             modelBuilder.Entity("School.Domain.Class", b =>
                 {
                     b.Property<int>("Id")
@@ -1213,7 +1330,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Classes");
+                    b.ToTable("Classes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Course", b =>
@@ -1277,7 +1394,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Department", b =>
@@ -1336,7 +1453,59 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.EducationLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("EducationLevels", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailBranding", b =>
@@ -1392,7 +1561,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmailBrandings");
+                    b.ToTable("EmailBrandings", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailLog", b =>
@@ -1461,7 +1630,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmailLogs");
+                    b.ToTable("EmailLogs", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailServerSetting", b =>
@@ -1530,7 +1699,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmailServerSettings");
+                    b.ToTable("EmailServerSettings", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailTemplate", b =>
@@ -1589,7 +1758,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmailTemplates");
+                    b.ToTable("EmailTemplates", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Event", b =>
@@ -1648,7 +1817,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Faculty", b =>
@@ -1702,7 +1871,104 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.FeeManagnment.FeeStructure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CampusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("CampusId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("FeeStructures", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.FeeManagnment.FeeStructureItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FeeStructureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FeeTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeeStructureId");
+
+                    b.HasIndex("FeeTypeId");
+
+                    b.ToTable("FeeStructureItems", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.FeeManagnment.FeeType", b =>
@@ -1748,7 +2014,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("FeeTypes");
+                    b.ToTable("FeeTypes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Assets.AssetAssignment", b =>
@@ -1806,7 +2072,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("AssetAssignments");
+                    b.ToTable("AssetAssignments", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Assets.SchoolAsset", b =>
@@ -1863,7 +2129,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("SchoolAssets");
+                    b.ToTable("SchoolAssets", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Attendance.Attendance", b =>
@@ -1919,7 +2185,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Attendances");
+                    b.ToTable("Attendances", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Attendance.AttendanceLog", b =>
@@ -1973,7 +2239,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("AttendanceLogs");
+                    b.ToTable("AttendanceLogs", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Attendance.ShiftMaster", b =>
@@ -2024,7 +2290,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("ShiftMasters");
+                    b.ToTable("ShiftMasters", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Attendance.WeekOff", b =>
@@ -2075,7 +2341,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("WeekOffs");
+                    b.ToTable("WeekOffs", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.BloodGroupMaster", b =>
@@ -2118,7 +2384,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("BloodGroupMasters");
+                    b.ToTable("BloodGroupMasters", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Designation", b =>
@@ -2169,7 +2435,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Designations");
+                    b.ToTable("Designations", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Employee", b =>
@@ -2309,7 +2575,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SpecializationId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeBankDetail", b =>
@@ -2373,7 +2639,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeBankDetails");
+                    b.ToTable("EmployeeBankDetails", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeCategory", b =>
@@ -2424,7 +2690,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeCategories");
+                    b.ToTable("EmployeeCategories", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeDetail", b =>
@@ -2553,7 +2819,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("ReligionMasterId");
 
-                    b.ToTable("EmployeeDetails");
+                    b.ToTable("EmployeeDetails", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeDocument", b =>
@@ -2620,7 +2886,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeDocuments");
+                    b.ToTable("EmployeeDocuments", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeEducation", b =>
@@ -2683,7 +2949,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeEducations");
+                    b.ToTable("EmployeeEducations", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeExperience", b =>
@@ -2744,7 +3010,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeExperiences");
+                    b.ToTable("EmployeeExperiences", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeSalaryDetail", b =>
@@ -2809,7 +3075,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeSalaryDetails");
+                    b.ToTable("EmployeeSalaryDetails", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmployeeType", b =>
@@ -2860,7 +3126,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmployeeTypes");
+                    b.ToTable("EmployeeTypes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.EmploymentStatus", b =>
@@ -2911,7 +3177,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("EmploymentStatuses");
+                    b.ToTable("EmploymentStatuses", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.LeaveManagement.HolidayMaster", b =>
@@ -2962,7 +3228,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("HolidayMasters");
+                    b.ToTable("HolidayMasters", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.LeaveManagement.LeaveBalance", b =>
@@ -3019,7 +3285,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("LeaveBalances");
+                    b.ToTable("LeaveBalances", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.LeaveManagement.LeaveRequest", b =>
@@ -3089,7 +3355,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("LeaveRequests");
+                    b.ToTable("LeaveRequests", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.LeaveManagement.LeaveSetting", b =>
@@ -3140,7 +3406,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("LeaveSettings");
+                    b.ToTable("LeaveSettings", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.LeaveManagement.LeaveType", b =>
@@ -3191,7 +3457,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("LeaveTypes");
+                    b.ToTable("LeaveTypes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.NoticePeriod", b =>
@@ -3242,7 +3508,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("NoticePeriods");
+                    b.ToTable("NoticePeriods", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Performance.KpiMetric", b =>
@@ -3293,7 +3559,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("KpiMetrics");
+                    b.ToTable("KpiMetrics", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Performance.PerformanceReview", b =>
@@ -3357,7 +3623,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("PerformanceReviews");
+                    b.ToTable("PerformanceReviews", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.QualificationMaster", b =>
@@ -3404,7 +3670,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("QualificationMasters");
+                    b.ToTable("QualificationMasters", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Recruitment.Candidate", b =>
@@ -3461,7 +3727,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("Candidates", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Recruitment.JobApplication", b =>
@@ -3516,7 +3782,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("JobApplications");
+                    b.ToTable("JobApplications", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Recruitment.JobPosting", b =>
@@ -3577,7 +3843,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("JobPostings");
+                    b.ToTable("JobPostings", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.ReligionMaster", b =>
@@ -3620,7 +3886,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("ReligionMasters");
+                    b.ToTable("ReligionMasters", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.SalaryGrade", b =>
@@ -3671,7 +3937,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("SalaryGrades");
+                    b.ToTable("SalaryGrades", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Specialization", b =>
@@ -3722,7 +3988,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specializations", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Timesheet.Timesheet", b =>
@@ -3779,7 +4045,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Timesheets");
+                    b.ToTable("Timesheets", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Timesheet.TimesheetEntry", b =>
@@ -3836,7 +4102,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("TimesheetId");
 
-                    b.ToTable("TimesheetEntries");
+                    b.ToTable("TimesheetEntries", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Training.TrainingEnrollment", b =>
@@ -3891,7 +4157,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("TrainingProgramId");
 
-                    b.ToTable("TrainingEnrollments");
+                    b.ToTable("TrainingEnrollments", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Training.TrainingProgram", b =>
@@ -3954,7 +4220,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("TrainingPrograms");
+                    b.ToTable("TrainingPrograms", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Location.City", b =>
@@ -4003,7 +4269,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Location.Country", b =>
@@ -4049,7 +4315,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Location.State", b =>
@@ -4098,7 +4364,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("States");
+                    b.ToTable("States", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Payroll.SalaryComponent", b =>
@@ -4149,7 +4415,73 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("SalaryComponents");
+                    b.ToTable("SalaryComponents", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.Program", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DurationYears")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.HasIndex("FacultyId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("Programs", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.AffiliationBoard", b =>
@@ -4189,7 +4521,67 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AffiliationBoards");
+                    b.ToTable("AffiliationBoards", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.School.Campus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("Campuses", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolMedium", b =>
@@ -4229,7 +4621,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SchoolMediums");
+                    b.ToTable("SchoolMediums", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolOwner", b =>
@@ -4299,7 +4691,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("SchoolOwners");
+                    b.ToTable("SchoolOwners", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolProfileSetting", b =>
@@ -4371,7 +4763,7 @@ namespace School.Infrastructure.Migrations
                     b.HasIndex("SchoolRegistrationId")
                         .IsUnique();
 
-                    b.ToTable("SchoolProfileSettings");
+                    b.ToTable("SchoolProfileSettings", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolRegistration", b =>
@@ -4489,7 +4881,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("SchoolRegistrations");
+                    b.ToTable("SchoolRegistrations", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolSubscription", b =>
@@ -4546,7 +4938,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("SchoolSubscriptions");
+                    b.ToTable("SchoolSubscriptions", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.School.SchoolType", b =>
@@ -4586,7 +4978,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SchoolTypes");
+                    b.ToTable("SchoolTypes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Status", b =>
@@ -4604,10 +4996,10 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
-            modelBuilder.Entity("School.Domain.Student.EducationalDetail", b =>
+            modelBuilder.Entity("School.Domain.Student.AdmissionApplication", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4615,8 +5007,63 @@ namespace School.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Certificate")
+                    b.Property<string>("AadhaarNo")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AdmissionNo")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ApplicationNo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("AssignedFeesJson")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BatchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BloodGroup")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CampusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CorrespondenceAddress")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("CorrespondenceCity")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CorrespondencePinCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("CorrespondenceState")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4624,33 +5071,280 @@ namespace School.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ExamName")
+                    b.Property<string>("CustomFieldsDataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocumentsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("EnrollmentNo")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FathersName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("GuardianMobile")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("GuardianName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastBoardUniversity")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LastGrade")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("LastInstituteName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LastObtainedMarks")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("LastPassingYear")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LastPercentage")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LastQualification")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastTotalMarks")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("MaritalStatus")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MothersName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Nationality")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ParentUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PermanentAddress")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("PermanentCity")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PermanentCountry")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PermanentPinCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("PermanentState")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("PrevEducationJson")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InstituteAddress")
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegistrationNo")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Religion")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("RollNo")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("SameAsPermAddress")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("StudentCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("StudentUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InstituteName")
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VerificationNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("YearSemesterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AadhaarNo")
+                        .IsUnique()
+                        .HasFilter("[AadhaarNo] IS NOT NULL");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("ApplicationNo")
+                        .IsUnique();
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("BloodGroup");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CampusId");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.HasIndex("FacultyId");
+
+                    b.HasIndex("Mobile");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("YearSemesterId");
+
+                    b.ToTable("AdmissionApplications", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.Student.AdmissionAuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("AdmissionApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DetailsJson")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("ObtainedMarks")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("PerformedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("PassingYear")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PerformedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
+                    b.Property<string>("StatusFrom")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("StudentRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalMarks")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("StatusTo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -4660,11 +5354,146 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdmissionApplicationId");
+
+                    b.ToTable("AdmissionAuditLogs", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.Student.AdmissionFormConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AutoGenRulesJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CampusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomFieldsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DocumentChecklistJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FormStepsJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampusId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.HasIndex("ProgramId");
+
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.HasIndex("StudentRegistrationId");
+                    b.ToTable("AdmissionFormConfigs", (string)null);
+                });
 
-                    b.ToTable("EducationalDetails");
+            modelBuilder.Entity("School.Domain.Student.AdmissionRule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CampusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ErrorMessage")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RuleName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("RuleType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RuleValue")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampusId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("AdmissionRules", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Student.Student", b =>
@@ -4803,206 +5632,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("School.Domain.Student.StudentExperienceCertificate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Certificate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Experience")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FromDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HospitalLabName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ToDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TotalDuration")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("StudentRegistrationId");
-
-                    b.ToTable("StudentExperienceCertificates");
-                });
-
-            modelBuilder.Entity("School.Domain.Student.StudentRegistration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AadhaarNumber")
-                        .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
-
-                    b.Property<string>("AcademicYear")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("BloodGroup")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("CouncilEnrollmentNo")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CourseType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DateOfBirth")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FathersName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("GuardianMobile")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("InstituteName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("MothersName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("PassYear")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("PassportPhoto")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<decimal?>("PaymentAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("PaymentTransactionId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PermanentAddress")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PinCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("RegistrationStatus")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Remarks")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("StudentRegistrations");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Transport.TransportRoute", b =>
@@ -5054,7 +5684,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("TransportRoutes");
+                    b.ToTable("TransportRoutes", (string)null);
                 });
 
             modelBuilder.Entity("School.Domain.Transport.Vehicle", b =>
@@ -5112,7 +5742,58 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
+                });
+
+            modelBuilder.Entity("School.Domain.YearSemester", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SchoolRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolRegistrationId");
+
+                    b.ToTable("YearSemesters", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -5420,6 +6101,52 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("School.Domain.Batch", b =>
+                {
+                    b.HasOne("School.Domain.AcademicYear", "AcademicYear")
+                        .WithMany()
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Program");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.Branch", b =>
+                {
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Program");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
             modelBuilder.Entity("School.Domain.Class", b =>
                 {
                     b.HasOne("School.Domain.Hr.Employee", "ClassTeacher")
@@ -5471,6 +6198,17 @@ namespace School.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Faculty");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.EducationLevel", b =>
+                {
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("SchoolRegistration");
                 });
@@ -5545,6 +6283,60 @@ namespace School.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.FeeManagnment.FeeStructure", b =>
+                {
+                    b.HasOne("School.Domain.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.School.Campus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("CampusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Campus");
+
+                    b.Navigation("Program");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.FeeManagnment.FeeStructureItem", b =>
+                {
+                    b.HasOne("School.Domain.FeeManagnment.FeeStructure", "FeeStructure")
+                        .WithMany("FeeStructureItems")
+                        .HasForeignKey("FeeStructureId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.FeeManagnment.FeeType", "FeeType")
+                        .WithMany()
+                        .HasForeignKey("FeeTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("FeeStructure");
+
+                    b.Navigation("FeeType");
                 });
 
             modelBuilder.Entity("School.Domain.FeeManagnment.FeeType", b =>
@@ -6260,6 +7052,48 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("SchoolRegistration");
                 });
 
+            modelBuilder.Entity("School.Domain.Program", b =>
+                {
+                    b.HasOne("School.Domain.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("School.Domain.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyId");
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("EducationLevel");
+
+                    b.Navigation("Faculty");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.School.Campus", b =>
+                {
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("SchoolRegistration");
+                });
+
             modelBuilder.Entity("School.Domain.School.SchoolOwner", b =>
                 {
                     b.HasOne("School.Domain.Auth.ApplicationUser", "ApplicationUser")
@@ -6360,23 +7194,164 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("SchoolRegistration");
                 });
 
-            modelBuilder.Entity("School.Domain.Student.EducationalDetail", b =>
+            modelBuilder.Entity("School.Domain.Student.AdmissionApplication", b =>
                 {
+                    b.HasOne("School.Domain.AcademicYear", "AcademicYear")
+                        .WithMany()
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Batch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId");
+
+                    b.HasOne("School.Domain.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId");
+
+                    b.HasOne("School.Domain.School.Campus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("CampusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("School.Domain.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("School.Domain.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("School.Domain.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyId");
+
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId");
+
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
                         .HasForeignKey("SchoolRegistrationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("School.Domain.Student.StudentRegistration", "StudentRegistration")
-                        .WithMany("EducationalDetails")
-                        .HasForeignKey("StudentRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.HasOne("School.Domain.YearSemester", "YearSemester")
+                        .WithMany()
+                        .HasForeignKey("YearSemesterId");
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Campus");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("EducationLevel");
+
+                    b.Navigation("Faculty");
+
+                    b.Navigation("Program");
 
                     b.Navigation("SchoolRegistration");
 
-                    b.Navigation("StudentRegistration");
+                    b.Navigation("YearSemester");
+                });
+
+            modelBuilder.Entity("School.Domain.Student.AdmissionAuditLog", b =>
+                {
+                    b.HasOne("School.Domain.Student.AdmissionApplication", "AdmissionApplication")
+                        .WithMany()
+                        .HasForeignKey("AdmissionApplicationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AdmissionApplication");
+                });
+
+            modelBuilder.Entity("School.Domain.Student.AdmissionFormConfig", b =>
+                {
+                    b.HasOne("School.Domain.School.Campus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("CampusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId");
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Campus");
+
+                    b.Navigation("EducationLevel");
+
+                    b.Navigation("Program");
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.Student.AdmissionRule", b =>
+                {
+                    b.HasOne("School.Domain.School.Campus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("CampusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.EducationLevel", "EducationLevel")
+                        .WithMany()
+                        .HasForeignKey("EducationLevelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("School.Domain.Program", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId");
+
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Campus");
+
+                    b.Navigation("EducationLevel");
+
+                    b.Navigation("Program");
+
+                    b.Navigation("SchoolRegistration");
                 });
 
             modelBuilder.Entity("School.Domain.Student.Student", b =>
@@ -6418,44 +7393,6 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("School.Domain.Student.StudentExperienceCertificate", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Student.StudentRegistration", "StudentRegistration")
-                        .WithMany("ExperienceCertificates")
-                        .HasForeignKey("StudentRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("StudentRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Student.StudentRegistration", b =>
-                {
-                    b.HasOne("School.Domain.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("SchoolRegistration");
-                });
-
             modelBuilder.Entity("School.Domain.Transport.TransportRoute", b =>
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
@@ -6476,6 +7413,17 @@ namespace School.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("School.Domain.Transport.Vehicle", b =>
+                {
+                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
+                        .WithMany()
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("SchoolRegistration");
+                });
+
+            modelBuilder.Entity("School.Domain.YearSemester", b =>
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
@@ -6509,6 +7457,11 @@ namespace School.Infrastructure.Migrations
             modelBuilder.Entity("School.Domain.Faculty", b =>
                 {
                     b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("School.Domain.FeeManagnment.FeeStructure", b =>
+                {
+                    b.Navigation("FeeStructureItems");
                 });
 
             modelBuilder.Entity("School.Domain.Hr.Employee", b =>
@@ -6577,13 +7530,6 @@ namespace School.Infrastructure.Migrations
             modelBuilder.Entity("School.Domain.School.SchoolType", b =>
                 {
                     b.Navigation("SchoolRegistrations");
-                });
-
-            modelBuilder.Entity("School.Domain.Student.StudentRegistration", b =>
-                {
-                    b.Navigation("EducationalDetails");
-
-                    b.Navigation("ExperienceCertificates");
                 });
 #pragma warning restore 612, 618
         }

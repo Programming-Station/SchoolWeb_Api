@@ -138,6 +138,27 @@ namespace School.Infrastructure
         public DbSet<AdmissionApplication> AdmissionApplications { get; set; } = null!;
         public DbSet<AdmissionAuditLog> AdmissionAuditLogs { get; set; } = null!;
 
+        // Academic Module
+        public DbSet<School.Domain.Academic.SubjectEnrollment> SubjectEnrollments { get; set; } = null!;
+        public DbSet<School.Domain.Academic.StudentAttendance> StudentAttendances { get; set; } = null!;
+        // 4.3 Timetable
+        public DbSet<School.Domain.Academic.TimetablePeriod> TimetablePeriods { get; set; } = null!;
+        // 4.4 Homework
+        public DbSet<School.Domain.Academic.Homework> Homeworks { get; set; } = null!;
+        public DbSet<School.Domain.Academic.HomeworkSubmission> HomeworkSubmissions { get; set; } = null!;
+        // 4.5 Assignment
+        public DbSet<School.Domain.Academic.Assignment> Assignments { get; set; } = null!;
+        public DbSet<School.Domain.Academic.AssignmentSubmission> AssignmentSubmissions { get; set; } = null!;
+        // 4.6 Online Classes
+        public DbSet<School.Domain.Academic.OnlineClass> OnlineClasses { get; set; } = null!;
+        // 4.7 Syllabus Tracking
+        public DbSet<School.Domain.Academic.SyllabusChapter> SyllabusChapters { get; set; } = null!;
+        public DbSet<School.Domain.Academic.LessonPlan> LessonPlans { get; set; } = null!;
+
+        // Fee Collection Module
+        public DbSet<School.Domain.FeeManagnment.FeeInstallment> FeeInstallments { get; set; } = null!;
+        public DbSet<School.Domain.FeeManagnment.FeePayment> FeePayments { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

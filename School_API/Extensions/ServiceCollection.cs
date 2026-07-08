@@ -169,6 +169,20 @@ namespace School_API
             // Timesheet
             .AddTransient<ITimesheetRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetRepository>()
             .AddTransient<IHrmsExpansionRepository, HrmsExpansionRepository>()
+
+            // Academic Module
+            .AddTransient<ISubjectEnrollmentRepository, SubjectEnrollmentRepository>()
+            .AddTransient<IStudentAttendanceRepository, StudentAttendanceRepository>()
+            // Academic Extended (4.3-4.7)
+            .AddTransient<ITimetablePeriodRepository, TimetablePeriodRepository>()
+            .AddTransient<IHomeworkRepository, HomeworkRepository>()
+            .AddTransient<IAssignmentRepository, AssignmentRepository>()
+            .AddTransient<IOnlineClassRepository, OnlineClassRepository>()
+            .AddTransient<ISyllabusRepository, SyllabusRepository>()
+
+            // Fee Collection
+            .AddTransient<IFeeInstallmentRepository, FeeInstallmentRepository>()
+            .AddTransient<IFeePaymentRepository, FeePaymentRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -259,7 +273,18 @@ namespace School_API
             .AddScoped<IExamResultService, School.Services.Academic.ExamResultService>()
             .AddScoped<School.Services.Interfaces.Academic.ISubjectService, School.Services.Academic.SubjectService>()
             .AddScoped<School.Services.Interfaces.Academic.ITimetableSlotService, School.Services.Academic.TimetableSlotService>()
+            .AddScoped<School.Services.Interfaces.Academic.ISubjectEnrollmentService, School.Services.Academic.SubjectEnrollmentService>()
+            .AddScoped<School.Services.Interfaces.Academic.IStudentAttendanceService, School.Services.Academic.StudentAttendanceService>()
+            // Academic Extended (4.3-4.7)
+            .AddScoped<School.Services.Interfaces.Academic.ITimetableService, School.Services.Academic.TimetableService>()
+            .AddScoped<School.Services.Interfaces.Academic.IHomeworkService, School.Services.Academic.HomeworkService>()
+            .AddScoped<School.Services.Interfaces.Academic.IAssignmentService, School.Services.Academic.AssignmentService>()
+            .AddScoped<School.Services.Interfaces.Academic.IOnlineClassService, School.Services.Academic.OnlineClassService>()
+            .AddScoped<School.Services.Interfaces.Academic.ISyllabusService, School.Services.Academic.SyllabusService>()
             .AddScoped<IHrmsExpansionService, HrmsExpansionService>()
+
+            // Fee Collection
+            .AddScoped<IFeeCollectionService, School.Services.FeeCollectionService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
