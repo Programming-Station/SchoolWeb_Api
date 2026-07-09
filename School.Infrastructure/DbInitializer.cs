@@ -232,6 +232,8 @@ namespace School.Infrastructure
 
             // Seed all Email data (SMTP settings, templates, branding) via consolidated seed
             DefaultEmailData.SeedAsync(context, encryptionService).Wait();
+
+            DefaultAcademicExtendedData.SeedAsync(context).Wait();
         }
     }
 }
