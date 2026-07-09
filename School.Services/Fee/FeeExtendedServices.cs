@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
+using School.Services.Interfaces;
 
 namespace School.Services.Fee
 {
@@ -214,7 +215,13 @@ namespace School.Services.Fee
     public class FeeRefundService : IFeeRefundService
     {
         private readonly IFeeRefundRepository _repo;
-        public FeeRefundService(IFeeRefundRepository repo) => _repo = repo;
+        private readonly IEmailService _emailService;
+
+        public FeeRefundService(IFeeRefundRepository repo, IEmailService emailService)
+        {
+            _repo = repo;
+            _emailService = emailService;
+        }
 
         public async Task<(bool, string, FeeRefundDto)> RequestRefundAsync(FeeRefundDto dto, string requestedBy, int schoolId)
         {
@@ -246,6 +253,31 @@ namespace School.Services.Fee
             if (refund == null) return (false, "Not found.");
             refund.Status = "Processed"; refund.RefundRef = refundRef; refund.ApprovedBy = processedBy;
             await _repo.UpdateStatusAsync(id, "Processed", processedBy);
+
+            try
+            {
+                var email = refund.Student?.ApplicationUser?.Email;
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var placeholders = new Dictionary<string, string>
+                    {
+                        { "SchoolName", "School SAAS" },
+                        { "StudentName", refund.Student?.Name ?? "" },
+                        { "RefundRef", refundRef ?? "-" },
+                        { "RefundAmount", refund.RefundAmount.ToString("C") },
+                        { "RefundDate", refund.RefundDate.ToString("dd-MMM-yyyy") },
+                        { "RefundMode", refund.RefundMode },
+                        { "Reason", refund.Reason ?? "-" },
+                        { "LoginUrl", "http://localhost:4200" }
+                    };
+                    await _emailService.SendTemplateAsync(email, "Fee Refund Processed", placeholders);
+                }
+            }
+            catch
+            {
+                // Silently ignore email failures
+            }
+
             return (true, "Refund processed.");
         }
 

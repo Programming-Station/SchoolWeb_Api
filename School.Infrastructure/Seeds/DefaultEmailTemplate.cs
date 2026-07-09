@@ -1737,6 +1737,17 @@ namespace School.Infrastructure.Seeds
                     ButtonLink = "{{ReceiptLink}}",
                     Placeholders = "{{SchoolName}}, {{StudentName}}, {{ReceiptNo}}, {{AmountPaid}}, {{PaymentDate}}, {{PaymentMode}}, {{InstallmentName}}, {{ReceiptLink}}"
                 },
+                new TemplateDefinition {
+                    Name = "Fee Refund Processed",
+                    Subject = "Fee Refund Processed - {{RefundAmount}}",
+                    Title = "Refund Processed",
+                    ThemeColor = "#3B82F6",
+                    MessageText = "We have processed a fee refund for <strong>{{StudentName}}</strong>. The amount has been credited to your account.",
+                    InfoCardHtml = "<strong>Refund Reference:</strong> {{RefundRef}}<br/><strong>Refund Amount:</strong> {{RefundAmount}}<br/><strong>Refund Date:</strong> {{RefundDate}}<br/><strong>Refund Mode:</strong> {{RefundMode}}<br/><strong>Reason:</strong> {{Reason}}",
+                    ButtonText = "View Portal",
+                    ButtonLink = "{{LoginUrl}}",
+                    Placeholders = "{{SchoolName}}, {{StudentName}}, {{RefundRef}}, {{RefundAmount}}, {{RefundDate}}, {{RefundMode}}, {{Reason}}, {{LoginUrl}}"
+                },
             };
 
             var templates = new List<EmailTemplate>();

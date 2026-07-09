@@ -68,7 +68,9 @@ namespace School.Infrastructure.Repositories
         public FeeRefundRepository(DbFactory f, SchoolDbContext ctx, IUnitOfWork uow) : base(f) { _ctx = ctx; _uow = uow; }
         public async Task<FeeRefund> AddAsync(FeeRefund e) { await base.AddAsync(e); await _uow.CommitAsync(); return e; }
         public async Task<FeeRefund?> GetByIdAsync(int id) =>
-            await DbSet.Include(x => x.Student).Include(x => x.FeePayment)
+            await DbSet.Include(x => x.Student)
+                    .ThenInclude(s => s.ApplicationUser)
+                .Include(x => x.FeePayment)
                 .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
         public async Task<IEnumerable<FeeRefund>> GetByStudentAsync(int studentId, int schoolId) =>
             await DbSet.Include(x => x.FeePayment)
