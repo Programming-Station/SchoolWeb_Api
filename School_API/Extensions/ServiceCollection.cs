@@ -303,6 +303,7 @@ namespace School_API
             .AddScoped<School.Services.Fee.IFeeFineService, School.Services.Fee.FeeFineService>()
             .AddScoped<School.Services.Fee.IScholarshipService, School.Services.Fee.ScholarshipService>()
             .AddScoped<School.Services.Fee.IFeeRefundService, School.Services.Fee.FeeRefundService>()
+            .AddScoped<School.Services.Interfaces.IOnlinePaymentService, School.Services.Fee.OnlinePaymentService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

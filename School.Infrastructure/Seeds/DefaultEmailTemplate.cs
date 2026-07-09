@@ -1726,6 +1726,17 @@ namespace School.Infrastructure.Seeds
                     ButtonLink = "mailto:{{SupportEmail}}",
                     Placeholders = "{{SchoolName}}, {{UserName}}, {{StartTime}}, {{Duration}}, {{Reason}}, {{SupportEmail}}"
                 },
+                new TemplateDefinition {
+                    Name = "Fee Payment Confirmation",
+                    Subject = "Fee Payment Confirmation - {{ReceiptNo}}",
+                    Title = "Payment Received",
+                    ThemeColor = "#10B981",
+                    MessageText = "We have successfully received your fee payment for <strong>{{StudentName}}</strong>. Thank you for your payment.",
+                    InfoCardHtml = "<strong>Receipt No:</strong> {{ReceiptNo}}<br/><strong>Amount Paid:</strong> {{AmountPaid}}<br/><strong>Payment Date:</strong> {{PaymentDate}}<br/><strong>Payment Mode:</strong> {{PaymentMode}}<br/><strong>Installment:</strong> {{InstallmentName}}",
+                    ButtonText = "Download Receipt",
+                    ButtonLink = "{{ReceiptLink}}",
+                    Placeholders = "{{SchoolName}}, {{StudentName}}, {{ReceiptNo}}, {{AmountPaid}}, {{PaymentDate}}, {{PaymentMode}}, {{InstallmentName}}, {{ReceiptLink}}"
+                },
             };
 
             var templates = new List<EmailTemplate>();

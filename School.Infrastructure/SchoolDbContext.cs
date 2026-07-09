@@ -162,6 +162,8 @@ namespace School.Infrastructure
         public DbSet<School.Domain.FeeManagnment.FeeFine> FeeFines { get; set; } = null!;
         public DbSet<School.Domain.FeeManagnment.StudentScholarship> StudentScholarships { get; set; } = null!;
         public DbSet<School.Domain.FeeManagnment.FeeRefund> FeeRefunds { get; set; } = null!;
+        public DbSet<School.Domain.FeeManagnment.PaymentGateway> PaymentGateways { get; set; } = null!;
+        public DbSet<School.Domain.FeeManagnment.OnlinePaymentOrder> OnlinePaymentOrders { get; set; } = null!;
 
         // Phase 5 – Examination
         // 5.1 Exam Schedule
