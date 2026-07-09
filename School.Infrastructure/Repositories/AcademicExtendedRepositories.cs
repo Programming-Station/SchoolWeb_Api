@@ -187,6 +187,10 @@ namespace School.Infrastructure.Repositories
             await _ctx.Set<SyllabusChapter>().Include(x => x.Subject).Include(x => x.Class)
                        .Where(x => x.SubjectId == subjectId && x.ClassId == classId && x.SchoolRegistrationId == schoolId && !x.IsDeleted)
                        .OrderBy(x => x.ChapterNo).ToListAsync();
+        public async Task<IEnumerable<SyllabusChapter>> GetChaptersByClassAsync(int classId, int schoolId) =>
+            await _ctx.Set<SyllabusChapter>().Include(x => x.Subject).Include(x => x.Class)
+                       .Where(x => x.ClassId == classId && x.SchoolRegistrationId == schoolId && !x.IsDeleted)
+                       .OrderBy(x => x.ChapterNo).ToListAsync();
         public async Task<int> UpdateChapterProgressAsync(int id, int completedPeriods, string status)
         {
             var c = await _ctx.Set<SyllabusChapter>().FindAsync(id); if (c == null) return 0;

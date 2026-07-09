@@ -216,6 +216,18 @@ namespace School.Services.Interfaces.Academic
         public string? TeacherNotes { get; set; }
     }
 
+    public class SyllabusTopicDto
+    {
+        public int Id { get; set; }
+        public string TopicName { get; set; } = null!;
+        public int Chapter { get; set; }
+        public bool IsCompleted { get; set; }
+        public DateTime? CompletedDate { get; set; }
+        public int SubjectId { get; set; }
+        public int? ClassId { get; set; }
+        public string SubjectName { get; set; } = null!;
+    }
+
     public interface ISyllabusService
     {
         Task<(bool Success, string Message, SyllabusChapterDto Chapter)> AddChapterAsync(SyllabusChapterDto dto, string createdBy, int schoolId);
@@ -226,5 +238,9 @@ namespace School.Services.Interfaces.Academic
         Task<IEnumerable<LessonPlanDto>> GetLessonPlansByChapterAsync(int chapterId);
         Task<IEnumerable<LessonPlanDto>> GetLessonPlansByDateAsync(int classId, DateTime date, int schoolId);
         Task<(bool Success, string Message)> UpdateLessonPlanStatusAsync(int id, string status, string? notes);
+        
+        Task<IEnumerable<SyllabusTopicDto>> GetByClassAsync(int classId, int schoolId);
+        Task<(bool Success, string Message)> ToggleCompleteAsync(int topicId, bool isCompleted, int schoolId);
+        Task<(bool Success, string Message)> SaveTopicAsync(int classId, int subjectId, string topicName, string chapter, string createdBy, int schoolId);
     }
 }

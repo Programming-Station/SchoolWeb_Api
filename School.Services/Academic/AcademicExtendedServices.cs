@@ -415,6 +415,56 @@ namespace School.Services.Academic
             return (true, "Updated.");
         }
 
+        public async Task<IEnumerable<SyllabusTopicDto>> GetByClassAsync(int classId, int schoolId)
+        {
+            var chapters = await _repo.GetChaptersByClassAsync(classId, schoolId);
+            return chapters.Select(c => new SyllabusTopicDto
+            {
+                Id = c.Id,
+                TopicName = c.ChapterName,
+                Chapter = c.ChapterNo,
+                IsCompleted = c.Status == "Completed",
+                CompletedDate = c.CompletedDate,
+                SubjectId = c.SubjectId,
+                ClassId = c.ClassId,
+                SubjectName = c.Subject?.Name ?? ""
+            });
+        }
+
+        public async Task<(bool, string)> ToggleCompleteAsync(int topicId, bool isCompleted, int schoolId)
+        {
+            var c = await _repo.GetChapterByIdAsync(topicId);
+            if (c == null || c.SchoolRegistrationId != schoolId) return (false, "Not found.");
+            c.Status = isCompleted ? "Completed" : "NotStarted";
+            c.CompletedPeriods = isCompleted ? (c.TotalPeriods ?? 1) : 0;
+            c.CompletedDate = isCompleted ? DateTime.Now : null;
+            if (isCompleted && !c.StartedDate.HasValue) c.StartedDate = DateTime.Now;
+            await _repo.UpdateChapterAsync(c);
+            return (true, "Status updated.");
+        }
+
+        public async Task<(bool, string)> SaveTopicAsync(int classId, int subjectId, string topicName, string chapter, string createdBy, int schoolId)
+        {
+            int.TryParse(chapter, out int chNo);
+            if (chNo <= 0) chNo = 1;
+
+            var c = new SyllabusChapter
+            {
+                SubjectId = subjectId,
+                ClassId = classId,
+                ChapterNo = chNo,
+                ChapterName = topicName,
+                Description = "Added via quick checklist",
+                TotalPeriods = 1,
+                CompletedPeriods = 0,
+                Status = "NotStarted",
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
+            };
+            await _repo.AddChapterAsync(c);
+            return (true, "Syllabus topic added.");
+        }
+
         private static SyllabusChapterDto MapC(SyllabusChapter c) => new()
         {
             Id = c.Id, SubjectId = c.SubjectId, SubjectName = c.Subject?.Name ?? "",

@@ -196,5 +196,22 @@ namespace School_API.Controllers.Academic
             var (ok, msg) = await _svc.UpdateLessonPlanStatusAsync(id, status, notes);
             return ok ? Ok(new { msg }) : BadRequest(new { msg });
         }
+
+        [HttpGet] public async Task<IActionResult> GetByClass([FromQuery] int classId)
+            => Ok(await _svc.GetByClassAsync(classId, _tenant.GetTenantId() ?? 0));
+
+        [HttpPost] public async Task<IActionResult> ToggleComplete([FromQuery] int topicId, [FromQuery] bool isCompleted)
+        {
+            var (ok, msg) = await _svc.ToggleCompleteAsync(topicId, isCompleted, _tenant.GetTenantId() ?? 0);
+            return ok ? Ok(new { msg }) : BadRequest(new { msg });
+        }
+
+        [HttpPost] public async Task<IActionResult> SaveTopic([FromBody] SaveTopicRequest req)
+        {
+            var (ok, msg) = await _svc.SaveTopicAsync(req.ClassId, req.SubjectId, req.TopicName, req.Chapter, UserName, _tenant.GetTenantId() ?? 0);
+            return ok ? Ok(new { msg }) : BadRequest(new { msg });
+        }
     }
+
+    public record SaveTopicRequest(int ClassId, int SubjectId, string TopicName, string Chapter);
 }

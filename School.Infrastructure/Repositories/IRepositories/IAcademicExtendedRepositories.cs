@@ -65,6 +65,7 @@ namespace School.Infrastructure.Repositories.IRepositories
         Task<SyllabusChapter> AddChapterAsync(SyllabusChapter chapter);
         Task<SyllabusChapter?> GetChapterByIdAsync(int id);
         Task<IEnumerable<SyllabusChapter>> GetChaptersBySubjectAsync(int subjectId, int classId, int schoolRegistrationId);
+        Task<IEnumerable<SyllabusChapter>> GetChaptersByClassAsync(int classId, int schoolRegistrationId);
         Task<int> UpdateChapterProgressAsync(int id, int completedPeriods, string status);
         Task<int> UpdateChapterAsync(SyllabusChapter chapter);
         Task<int> DeleteChapterAsync(int id);
