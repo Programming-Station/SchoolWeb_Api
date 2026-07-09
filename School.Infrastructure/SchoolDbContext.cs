@@ -123,6 +123,7 @@ namespace School.Infrastructure
         // Transport
         public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
+        public DbSet<TransportAllocation> TransportAllocations { get; set; } = null!;
 
         // Admission Module
         public DbSet<Campus> Campuses { get; set; } = null!;

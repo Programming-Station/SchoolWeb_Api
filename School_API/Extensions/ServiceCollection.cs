@@ -194,6 +194,10 @@ namespace School_API
             .AddTransient<IStudentScholarshipRepository, StudentScholarshipRepository>()
             .AddTransient<IFeeRefundRepository, FeeRefundRepository>()
             .AddTransient<IFineRuleRepository, FineRuleRepository>()
+            // Transport Module
+            .AddTransient<IVehicleRepository, VehicleRepository>()
+            .AddTransient<ITransportRouteRepository, TransportRouteRepository>()
+            .AddTransient<ITransportAllocationRepository, TransportAllocationRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -310,6 +314,8 @@ namespace School_API
             .AddScoped<School.Services.Interfaces.IReceiptService, School.Services.Fee.ReceiptService>()
             .AddScoped<School.Services.Interfaces.IFineCalculationService, School.Services.Fee.FineCalculationService>()
             .AddScoped<School.Services.Interfaces.IFeeReportService, School.Services.Fee.FeeReportService>()
+            // Transport Module
+            .AddScoped<ITransportService, School.Services.Transport.TransportService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
