@@ -14,16 +14,19 @@ namespace School.Services.AccessControl
     {
         private readonly IModuleRepository _moduleRepository;
         private readonly ICategoryModuleRepository _categoryModuleRepository;
+        private readonly global::School.Infrastructure.Interfaces.ITenantService _tenantService;
         private readonly IMapper _mapper;
 
         public ModuleService(
             IModuleRepository moduleRepository, 
             ICategoryModuleRepository categoryModuleRepository,
-            IMapper mapper)
+            IMapper mapper,
+            global::School.Infrastructure.Interfaces.ITenantService tenantService)
         {
             _moduleRepository = moduleRepository;
             _categoryModuleRepository = categoryModuleRepository;
             _mapper = mapper;
+            _tenantService = tenantService;
         }
 
         public async Task<APIResponse<ModuleDto>> AddModuleAsync(ModuleModel model)
@@ -43,6 +46,19 @@ namespace School.Services.AccessControl
             var entity = _mapper.Map<Module>(model);
             entity.CreatedBy = model.CreatedBy;
             entity.CreatedDate = DateTime.UtcNow;
+
+            // Ensure tenant (SchoolRegistrationId) is set from the current context
+            var tenantId = _tenantService?.GetTenantId();
+            if (!tenantId.HasValue)
+            {
+                return new APIResponse<ModuleDto>
+                {
+                    Success = false,
+                    Message = "Missing tenant (SchoolRegistrationId).",
+                    StatusCode = HttpStatusCode.BadRequest,
+                };
+            }
+            entity.SchoolRegistrationId = tenantId.Value;
 
             entity.Name = entity.Name?.Trim() ?? "";
             entity.Description = entity.Description?.Trim();

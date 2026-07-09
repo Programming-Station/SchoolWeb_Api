@@ -136,6 +136,7 @@ namespace School.Infrastructure
         public DbSet<FeeStructureItem> FeeStructureItems { get; set; } = null!;
         public DbSet<AdmissionApplication> AdmissionApplications { get; set; } = null!;
         public DbSet<AdmissionAuditLog> AdmissionAuditLogs { get; set; } = null!;
+        public DbSet<ParentStudentMapping> ParentStudentMappings { get; set; } = null!;
 
         // Academic Module
         public DbSet<School.Domain.Academic.SubjectEnrollment> SubjectEnrollments { get; set; } = null!;
@@ -195,6 +196,12 @@ namespace School.Infrastructure
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.HasIndex(e => e.EnrollmentNumber).IsUnique();
+            });
+
+            modelBuilder.Entity<ParentStudentMapping>(entity =>
+            {
+                entity.ToTable("ParentStudentMappings");
+                entity.HasIndex(e => new { e.ParentUserId, e.StudentId }).IsUnique();
             });
 
             modelBuilder.Entity<IdentityRole>(entity =>
