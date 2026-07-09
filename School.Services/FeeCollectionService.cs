@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.FeeManagnment;
+using School.Infrastructure;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Services.Interfaces;
 
@@ -13,15 +15,18 @@ namespace School.Services
         private readonly IFeeInstallmentRepository _installmentRepo;
         private readonly IFeePaymentRepository _paymentRepo;
         private readonly IFeeStructureRepository _structureRepo;
+        private readonly SchoolDbContext _dbContext;
 
         public FeeCollectionService(
             IFeeInstallmentRepository installmentRepo,
             IFeePaymentRepository paymentRepo,
-            IFeeStructureRepository structureRepo)
+            IFeeStructureRepository structureRepo,
+            SchoolDbContext dbContext)
         {
             _installmentRepo = installmentRepo;
             _paymentRepo     = paymentRepo;
             _structureRepo   = structureRepo;
+            _dbContext       = dbContext;
         }
 
         public async Task<(bool Success, string Message, List<FeeInstallmentDto> Installments)> GenerateInstallmentsAsync(
@@ -189,5 +194,28 @@ namespace School.Services
             Remarks           = p.Remarks,
             Status            = p.Status
         };
+
+        public async Task<IEnumerable<FeeInstallmentDto>> GetPendingByClassAsync(int classId, int schoolRegistrationId)
+        {
+            // Get student IDs for the given class
+            var studentIds = await _dbContext.Students
+                .Where(s => s.ClassId == classId && s.SchoolRegistrationId == schoolRegistrationId && !s.IsDeleted)
+                .Select(s => s.Id)
+                .ToListAsync();
+
+            if (!studentIds.Any()) return Enumerable.Empty<FeeInstallmentDto>();
+
+            var pendingInstallments = await _dbContext.FeeInstallments
+                .Include(x => x.Student)
+                .Include(x => x.FeeStructure)
+                .Where(x => studentIds.Contains(x.StudentId)
+                    && x.SchoolRegistrationId == schoolRegistrationId
+                    && (x.Status == "Pending" || x.Status == "Overdue" || x.Status == "PartiallyPaid")
+                    && !x.IsDeleted)
+                .OrderBy(x => x.DueDate)
+                .ToListAsync();
+
+            return pendingInstallments.Select(MapInstallmentDto);
+        }
     }
 }

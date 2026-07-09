@@ -80,5 +80,6 @@ namespace School.Services.Interfaces
         Task<IEnumerable<FeePaymentDto>> GetPaymentsByDateRangeAsync(DateTime from, DateTime to, int schoolRegistrationId);
         Task<FeeCollectionSummaryDto> GetCollectionSummaryAsync(DateTime from, DateTime to, int schoolRegistrationId);
         Task<FeePaymentDto?> GetPaymentByReceiptAsync(string receiptNo, int schoolRegistrationId);
+        Task<IEnumerable<FeeInstallmentDto>> GetPendingByClassAsync(int classId, int schoolRegistrationId);
     }
 }

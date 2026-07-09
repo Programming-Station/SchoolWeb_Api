@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
 using School.Domain.FeeManagnment;
+using School.Infrastructure;
 using School.Infrastructure.Repositories.IRepositories;
 
 namespace School.Services.Academic
@@ -91,6 +93,19 @@ namespace School.Services.Academic
         public string? Remarks { get; set; }
     }
 
+    public class PromotionEligibilityDto
+    {
+        public int StudentId { get; set; }
+        public string StudentName { get; set; } = null!;
+        public string? EnrollmentNo { get; set; }
+        public string? ClassName { get; set; }
+        public decimal Percentage { get; set; }
+        public string Grade { get; set; } = null!;
+        public string ResultStatus { get; set; } = null!;   // Pass / Fail / Absent
+        public bool IsEligible { get; set; }                 // Green (true) or Red (false)
+        public string? Remark { get; set; }                  // "Promoted" / "Detained - Failed" / "Detained - Absent"
+    }
+
     // ══════════════════════════════════════════════════════════════════════════
     // INTERFACES — Phase 5
     // ══════════════════════════════════════════════════════════════════════════
@@ -127,6 +142,7 @@ namespace School.Services.Academic
         Task<IEnumerable<PromotionDto>> GetByClassAsync(int fromClassId, int schoolId);
         Task<IEnumerable<PromotionDto>> GetByStudentAsync(int studentId, int schoolId);
         Task<(bool Success, string Message)> UpdateAsync(PromotionDto dto);
+        Task<IEnumerable<PromotionEligibilityDto>> GetEligibleStudentsAsync(int classId, int examId, int schoolId);
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -296,7 +312,8 @@ namespace School.Services.Academic
     public class StudentPromotionService : IStudentPromotionService
     {
         private readonly IStudentPromotionRepository _repo;
-        public StudentPromotionService(IStudentPromotionRepository repo) => _repo = repo;
+        private readonly SchoolDbContext _ctx;
+        public StudentPromotionService(IStudentPromotionRepository repo, SchoolDbContext ctx) { _repo = repo; _ctx = ctx; }
 
         public async Task<(bool, string, int)> BulkPromoteAsync(BulkPromotionRequest req, string promotedBy, int schoolId)
         {
@@ -335,5 +352,47 @@ namespace School.Services.Academic
             FromAcademicYearId = p.FromAcademicYearId, ToAcademicYearId = p.ToAcademicYearId,
             Status = p.Status, Remarks = p.Remarks, PromotionDate = p.PromotionDate
         };
+
+        public async Task<IEnumerable<PromotionEligibilityDto>> GetEligibleStudentsAsync(int classId, int examId, int schoolId)
+        {
+            // Get all students in the given class
+            var students = await _ctx.Students
+                .Include(s => s.Class)
+                .Where(s => s.ClassId == classId && s.SchoolRegistrationId == schoolId && !s.IsDeleted)
+                .ToListAsync();
+
+            // Get report cards for these students for this exam
+            var reportCards = await _ctx.ReportCards
+                .Where(rc => rc.ExamId == examId && rc.SchoolRegistrationId == schoolId && !rc.IsDeleted)
+                .ToListAsync();
+
+            var rcLookup = reportCards.ToDictionary(rc => rc.StudentId);
+
+            var eligibilityList = students.Select(s =>
+            {
+                var hasReport = rcLookup.TryGetValue(s.Id, out var rc);
+                var isPassed = hasReport && rc!.Status == "Pass";
+                var percentage = hasReport ? rc!.Percentage : 0;
+                var grade = hasReport ? rc!.Grade ?? "-" : "-";
+                var status = hasReport ? rc!.Status : "No Result";
+
+                return new PromotionEligibilityDto
+                {
+                    StudentId = s.Id,
+                    StudentName = s.Name,
+                    EnrollmentNo = s.EnrollmentNumber,
+                    ClassName = s.Class?.Name,
+                    Percentage = percentage,
+                    Grade = grade,
+                    ResultStatus = status,
+                    IsEligible = isPassed,
+                    Remark = isPassed ? "Eligible for Promotion"
+                        : hasReport ? $"Detained — {status}"
+                        : "No exam result found"
+                };
+            }).OrderByDescending(e => e.IsEligible).ThenByDescending(e => e.Percentage);
+
+            return eligibilityList;
+        }
     }
 }

@@ -136,5 +136,8 @@ namespace School_API.Controllers.Academic
             var (ok, msg) = await _svc.UpdateAsync(dto);
             return ok ? Ok(new { msg }) : BadRequest(new { msg });
         }
+
+        [HttpGet] public async Task<IActionResult> GetEligible([FromQuery] int classId, [FromQuery] int examId)
+            => Ok(await _svc.GetEligibleStudentsAsync(classId, examId, _tenant.GetTenantId() ?? 0));
     }
 }

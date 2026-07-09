@@ -34,7 +34,7 @@ namespace School.Services.Academic
         public async Task<APIResponse<List<ExamDto>>> GetAllAsync()
         {
             var d = await _repo.List()
-                .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description })
+                .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description, IsResultPublished = x.IsResultPublished, ResultPublishedDate = x.ResultPublishedDate, ResultPublishedBy = x.ResultPublishedBy })
                 .ToListAsync();
             return new APIResponse<List<ExamDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = d };
         }
@@ -42,7 +42,7 @@ namespace School.Services.Academic
         public async Task<APIResponse<ExamDto>> GetByIdAsync(int id)
         {
             var x = await _repo.List().Where(e => e.Id == id)
-                .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description })
+                .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description, IsResultPublished = x.IsResultPublished, ResultPublishedDate = x.ResultPublishedDate, ResultPublishedBy = x.ResultPublishedBy })
                 .FirstOrDefaultAsync();
             if (x == null) return new APIResponse<ExamDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
             return new APIResponse<ExamDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = x };
@@ -131,6 +131,71 @@ namespace School.Services.Academic
             _repo.Delete(e);
             await _uow.CommitAsync();
             return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
+        }
+
+        public async Task<APIResponse<object>> PublishResultAsync(int examId, string publishedBy)
+        {
+            var exam = await _repo.List().Where(x => x.Id == examId).FirstOrDefaultAsync();
+            if (exam == null)
+                return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Exam not found" };
+
+            if (exam.IsResultPublished)
+                return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "Result is already published" };
+
+            // Validate that at least one result exists for this exam
+            var resultCount = await _dbContext.Set<ExamResult>()
+                .CountAsync(r => r.ExamId == examId && !r.IsDeleted);
+            if (resultCount == 0)
+                return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "No marks/results found for this exam. Please enter marks before publishing." };
+
+            // Set published flag
+            exam.IsResultPublished = true;
+            exam.ResultPublishedDate = DateTime.UtcNow;
+            exam.ResultPublishedBy = publishedBy;
+            exam.UpdatedBy = publishedBy;
+            exam.UpdatedDate = DateTime.UtcNow;
+            _repo.Update(exam);
+            await _uow.CommitAsync();
+
+            // Fire-and-forget: email all students who have results
+            _ = SendResultPublishedEmailsAsync(exam);
+
+            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = $"Result published successfully. {resultCount} student result(s) available." };
+        }
+
+        private async Task SendResultPublishedEmailsAsync(Exam exam)
+        {
+            try
+            {
+                var results = await _dbContext.Set<ExamResult>()
+                    .Include(r => r.Student).ThenInclude(s => s.ApplicationUser)
+                    .Where(r => r.ExamId == exam.Id && !r.IsDeleted)
+                    .ToListAsync();
+
+                foreach (var result in results)
+                {
+                    var email = result.Student?.ApplicationUser?.Email;
+                    if (!string.IsNullOrWhiteSpace(email))
+                    {
+                        await _emailService.SendGenericTemplateAsync(email!, "Exam Result Published", new Dictionary<string, string>
+                        {
+                            { "SchoolName", "School" },
+                            { "UserName", result.Student!.Name },
+                            { "ExamName", exam.Name },
+                            { "ExamType", exam.ExamType ?? "-" },
+                            { "MarksObtained", result.MarksObtained.ToString("F2") },
+                            { "TotalMarks", result.TotalMarks.ToString("F2") },
+                            { "Grade", result.Grade ?? "-" },
+                            { "Status", result.Status },
+                            { "LoginUrl", "#" }
+                        });
+                    }
+                }
+            }
+            catch
+            {
+                // Swallow — email failure must not affect core publish operation
+            }
         }
     }
 

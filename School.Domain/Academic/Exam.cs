@@ -17,6 +17,10 @@ namespace School.Domain.Academic
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
+        public bool IsResultPublished { get; set; } = false;
+        public DateTime? ResultPublishedDate { get; set; }
+        [MaxLength(150)] public string? ResultPublishedBy { get; set; }
+
         public virtual ICollection<ExamResult> Results { get; set; } = new List<ExamResult>();
     }
 }

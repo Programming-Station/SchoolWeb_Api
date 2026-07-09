@@ -98,5 +98,14 @@ namespace School_API.Controllers.Fee
             if (result == null) return NotFound(new { message = "Receipt not found." });
             return Ok(result);
         }
+
+        /// <summary>Get pending fees report for all students in a class.</summary>
+        [HttpGet]
+        public async Task<IActionResult> GetPendingByClass([FromQuery] int classId)
+        {
+            var schoolId = _tenant.GetTenantId() ?? 0;
+            var result = await _service.GetPendingByClassAsync(classId, schoolId);
+            return Ok(result);
+        }
     }
 }

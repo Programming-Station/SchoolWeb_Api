@@ -12,6 +12,7 @@ namespace School.Services.Interfaces.Academic
         Task<APIResponse<object>> CreateAsync(CreateExamDto dto, string username);
         Task<APIResponse<object>> UpdateAsync(int id, UpdateExamDto dto, string username);
         Task<APIResponse<object>> DeleteAsync(int id, string username);
+        Task<APIResponse<object>> PublishResultAsync(int examId, string publishedBy);
     }
     public interface IExamResultService
     {

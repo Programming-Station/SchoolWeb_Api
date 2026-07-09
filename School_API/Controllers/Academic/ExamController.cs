@@ -15,6 +15,13 @@ namespace School_API.Controllers.Academic
         [HttpPost] public async Task<IActionResult> Create([FromBody]CreateExamDto m){var r=await _svc.CreateAsync(m,UserName);return StatusCode((int)r.StatusCode,r);}
         [HttpPut] public async Task<IActionResult> Update([FromBody]UpdateExamDto m){var r=await _svc.UpdateAsync(m.Id,m,UserName);return r.Success?Ok(r):StatusCode((int)r.StatusCode,r);}
         [HttpDelete("{id}")] public async Task<IActionResult> Delete(int id){var r=await _svc.DeleteAsync(id,UserName);return r.Success?Ok(r):StatusCode((int)r.StatusCode,r);}
+        [HttpPost("PublishResult")] 
+        public async Task<IActionResult> PublishResult([FromQuery]int examId)
+        {
+            var r=await _svc.PublishResultAsync(examId,UserName);
+            return r.Success?Ok(r):StatusCode((int)r.StatusCode,r);
+            
+            }
     }
 
     [Route("api/[controller]")][ApiController]
