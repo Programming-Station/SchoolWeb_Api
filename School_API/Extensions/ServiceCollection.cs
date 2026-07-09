@@ -188,6 +188,7 @@ namespace School_API
             // Fee Collection
             .AddTransient<IFeeInstallmentRepository, FeeInstallmentRepository>()
             .AddTransient<IFeePaymentRepository, FeePaymentRepository>()
+            .AddTransient<IFeeStructureRepository, FeeStructureRepository>()
             // Phase 6 – Fee Extended
             .AddTransient<IFeeFineRepository, FeeFineRepository>()
             .AddTransient<IStudentScholarshipRepository, StudentScholarshipRepository>()
