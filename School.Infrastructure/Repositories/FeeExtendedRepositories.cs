@@ -89,4 +89,48 @@ namespace School.Infrastructure.Repositories
                 && x.RefundDate >= from && x.RefundDate <= to && !x.IsDeleted)
                 .SumAsync(x => x.RefundAmount);
     }
+
+    public class FineRuleRepository : Repository<FineRule>, IFineRuleRepository
+    {
+        private readonly SchoolDbContext _ctx;
+        private readonly IUnitOfWork _uow;
+
+        public FineRuleRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
+        {
+            _ctx = context;
+            _uow = unitOfWork;
+        }
+
+        public async Task<FineRule> AddAsync(FineRule entity)
+        {
+            entity.CreatedDate = DateTime.Now;
+            await base.AddAsync(entity);
+            await _uow.CommitAsync();
+            return entity;
+        }
+
+        public async Task<FineRule?> GetByIdAsync(int id) =>
+            await DbSet.Include(x => x.FeeType).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+
+        public async Task<FineRule?> GetByFeeTypeAsync(int feeTypeId, int schoolId) =>
+            await DbSet.FirstOrDefaultAsync(x => x.FeeTypeId == feeTypeId && x.SchoolRegistrationId == schoolId && x.IsActive && !x.IsDeleted);
+
+        public async Task<IEnumerable<FineRule>> GetAllAsync(int schoolId) =>
+            await DbSet.Include(x => x.FeeType).Where(x => x.SchoolRegistrationId == schoolId && !x.IsDeleted).ToListAsync();
+
+        public async Task<int> UpdateAsync(FineRule entity)
+        {
+            _ctx.Entry(entity).State = EntityState.Modified;
+            return await _uow.CommitAsync();
+        }
+
+        public async Task<int> DeleteAsync(int id)
+        {
+            var e = await DbSet.FindAsync(id);
+            if (e == null) return 0;
+            e.IsDeleted = true;
+            _ctx.Entry(e).State = EntityState.Modified;
+            return await _uow.CommitAsync();
+        }
+    }
 }

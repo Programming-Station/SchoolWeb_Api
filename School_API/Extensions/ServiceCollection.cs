@@ -192,6 +192,7 @@ namespace School_API
             .AddTransient<IFeeFineRepository, FeeFineRepository>()
             .AddTransient<IStudentScholarshipRepository, StudentScholarshipRepository>()
             .AddTransient<IFeeRefundRepository, FeeRefundRepository>()
+            .AddTransient<IFineRuleRepository, FineRuleRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -205,6 +206,7 @@ namespace School_API
             // Email Background Queue Services
             services.AddSingleton<IEmailQueue, EmailQueue>();
             services.AddHostedService<EmailQueueProcessor>();
+            services.AddHostedService<FineCalculationBackgroundJob>();
 
             return services
             .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
@@ -304,6 +306,8 @@ namespace School_API
             .AddScoped<School.Services.Fee.IScholarshipService, School.Services.Fee.ScholarshipService>()
             .AddScoped<School.Services.Fee.IFeeRefundService, School.Services.Fee.FeeRefundService>()
             .AddScoped<School.Services.Interfaces.IOnlinePaymentService, School.Services.Fee.OnlinePaymentService>()
+            .AddScoped<School.Services.Interfaces.IReceiptService, School.Services.Fee.ReceiptService>()
+            .AddScoped<School.Services.Interfaces.IFineCalculationService, School.Services.Fee.FineCalculationService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

@@ -34,4 +34,14 @@ namespace School.Infrastructure.Repositories.IRepositories
         Task<int> UpdateStatusAsync(int id, string status, string approvedBy);
         Task<decimal> GetTotalRefundedAsync(DateTime from, DateTime to, int schoolId);
     }
+
+    public interface IFineRuleRepository
+    {
+        Task<FineRule> AddAsync(FineRule entity);
+        Task<FineRule?> GetByIdAsync(int id);
+        Task<FineRule?> GetByFeeTypeAsync(int feeTypeId, int schoolId);
+        Task<IEnumerable<FineRule>> GetAllAsync(int schoolId);
+        Task<int> UpdateAsync(FineRule entity);
+        Task<int> DeleteAsync(int id);
+    }
 }

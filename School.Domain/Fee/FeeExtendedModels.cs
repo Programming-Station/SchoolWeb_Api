@@ -93,4 +93,27 @@ namespace School.Domain.FeeManagnment
         [Required] public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))] public virtual SchoolRegistration SchoolRegistration { get; set; }
     }
+
+    /// <summary>6.4 — Fine Calculation Rules per Fee Type</summary>
+    public class FineRule : AuditEntity<int>, ITenantEntity
+    {
+        [Key] public int Id { get; set; }
+
+        [Required] public int FeeTypeId { get; set; }
+        [ForeignKey(nameof(FeeTypeId))] public virtual FeeType FeeType { get; set; }
+
+        [Required] public int GraceDays { get; set; } = 0;
+
+        /// <summary>Fixed / Percentage</summary>
+        [Required, MaxLength(20)] public string FineType { get; set; } = "Fixed";
+
+        [Required, Column(TypeName = "decimal(10,2)")] public decimal FineAmount { get; set; }
+
+        [Required, Column(TypeName = "decimal(10,2)")] public decimal MaxFine { get; set; } = 1000;
+
+        public bool IsActive { get; set; } = true;
+
+        [Required] public int SchoolRegistrationId { get; set; }
+        [ForeignKey(nameof(SchoolRegistrationId))] public virtual SchoolRegistration SchoolRegistration { get; set; }
+    }
 }

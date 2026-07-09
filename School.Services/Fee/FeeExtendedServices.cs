@@ -23,6 +23,8 @@ namespace School.Services.Fee
         public string? Reason { get; set; }
         public string Status { get; set; } = "Pending";
         public string? AppliedBy { get; set; }
+        public int SchoolRegistrationId { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 
     public class ScholarshipDto
