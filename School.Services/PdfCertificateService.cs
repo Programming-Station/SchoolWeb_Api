@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using School.Domain.FeeManagnment;
+using School.Infrastructure;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -9,60 +12,12 @@ namespace School.Services
 {
     public class PdfCertificateService : IPdfCertificateService
     {
+        private readonly SchoolDbContext _dbContext;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        public PdfCertificateService(SchoolDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<byte[]> GenerateRegistrationCertificateAsync(StudentRegistrationDto registration,string baseUrl)
         {
@@ -231,6 +186,106 @@ namespace School.Services
                 .PaddingHorizontal(5); 
         }
 
+
+        public async Task<byte[]> GenerateFeeReceiptPdfAsync(int paymentId, string baseUrl)
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            var payment = await _dbContext.FeePayments
+                .Include(p => p.Student)
+                    .ThenInclude(s => s.Class)
+                .Include(p => p.FeeInstallment)
+                .FirstOrDefaultAsync(p => p.Id == paymentId && !p.IsDeleted);
+
+            if (payment == null) return Array.Empty<byte>();
+
+            var qrCodeUrl = $"{baseUrl}/api/FeeCollection/GetReceipt?paymentId={paymentId}";
+            var qrCodeBytes = GenerateQrCode(qrCodeUrl);
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(35);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
+
+                    page.Header().PaddingBottom(20).Column(col =>
+                    {
+                        col.Item().AlignCenter().Text("SCHOOL SAAS SYSTEM")
+                            .Bold().FontSize(22).FontColor(Color.FromHex("#1E3A8A"));
+
+                        col.Item().AlignCenter().Text("Fee Payment Receipt")
+                            .FontColor(Colors.Grey.Darken2).FontSize(14).Bold();
+                    });
+
+                    page.Content().Column(column =>
+                    {
+                        column.Spacing(10);
+
+                        column.Item().Row(row =>
+                        {
+                            row.RelativeItem().Column(c =>
+                            {
+                                c.Item().Text($"Receipt No: {payment.ReceiptNo}").Bold();
+                                c.Item().Text($"Date: {payment.PaymentDate:dd-MMM-yyyy hh:mm tt}");
+                                c.Item().Text($"Mode: {payment.PaymentMode}");
+                                c.Item().Text($"Ref: {payment.TransactionRef ?? "-"}");
+                            });
+
+                            row.RelativeItem().Column(c =>
+                            {
+                                c.Item().Text($"Student: {payment.Student?.Name}").Bold();
+                                c.Item().Text($"Class: {payment.Student?.Class?.Name ?? "N/A"}");
+                                c.Item().Text($"Fathers Name: {payment.Student?.FathersName ?? "N/A"}");
+                            });
+                        });
+
+                        column.Item().PaddingTop(15).Table(table =>
+                        {
+                            table.ColumnsDefinition(c =>
+                            {
+                                c.RelativeColumn(3);   // Description
+                                c.RelativeColumn(1);   // Status
+                                c.RelativeColumn(1);   // Amount
+                            });
+
+                            table.Cell().Background(Colors.Grey.Lighten3).Element(CellStyle).Text("Installment Description").Bold();
+                            table.Cell().Background(Colors.Grey.Lighten3).Element(CellStyle).Text("Status").Bold();
+                            table.Cell().Background(Colors.Grey.Lighten3).Element(CellStyle).Text("Amount Paid").Bold();
+
+                            table.Cell().Element(CellStyle).Text(payment.FeeInstallment?.InstallmentName ?? "Quarterly Installment");
+                            table.Cell().Element(CellStyle).Text(payment.Status);
+                            table.Cell().Element(CellStyle).Text(payment.AmountPaid.ToString("C"));
+                        });
+
+                        column.Item().PaddingTop(20).Row(row =>
+                        {
+                            row.RelativeItem().Column(c =>
+                            {
+                                c.Item().Text("Terms & Conditions:").Bold().FontSize(8);
+                                c.Item().Text("1. Fees once paid are non-refundable.").FontSize(7);
+                                c.Item().Text("2. This is a computer-generated document and requires no physical signature.").FontSize(7);
+                            });
+
+                            row.ConstantItem(85).Column(qr =>
+                            {
+                                qr.Item().Width(70).Height(70).Image(qrCodeBytes).FitArea();
+                                qr.Item().AlignCenter().Text("Verify Receipt").FontSize(6);
+                            });
+                        });
+                    });
+
+                    page.Footer().AlignCenter().PaddingTop(15).Text(t =>
+                    {
+                        t.Span("Generated via School SAAS Billing Gateway").FontSize(8).Italic();
+                    });
+                });
+            });
+
+            return await Task.Run(() => document.GeneratePdf());
+        }
 
         private static string FormatPassYear(string passYear)
         {

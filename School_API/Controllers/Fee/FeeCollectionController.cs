@@ -9,12 +9,14 @@ namespace School_API.Controllers.Fee
     {
         private readonly IFeeCollectionService _service;
         private readonly ITenantService _tenant;
+        private readonly IPdfCertificateService _pdfService;
 
-        public FeeCollectionController(ICurrentUserService currentUser, IFeeCollectionService service, ITenantService tenant)
+        public FeeCollectionController(ICurrentUserService currentUser, IFeeCollectionService service, ITenantService tenant, IPdfCertificateService pdfService)
             : base(currentUser)
         {
             _service = service;
             _tenant  = tenant;
+            _pdfService = pdfService;
         }
 
         /// <summary>Generate installments for a student based on fee structure.</summary>
@@ -106,6 +108,17 @@ namespace School_API.Controllers.Fee
             var schoolId = _tenant.GetTenantId() ?? 0;
             var result = await _service.GetPendingByClassAsync(classId, schoolId);
             return Ok(result);
+        }
+
+        /// <summary>Generate a printable PDF receipt for a payment.</summary>
+        [HttpGet("{paymentId}")]
+        public async Task<IActionResult> DownloadReceiptPdf([FromRoute] int paymentId)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var pdfBytes = await _pdfService.GenerateFeeReceiptPdfAsync(paymentId, baseUrl);
+            if (pdfBytes == null || pdfBytes.Length == 0)
+                return NotFound(new { message = "Payment receipt not found or failed to generate." });
+            return File(pdfBytes, "application/pdf", $"Fee_Receipt_{paymentId}.pdf");
         }
     }
 }
