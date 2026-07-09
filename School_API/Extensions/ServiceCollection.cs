@@ -179,10 +179,19 @@ namespace School_API
             .AddTransient<IAssignmentRepository, AssignmentRepository>()
             .AddTransient<IOnlineClassRepository, OnlineClassRepository>()
             .AddTransient<ISyllabusRepository, SyllabusRepository>()
+            // Phase 5 – Examination
+            .AddTransient<IExamScheduleRepository, ExamScheduleRepository>()
+            .AddTransient<IGradeConfigRepository, GradeConfigRepository>()
+            .AddTransient<IReportCardRepository, ReportCardRepository>()
+            .AddTransient<IStudentPromotionRepository, StudentPromotionRepository>()
 
             // Fee Collection
             .AddTransient<IFeeInstallmentRepository, FeeInstallmentRepository>()
             .AddTransient<IFeePaymentRepository, FeePaymentRepository>()
+            // Phase 6 – Fee Extended
+            .AddTransient<IFeeFineRepository, FeeFineRepository>()
+            .AddTransient<IStudentScholarshipRepository, StudentScholarshipRepository>()
+            .AddTransient<IFeeRefundRepository, FeeRefundRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -281,10 +290,19 @@ namespace School_API
             .AddScoped<School.Services.Interfaces.Academic.IAssignmentService, School.Services.Academic.AssignmentService>()
             .AddScoped<School.Services.Interfaces.Academic.IOnlineClassService, School.Services.Academic.OnlineClassService>()
             .AddScoped<School.Services.Interfaces.Academic.ISyllabusService, School.Services.Academic.SyllabusService>()
+            // Phase 5 – Examination
+            .AddScoped<School.Services.Academic.IExamScheduleService, School.Services.Academic.ExamScheduleService>()
+            .AddScoped<School.Services.Academic.IGradeConfigService, School.Services.Academic.GradeConfigService>()
+            .AddScoped<School.Services.Academic.IReportCardService, School.Services.Academic.ReportCardService>()
+            .AddScoped<School.Services.Academic.IStudentPromotionService, School.Services.Academic.StudentPromotionService>()
             .AddScoped<IHrmsExpansionService, HrmsExpansionService>()
 
             // Fee Collection
             .AddScoped<IFeeCollectionService, School.Services.FeeCollectionService>()
+            // Phase 6 – Fee Extended
+            .AddScoped<School.Services.Fee.IFeeFineService, School.Services.Fee.FeeFineService>()
+            .AddScoped<School.Services.Fee.IScholarshipService, School.Services.Fee.ScholarshipService>()
+            .AddScoped<School.Services.Fee.IFeeRefundService, School.Services.Fee.FeeRefundService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

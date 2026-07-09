@@ -158,6 +158,20 @@ namespace School.Infrastructure
         // Fee Collection Module
         public DbSet<School.Domain.FeeManagnment.FeeInstallment> FeeInstallments { get; set; } = null!;
         public DbSet<School.Domain.FeeManagnment.FeePayment> FeePayments { get; set; } = null!;
+        // 6.4 Fine | 6.5 Scholarship | 6.6 Refund
+        public DbSet<School.Domain.FeeManagnment.FeeFine> FeeFines { get; set; } = null!;
+        public DbSet<School.Domain.FeeManagnment.StudentScholarship> StudentScholarships { get; set; } = null!;
+        public DbSet<School.Domain.FeeManagnment.FeeRefund> FeeRefunds { get; set; } = null!;
+
+        // Phase 5 – Examination
+        // 5.1 Exam Schedule
+        public DbSet<School.Domain.Academic.ExamSchedule> ExamSchedules { get; set; } = null!;
+        // 5.3 Grade Config
+        public DbSet<School.Domain.Academic.GradeConfig> GradeConfigs { get; set; } = null!;
+        // 5.4 Report Card
+        public DbSet<School.Domain.Academic.ReportCard> ReportCards { get; set; } = null!;
+        // 5.6 Promotion
+        public DbSet<School.Domain.Academic.StudentPromotion> StudentPromotions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
