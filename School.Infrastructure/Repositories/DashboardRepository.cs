@@ -198,8 +198,8 @@ namespace School.Infrastructure.Repositories
                 stats.ActiveCourses = await _context.Courses.CountAsync(c => !c.IsDeleted);
                 stats.Departments = await _context.Affiliateds.CountAsync(a => !a.IsDeleted);
 
-                stats.PendingApprovals = await _context.StudentRegistrations
-                    .CountAsync(sr => !sr.IsDeleted && sr.RegistrationStatus.ToLower() == "pending");
+                stats.PendingApprovals = await _context.AdmissionApplications
+                    .CountAsync(sr => !sr.IsDeleted && sr.Status.ToLower() == "submitted");
 
                 stats.ExamsScheduled = await _context.Exams
                     .CountAsync(e => !e.IsDeleted && e.StartDate >= today);
@@ -236,9 +236,9 @@ namespace School.Infrastructure.Repositories
                     stats.FeeCollectionGrowth = feeCollectionResponse.Data.Growth;
                 }
 
-                stats.TodayFeeCollection = await _context.StudentRegistrations
-                    .Where(sr => !sr.IsDeleted && sr.PaymentStatus.ToLower() == "completed" && sr.CreatedDate.HasValue && sr.CreatedDate.Value.Date == today)
-                    .SumAsync(sr => sr.PaymentAmount ?? 0);
+                stats.TodayFeeCollection = await _context.FeePayments
+                    .Where(fp => !fp.IsDeleted && fp.CreatedDate.HasValue && fp.CreatedDate.Value.Date == today)
+                    .SumAsync(fp => fp.AmountPaid);
                 if (stats.TodayFeeCollection == 0)
                 {
                     stats.TodayFeeCollection = 12500; // Fallback
@@ -272,13 +272,13 @@ namespace School.Infrastructure.Repositories
             {
                 var activities = new List<ActivityDto>();
 
-                var recentRegistrations = await _context.StudentRegistrations
+                var recentRegistrations = await _context.AdmissionApplications
                     .Where(sr => !sr.IsDeleted)
                     .OrderByDescending(sr => sr.CreatedDate)
                     .Take(count / 2)
                     .Select(sr => new ActivityDto
                     {
-                        Action = $"New student registration - {sr.FullName}",
+                        Action = $"New admission application - {sr.FullName}",
                         Time = GetTimeAgo(sr.CreatedDate ?? DateTime.UtcNow),
                         Type = "student"
                     })
@@ -329,7 +329,7 @@ namespace School.Infrastructure.Repositories
         {
             try
             {
-                var registrations = await _context.StudentRegistrations
+                var registrations = await _context.AdmissionApplications
                     .Include(sr => sr.Course)
                     .Where(sr => !sr.IsDeleted)
                     .OrderByDescending(sr => sr.CreatedDate)
@@ -340,7 +340,7 @@ namespace School.Infrastructure.Repositories
                         Name = sr.FullName,
                         Course = sr.Course != null ? sr.Course.Name : "N/A",
                         Date = sr.CreatedDate.HasValue ? sr.CreatedDate.Value.ToString("yyyy-MM-dd") : DateTime.UtcNow.ToString("yyyy-MM-dd"),
-                        Status = sr.RegistrationStatus
+                        Status = sr.Status
                     })
                     .ToListAsync();
 
@@ -420,26 +420,24 @@ namespace School.Infrastructure.Repositories
                 var lastMonth = currentMonth == 1 ? 12 : currentMonth - 1;
                 var lastMonthYear = currentMonth == 1 ? currentYear - 1 : currentYear;
 
-                var currentMonthTotal = await _context.StudentRegistrations
-                    .Where(sr => !sr.IsDeleted && 
-                                 sr.PaymentStatus.ToLower() == "completed" &&
-                                 sr.CreatedDate.HasValue &&
-                                 sr.CreatedDate.Value.Month == currentMonth &&
-                                 sr.CreatedDate.Value.Year == currentYear)
-                    .SumAsync(sr => sr.PaymentAmount ?? 0);
+                var currentMonthTotal = await _context.FeePayments
+                    .Where(fp => !fp.IsDeleted &&
+                                 fp.CreatedDate.HasValue &&
+                                 fp.CreatedDate.Value.Month == currentMonth &&
+                                 fp.CreatedDate.Value.Year == currentYear)
+                    .SumAsync(fp => fp.AmountPaid);
 
-                var lastMonthTotal = await _context.StudentRegistrations
-                    .Where(sr => !sr.IsDeleted &&
-                                 sr.PaymentStatus.ToLower() == "completed" &&
-                                 sr.CreatedDate.HasValue &&
-                                 sr.CreatedDate.Value.Month == lastMonth &&
-                                 sr.CreatedDate.Value.Year == lastMonthYear)
-                    .SumAsync(sr => sr.PaymentAmount ?? 0);
+                var lastMonthTotal = await _context.FeePayments
+                    .Where(fp => !fp.IsDeleted &&
+                                 fp.CreatedDate.HasValue &&
+                                 fp.CreatedDate.Value.Month == lastMonth &&
+                                 fp.CreatedDate.Value.Year == lastMonthYear)
+                    .SumAsync(fp => fp.AmountPaid);
 
-                var pendingTotal = await _context.StudentRegistrations
-                    .Where(sr => !sr.IsDeleted &&
-                                 sr.PaymentStatus.ToLower() == "pending")
-                    .SumAsync(sr => sr.PaymentAmount ?? 0);
+                var pendingInstallments = await _context.FeeInstallments
+                    .Where(fi => !fi.IsDeleted && (fi.Status == null || fi.Status.ToLower() == "pending" || fi.Status.ToLower() == "overdue"))
+                    .SumAsync(fi => fi.Amount);
+                var pendingTotal = pendingInstallments;
 
                 // Safe fallback to show some active fee stats if empty
                 if (currentMonthTotal == 0 && pendingTotal == 0)
@@ -526,9 +524,9 @@ namespace School.Infrastructure.Repositories
 
         private async Task<List<RecentAdmissionDto>> GetRecentAdmissionsAsync(int count = 5)
         {
-            var admissions = await _context.StudentRegistrations
+            var admissions = await _context.AdmissionApplications
                 .Include(sr => sr.Course)
-                .Where(sr => !sr.IsDeleted && sr.RegistrationStatus.ToLower() == "approved")
+                .Where(sr => !sr.IsDeleted && (sr.Status.ToLower() == "approved" || sr.Status.ToLower() == "enrolled"))
                 .OrderByDescending(sr => sr.CreatedDate)
                 .Take(count)
                 .Select(sr => new RecentAdmissionDto
@@ -537,7 +535,7 @@ namespace School.Infrastructure.Repositories
                     Name = sr.FullName,
                     Class = sr.Course != null ? sr.Course.Name : "Grade 5-A",
                     Date = sr.CreatedDate.HasValue ? sr.CreatedDate.Value.ToString("yyyy-MM-dd") : DateTime.UtcNow.ToString("yyyy-MM-dd"),
-                    EnrollmentNo = "ENR260" + sr.Id.ToString().PadLeft(3, '0')
+                    EnrollmentNo = sr.AdmissionNo ?? ("ENR260" + sr.Id.ToString().PadLeft(3, '0'))
                 })
                 .ToListAsync();
 
@@ -555,17 +553,17 @@ namespace School.Infrastructure.Repositories
 
         private async Task<List<FeeDefaulterDto>> GetPendingFeeDefaultersAsync(int count = 5)
         {
-            var defaulters = await _context.StudentRegistrations
-                .Include(sr => sr.Course)
-                .Where(sr => !sr.IsDeleted && sr.PaymentStatus.ToLower() == "pending" && (sr.PaymentAmount ?? 0) > 0)
-                .OrderByDescending(sr => sr.CreatedDate)
+            var defaulters = await _context.FeeInstallments
+                .Include(fi => fi.Student)
+                .Where(fi => !fi.IsDeleted && (fi.Status == null || fi.Status.ToLower() == "overdue" || fi.Status.ToLower() == "pending") && fi.Amount > 0)
+                .OrderBy(fi => fi.DueDate)
                 .Take(count)
-                .Select(sr => new FeeDefaulterDto
+                .Select(fi => new FeeDefaulterDto
                 {
-                    StudentName = sr.FullName,
-                    ClassName = sr.Course != null ? sr.Course.Name : "Grade 5-A",
-                    PendingAmount = sr.PaymentAmount ?? 0,
-                    DueDate = sr.CreatedDate.HasValue ? sr.CreatedDate.Value.AddDays(30).ToString("yyyy-MM-dd") : DateTime.UtcNow.AddDays(15).ToString("yyyy-MM-dd")
+                    StudentName = fi.Student != null ? fi.Student.Name : "Unknown Student",
+                    ClassName = fi.Student != null ? fi.Student.CourseOpted : "N/A",
+                    PendingAmount = fi.Amount,
+                    DueDate = fi.DueDate.ToString("yyyy-MM-dd")
                 })
                 .ToListAsync();
 
@@ -755,7 +753,7 @@ namespace School.Infrastructure.Repositories
             try
             {
                 // 1. Student Admission Trend (Monthly count of registrations in current year)
-                var registrationsByMonth = await _context.StudentRegistrations
+                var registrationsByMonth = await _context.AdmissionApplications
                     .Where(sr => !sr.IsDeleted && sr.CreatedDate.HasValue && sr.CreatedDate.Value.Year == currentYear)
                     .GroupBy(sr => sr.CreatedDate.Value.Month)
                     .Select(g => new { Month = g.Key, Count = g.Count() })
@@ -797,9 +795,9 @@ namespace School.Infrastructure.Repositories
                     var date = DateTime.UtcNow.AddMonths(-i);
                     var label = date.ToString("MMM yy");
                     
-                    var collected = await _context.StudentRegistrations
-                        .Where(sr => !sr.IsDeleted && sr.PaymentStatus.ToLower() == "completed" && sr.CreatedDate.HasValue && sr.CreatedDate.Value.Month == date.Month && sr.CreatedDate.Value.Year == date.Year)
-                        .SumAsync(sr => sr.PaymentAmount ?? 0);
+                    var collected = await _context.FeePayments
+                        .Where(fp => !fp.IsDeleted && fp.CreatedDate.HasValue && fp.CreatedDate.Value.Month == date.Month && fp.CreatedDate.Value.Year == date.Year)
+                        .SumAsync(fp => fp.AmountPaid);
                         
                     if (collected == 0)
                     {

@@ -126,7 +126,6 @@ namespace School_API
             .AddTransient<ICityRepository, CityRepository>()
             .AddTransient<IStateRepository, StateRepository>()
             .AddTransient<IAffiliatedRepository, AffiliatedRepository>()
-            .AddScoped<IStudentRegistrationRepository, StudentRegistrationRepository>()
             .AddTransient<IAcademicYearRepository, AcademicYearRepository>()
        
             .AddTransient<IEventRepository, EventRepository>()
@@ -244,7 +243,6 @@ namespace School_API
             .AddScoped<IStateService, StateService>()
             .AddScoped<IAffiliatedService, AffiliatedService>()
             .AddScoped<IMasterService, MasterService>()
-            .AddScoped<IStudentRegistrationService, StudentRegistrationService>()
             .AddScoped<IAcademicYearService, AcademicYearService>()
            
             .AddScoped<IEventService, EventService>()

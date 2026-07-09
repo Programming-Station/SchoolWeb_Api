@@ -92,10 +92,6 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.SchoolRegistration != null ? src.SchoolRegistration.SchoolName : string.Empty))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.ApplicationUser != null ? src.ApplicationUser.UserName : string.Empty));
 
-            CreateMap<global::School.Domain.Student.StudentRegistration, global::School_DTOs.Student.StudentRegistrationDto>()
-                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => ParseDateOfBirth(src.DateOfBirth)))
-                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course != null ? src.Course.Name : string.Empty));
-
             CreateMap<global::School.Domain.Hr.Employee, global::School_DTOs.Hr.EmployeeDto>()
                 .ForMember(dest => dest.FatherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.FatherName : null))
                 .ForMember(dest => dest.MotherName, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.MotherName : null))

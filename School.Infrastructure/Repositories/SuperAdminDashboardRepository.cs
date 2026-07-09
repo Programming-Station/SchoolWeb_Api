@@ -189,9 +189,9 @@ namespace School.Infrastructure.Repositories
                 for (int i = 5; i >= 0; i--)
                 {
                     var targetMonth = DateTime.UtcNow.AddMonths(-i);
-                    var collected = await _context.StudentRegistrations.IgnoreQueryFilters()
-                        .Where(sr => !sr.IsDeleted && sr.PaymentStatus.ToLower() == "completed" && sr.CreatedDate.HasValue && sr.CreatedDate.Value.Month == targetMonth.Month && sr.CreatedDate.Value.Year == targetMonth.Year)
-                        .SumAsync(sr => sr.PaymentAmount ?? 0);
+                    var collected = await _context.FeePayments.IgnoreQueryFilters()
+                        .Where(fp => !fp.IsDeleted && fp.CreatedDate.HasValue && fp.CreatedDate.Value.Month == targetMonth.Month && fp.CreatedDate.Value.Year == targetMonth.Year)
+                        .SumAsync(fp => fp.AmountPaid);
                     if (collected == 0)
                     {
                         collected = 250000 + (i * 35000);

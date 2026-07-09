@@ -50,7 +50,6 @@ namespace School.Infrastructure
         public DbSet<Country> Countries { get; set; } = null!;
         public DbSet<Affiliated> Affiliateds { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
-        public DbSet<StudentRegistration> StudentRegistrations { get; set; } = null!;
         public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
         public DbSet<AffiliationBoard> AffiliationBoards { get; set; } = null!;
         public DbSet<SchoolType> SchoolTypes { get; set; } = null!;
@@ -58,7 +57,6 @@ namespace School.Infrastructure
         public DbSet<SchoolProfileSetting> SchoolProfileSettings { get; set; } = null!;
         public DbSet<SchoolSubscription> SchoolSubscriptions { get; set; } = null!;
         public DbSet<SchoolOwner> SchoolOwners { get; set; } = null!;
-        public DbSet<StudentExperienceCertificate> StudentExperienceCertificates { get; set; } = null!;
         public DbSet<EducationalDetail> EducationalDetails { get; set; } = null!;
         public DbSet<AcademicYear> AcademicYears { get; set; } = null!;
         public DbSet<EmailServerSetting> EmailServerSettings { get; set; } = null!;

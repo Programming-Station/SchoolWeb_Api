@@ -19,11 +19,11 @@ namespace School.Services
             _dbContext = dbContext;
         }
 
-        public async Task<byte[]> GenerateRegistrationCertificateAsync(StudentRegistrationDto registration,string baseUrl)
+        public async Task<byte[]> GenerateRegistrationCertificateAsync(AdmissionApplicationDto registration, string baseUrl)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
-            var qrCodeUrl = $"{baseUrl}/api/StudentRegistration/Verify/{registration.Id}";
+            var qrCodeUrl = $"{baseUrl}/api/Admission/GetById/{registration.Id}";
             var qrCodeBytes = GenerateQrCode(qrCodeUrl);
 
             var bgPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
@@ -33,10 +33,10 @@ namespace School.Services
             var logoImage = File.ReadAllBytes(logoPath);
 
             byte[] studentPhoto = null;
-            if (!string.IsNullOrWhiteSpace(registration.PassportPhoto))
+            if (!string.IsNullOrWhiteSpace(registration.PhotoUrl))
             {
-                var photoPath = Path.Combine(Directory.GetCurrentDirectory(),registration.PassportPhoto);
-                if (File.Exists(photoPath))studentPhoto = File.ReadAllBytes(photoPath);
+                var photoPath = Path.Combine(Directory.GetCurrentDirectory(), registration.PhotoUrl);
+                if (File.Exists(photoPath)) studentPhoto = File.ReadAllBytes(photoPath);
             }
 
             var document = Document.Create(container =>
@@ -73,7 +73,7 @@ namespace School.Services
                         ).AlignCenter().FontSize(9);
 
                         column.Item().AlignCenter()
-                            .Text(registration.CourseName ?? registration.CourseType)
+                            .Text(registration.CourseName ?? "N/A")
                             .Bold().FontSize(12);
 
                         column.Item().PaddingTop(8).Table(table =>
@@ -88,7 +88,7 @@ namespace School.Services
 
 
                             table.Cell().Element(CellStyle).Text("Registration No").Bold();
-                            table.Cell().Element(CellStyle).Text(registration.CouncilEnrollmentNo ?? $"PMCI/{registration.Id}/25");
+                            table.Cell().Element(CellStyle).Text(registration.AdmissionNo ?? $"ADM/{registration.Id}/25");
                             table.Cell().RowSpan(4)
                                 .AlignCenter().AlignMiddle()
                                 .Width(90)
@@ -106,7 +106,7 @@ namespace School.Services
                             table.Cell().Element(CellStyle).Text(registration.MothersName);
 
                             table.Cell().Element(CellStyle).Text("Month / Year of Passing").Bold();
-                            table.Cell().Element(CellStyle).Text(FormatPassYear(registration.PassYear));
+                            table.Cell().Element(CellStyle).Text(FormatPassYear(registration.LastPassingYear));
                             table.Cell().Element(CellStyle); // blank
 
                             table.Cell().Element(CellStyle).Text("Blood Group").Bold();
@@ -124,14 +124,14 @@ namespace School.Services
 
                             table.Cell().Element(CellStyle).Text("Address").Bold();
                             table.Cell().Element(CellStyle)
-                                .Text($"{registration.PermanentAddress}, PIN - {registration.PinCode}");
+                                .Text($"{registration.PermanentAddress}, PIN - {registration.PermanentPinCode}");
 
                             table.Cell().Element(CellStyle).Text("Examining Body").Bold();
-                            table.Cell().Element(CellStyle).Text(registration.InstituteName);
+                            table.Cell().Element(CellStyle).Text(registration.LastInstituteName ?? "N/A");
 
                             table.Cell().Element(CellStyle).Text("Date of Birth").Bold();
                             table.Cell().Element(CellStyle)
-                                .Text(registration.DateOfBirth != DateTime.MinValue ? registration.DateOfBirth.ToString("dd-MMM-yyyy") : "N/A");
+                                .Text(registration.DateOfBirth != default(DateTime) ? registration.DateOfBirth.ToString("dd-MMM-yyyy") : "N/A");
 
                             var issueDate = DateTime.UtcNow;
                             var expiryDate = issueDate.AddYears(5);
