@@ -259,6 +259,7 @@ namespace School.Infrastructure
             DefaultEmailData.SeedAsync(context, encryptionService).Wait();
 
             DefaultAcademicExtendedData.SeedAsync(context).Wait();
+            DefaultAdditionalData.SeedAsync(context).Wait();
         }
     }
 }
