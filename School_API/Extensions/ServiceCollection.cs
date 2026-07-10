@@ -38,6 +38,7 @@ using School.Services.Interfaces.Academic;
 using School.Infrastructure.Repositories.Email;
 using School.Services.Email;
 using School.Services.Interfaces.Email;
+using School.Services.Location;
 
 namespace School_API
 {
@@ -317,6 +318,10 @@ namespace School_API
             .AddScoped<School.Services.Interfaces.IFeeReportService, School.Services.Fee.FeeReportService>()
             // Transport Module
             .AddScoped<ITransportService, School.Services.Transport.TransportService>()
+            // Location Module
+            .AddScoped<ICountryService, CountryService>()
+            .AddScoped<IStateLocationService, StateLocationService>()
+            .AddScoped<ICityLocationService, CityLocationService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
