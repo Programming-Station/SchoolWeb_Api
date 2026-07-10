@@ -21,6 +21,7 @@ using School.Domain.Hr.Training;
 using School.Domain.Hr.Assets;
 using School.Domain.Payroll;
 using School.Domain.Transport;
+using School.Domain.Library;
 
 namespace School.Infrastructure
 {
@@ -122,6 +123,20 @@ namespace School.Infrastructure
         public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
         public DbSet<TransportAllocation> TransportAllocations { get; set; } = null!;
+
+        // Library — Core
+        public DbSet<Book> Books { get; set; } = null!;
+        public DbSet<BookIssueLog> BookIssueLogs { get; set; } = null!;
+        public DbSet<BookCategory> BookCategories { get; set; } = null!;
+        public DbSet<BookAuthor> BookAuthors { get; set; } = null!;
+        public DbSet<BookPublisher> BookPublishers { get; set; } = null!;
+        public DbSet<BookVendor> BookVendors { get; set; } = null!;
+        // Library — Members & Transactions
+        public DbSet<LibraryMember> LibraryMembers { get; set; } = null!;
+        public DbSet<BookReservation> BookReservations { get; set; } = null!;
+        public DbSet<LibraryFineRule> LibraryFineRules { get; set; } = null!;
+        // Library — Digital
+        public DbSet<DigitalResource> DigitalResources { get; set; } = null!;
 
         // Admission Module
         public DbSet<Campus> Campuses { get; set; } = null!;

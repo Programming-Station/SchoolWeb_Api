@@ -33,6 +33,7 @@ using School.Services.Interfaces.Hr.LeaveManagement;
 using School.Services.Interfaces.Hr.Attendance;
 using School.Services.Interfaces.Hr.Timesheet;
 using School.Services.Hr;
+using School.Services.Library;
 using School.Services.Interfaces.Payroll;
 using School.Services.Interfaces.Academic;
 using School.Infrastructure.Repositories.Email;
@@ -211,6 +212,9 @@ namespace School_API
             .AddTransient<IAdmissionFormConfigRepository, AdmissionFormConfigRepository>()
             .AddTransient<IAdmissionRuleRepository, AdmissionRuleRepository>()
             .AddTransient<IAdmissionApplicationRepository, AdmissionApplicationRepository>()
+            // Library Module Repositories
+            .AddTransient<IBookRepository, BookRepository>()
+            .AddTransient<IBookIssueLogRepository, BookIssueLogRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -292,6 +296,9 @@ namespace School_API
             // Timesheet
             .AddScoped<ITimesheetService, School.Services.Hr.Timesheet.TimesheetService>()
             .AddScoped<ITimesheetEntryService, School.Services.Hr.Timesheet.TimesheetEntryService>()
+
+            // Library
+            .AddScoped<ILibraryService, LibraryService>()
 
             // Payroll
             .AddScoped<ISalaryComponentService, School.Services.Payroll.SalaryComponentService>()
