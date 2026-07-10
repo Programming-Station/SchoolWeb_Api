@@ -200,6 +200,17 @@ namespace School_API
             .AddTransient<ITransportAllocationRepository, TransportAllocationRepository>()
             // Parent Portal
             .AddTransient<IParentRepository, ParentRepository>()
+            
+            // Admission Module Repositories
+            .AddTransient<ICampusRepository, CampusRepository>()
+            .AddTransient<IEducationLevelRepository, EducationLevelRepository>()
+            .AddTransient<IProgramRepository, ProgramRepository>()
+            .AddTransient<IBranchRepository, BranchRepository>()
+            .AddTransient<IYearSemesterRepository, YearSemesterRepository>()
+            .AddTransient<IBatchRepository, BatchRepository>()
+            .AddTransient<IAdmissionFormConfigRepository, AdmissionFormConfigRepository>()
+            .AddTransient<IAdmissionRuleRepository, AdmissionRuleRepository>()
+            .AddTransient<IAdmissionApplicationRepository, AdmissionApplicationRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -322,6 +333,10 @@ namespace School_API
             .AddScoped<ICountryService, CountryService>()
             .AddScoped<IStateLocationService, StateLocationService>()
             .AddScoped<ICityLocationService, CityLocationService>()
+            
+            // Admission & Enrollment Services
+            .AddScoped<IAdmissionService, AdmissionService>()
+            .AddScoped<IEnrollmentService, EnrollmentService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)
