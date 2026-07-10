@@ -15,7 +15,9 @@ namespace School.Infrastructure.Seeds
     {
         public static async Task SeedAsync(SchoolDbContext context)
         {
-            var school = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001");
+            var school = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DPSVAR001")
+                         ?? await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001")
+                         ?? await context.SchoolRegistrations.FirstOrDefaultAsync();
             if (school == null) return;
             int schoolId = school.Id;
 

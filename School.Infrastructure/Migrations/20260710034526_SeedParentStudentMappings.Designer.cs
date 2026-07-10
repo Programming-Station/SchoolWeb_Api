@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Infrastructure;
 
@@ -11,9 +12,11 @@ using School.Infrastructure;
 namespace School.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260710034526_SeedParentStudentMappings")]
+    partial class SeedParentStudentMappings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1537,7 +1540,7 @@ namespace School.Infrastructure.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -1593,7 +1596,7 @@ namespace School.Infrastructure.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")
@@ -1641,7 +1644,7 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SubMenuId")
@@ -1710,7 +1713,7 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -1755,7 +1758,7 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -1824,7 +1827,7 @@ namespace School.Infrastructure.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SchoolRegistrationId")
+                    b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("SubMenuName")
@@ -8167,7 +8170,9 @@ namespace School.Infrastructure.Migrations
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("SchoolRegistration");
                 });
@@ -8176,7 +8181,9 @@ namespace School.Infrastructure.Migrations
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("SchoolRegistration");
                 });
@@ -8197,7 +8204,9 @@ namespace School.Infrastructure.Migrations
 
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("School.Domain.AccessControl.SubMenu", "SubMenu")
                         .WithMany()
@@ -8222,7 +8231,9 @@ namespace School.Infrastructure.Migrations
 
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("CategoryModule");
 
@@ -8243,7 +8254,9 @@ namespace School.Infrastructure.Migrations
 
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("School.Domain.Auth.ApplicationUser", "User")
                         .WithMany()
@@ -8270,7 +8283,9 @@ namespace School.Infrastructure.Migrations
 
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
-                        .HasForeignKey("SchoolRegistrationId");
+                        .HasForeignKey("SchoolRegistrationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("MainMenu");
 

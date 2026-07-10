@@ -56,7 +56,7 @@ namespace School.Services.Hr
 
             var pagedResponse = new PagedResponse<object>
             {
-                Data = _mapper.Map<IEnumerable<object>>(entities),
+                Data = _mapper.Map<IEnumerable<global::School_DTOs.Hr.HrMasterDto>>(entities),
                 CurrentPage = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalRecords = totalRecords,
@@ -72,7 +72,7 @@ namespace School.Services.Hr
             if (entity == null)
                 return new APIResponse<object> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "Record not found." };
 
-            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Data = _mapper.Map<object>(entity) };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Data = _mapper.Map<global::School_DTOs.Hr.HrMasterDto>(entity) };
         }
 
         public async Task<APIResponse<object>> CreateAsync(object dto, string username)
@@ -83,7 +83,7 @@ namespace School.Services.Hr
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
 
-            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.Created, Data = _mapper.Map<object>(entity) };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.Created, Data = _mapper.Map<global::School_DTOs.Hr.HrMasterDto>(entity) };
         }
 
         public async Task<APIResponse<object>> UpdateAsync(int id, object dto, string username)
@@ -99,7 +99,7 @@ namespace School.Services.Hr
             _repository.Update(existingEntity);
             await _unitOfWork.CommitAsync();
 
-            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Data = _mapper.Map<object>(existingEntity) };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Data = _mapper.Map<global::School_DTOs.Hr.HrMasterDto>(existingEntity) };
         }
 
         public async Task<APIResponse<bool>> DeleteAsync(int id, string username)

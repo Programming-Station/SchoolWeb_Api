@@ -222,10 +222,35 @@ namespace School.Infrastructure
                 context.SaveChanges();
             }
 
+            // Correct SchoolRegistrationId for existing users (except superadmin)
+            var usersToCorrect = context.Users
+                .Where(u => u.NormalizedUserName != "SUPERADMIN" && (u.SchoolRegistrationId == null || u.SchoolRegistrationId == 0))
+                .ToList();
+
+            if (usersToCorrect.Any())
+            {
+                var schoolOwnersMap = context.SchoolOwners
+                    .ToDictionary(so => so.ApplicationUserId, so => so.SchoolRegistrationId);
+
+                foreach (var user in usersToCorrect)
+                {
+                    if (schoolOwnersMap.TryGetValue(user.Id, out var mappedSchoolId))
+                    {
+                        user.SchoolRegistrationId = mappedSchoolId;
+                    }
+                    else
+                    {
+                        user.SchoolRegistrationId = defaultSchoolId;
+                    }
+                }
+                context.SaveChanges();
+            }
+
             // ─── 5. Dependent Domain Seeding ─────────────────────────────────────────
             DefaultAccessControlData.SeedAsync(context).Wait();
             DefaultHrData.SeedAsync(context).Wait();
             DefaultAcademicYearData.SeedAsync(context).Wait();
+            DefaultAdmissionData.SeedAsync(context).Wait();
             DefaultCourseData.SeedAsync(context).Wait();
             DefaultClassData.SeedAsync(context).Wait();
             DefaultStudentData.SeedAsync(context).Wait();

@@ -323,7 +323,7 @@ namespace School.Infrastructure
         private void SetTenantId()
         {
             var tenantId = CurrentTenantId;
-            if (!tenantId.HasValue) return;
+            int resolvedTenantId = tenantId ?? 1;
 
             foreach (var entry in ChangeTracker.Entries())
             {
@@ -333,7 +333,7 @@ namespace School.Infrastructure
                     {
                         if (tenantEntity.SchoolRegistrationId == 0)
                         {
-                            tenantEntity.SchoolRegistrationId = tenantId.Value;
+                            tenantEntity.SchoolRegistrationId = resolvedTenantId;
                         }
                     }
                 }

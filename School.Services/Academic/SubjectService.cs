@@ -1,6 +1,7 @@
 using School_DTOs;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
+using School.Infrastructure.Interfaces;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Academic;
@@ -18,25 +19,49 @@ namespace School.Services.Academic
     {
         private readonly IRepository<Subject> _repo;
         private readonly IUnitOfWork _uow;
-        public SubjectService(IRepository<Subject> repo, IUnitOfWork uow) { _repo = repo; _uow = uow; }
+        private readonly ITenantService _tenantService;
+
+        public SubjectService(IRepository<Subject> repo, IUnitOfWork uow, ITenantService tenantService)
+        {
+            _repo = repo;
+            _uow = uow;
+            _tenantService = tenantService;
+        }
 
         public async Task<APIResponse<List<SubjectDto>>> GetAllAsync()
         {
             var data = await _repo.List().Select(x => new SubjectDto { Id=x.Id, Name=x.Name, Code=x.Code, Description=x.Description, DisplayOrder=x.DisplayOrder, Status=x.Status }).ToListAsync();
             return new APIResponse<List<SubjectDto>> { StatusCode=HttpStatusCode.OK, Message="Success", Data=data };
         }
+
         public async Task<APIResponse<SubjectDto>> GetByIdAsync(int id)
         {
             var x = await _repo.List().Where(s=>s.Id==id).Select(x => new SubjectDto { Id=x.Id, Name=x.Name, Code=x.Code, Description=x.Description, DisplayOrder=x.DisplayOrder, Status=x.Status }).FirstOrDefaultAsync();
             if(x==null) return new APIResponse<SubjectDto>{StatusCode=HttpStatusCode.NotFound,Message="Not found"};
             return new APIResponse<SubjectDto>{StatusCode=HttpStatusCode.OK,Message="Success",Data=x};
         }
+
         public async Task<APIResponse<object>> CreateAsync(CreateSubjectDto dto, string username)
         {
-            await _repo.AddAsync(new Subject { Name=dto.Name,Code=dto.Code,Description=dto.Description,DisplayOrder=dto.DisplayOrder,Status=dto.Status,CreatedBy=username,CreatedDate=DateTime.UtcNow });
+            var tenantId = _tenantService.GetTenantId();
+            if (tenantId == null || tenantId == 0)
+                return new APIResponse<object> { StatusCode = HttpStatusCode.BadRequest, Message = "School tenant context not found. Please ensure you are logged in as a school user." };
+
+            await _repo.AddAsync(new Subject
+            {
+                Name = dto.Name,
+                Code = dto.Code,
+                Description = dto.Description,
+                DisplayOrder = dto.DisplayOrder,
+                Status = dto.Status,
+                SchoolRegistrationId = tenantId.Value,
+                CreatedBy = username,
+                CreatedDate = DateTime.UtcNow
+            });
             await _uow.CommitAsync();
             return new APIResponse<object>{StatusCode=HttpStatusCode.OK,Message="Created successfully"};
         }
+
         public async Task<APIResponse<object>> UpdateAsync(int id, UpdateSubjectDto dto, string username)
         {
             var e=await _repo.List().Where(x=>x.Id==id).FirstOrDefaultAsync();
@@ -45,6 +70,7 @@ namespace School.Services.Academic
             _repo.Update(e); await _uow.CommitAsync();
             return new APIResponse<object>{StatusCode=HttpStatusCode.OK,Message="Updated successfully"};
         }
+
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
         {
             var e=await _repo.List().Where(x=>x.Id==id).FirstOrDefaultAsync();
@@ -54,4 +80,3 @@ namespace School.Services.Academic
         }
     }
 }
-

@@ -86,7 +86,8 @@ namespace School.Services
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     EmailConfirmed = true,
-                    PhoneNumberConfirmed = true
+                    PhoneNumberConfirmed = true,
+                    SchoolRegistrationId = entity.SchoolRegistrationId
                 };
 
                 var createResult = await _userManager.CreateAsync(user, "School@123");

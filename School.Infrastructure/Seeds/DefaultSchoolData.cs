@@ -298,7 +298,8 @@ namespace School.Infrastructure.Seeds
                         NormalizedUserName = item.OwnerUsername.ToUpper(),
                         StatusId = (int)DefaultStatus.Verified,
                         IsDefaultPassword = false,
-                        IsActive = true
+                        IsActive = true,
+                        SchoolRegistrationId = school.Id
                     };
                     context.Users.Add(ownerUser);
                     await context.SaveChangesAsync();
@@ -314,6 +315,11 @@ namespace School.Infrastructure.Seeds
                         });
                         await context.SaveChangesAsync();
                     }
+                }
+                else if (ownerUser.SchoolRegistrationId == null || ownerUser.SchoolRegistrationId == 0)
+                {
+                    ownerUser.SchoolRegistrationId = school.Id;
+                    await context.SaveChangesAsync();
                 }
 
                 // Link School Owner

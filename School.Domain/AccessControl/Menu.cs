@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
 {
-    public class Menu : AuditEntity<int>, ITenantEntity
+    public class Menu : AuditEntity<int>
     {
         public Menu()
         {
@@ -35,10 +35,10 @@ namespace School.Domain.AccessControl
 
         public bool IsVisible { get; set; } = true;
 
-        public int SchoolRegistrationId { get; set; }
+        public int? SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(SchoolRegistrationId))]
-        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
+        public virtual SchoolRegistration? SchoolRegistration { get; set; }
 
         public virtual ICollection<SubMenu> SubMenus { get; set; }
     }

@@ -17,7 +17,9 @@ namespace School.Infrastructure.Repositories.AccessControl
         {
             var alreadyExists = await DbSet.AnyAsync(m => m.Name == entity.Name && !m.IsDeleted);
             if (alreadyExists) return new CategoryModule { Id = 0 };
-            return await base.AddAsync(entity);
+            await base.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task<CategoryModule> GetCategoryModuleByIdAsync(int id)

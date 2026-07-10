@@ -7,7 +7,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
 {
-    public class ModulePermission : AuditEntity<int>, ITenantEntity
+    public class ModulePermission : AuditEntity<int>
     {
         [Key]
         public int Id { get; set; }
@@ -33,10 +33,10 @@ namespace School.Domain.AccessControl
         
         public bool IsActive { get; set; } = true; 
 
-        public int SchoolRegistrationId { get; set; }
+        public int? SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(SchoolRegistrationId))]
-        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
+        public virtual SchoolRegistration? SchoolRegistration { get; set; }
     }
 }
 

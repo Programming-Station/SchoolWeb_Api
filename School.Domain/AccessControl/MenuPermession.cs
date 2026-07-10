@@ -6,7 +6,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.AccessControl
 {
-    public class MenuPermession : AuditEntity<int>, ITenantEntity
+    public class MenuPermession : AuditEntity<int>
     {
         [Key]
         public int Id { get; set; }
@@ -22,10 +22,10 @@ namespace School.Domain.AccessControl
         [MaxLength(450)]
         public string RoleId { get; set; } = null!;
 
-        public int SchoolRegistrationId { get; set; }
+        public int? SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(SchoolRegistrationId))]
-        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
+        public virtual SchoolRegistration? SchoolRegistration { get; set; }
 
         [ForeignKey("MenuId")]
         public virtual Menu MainMenu { get; set; } = null!;

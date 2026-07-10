@@ -197,6 +197,8 @@ namespace School_API
             .AddTransient<IVehicleRepository, VehicleRepository>()
             .AddTransient<ITransportRouteRepository, TransportRouteRepository>()
             .AddTransient<ITransportAllocationRepository, TransportAllocationRepository>()
+            // Parent Portal
+            .AddTransient<IParentRepository, ParentRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -252,6 +254,7 @@ namespace School_API
             .AddScoped<IStudentDashboardService, StudentDashboardService>()
             .AddScoped<IFacultyService, FacultyService>()
             .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
+            .AddScoped<School.Services.Hr.IDepartmentService, School.Services.Hr.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()

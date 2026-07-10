@@ -45,6 +45,7 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                    SchoolRegistrationId = 1
                 },
 
                 new ApplicationUser
@@ -62,6 +63,7 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                    SchoolRegistrationId = 1
                 },
                 new ApplicationUser
                 {
@@ -78,6 +80,7 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                    SchoolRegistrationId = 1
                 },
                 new ApplicationUser
                 {
@@ -94,6 +97,7 @@ namespace School.Infrastructure.Seeds
                     StatusId = (int)DefaultStatus.Verified,
                     IsDefaultPassword = false,
                     IsActive = true,
+                    SchoolRegistrationId = 1
                 }
             };
         }

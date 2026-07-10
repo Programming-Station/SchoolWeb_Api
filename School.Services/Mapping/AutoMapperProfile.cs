@@ -82,6 +82,20 @@ namespace School.Services.Mapping
 
                 }
             }
+
+            // Register mappings for generic HR Master entities to HrMasterDto, CreateHrMasterDto, and UpdateHrMasterDto
+            var hrMasterTypes = sourceTypes.Where(t => 
+                t.IsClass && 
+                !t.IsAbstract &&
+                typeof(global::School.Domain.BaseEntity.IAuditEntity<int>).IsAssignableFrom(t) &&
+                typeof(global::School.Domain.BaseEntity.ITenantEntity).IsAssignableFrom(t));
+
+            foreach (var type in hrMasterTypes)
+            {
+                CreateMap(type, typeof(global::School_DTOs.Hr.HrMasterDto)).ReverseMap();
+                CreateMap(typeof(global::School_DTOs.Hr.CreateHrMasterDto), type);
+                CreateMap(typeof(global::School_DTOs.Hr.UpdateHrMasterDto), type);
+            }
              
 
             CreateMap<global::School.Domain.Event, global::School_DTOs.Event.EventDto>()

@@ -49,16 +49,7 @@ namespace School.Services.AccessControl
 
             // Ensure tenant (SchoolRegistrationId) is set from the current context
             var tenantId = _tenantService?.GetTenantId();
-            if (!tenantId.HasValue)
-            {
-                return new APIResponse<ModuleDto>
-                {
-                    Success = false,
-                    Message = "Missing tenant (SchoolRegistrationId).",
-                    StatusCode = HttpStatusCode.BadRequest,
-                };
-            }
-            entity.SchoolRegistrationId = tenantId.Value;
+            entity.SchoolRegistrationId = tenantId;
 
             entity.Name = entity.Name?.Trim() ?? "";
             entity.Description = entity.Description?.Trim();
