@@ -18,6 +18,7 @@ using School.Domain.Academic;
 using School.Domain.Hr.Recruitment;
 using School.Domain.Hr.Performance;
 using School.Domain.Hr.Training;
+using School.Domain.Hostel;
 using School.Domain.Hr.Assets;
 using School.Domain.Payroll;
 using School.Domain.Transport;
@@ -123,6 +124,17 @@ namespace School.Infrastructure
         public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
         public DbSet<TransportAllocation> TransportAllocations { get; set; } = null!;
+        public DbSet<TransportStop> TransportStops { get; set; } = null!;
+        public DbSet<RouteStopMapping> RouteStopMappings { get; set; } = null!;
+        public DbSet<Conductor> Conductors { get; set; } = null!;
+        public DbSet<RouteAssignment> RouteAssignments { get; set; } = null!;
+        public DbSet<TransportTrip> TransportTrips { get; set; } = null!;
+        public DbSet<RfidScanLog> RfidScanLogs { get; set; } = null!;
+        public DbSet<FuelLog> FuelLogs { get; set; } = null!;
+        public DbSet<VehicleMaintenance> VehicleMaintenances { get; set; } = null!;
+        public DbSet<VehicleIncident> VehicleIncidents { get; set; } = null!;
+        public DbSet<TransportInventory> TransportInventories { get; set; } = null!;
+        public DbSet<TransportGateLog> TransportGateLogs { get; set; } = null!;
 
         // Library — Core
         public DbSet<Book> Books { get; set; } = null!;
@@ -190,6 +202,31 @@ namespace School.Infrastructure
         public DbSet<School.Domain.Academic.ReportCard> ReportCards { get; set; } = null!;
         // 5.6 Promotion
         public DbSet<School.Domain.Academic.StudentPromotion> StudentPromotions { get; set; } = null!;
+
+        // Hostel Module
+        public DbSet<Hostel> Hostels { get; set; } = null!;
+        public DbSet<Building> Buildings { get; set; } = null!;
+        public DbSet<Floor> Floors { get; set; } = null!;
+        public DbSet<RoomCategory> RoomCategories { get; set; } = null!;
+        public DbSet<Room> Rooms { get; set; } = null!;
+        public DbSet<Bed> Beds { get; set; } = null!;
+        public DbSet<HostelWarden> HostelWardens { get; set; } = null!;
+        public DbSet<HostelAdmission> HostelAdmissions { get; set; } = null!;
+        public DbSet<RoomTransferHistory> RoomTransferHistories { get; set; } = null!;
+        public DbSet<BedReservation> BedReservations { get; set; } = null!;
+        public DbSet<HostelFeeAllocation> HostelFeeAllocations { get; set; } = null!;
+        public DbSet<HostelFeePayment> HostelFeePayments { get; set; } = null!;
+        public DbSet<MessMenu> MessMenus { get; set; } = null!;
+        public DbSet<MealAttendance> MealAttendances { get; set; } = null!;
+        public DbSet<HostelVisitor> HostelVisitors { get; set; } = null!;
+        public DbSet<HostelGatePass> HostelGatePasses { get; set; } = null!;
+        public DbSet<HostelAttendance> HostelAttendances { get; set; } = null!;
+        public DbSet<HostelComplaint> HostelComplaints { get; set; } = null!;
+        public DbSet<HostelMaintenance> HostelMaintenances { get; set; } = null!;
+        public DbSet<LaundryTransaction> LaundryTransactions { get; set; } = null!;
+        public DbSet<HostelInventory> HostelInventories { get; set; } = null!;
+        public DbSet<HostelMedicalLog> HostelMedicalLogs { get; set; } = null!;
+        public DbSet<HostelDiscipline> HostelDisciplines { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

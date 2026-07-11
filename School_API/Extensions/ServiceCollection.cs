@@ -40,6 +40,7 @@ using School.Infrastructure.Repositories.Email;
 using School.Services.Email;
 using School.Services.Interfaces.Email;
 using School.Services.Location;
+using School.Services.Hostel;
 
 namespace School_API
 {
@@ -344,6 +345,9 @@ namespace School_API
             // Admission & Enrollment Services
             .AddScoped<IAdmissionService, AdmissionService>()
             .AddScoped<IEnrollmentService, EnrollmentService>()
+
+            // Hostel Module
+            .AddScoped<IHostelService, HostelService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

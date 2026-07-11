@@ -154,6 +154,161 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.AssetName, opt => opt.MapFrom(src => src.SchoolAsset != null ? src.SchoolAsset.Name : string.Empty))
                 .ForMember(dest => dest.AssetCode, opt => opt.MapFrom(src => src.SchoolAsset != null ? src.SchoolAsset.AssetCode : string.Empty))
                 .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty));
+
+            // Hostel Module Custom Projections
+            CreateMap<global::School.Domain.Hostel.Building, global::School_DTOs.Hostel.BuildingDto>()
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.Floor, global::School_DTOs.Hostel.FloorDto>()
+                .ForMember(dest => dest.BuildingName, opt => opt.MapFrom(src => src.Building != null ? src.Building.Name : string.Empty))
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Building != null && src.Building.Hostel != null ? src.Building.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.Room, global::School_DTOs.Hostel.RoomDto>()
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty))
+                .ForMember(dest => dest.BuildingName, opt => opt.MapFrom(src => src.Building != null ? src.Building.Name : string.Empty))
+                .ForMember(dest => dest.FloorNumber, opt => opt.MapFrom(src => src.Floor != null ? src.Floor.FloorNumber : 0))
+                .ForMember(dest => dest.RoomCategoryName, opt => opt.MapFrom(src => src.RoomCategory != null ? src.RoomCategory.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.Bed, global::School_DTOs.Hostel.BedDto>()
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room != null ? src.Room.RoomNumber : string.Empty))
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Room != null && src.Room.Hostel != null ? src.Room.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelWarden, global::School_DTOs.Hostel.HostelWardenDto>()
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty))
+                .ForMember(dest => dest.EmployeeCode, opt => opt.MapFrom(src => src.Employee != null ? src.Employee.EmployeeCode : string.Empty))
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelAdmission, global::School_DTOs.Hostel.HostelAdmissionDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty))
+                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Student != null && src.Student.Class != null ? src.Student.Class.Name : string.Empty))
+                .ForMember(dest => dest.SectionName, opt => opt.MapFrom(src => src.Student != null && src.Student.Class != null ? src.Student.Class.Section : string.Empty))
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty))
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room != null ? src.Room.RoomNumber : string.Empty))
+                .ForMember(dest => dest.BedNumber, opt => opt.MapFrom(src => src.Bed != null ? src.Bed.BedNumber : string.Empty))
+                .ForMember(dest => dest.AcademicYearName, opt => opt.MapFrom(src => src.AcademicYear != null ? src.AcademicYear.YearName : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.MessMenu, global::School_DTOs.Hostel.MessMenuDto>()
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.MealAttendance, global::School_DTOs.Hostel.MealAttendanceDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelVisitor, global::School_DTOs.Hostel.HostelVisitorDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelGatePass, global::School_DTOs.Hostel.HostelGatePassDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty))
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Admission != null && src.Admission.Room != null ? src.Admission.Room.RoomNumber : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelAttendance, global::School_DTOs.Hostel.HostelAttendanceDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty))
+                .ForMember(dest => dest.RoomNumber, opt => opt.Ignore());
+
+            CreateMap<global::School.Domain.Hostel.HostelComplaint, global::School_DTOs.Hostel.HostelComplaintDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.RoomNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.AssignedStaffName, opt => opt.MapFrom(src => src.AssignedStaff != null ? (src.AssignedStaff.FirstName + " " + src.AssignedStaff.LastName) : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelMaintenance, global::School_DTOs.Hostel.HostelMaintenanceDto>()
+                .ForMember(dest => dest.ComplaintDescription, opt => opt.MapFrom(src => src.Complaint != null ? src.Complaint.Description : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.LaundryTransaction, global::School_DTOs.Hostel.LaundryTransactionDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelInventory, global::School_DTOs.Hostel.HostelInventoryDto>()
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room != null ? src.Room.RoomNumber : string.Empty))
+                .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Room != null && src.Room.Hostel != null ? src.Room.Hostel.Name : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelMedicalLog, global::School_DTOs.Hostel.HostelMedicalLogDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.IsolationRoomNumber, opt => opt.MapFrom(src => src.IsolationRoom != null ? src.IsolationRoom.RoomNumber : string.Empty));
+
+            CreateMap<global::School.Domain.Hostel.HostelDiscipline, global::School_DTOs.Hostel.HostelDisciplineDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentCode, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty));
+
+            // ══════════════════════════════════════════════════════════════════════════
+            // TRANSPORT MODULE MAPPINGS
+            // ══════════════════════════════════════════════════════════════════════════
+            CreateMap<global::School.Domain.Transport.Vehicle, global::School_DTOs.Transport.VehicleDto>();
+            CreateMap<global::School_DTOs.Transport.CreateVehicleDto, global::School.Domain.Transport.Vehicle>();
+
+            CreateMap<global::School.Domain.Transport.TransportRoute, global::School_DTOs.Transport.TransportRouteDto>();
+            CreateMap<global::School_DTOs.Transport.CreateTransportRouteDto, global::School.Domain.Transport.TransportRoute>();
+
+            CreateMap<global::School.Domain.Transport.TransportStop, global::School_DTOs.Transport.TransportStopDto>();
+            CreateMap<global::School_DTOs.Transport.CreateTransportStopDto, global::School.Domain.Transport.TransportStop>();
+
+            CreateMap<global::School.Domain.Transport.RouteStopMapping, global::School_DTOs.Transport.RouteStopMappingDto>()
+                .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Route != null ? src.Route.RouteName : string.Empty))
+                .ForMember(dest => dest.StopName, opt => opt.MapFrom(src => src.Stop != null ? src.Stop.StopName : string.Empty));
+
+            CreateMap<global::School.Domain.Transport.Conductor, global::School_DTOs.Transport.ConductorDto>()
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty))
+                .ForMember(dest => dest.EmployeeCode, opt => opt.MapFrom(src => src.Employee != null ? src.Employee.EmployeeCode : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateConductorDto, global::School.Domain.Transport.Conductor>();
+
+            CreateMap<global::School.Domain.Transport.RouteAssignment, global::School_DTOs.Transport.RouteAssignmentDto>()
+                .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Route != null ? src.Route.RouteName : string.Empty))
+                .ForMember(dest => dest.RouteCode, opt => opt.MapFrom(src => src.Route != null ? src.Route.RouteCode : string.Empty))
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty))
+                .ForMember(dest => dest.RegistrationNumber, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.RegistrationNumber : string.Empty))
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.Driver != null ? (src.Driver.FirstName + " " + src.Driver.LastName) : string.Empty))
+                .ForMember(dest => dest.DriverPhone, opt => opt.MapFrom(src => src.Driver != null ? src.Driver.MobileNumber : string.Empty))
+                .ForMember(dest => dest.ConductorName, opt => opt.MapFrom(src => src.Conductor != null && src.Conductor.Employee != null ? (src.Conductor.Employee.FirstName + " " + src.Conductor.Employee.LastName) : string.Empty))
+                .ForMember(dest => dest.AcademicYearName, opt => opt.MapFrom(src => src.AcademicYear != null ? src.AcademicYear.YearName : string.Empty))
+                .ForMember(dest => dest.BackupVehicleName, opt => opt.MapFrom(src => src.BackupVehicle != null ? src.BackupVehicle.Name : string.Empty))
+                .ForMember(dest => dest.BackupDriverName, opt => opt.MapFrom(src => src.BackupDriver != null ? (src.BackupDriver.FirstName + " " + src.BackupDriver.LastName) : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateRouteAssignmentDto, global::School.Domain.Transport.RouteAssignment>();
+
+            CreateMap<global::School.Domain.Transport.TransportAllocation, global::School_DTOs.Transport.TransportAllocationDto>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.AdmissionNumber, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentId : string.Empty))
+                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Student != null && src.Student.Class != null ? src.Student.Class.Name : string.Empty))
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty))
+                .ForMember(dest => dest.EmployeeCode, opt => opt.MapFrom(src => src.Employee != null ? src.Employee.EmployeeCode : string.Empty))
+                .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.TransportRoute != null ? src.TransportRoute.RouteName : string.Empty))
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.TransportRoute != null && src.TransportRoute.Vehicle != null ? src.TransportRoute.Vehicle.Name : string.Empty))
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.TransportRoute != null && src.TransportRoute.Vehicle != null ? src.TransportRoute.Vehicle.DriverName : string.Empty))
+                .ForMember(dest => dest.DriverPhone, opt => opt.MapFrom(src => src.TransportRoute != null && src.TransportRoute.Vehicle != null ? src.TransportRoute.Vehicle.DriverPhone : string.Empty))
+                .ForMember(dest => dest.PickupStopName, opt => opt.MapFrom(src => src.PickupStop != null ? src.PickupStop.StopName : string.Empty))
+                .ForMember(dest => dest.DropStopName, opt => opt.MapFrom(src => src.DropStop != null ? src.DropStop.StopName : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateTransportAllocationDto, global::School.Domain.Transport.TransportAllocation>();
+
+            CreateMap<global::School.Domain.Transport.TransportTrip, global::School_DTOs.Transport.TransportTripDto>()
+                .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Route != null ? src.Route.RouteName : string.Empty))
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty))
+                .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.Driver != null ? (src.Driver.FirstName + " " + src.Driver.LastName) : string.Empty))
+                .ForMember(dest => dest.ConductorName, opt => opt.MapFrom(src => src.Conductor != null && src.Conductor.Employee != null ? (src.Conductor.Employee.FirstName + " " + src.Conductor.Employee.LastName) : string.Empty));
+
+            CreateMap<global::School.Domain.Transport.RfidScanLog, global::School_DTOs.Transport.RfidScanLogDto>()
+                .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Trip != null && src.Trip.Route != null ? src.Trip.Route.RouteName : string.Empty))
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty));
+
+            CreateMap<global::School.Domain.Transport.FuelLog, global::School_DTOs.Transport.FuelLogDto>()
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateFuelLogDto, global::School.Domain.Transport.FuelLog>();
+
+            CreateMap<global::School.Domain.Transport.VehicleMaintenance, global::School_DTOs.Transport.VehicleMaintenanceDto>()
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateVehicleMaintenanceDto, global::School.Domain.Transport.VehicleMaintenance>();
+
+            CreateMap<global::School.Domain.Transport.VehicleIncident, global::School_DTOs.Transport.VehicleIncidentDto>()
+                .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty));
+            CreateMap<global::School_DTOs.Transport.CreateVehicleIncidentDto, global::School.Domain.Transport.VehicleIncident>();
+
+            CreateMap<global::School.Domain.Transport.TransportInventory, global::School_DTOs.Transport.TransportInventoryDto>();
+            CreateMap<global::School_DTOs.Transport.CreateTransportInventoryDto, global::School.Domain.Transport.TransportInventory>();
+
+            CreateMap<global::School.Domain.Transport.TransportGateLog, global::School_DTOs.Transport.TransportGateLogDto>();
+            CreateMap<global::School_DTOs.Transport.CreateTransportGateLogDto, global::School.Domain.Transport.TransportGateLog>();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

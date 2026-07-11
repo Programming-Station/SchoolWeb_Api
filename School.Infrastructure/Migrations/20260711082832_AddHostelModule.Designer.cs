@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Infrastructure;
 
@@ -11,9 +12,11 @@ using School.Infrastructure;
 namespace School.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711082832_AddHostelModule")]
+    partial class AddHostelModule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -9688,310 +9691,6 @@ namespace School.Infrastructure.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("School.Domain.Transport.Conductor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("BackgroundVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ContactNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DocumentsUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("EmergencyContact")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LicenseNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("PoliceVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("Conductors");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.FuelLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("CostPerUnit")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("FuelQuantity")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("OdometerReading")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VendorName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("FuelLogs");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RfidScanLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RfidTag")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("ScanTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ScanType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TripId");
-
-                    b.ToTable("RfidScanLogs");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RouteAssignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BackupDriverId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BackupVehicleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ConductorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DriverId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AcademicYearId");
-
-                    b.HasIndex("BackupDriverId");
-
-                    b.HasIndex("BackupVehicleId");
-
-                    b.HasIndex("ConductorId");
-
-                    b.HasIndex("DriverId");
-
-                    b.HasIndex("RouteId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("RouteAssignments");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RouteStopMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SequenceOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StopId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("StopId");
-
-                    b.ToTable("RouteStopMappings");
-                });
-
             modelBuilder.Entity("School.Domain.Transport.TransportAllocation", b =>
                 {
                     b.Property<int>("Id")
@@ -10000,23 +9699,11 @@ namespace School.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("DropStopId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("DropTime")
-                        .HasColumnType("time");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -10024,42 +9711,20 @@ namespace School.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSuspended")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("MonthlyCharge")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int?>("PickupStopId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("PickupTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("QrCode")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("RfidTag")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
-
-                    b.Property<string>("SeatNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int?>("StudentId")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.Property<int>("TransportRouteId")
@@ -10073,14 +9738,6 @@ namespace School.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AcademicYearId");
-
-                    b.HasIndex("DropStopId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("PickupStopId");
-
                     b.HasIndex("SchoolRegistrationId");
 
                     b.HasIndex("StudentId");
@@ -10088,120 +9745,6 @@ namespace School.Infrastructure.Migrations
                     b.HasIndex("TransportRouteId");
 
                     b.ToTable("TransportAllocations");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportGateLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DriverName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<DateTime>("EntryTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ExitTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Purpose")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VehicleNumber")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("TransportGateLogs");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportInventory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("InstallationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("TransportInventories");
                 });
 
             modelBuilder.Entity("School.Domain.Transport.TransportRoute", b =>
@@ -10222,35 +9765,8 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Destination")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<double>("DistanceKm")
-                        .HasColumnType("float");
-
-                    b.Property<int>("EstimatedTimeMinutes")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("MaximumCapacity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RouteCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("RouteColor")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("RouteMapPath")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("RouteName")
                         .IsRequired()
@@ -10259,10 +9775,6 @@ namespace School.Infrastructure.Migrations
 
                     b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Source")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -10287,153 +9799,6 @@ namespace School.Infrastructure.Migrations
                     b.ToTable("TransportRoutes");
                 });
 
-            modelBuilder.Entity("School.Domain.Transport.TransportStop", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<TimeSpan>("ArrivalTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("DepartureTime")
-                        .HasColumnType("time");
-
-                    b.Property<double>("DistanceFromSource")
-                        .HasColumnType("float");
-
-                    b.Property<string>("GoogleMapsLink")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Landmark")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(9,6)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(9,6)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("StopName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("TransportStops");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportTrip", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ActualEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ActualStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CancellationReason")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int?>("ConductorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DelayMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DriverId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DriverNotes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ScheduledStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<DateTime>("TripDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConductorId");
-
-                    b.HasIndex("DriverId");
-
-                    b.HasIndex("RouteId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("TransportTrips");
-                });
-
             modelBuilder.Entity("School.Domain.Transport.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -10442,29 +9807,14 @@ namespace School.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Barcode")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
-
-                    b.Property<string>("ChassisNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("CurrentOdometer")
-                        .HasColumnType("float");
-
-                    b.Property<string>("DocumentsUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("DriverName")
                         .HasMaxLength(50)
@@ -10474,253 +9824,37 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("EngineNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FitnessCertificate")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("FitnessExpiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("FuelTankCapacity")
-                        .HasColumnType("float");
-
-                    b.Property<string>("FuelType")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("GpsDeviceNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("InsuranceExpiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InsuranceNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("InsuranceUploadUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Manufacturer")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<double>("Mileage")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Model")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("PermitExpiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PermitNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PucCertificate")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("PucExpiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("QrCode")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("RcUploadUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("RegistrationNumber")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Remarks")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("RfidReaderId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("VehicleType")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SchoolRegistrationId");
 
                     b.ToTable("Vehicles");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.VehicleIncident", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("ClaimAmount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<string>("ClaimNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("IncidentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PoliceReportFileUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<decimal>("RepairCost")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("VehicleIncidents");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.VehicleMaintenance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MaintenanceType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("NextServiceDue")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Odometer")
-                        .HasColumnType("float");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ServiceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VendorName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("VehicleMaintenances");
                 });
 
             modelBuilder.Entity("School.Domain.YearSemester", b =>
@@ -13802,183 +12936,8 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("School.Domain.Transport.Conductor", b =>
-                {
-                    b.HasOne("School.Domain.Hr.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.FuelLog", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RfidScanLog", b =>
-                {
-                    b.HasOne("School.Domain.Hr.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Student.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
-
-                    b.HasOne("School.Domain.Transport.TransportTrip", "Trip")
-                        .WithMany()
-                        .HasForeignKey("TripId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Trip");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RouteAssignment", b =>
-                {
-                    b.HasOne("School.Domain.AcademicYear", "AcademicYear")
-                        .WithMany()
-                        .HasForeignKey("AcademicYearId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Hr.Employee", "BackupDriver")
-                        .WithMany()
-                        .HasForeignKey("BackupDriverId");
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "BackupVehicle")
-                        .WithMany()
-                        .HasForeignKey("BackupVehicleId");
-
-                    b.HasOne("School.Domain.Transport.Conductor", "Conductor")
-                        .WithMany()
-                        .HasForeignKey("ConductorId");
-
-                    b.HasOne("School.Domain.Hr.Employee", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.TransportRoute", "Route")
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("AcademicYear");
-
-                    b.Navigation("BackupDriver");
-
-                    b.Navigation("BackupVehicle");
-
-                    b.Navigation("Conductor");
-
-                    b.Navigation("Driver");
-
-                    b.Navigation("Route");
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.RouteStopMapping", b =>
-                {
-                    b.HasOne("School.Domain.Transport.TransportRoute", "Route")
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.TransportStop", "Stop")
-                        .WithMany()
-                        .HasForeignKey("StopId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Route");
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Stop");
-                });
-
             modelBuilder.Entity("School.Domain.Transport.TransportAllocation", b =>
                 {
-                    b.HasOne("School.Domain.AcademicYear", "AcademicYear")
-                        .WithMany()
-                        .HasForeignKey("AcademicYearId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.TransportStop", "DropStop")
-                        .WithMany()
-                        .HasForeignKey("DropStopId");
-
-                    b.HasOne("School.Domain.Hr.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("School.Domain.Transport.TransportStop", "PickupStop")
-                        .WithMany()
-                        .HasForeignKey("PickupStopId");
-
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
                         .HasForeignKey("SchoolRegistrationId")
@@ -13987,7 +12946,9 @@ namespace School.Infrastructure.Migrations
 
                     b.HasOne("School.Domain.Student.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("School.Domain.Transport.TransportRoute", "TransportRoute")
                         .WithMany()
@@ -13995,41 +12956,11 @@ namespace School.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("AcademicYear");
-
-                    b.Navigation("DropStop");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("PickupStop");
-
                     b.Navigation("SchoolRegistration");
 
                     b.Navigation("Student");
 
                     b.Navigation("TransportRoute");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportGateLog", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportInventory", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
                 });
 
             modelBuilder.Entity("School.Domain.Transport.TransportRoute", b =>
@@ -14051,58 +12982,6 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("School.Domain.Transport.TransportStop", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.TransportTrip", b =>
-                {
-                    b.HasOne("School.Domain.Transport.Conductor", "Conductor")
-                        .WithMany()
-                        .HasForeignKey("ConductorId");
-
-                    b.HasOne("School.Domain.Hr.Employee", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.TransportRoute", "Route")
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Conductor");
-
-                    b.Navigation("Driver");
-
-                    b.Navigation("Route");
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Vehicle");
-                });
-
             modelBuilder.Entity("School.Domain.Transport.Vehicle", b =>
                 {
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
@@ -14112,44 +12991,6 @@ namespace School.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.VehicleIncident", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("School.Domain.Transport.VehicleMaintenance", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.Transport.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-
-                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("School.Domain.YearSemester", b =>
