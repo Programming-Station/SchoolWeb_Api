@@ -7,6 +7,7 @@ using School.Domain.Hr;
 
 namespace School.Domain.Transport
 {
+    [Table("RfidScanLogs", Schema = "Transport")]
     public class RfidScanLog : AuditEntity<int>, ITenantEntity
     {
         [Key] 

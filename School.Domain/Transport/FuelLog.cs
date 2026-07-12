@@ -6,6 +6,7 @@ using School.Domain.School;
 
 namespace School.Domain.Transport
 {
+    [Table("FuelLogs", Schema = "Transport")]
     public class FuelLog : AuditEntity<int>, ITenantEntity
     {
         [Key] 

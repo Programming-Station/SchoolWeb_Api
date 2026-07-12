@@ -6,7 +6,7 @@ using School.Domain.School;
 
 namespace School.Domain.Library
 {
-    [Table("BookReservations")]
+    [Table("BookReservations", Schema = "Library")]
     public class BookReservation : AuditEntity<int>, ITenantEntity
     {
         [Key]

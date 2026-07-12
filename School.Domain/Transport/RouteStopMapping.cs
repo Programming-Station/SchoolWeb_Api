@@ -5,6 +5,7 @@ using School.Domain.School;
 
 namespace School.Domain.Transport
 {
+    [Table("RouteStopMappings", Schema = "Transport")]
     public class RouteStopMapping : AuditEntity<int>, ITenantEntity
     {
         [Key] 

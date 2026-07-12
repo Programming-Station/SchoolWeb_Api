@@ -5,7 +5,7 @@ using School.Domain.School;
 
 namespace School.Domain.Library
 {
-    [Table("LibraryFineRules")]
+    [Table("LibraryFineRules", Schema = "Library")]
     public class LibraryFineRule : AuditEntity<int>, ITenantEntity
     {
         [Key]

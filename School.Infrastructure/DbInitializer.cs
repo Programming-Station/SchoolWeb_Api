@@ -261,6 +261,7 @@ namespace School.Infrastructure
             DefaultAcademicExtendedData.SeedAsync(context).Wait();
             DefaultAdditionalData.SeedAsync(context).Wait();
             DefaultHostelData.SeedAsync(context).Wait();
+            TransportSeedData.SeedAsync(context).Wait();
         }
     }
 }

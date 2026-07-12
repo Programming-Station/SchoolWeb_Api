@@ -279,13 +279,16 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.DriverPhone, opt => opt.MapFrom(src => src.TransportRoute != null && src.TransportRoute.Vehicle != null ? src.TransportRoute.Vehicle.DriverPhone : string.Empty))
                 .ForMember(dest => dest.PickupStopName, opt => opt.MapFrom(src => src.PickupStop != null ? src.PickupStop.StopName : string.Empty))
                 .ForMember(dest => dest.DropStopName, opt => opt.MapFrom(src => src.DropStop != null ? src.DropStop.StopName : string.Empty));
-            CreateMap<global::School_DTOs.Transport.CreateTransportAllocationDto, global::School.Domain.Transport.TransportAllocation>();
+            // Enable ReverseMap for TransportAllocation
+            CreateMap<global::School_DTOs.Transport.CreateTransportAllocationDto, global::School.Domain.Transport.TransportAllocation>().ReverseMap();
 
+            // Existing TransportTrip mapping (already present)
             CreateMap<global::School.Domain.Transport.TransportTrip, global::School_DTOs.Transport.TransportTripDto>()
                 .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Route != null ? src.Route.RouteName : string.Empty))
                 .ForMember(dest => dest.VehicleName, opt => opt.MapFrom(src => src.Vehicle != null ? src.Vehicle.Name : string.Empty))
                 .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.Driver != null ? (src.Driver.FirstName + " " + src.Driver.LastName) : string.Empty))
-                .ForMember(dest => dest.ConductorName, opt => opt.MapFrom(src => src.Conductor != null && src.Conductor.Employee != null ? (src.Conductor.Employee.FirstName + " " + src.Conductor.Employee.LastName) : string.Empty));
+                .ForMember(dest => dest.ConductorName, opt => opt.MapFrom(src => src.Conductor != null && src.Conductor.Employee != null ? (src.Conductor.Employee.FirstName + " " + src.Conductor.Employee.LastName) : string.Empty))
+                .ReverseMap();
 
             CreateMap<global::School.Domain.Transport.RfidScanLog, global::School_DTOs.Transport.RfidScanLogDto>()
                 .ForMember(dest => dest.RouteName, opt => opt.MapFrom(src => src.Trip != null && src.Trip.Route != null ? src.Trip.Route.RouteName : string.Empty))
@@ -305,10 +308,12 @@ namespace School.Services.Mapping
             CreateMap<global::School_DTOs.Transport.CreateVehicleIncidentDto, global::School.Domain.Transport.VehicleIncident>();
 
             CreateMap<global::School.Domain.Transport.TransportInventory, global::School_DTOs.Transport.TransportInventoryDto>();
-            CreateMap<global::School_DTOs.Transport.CreateTransportInventoryDto, global::School.Domain.Transport.TransportInventory>();
+            // Enable ReverseMap for TransportInventory
+            CreateMap<global::School_DTOs.Transport.CreateTransportInventoryDto, global::School.Domain.Transport.TransportInventory>().ReverseMap();
 
             CreateMap<global::School.Domain.Transport.TransportGateLog, global::School_DTOs.Transport.TransportGateLogDto>();
-            CreateMap<global::School_DTOs.Transport.CreateTransportGateLogDto, global::School.Domain.Transport.TransportGateLog>();
+            // Enable ReverseMap for TransportGateLog
+            CreateMap<global::School_DTOs.Transport.CreateTransportGateLogDto, global::School.Domain.Transport.TransportGateLog>().ReverseMap();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)
