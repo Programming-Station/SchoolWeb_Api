@@ -265,6 +265,7 @@ namespace School.Infrastructure
             DefaultPayrollData.SeedAsync(context).Wait();
             DefaultFinanceData.SeedAsync(context).Wait();
             DefaultInventoryData.SeedAsync(context).Wait();
+            DefaultLibraryData.SeedAsync(context).Wait();
         }
     }
 }

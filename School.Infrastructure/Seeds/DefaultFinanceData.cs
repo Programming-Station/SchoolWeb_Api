@@ -205,6 +205,29 @@ namespace School.Infrastructure.Seeds
                 tuitionAccount.CurrentBalance += 15000m;
 
                 await context.SaveChangesAsync();
+
+                // 8. Cash Bank Transactions
+                if (bankAccount != null && !await context.CashBankTransactions.IgnoreQueryFilters().AnyAsync(t => t.SchoolRegistrationId == schoolId))
+                {
+                    var txn = new CashBankTransaction
+                    {
+                        JournalEntryId = entry.Id,
+                        AccountId = bankAccount.Id,
+                        TransactionType = "Deposit",
+                        PaymentMode = "BankTransfer",
+                        ReferenceNo = "TXN-FEES-100458",
+                        TransactionDate = DateTime.UtcNow.AddDays(-10),
+                        Amount = 15000m,
+                        IsReconciled = true,
+                        ReconciledDate = DateTime.UtcNow.AddDays(-9),
+                        ClearedDate = DateTime.UtcNow.AddDays(-9),
+                        SchoolRegistrationId = schoolId,
+                        CreatedDate = DateTime.UtcNow.AddDays(-10),
+                        CreatedBy = "seed"
+                    };
+                    context.CashBankTransactions.Add(txn);
+                    await context.SaveChangesAsync();
+                }
             }
         }
     }
