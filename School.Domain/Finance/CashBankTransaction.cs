@@ -29,6 +29,13 @@ namespace School.Domain.Finance
         [MaxLength(100)]
         public string? ReferenceNo { get; set; } // Cheque #, TXN reference
 
+        [MaxLength(50)]
+        public string? ChequeNo { get; set; }
+
+        public int? CostCenterId { get; set; }
+        [ForeignKey(nameof(CostCenterId))]
+        public virtual CostCenter? CostCenter { get; set; }
+
         [Required]
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 
@@ -38,6 +45,8 @@ namespace School.Domain.Finance
         public bool IsReconciled { get; set; } = false;
 
         public DateTime? ReconciledDate { get; set; }
+
+        public DateTime? ClearedDate { get; set; }
 
         [Required]
         public int SchoolRegistrationId { get; set; }

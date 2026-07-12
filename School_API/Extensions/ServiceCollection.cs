@@ -44,6 +44,10 @@ using School.Services.Hostel;
 using School.Services.Finance;
 using School.Services.Inventory;
 using School.Services.Communication;
+using School.Services.Analytics;
+using School.Services.Administration;
+using School.Services.AI;
+
 
 namespace School_API
 {
@@ -363,6 +367,10 @@ namespace School_API
 
             // Hostel Module
             .AddScoped<IHostelService, HostelService>()
+            // Analytics, Administration & AI Modules
+            .AddScoped<IAnalyticsService, AnalyticsService>()
+            .AddScoped<IAdministrationService, AdministrationService>()
+            .AddScoped<IAiService, AiService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

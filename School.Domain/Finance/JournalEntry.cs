@@ -33,6 +33,24 @@ namespace School.Domain.Finance
         [MaxLength(50)]
         public string Source { get; set; } = "Manual"; // Manual, Fees, Payroll, Procurement
 
+        [Required, MaxLength(50)]
+        public string VoucherType { get; set; } = "Journal"; // Journal, Payment, Receipt, Contra, CreditNote, DebitNote, Opening, Closing, Adjustment
+
+        [Required, MaxLength(30)]
+        public string Status { get; set; } = "Approved"; // Pending, Approved, Rejected (Default Approved for backward compatibility)
+
+        [MaxLength(150)]
+        public string? ApprovedBy { get; set; }
+
+        public DateTime? ApprovedDate { get; set; }
+
+        public int? CostCenterId { get; set; }
+        [ForeignKey(nameof(CostCenterId))]
+        public virtual CostCenter? CostCenter { get; set; }
+
+        [MaxLength(500)]
+        public string? AttachmentUrl { get; set; }
+
         public bool IsPosted { get; set; } = false;
 
         [Required]

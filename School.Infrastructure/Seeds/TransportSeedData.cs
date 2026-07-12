@@ -14,6 +14,13 @@ namespace School.Infrastructure.Seeds
             var school = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.Id == 1);
             if (school == null) return;
 
+            var academicYear = await context.AcademicYears.FirstOrDefaultAsync(ay => ay.SchoolRegistrationId == school.Id && ay.IsCurrent);
+            if (academicYear == null)
+            {
+                academicYear = await context.AcademicYears.FirstOrDefaultAsync(ay => ay.SchoolRegistrationId == school.Id);
+            }
+            if (academicYear == null) return;
+
             // Vehicle (default bus)
             var vehicle = new Vehicle
             {
@@ -36,6 +43,7 @@ namespace School.Infrastructure.Seeds
                 DistanceKm = 12.5,
                 EstimatedTimeMinutes = 45,
                 SchoolRegistrationId = school.Id,
+                VehicleId = vehicle.Id,
                 CreatedBy = "seed",
                 CreatedDate = DateTime.UtcNow
             };
@@ -139,6 +147,7 @@ namespace School.Infrastructure.Seeds
                 MonthlyCharge = 1500m,
                 StartDate = DateTime.UtcNow.Date,
                 Status = "Active",
+                AcademicYearId = academicYear.Id,
                 SchoolRegistrationId = school.Id,
                 CreatedBy = "seed",
                 CreatedDate = DateTime.UtcNow
@@ -203,6 +212,7 @@ namespace School.Infrastructure.Seeds
                     DistanceKm = 10 + i,
                     EstimatedTimeMinutes = 30 + i * 2,
                     SchoolRegistrationId = school.Id,
+                    VehicleId = vehicles[i - 2].Id,
                     CreatedBy = "seed",
                     CreatedDate = DateTime.UtcNow
                 };
@@ -299,6 +309,7 @@ namespace School.Infrastructure.Seeds
                     MonthlyCharge = 1500m + i * 10,
                     StartDate = DateTime.UtcNow.Date,
                     Status = "Active",
+                    AcademicYearId = academicYear.Id,
                     SchoolRegistrationId = school.Id,
                     CreatedBy = "seed",
                     CreatedDate = DateTime.UtcNow

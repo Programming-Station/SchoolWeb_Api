@@ -26,6 +26,9 @@ using School.Domain.Library;
 using School.Domain.Finance;
 using School.Domain.Inventory;
 using School.Domain.Communication;
+using School.Domain.Analytics;
+using School.Domain.Administration;
+using School.Domain.AI;
 
 namespace School.Infrastructure
 {
@@ -251,6 +254,9 @@ namespace School.Infrastructure
         public DbSet<CashBankTransaction> CashBankTransactions { get; set; } = null!;
         public DbSet<BudgetPlan> BudgetPlans { get; set; } = null!;
         public DbSet<TaxConfig> TaxConfigs { get; set; } = null!;
+        public DbSet<FinancialYear> FinancialYears { get; set; } = null!;
+        public DbSet<CostCenter> CostCenters { get; set; } = null!;
+        public DbSet<ChequeBook> ChequeBooks { get; set; } = null!;
 
         // Inventory Schema
         public DbSet<ItemCategory> ItemCategories { get; set; } = null!;
@@ -276,6 +282,26 @@ namespace School.Infrastructure
         public DbSet<FeedbackSurvey> FeedbackSurveys { get; set; } = null!;
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; } = null!;
         public DbSet<SurveyResponse> SurveyResponses { get; set; } = null!;
+
+        // Analytics Schema
+        public DbSet<DashboardConfig> DashboardConfigs { get; set; } = null!;
+        public DbSet<DashboardWidget> DashboardWidgets { get; set; } = null!;
+        public DbSet<ReportTemplate> ReportTemplates { get; set; } = null!;
+        public DbSet<AnalyticsKpi> AnalyticsKpis { get; set; } = null!;
+
+        // Administration Schema
+        public DbSet<SchoolBranch> SchoolBranches { get; set; } = null!;
+        public DbSet<WorkflowDefinition> WorkflowDefinitions { get; set; } = null!;
+        public DbSet<WorkflowStep> WorkflowSteps { get; set; } = null!;
+        public DbSet<WorkflowInstance> WorkflowInstances { get; set; } = null!;
+        public DbSet<ApprovalLog> ApprovalLogs { get; set; } = null!;
+        public DbSet<AdminAuditLog> AdminAuditLogs { get; set; } = null!;
+
+        // AI Schema
+        public DbSet<AiPrediction> AiPredictions { get; set; } = null!;
+        public DbSet<AiGeneration> AiGenerations { get; set; } = null!;
+        public DbSet<AiChatSession> AiChatSessions { get; set; } = null!;
+        public DbSet<AiChatMessage> AiChatMessages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

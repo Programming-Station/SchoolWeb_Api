@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Infrastructure;
 
@@ -11,9 +12,11 @@ using School.Infrastructure;
 namespace School.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712185344_AddAnalyticsAdminAiModules")]
+    partial class AddAnalyticsAdminAiModules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4840,16 +4843,6 @@ namespace School.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ChequeNo")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("ClearedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CostCenterId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -4898,68 +4891,11 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("CostCenterId");
-
                     b.HasIndex("JournalEntryId");
 
                     b.HasIndex("SchoolRegistrationId");
 
                     b.ToTable("CashBankTransactions", "Finance");
-                });
-
-            modelBuilder.Entity("School.Domain.Finance.ChequeBook", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BankAccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EndChequeNo")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsExhausted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NextChequeNo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SeriesPrefix")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("StartChequeNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankAccountId");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("ChequeBooks", "Finance");
                 });
 
             modelBuilder.Entity("School.Domain.Finance.CoaAccount", b =>
@@ -5021,102 +4957,6 @@ namespace School.Infrastructure.Migrations
                     b.ToTable("CoaAccounts", "Finance");
                 });
 
-            modelBuilder.Entity("School.Domain.Finance.CostCenter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("CostCenters", "Finance");
-                });
-
-            modelBuilder.Entity("School.Domain.Finance.FinancialYear", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsClosed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("YearName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SchoolRegistrationId");
-
-                    b.ToTable("FinancialYears", "Finance");
-                });
-
             modelBuilder.Entity("School.Domain.Finance.JournalEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -5124,20 +4964,6 @@ namespace School.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApprovedBy")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<DateTime?>("ApprovedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AttachmentUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("CostCenterId")
-                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -5170,11 +4996,6 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -5186,14 +5007,7 @@ namespace School.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("VoucherType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CostCenterId");
 
                     b.HasIndex("SchoolRegistrationId");
 
@@ -15239,10 +15053,6 @@ namespace School.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("School.Domain.Finance.CostCenter", "CostCenter")
-                        .WithMany()
-                        .HasForeignKey("CostCenterId");
-
                     b.HasOne("School.Domain.Finance.JournalEntry", "JournalEntry")
                         .WithMany()
                         .HasForeignKey("JournalEntryId");
@@ -15255,28 +15065,7 @@ namespace School.Infrastructure.Migrations
 
                     b.Navigation("Account");
 
-                    b.Navigation("CostCenter");
-
                     b.Navigation("JournalEntry");
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Finance.ChequeBook", b =>
-                {
-                    b.HasOne("School.Domain.Finance.CoaAccount", "BankAccount")
-                        .WithMany()
-                        .HasForeignKey("BankAccountId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("BankAccount");
 
                     b.Navigation("SchoolRegistration");
                 });
@@ -15298,41 +15087,13 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("SchoolRegistration");
                 });
 
-            modelBuilder.Entity("School.Domain.Finance.CostCenter", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Finance.FinancialYear", b =>
-                {
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
             modelBuilder.Entity("School.Domain.Finance.JournalEntry", b =>
                 {
-                    b.HasOne("School.Domain.Finance.CostCenter", "CostCenter")
-                        .WithMany()
-                        .HasForeignKey("CostCenterId");
-
                     b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
                         .WithMany()
                         .HasForeignKey("SchoolRegistrationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("CostCenter");
 
                     b.Navigation("SchoolRegistration");
                 });

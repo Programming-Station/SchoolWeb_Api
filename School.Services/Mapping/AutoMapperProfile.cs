@@ -35,6 +35,10 @@ namespace School.Services.Mapping
                 {
                     continue;
                 }
+                if (source.Name == "DashboardConfig" || source.Name == "DashboardWidget" || source.Name == "ReportTemplate" || source.Name == "AiChatSession" || source.Name == "AiPrediction")
+                {
+                    continue;
+                }
                 if (destination.Name.Contains("Dto"))
                 {
                     var createdDateProp = destination.GetProperty("CreatedDate");
@@ -314,6 +318,52 @@ namespace School.Services.Mapping
             CreateMap<global::School.Domain.Transport.TransportGateLog, global::School_DTOs.Transport.TransportGateLogDto>();
             // Enable ReverseMap for TransportGateLog
             CreateMap<global::School_DTOs.Transport.CreateTransportGateLogDto, global::School.Domain.Transport.TransportGateLog>().ReverseMap();
+
+            // Custom mappings for Analytics and AI modules
+            CreateMap<global::School.Domain.Analytics.DashboardConfig, global::School_DTOs.Analytics.DashboardConfigDto>()
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleScope ?? string.Empty))
+                .ForMember(dest => dest.LayoutJson, opt => opt.MapFrom(src => "{}"))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
+
+            CreateMap<global::School_DTOs.Analytics.DashboardConfigDto, global::School.Domain.Analytics.DashboardConfig>()
+                .ForMember(dest => dest.RoleScope, opt => opt.MapFrom(src => src.Role))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Role + " Dashboard"));
+
+            CreateMap<global::School.Domain.Analytics.DashboardWidget, global::School_DTOs.Analytics.DashboardWidgetDto>()
+                .ForMember(dest => dest.DataSourceUrl, opt => opt.MapFrom(src => src.SourceApiUrl))
+                .ForMember(dest => dest.ColSpan, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.RowSpan, opt => opt.MapFrom(src => 1))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
+
+            CreateMap<global::School_DTOs.Analytics.DashboardWidgetDto, global::School.Domain.Analytics.DashboardWidget>()
+                .ForMember(dest => dest.SourceApiUrl, opt => opt.MapFrom(src => src.DataSourceUrl))
+                .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => "{}"));
+
+            CreateMap<global::School.Domain.Analytics.ReportTemplate, global::School_DTOs.Analytics.ReportTemplateDto>()
+                .ForMember(dest => dest.ReportType, opt => opt.MapFrom(src => src.Category))
+                .ForMember(dest => dest.LayoutTemplate, opt => opt.MapFrom(src => src.SelectedColumnsJson))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
+
+            CreateMap<global::School_DTOs.Analytics.ReportTemplateDto, global::School.Domain.Analytics.ReportTemplate>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.ReportType))
+                .ForMember(dest => dest.SelectedColumnsJson, opt => opt.MapFrom(src => src.LayoutTemplate));
+
+            CreateMap<global::School.Domain.AI.AiChatSession, global::School_DTOs.AI.AiChatSessionDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
+
+            CreateMap<global::School_DTOs.AI.AiChatSessionDto, global::School.Domain.AI.AiChatSession>();
+
+            CreateMap<global::School.Domain.AI.AiPrediction, global::School_DTOs.AI.AiPredictionDto>()
+                .ForMember(dest => dest.TargetEntityName, opt => opt.MapFrom(src => "Entity #" + src.TargetEntityId))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate.HasValue ? src.CreatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
+
+            CreateMap<global::School_DTOs.AI.AiPredictionDto, global::School.Domain.AI.AiPrediction>();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)
