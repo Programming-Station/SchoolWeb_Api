@@ -258,22 +258,67 @@ namespace School.Infrastructure.Repositories
                     };
                 }
 
-                // ─── Salary details ────────────────────────────────────────────────
-                dashboard.SalarySlip = new EmployeeSalarySlipDto
+                // ─── Salary details (Dynamic Database-bound) ────────────────────────────────────────────────
+                var latestRun = await _context.PayrollRuns
+                    .Where(x => x.EmployeeId == employee.Id && (x.Status == "Paid" || x.Status == "Locked"))
+                    .OrderByDescending(x => x.Month)
+                    .FirstOrDefaultAsync();
+
+                if (latestRun != null)
                 {
-                    PayPeriod = DateTime.UtcNow.AddMonths(-1).ToString("MMMM yyyy"),
-                    BasicSalary = 48000,
-                    Allowances = 4500,
-                    Deductions = 1500,
-                    NetSalary = 51000,
-                    PaymentDate = DateTime.UtcNow.AddMonths(-1).Date.AddDays(4).ToString("yyyy-MM-dd"),
-                    Status = "Paid",
-                    History = new List<EmployeePayrollHistoryDto>
+                    var details = await _context.PayrollRunDetails
+                        .Include(d => d.SalaryComponent)
+                        .Where(d => d.PayrollRunId == latestRun.Id)
+                        .ToListAsync();
+
+                    decimal basic = details.Where(d => d.SalaryComponent.Type == "Earning" && d.SalaryComponent.Name.Equals("Basic", StringComparison.OrdinalIgnoreCase)).Sum(d => d.Amount);
+                    decimal allowances = details.Where(d => d.SalaryComponent.Type == "Earning" && !d.SalaryComponent.Name.Equals("Basic", StringComparison.OrdinalIgnoreCase)).Sum(d => d.Amount);
+
+                    var historyRuns = await _context.PayrollRuns
+                        .Where(x => x.EmployeeId == employee.Id && x.Status == "Paid")
+                        .OrderByDescending(x => x.Month)
+                        .Take(6)
+                        .ToListAsync();
+
+                    var historyList = historyRuns.Select(h => new EmployeePayrollHistoryDto
                     {
-                        new EmployeePayrollHistoryDto { PayPeriod = DateTime.UtcNow.AddMonths(-1).ToString("MMMM yyyy"), AmountPaid = 51000, DatePaid = DateTime.UtcNow.AddMonths(-1).Date.AddDays(4).ToString("yyyy-MM-dd"), TransactionId = "TXNEMPAY981" },
-                        new EmployeePayrollHistoryDto { PayPeriod = DateTime.UtcNow.AddMonths(-2).ToString("MMMM yyyy"), AmountPaid = 51000, DatePaid = DateTime.UtcNow.AddMonths(-2).Date.AddDays(5).ToString("yyyy-MM-dd"), TransactionId = "TXNEMPAY956" }
-                    }
-                };
+                        PayPeriod = DateTime.TryParse(h.Month + "-01", out DateTime hDate) ? hDate.ToString("MMMM yyyy") : h.Month,
+                        AmountPaid = h.NetSalary,
+                        DatePaid = h.PaidDate?.ToString("yyyy-MM-dd") ?? h.UpdatedDate?.ToString("yyyy-MM-dd") ?? "",
+                        TransactionId = h.PaymentRef ?? $"TXNEMPAY{h.Id}"
+                    }).ToList();
+
+                    dashboard.SalarySlip = new EmployeeSalarySlipDto
+                    {
+                        PayPeriod = DateTime.TryParse(latestRun.Month + "-01", out DateTime pDate) ? pDate.ToString("MMMM yyyy") : latestRun.Month,
+                        BasicSalary = basic,
+                        Allowances = allowances,
+                        Deductions = latestRun.TotalDeductions,
+                        NetSalary = latestRun.NetSalary,
+                        PaymentDate = latestRun.PaidDate?.ToString("yyyy-MM-dd") ?? latestRun.UpdatedDate?.ToString("yyyy-MM-dd") ?? "",
+                        Status = latestRun.Status,
+                        History = historyList
+                    };
+                }
+                else
+                {
+                    // Fallback to mock data if no database payroll exists yet
+                    dashboard.SalarySlip = new EmployeeSalarySlipDto
+                    {
+                        PayPeriod = DateTime.UtcNow.AddMonths(-1).ToString("MMMM yyyy"),
+                        BasicSalary = 48000,
+                        Allowances = 4500,
+                        Deductions = 1500,
+                        NetSalary = 51000,
+                        PaymentDate = DateTime.UtcNow.AddMonths(-1).Date.AddDays(4).ToString("yyyy-MM-dd"),
+                        Status = "Paid",
+                        History = new List<EmployeePayrollHistoryDto>
+                        {
+                            new EmployeePayrollHistoryDto { PayPeriod = DateTime.UtcNow.AddMonths(-1).ToString("MMMM yyyy"), AmountPaid = 51000, DatePaid = DateTime.UtcNow.AddMonths(-1).Date.AddDays(4).ToString("yyyy-MM-dd"), TransactionId = "TXNEMPAY981" },
+                            new EmployeePayrollHistoryDto { PayPeriod = DateTime.UtcNow.AddMonths(-2).ToString("MMMM yyyy"), AmountPaid = 51000, DatePaid = DateTime.UtcNow.AddMonths(-2).Date.AddDays(5).ToString("yyyy-MM-dd"), TransactionId = "TXNEMPAY956" }
+                        }
+                    };
+                }
 
                 // ─── Notice board notices ──────────────────────────────────────────
                 dashboard.Notices = new List<EmployeeNoticeDto>

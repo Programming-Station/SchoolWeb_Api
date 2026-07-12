@@ -41,6 +41,9 @@ using School.Services.Email;
 using School.Services.Interfaces.Email;
 using School.Services.Location;
 using School.Services.Hostel;
+using School.Services.Finance;
+using School.Services.Inventory;
+using School.Services.Communication;
 
 namespace School_API
 {
@@ -304,6 +307,18 @@ namespace School_API
             // Payroll
             .AddScoped<ISalaryComponentService, School.Services.Payroll.SalaryComponentService>()
             .AddScoped<IPayrollRunService, School.Services.Payroll.PayrollRunService>()
+            .AddScoped<IPayGroupService, School.Services.Payroll.PayGroupService>()
+            .AddScoped<ISalaryStructureService, School.Services.Payroll.SalaryStructureService>()
+            .AddScoped<IEmployeeSalaryAllocationService, School.Services.Payroll.EmployeeSalaryAllocationService>()
+            .AddScoped<IEmployeeLoanService, School.Services.Payroll.EmployeeLoanService>()
+            .AddScoped<ISalaryAdvanceService, School.Services.Payroll.SalaryAdvanceService>()
+            .AddScoped<IEmployeeBonusService, School.Services.Payroll.EmployeeBonusService>()
+            .AddScoped<IReimbursementClaimService, School.Services.Payroll.ReimbursementClaimService>()
+            .AddScoped<ISalaryArrearService, School.Services.Payroll.SalaryArrearService>()
+            .AddScoped<IStatutoryComplianceConfigService, School.Services.Payroll.StatutoryComplianceConfigService>()
+            .AddScoped<IAccountingService, AccountingService>()
+            .AddScoped<IProcurementService, ProcurementService>()
+            .AddScoped<ICommunicationService, CommunicationService>()
 
             // Academic
             .AddScoped<School.Services.Interfaces.Academic.IExamService, School.Services.Academic.ExamService>()

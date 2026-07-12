@@ -23,6 +23,9 @@ using School.Domain.Hr.Assets;
 using School.Domain.Payroll;
 using School.Domain.Transport;
 using School.Domain.Library;
+using School.Domain.Finance;
+using School.Domain.Inventory;
+using School.Domain.Communication;
 
 namespace School.Infrastructure
 {
@@ -119,6 +122,19 @@ namespace School.Infrastructure
 
         // Payroll
         public DbSet<SalaryComponent> SalaryComponents { get; set; } = null!;
+        public DbSet<PayrollRun> PayrollRuns { get; set; } = null!;
+        public DbSet<PayGroup> PayGroups { get; set; } = null!;
+        public DbSet<SalaryStructure> SalaryStructures { get; set; } = null!;
+        public DbSet<SalaryStructureItem> SalaryStructureItems { get; set; } = null!;
+        public DbSet<EmployeeSalaryAllocation> EmployeeSalaryAllocations { get; set; } = null!;
+        public DbSet<EmployeeLoan> EmployeeLoans { get; set; } = null!;
+        public DbSet<LoanRepaymentSchedule> LoanRepaymentSchedules { get; set; } = null!;
+        public DbSet<SalaryAdvance> SalaryAdvances { get; set; } = null!;
+        public DbSet<EmployeeBonus> EmployeeBonuses { get; set; } = null!;
+        public DbSet<ReimbursementClaim> ReimbursementClaims { get; set; } = null!;
+        public DbSet<SalaryArrear> SalaryArrears { get; set; } = null!;
+        public DbSet<StatutoryComplianceConfig> StatutoryComplianceConfigs { get; set; } = null!;
+        public DbSet<PayrollRunDetail> PayrollRunDetails { get; set; } = null!;
 
         // Transport
         public DbSet<TransportRoute> TransportRoutes { get; set; } = null!;
@@ -227,6 +243,39 @@ namespace School.Infrastructure
         public DbSet<HostelInventory> HostelInventories { get; set; } = null!;
         public DbSet<HostelMedicalLog> HostelMedicalLogs { get; set; } = null!;
         public DbSet<HostelDiscipline> HostelDisciplines { get; set; } = null!;
+
+        // Finance Schema
+        public DbSet<CoaAccount> CoaAccounts { get; set; } = null!;
+        public DbSet<JournalEntry> JournalEntries { get; set; } = null!;
+        public DbSet<JournalEntryLine> JournalEntryLines { get; set; } = null!;
+        public DbSet<CashBankTransaction> CashBankTransactions { get; set; } = null!;
+        public DbSet<BudgetPlan> BudgetPlans { get; set; } = null!;
+        public DbSet<TaxConfig> TaxConfigs { get; set; } = null!;
+
+        // Inventory Schema
+        public DbSet<ItemCategory> ItemCategories { get; set; } = null!;
+        public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
+        public DbSet<Vendor> Vendors { get; set; } = null!;
+        public DbSet<PurchaseRequisition> PurchaseRequisitions { get; set; } = null!;
+        public DbSet<PurchaseRequisitionItem> PurchaseRequisitionItems { get; set; } = null!;
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; } = null!;
+        public DbSet<GoodsReceiptNote> GoodsReceiptNotes { get; set; } = null!;
+        public DbSet<GoodsReceiptNoteItem> GoodsReceiptNoteItems { get; set; } = null!;
+        public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
+        public DbSet<AssetDepreciationLog> AssetDepreciationLogs { get; set; } = null!;
+        public DbSet<AssetMaintenanceLog> AssetMaintenanceLogs { get; set; } = null!;
+
+        // Communication Schema
+        public DbSet<NoticeBoard> NoticeBoards { get; set; } = null!;
+        public DbSet<Circular> Circulars { get; set; } = null!;
+        public DbSet<SmsLog> SmsLogs { get; set; } = null!;
+        public DbSet<WhatsAppLog> WhatsAppLogs { get; set; } = null!;
+        public DbSet<PushNotification> PushNotifications { get; set; } = null!;
+        public DbSet<ParentTeacherChat> ParentTeacherChats { get; set; } = null!;
+        public DbSet<FeedbackSurvey> FeedbackSurveys { get; set; } = null!;
+        public DbSet<SurveyQuestion> SurveyQuestions { get; set; } = null!;
+        public DbSet<SurveyResponse> SurveyResponses { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

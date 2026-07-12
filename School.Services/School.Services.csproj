@@ -20,6 +20,7 @@
 		<ProjectReference Include="..\School.Infrastructure\School.Infrastructure.csproj" />
 		<ProjectReference Include="..\School.Models\School.Models.csproj" />
 		<ProjectReference Include="..\School.Utilities\School.Utilities.csproj" /> 
+		<ProjectReference Include="..\School_DTOs\School_DTOs.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using static School.Domain.BaseEntity;
+using School.Domain.School;
+
+namespace School.Domain.Finance
+{
+    [Table("JournalEntries", Schema = "Finance")]
+    public class JournalEntry : AuditEntity<int>, ITenantEntity
+    {
+        public JournalEntry()
+        {
+            Lines = new HashSet<JournalEntryLine>();
+        }
+
+        [Key]
+        public int Id { get; set; }
+
+        [Required, MaxLength(50)]
+        public string VoucherNo { get; set; } = null!; // Auto generated: JV-YYYY-MM-XXXX
+
+        [Required]
+        public DateTime EntryDate { get; set; } = DateTime.UtcNow;
+
+        [MaxLength(1000)]
+        public string? Narration { get; set; }
+
+        [MaxLength(200)]
+        public string? Reference { get; set; } // Invoice ID, Bill ID, etc.
+
+        [MaxLength(50)]
+        public string Source { get; set; } = "Manual"; // Manual, Fees, Payroll, Procurement
+
+        public bool IsPosted { get; set; } = false;
+
+        [Required]
+        public int SchoolRegistrationId { get; set; }
+
+        [ForeignKey(nameof(SchoolRegistrationId))]
+        public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
+
+        public virtual ICollection<JournalEntryLine> Lines { get; set; }
+    }
+}

@@ -4,6 +4,7 @@ using static School.Domain.BaseEntity;
 using School.Domain.School;
 namespace School.Domain.Payroll
 {
+    [Table("SalaryComponents", Schema = "Payroll")]
     public class SalaryComponent : AuditEntity<int>, ITenantEntity
     {
         [Key] public int Id{get;set;}
