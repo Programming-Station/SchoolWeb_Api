@@ -271,6 +271,14 @@ namespace School.Infrastructure
         public DbSet<StockTransaction> StockTransactions { get; set; } = null!;
         public DbSet<AssetDepreciationLog> AssetDepreciationLogs { get; set; } = null!;
         public DbSet<AssetMaintenanceLog> AssetMaintenanceLogs { get; set; } = null!;
+        public DbSet<Warehouse> Warehouses { get; set; } = null!;
+        public DbSet<WarehouseBin> WarehouseBins { get; set; } = null!;
+        public DbSet<Store> Stores { get; set; } = null!;
+        public DbSet<RequestForQuotation> RequestForQuotations { get; set; } = null!;
+        public DbSet<VendorQuotation> VendorQuotations { get; set; } = null!;
+        public DbSet<PurchaseReturn> PurchaseReturns { get; set; } = null!;
+        public DbSet<StockIssue> StockIssues { get; set; } = null!;
+        public DbSet<QualityInspection> QualityInspections { get; set; } = null!;
 
         // Communication Schema
         public DbSet<NoticeBoard> NoticeBoards { get; set; } = null!;

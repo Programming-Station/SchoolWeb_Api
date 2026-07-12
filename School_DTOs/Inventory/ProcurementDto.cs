@@ -234,4 +234,200 @@ namespace School_DTOs.Inventory
         public string? ServiceDetails { get; set; }
         public string? PerformedBy { get; set; }
     }
+
+    // --- Enterprise Extensions ---
+
+    // Warehouse DTOs
+    public class WarehouseDto
+    {
+        public int Id { get; set; }
+        public string Code { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string? Address { get; set; }
+        public decimal Capacity { get; set; }
+    }
+
+    public class CreateWarehouseDto
+    {
+        public string Code { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string? Address { get; set; }
+        public decimal Capacity { get; set; }
+    }
+
+    // Warehouse Bin DTOs
+    public class WarehouseBinDto
+    {
+        public int Id { get; set; }
+        public int WarehouseId { get; set; }
+        public string WarehouseName { get; set; } = null!;
+        public string Zone { get; set; } = "Default";
+        public string Rack { get; set; } = "Default";
+        public string Shelf { get; set; } = "Default";
+        public string BinCode { get; set; } = null!;
+        public decimal Capacity { get; set; }
+    }
+
+    public class CreateWarehouseBinDto
+    {
+        public int WarehouseId { get; set; }
+        public string Zone { get; set; } = "Default";
+        public string Rack { get; set; } = "Default";
+        public string Shelf { get; set; } = "Default";
+        public string BinCode { get; set; } = null!;
+        public decimal Capacity { get; set; }
+    }
+
+    // Store DTOs
+    public class StoreDto
+    {
+        public int Id { get; set; }
+        public string Code { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string StoreType { get; set; } = "General";
+        public string? ContactPerson { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class CreateStoreDto
+    {
+        public string Code { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string StoreType { get; set; } = "General";
+        public string? ContactPerson { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    // RFQ DTOs
+    public class RequestForQuotationDto
+    {
+        public int Id { get; set; }
+        public string RfqNo { get; set; } = null!;
+        public int RequisitionId { get; set; }
+        public string RequisitionNo { get; set; } = null!;
+        public DateTime RfqDate { get; set; }
+        public string Status { get; set; } = "Draft";
+    }
+
+    public class CreateRequestForQuotationDto
+    {
+        public int RequisitionId { get; set; }
+    }
+
+    // Quotation DTOs
+    public class VendorQuotationDto
+    {
+        public int Id { get; set; }
+        public int RfqId { get; set; }
+        public string RfqNo { get; set; } = null!;
+        public int VendorId { get; set; }
+        public string VendorName { get; set; } = null!;
+        public DateTime QuoteDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Status { get; set; } = "Submitted";
+    }
+
+    public class CreateVendorQuotationDto
+    {
+        public int RfqId { get; set; }
+        public int VendorId { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
+
+    // Return DTOs
+    public class PurchaseReturnDto
+    {
+        public int Id { get; set; }
+        public string ReturnNo { get; set; } = null!;
+        public int GrnId { get; set; }
+        public string GrnNo { get; set; } = null!;
+        public DateTime ReturnDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Reason { get; set; } = null!;
+        public string? CreditNoteNo { get; set; }
+        public decimal RefundAmount { get; set; }
+        public string Status { get; set; } = "Draft";
+    }
+
+    public class CreatePurchaseReturnDto
+    {
+        public int GrnId { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Reason { get; set; } = null!;
+        public string? CreditNoteNo { get; set; }
+        public decimal RefundAmount { get; set; }
+    }
+
+    // Stock Issue DTOs
+    public class StockIssueDto
+    {
+        public int Id { get; set; }
+        public string IssueNo { get; set; } = null!;
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public decimal Quantity { get; set; }
+        public string IssuedToType { get; set; } = null!;
+        public int IssuedToId { get; set; }
+        public DateTime IssueDate { get; set; }
+        public bool Returnable { get; set; }
+        public DateTime? DueDate { get; set; }
+        public string Status { get; set; } = "Issued";
+    }
+
+    public class CreateStockIssueDto
+    {
+        public int ItemId { get; set; }
+        public decimal Quantity { get; set; }
+        public string IssuedToType { get; set; } = null!;
+        public int IssuedToId { get; set; }
+        public bool Returnable { get; set; }
+        public DateTime? DueDate { get; set; }
+    }
+
+    // Quality Inspection DTOs
+    public class QualityInspectionDto
+    {
+        public int Id { get; set; }
+        public int GrnId { get; set; }
+        public string GrnNo { get; set; } = null!;
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public decimal QuantityInspected { get; set; }
+        public decimal QuantityAccepted { get; set; }
+        public decimal QuantityRejected { get; set; }
+        public string? InspectionReport { get; set; }
+        public decimal QualityScore { get; set; }
+        public string InspectedBy { get; set; } = null!;
+    }
+
+    public class CreateQualityInspectionDto
+    {
+        public int GrnId { get; set; }
+        public int ItemId { get; set; }
+        public decimal QuantityInspected { get; set; }
+        public decimal QuantityAccepted { get; set; }
+        public decimal QuantityRejected { get; set; }
+        public string? InspectionReport { get; set; }
+        public decimal QualityScore { get; set; }
+    }
+
+    // AI Forecast DTOs
+    public class AIDemandForecastDto
+    {
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public double ForecastedDemandNextMonth { get; set; }
+        public double ConfidenceInterval { get; set; }
+        public string Recommendation { get; set; } = null!;
+    }
+
+    public class AIReorderSuggestionDto
+    {
+        public int ItemId { get; set; }
+        public string ItemName { get; set; } = null!;
+        public decimal CurrentStock { get; set; }
+        public decimal ReorderLevel { get; set; }
+        public decimal RecommendedReorderQty { get; set; }
+        public string UrgencyLevel { get; set; } = "Medium";
+    }
 }
