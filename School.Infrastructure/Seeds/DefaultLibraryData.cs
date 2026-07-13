@@ -132,7 +132,7 @@ namespace School.Infrastructure.Seeds
                     AccessionNumber = "ACC-LIT-001",
                     Barcode = "BAR-LIT-001",
                     QRCode = "QR-LIT-001",
-                    Edition = "Oxford School Edition",
+                    Edition = "Oxford School Ed.",
                     Volume = "N/A",
                     Language = "English",
                     SubjectCategory = "English Literature",
