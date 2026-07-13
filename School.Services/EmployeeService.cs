@@ -70,6 +70,7 @@ namespace School.Services
                     Address = model.Address,
                     City = model.City,
                     State = model.State,
+                    Country = model.Country,
                     CreatedBy = username,
                     CreatedDate = DateTime.Now
                 };
@@ -147,6 +148,7 @@ namespace School.Services
                         Address = model.Address,
                         City = model.City,
                         State = model.State,
+                        Country = model.Country,
                         CreatedBy = username,
                         CreatedDate = DateTime.Now
                     };
@@ -161,6 +163,7 @@ namespace School.Services
                     existingEntity.EmployeeDetail.Address = model.Address;
                     existingEntity.EmployeeDetail.City = model.City;
                     existingEntity.EmployeeDetail.State = model.State;
+                    existingEntity.EmployeeDetail.Country = model.Country;
                     existingEntity.EmployeeDetail.UpdatedBy = username;
                     existingEntity.EmployeeDetail.UpdatedDate = DateTime.Now;
                 }

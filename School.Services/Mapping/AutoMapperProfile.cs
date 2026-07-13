@@ -118,6 +118,7 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.Address : null))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.City : null))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.State : null))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.Country : null))
                 .ForMember(dest => dest.PinCode, opt => opt.MapFrom(src => src.EmployeeDetail != null ? src.EmployeeDetail.PinCode : null))
                 .ForMember(dest => dest.BloodGroup, opt => opt.MapFrom(src => src.EmployeeDetail != null && src.EmployeeDetail.BloodGroup != null ? src.EmployeeDetail.BloodGroup.Name : null))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))

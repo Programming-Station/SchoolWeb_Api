@@ -35,6 +35,7 @@ namespace School_DTOs.Hr
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
+        public string? Country { get; set; }
         public string? BloodGroup { get; set; }
     }
 
@@ -53,6 +54,7 @@ namespace School_DTOs.Hr
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
+        public string? Country { get; set; }
         public string? PinCode { get; set; }
         public string? FatherName { get; set; }
         public string? MotherName { get; set; }

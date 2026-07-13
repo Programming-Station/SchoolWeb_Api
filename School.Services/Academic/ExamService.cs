@@ -36,7 +36,7 @@ namespace School.Services.Academic
             var d = await _repo.List()
                 .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description, IsResultPublished = x.IsResultPublished, ResultPublishedDate = x.ResultPublishedDate, ResultPublishedBy = x.ResultPublishedBy })
                 .ToListAsync();
-            return new APIResponse<List<ExamDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = d };
+            return new APIResponse<List<ExamDto>> { Success = true, StatusCode = HttpStatusCode.OK, Message = "Success", Data = d };
         }
 
         public async Task<APIResponse<ExamDto>> GetByIdAsync(int id)
@@ -45,7 +45,7 @@ namespace School.Services.Academic
                 .Select(x => new ExamDto { Id = x.Id, Name = x.Name, ExamType = x.ExamType, StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, Description = x.Description, IsResultPublished = x.IsResultPublished, ResultPublishedDate = x.ResultPublishedDate, ResultPublishedBy = x.ResultPublishedBy })
                 .FirstOrDefaultAsync();
             if (x == null) return new APIResponse<ExamDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
-            return new APIResponse<ExamDto> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = x };
+            return new APIResponse<ExamDto> { Success = true, StatusCode = HttpStatusCode.OK, Message = "Success", Data = x };
         }
 
         public async Task<APIResponse<object>> CreateAsync(CreateExamDto dto, string username)
@@ -68,7 +68,7 @@ namespace School.Services.Academic
             // Fire-and-forget to avoid blocking the API response
             _ = SendExamScheduleEmailsAsync(entity, username);
 
-            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Message = "Created successfully" };
         }
 
         private async Task SendExamScheduleEmailsAsync(Exam exam, string username)
@@ -121,7 +121,7 @@ namespace School.Services.Academic
             e.UpdatedBy = username; e.UpdatedDate = DateTime.UtcNow;
             _repo.Update(e);
             await _uow.CommitAsync();
-            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Message = "Updated successfully" };
         }
 
         public async Task<APIResponse<object>> DeleteAsync(int id, string username)
@@ -130,7 +130,7 @@ namespace School.Services.Academic
             if (e == null) return new APIResponse<object> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
             _repo.Delete(e);
             await _uow.CommitAsync();
-            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Message = "Deleted successfully" };
         }
 
         public async Task<APIResponse<object>> PublishResultAsync(int examId, string publishedBy)
@@ -160,7 +160,7 @@ namespace School.Services.Academic
             // Fire-and-forget: email all students who have results
             _ = SendResultPublishedEmailsAsync(exam);
 
-            return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = $"Result published successfully. {resultCount} student result(s) available." };
+            return new APIResponse<object> { Success = true, StatusCode = HttpStatusCode.OK, Message = $"Result published successfully. {resultCount} student result(s) available." };
         }
 
         private async Task SendResultPublishedEmailsAsync(Exam exam)
