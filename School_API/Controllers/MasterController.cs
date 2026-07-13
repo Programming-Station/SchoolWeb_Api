@@ -1,4 +1,4 @@
-﻿using School.Models;
+using School.Models;
 using School.Services.Interfaces;
 using School.Utilities.Enums;
 using School_API.Common.Interface;
@@ -1235,6 +1235,13 @@ namespace School_API.Controllers
         public async Task<IActionResult> GetVehicles()
         {
             var res = await _masterService.GetVehiclesAsync();
+            return Ok(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents()
+        {
+            var res = await _masterService.GetStudentsAsync();
             return Ok(res);
         }
     }

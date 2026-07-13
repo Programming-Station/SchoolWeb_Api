@@ -41,49 +41,54 @@ namespace School.Services.Mapping
                 }
                 if (destination.Name.Contains("Dto"))
                 {
-                    var createdDateProp = destination.GetProperty("CreatedDate");
-                    var updatedDateProp = destination.GetProperty("UpdatedDate");
-                    
-                    if (createdDateProp != null || updatedDateProp != null)
+                    if (destination.Name.StartsWith("Create") || destination.Name.StartsWith("Update"))
                     {
-                        var mapConfig = CreateMap(source, destination);
-                        
-                        if (createdDateProp != null && createdDateProp.PropertyType == typeof(string))
-                        {
-                            mapConfig.ForMember("CreatedDate",
-                                opt => opt.MapFrom((src, dest, destMember, context) =>
-                                {
-                                    var createdDate = src.GetType().GetProperty("CreatedDate")?.GetValue(src);
-                                    return createdDate is DateTime dateTime
-                                        ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
-                                        : null;
-                                }
-                            ));
-                        }
-                        
-                        if (updatedDateProp != null && updatedDateProp.PropertyType == typeof(string))
-                        {
-                            mapConfig.ForMember("UpdatedDate",
-                                opt => opt.MapFrom((src, dest, destMember, context) =>
-                                {
-                                    var updatedDate = src.GetType().GetProperty("UpdatedDate")?.GetValue(src);
-                                    return updatedDate is DateTime dateTime
-                                        ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
-                                        : null;
-                                }
-                            ));
-                        }
+                        CreateMap(destination, source).ReverseMap();
                     }
                     else
                     {
-                        CreateMap(source, destination);
+                        var createdDateProp = destination.GetProperty("CreatedDate");
+                        var updatedDateProp = destination.GetProperty("UpdatedDate");
+                        
+                        if (createdDateProp != null || updatedDateProp != null)
+                        {
+                            var mapConfig = CreateMap(source, destination);
+                            
+                            if (createdDateProp != null && createdDateProp.PropertyType == typeof(string))
+                            {
+                                mapConfig.ForMember("CreatedDate",
+                                    opt => opt.MapFrom((src, dest, destMember, context) =>
+                                    {
+                                        var createdDate = src.GetType().GetProperty("CreatedDate")?.GetValue(src);
+                                        return createdDate is DateTime dateTime
+                                            ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
+                                            : null;
+                                    }
+                                ));
+                            }
+                            
+                            if (updatedDateProp != null && updatedDateProp.PropertyType == typeof(string))
+                            {
+                                mapConfig.ForMember("UpdatedDate",
+                                    opt => opt.MapFrom((src, dest, destMember, context) =>
+                                    {
+                                        var updatedDate = src.GetType().GetProperty("UpdatedDate")?.GetValue(src);
+                                        return updatedDate is DateTime dateTime
+                                            ? dateTime.ToString("dd-MM-yyyy hh:mm:ss tt")
+                                            : null;
+                                    }
+                                ));
+                            }
+                        }
+                        else
+                        {
+                            CreateMap(source, destination);
+                        }
                     }
-
                 }
                 else
                 {
                     CreateMap(source, destination).ReverseMap();
-
                 }
             }
 
