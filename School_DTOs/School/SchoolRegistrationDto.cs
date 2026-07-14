@@ -39,5 +39,27 @@ namespace School_DTOs.School
         public string PhoneNumber { get; set; }
 
         public string ContactPersonName { get; set; }
+
+        public string? AlternatePhoneNumber { get; set; }
+
+        public string? WebsiteUrl { get; set; }
+
+        public string ApprovalStatus { get; set; }
+
+        public string? SubDomain { get; set; }
+
+        public int? MaxStudentsAllowed { get; set; }
+
+        public int? AffiliationBoardId { get; set; }
+
+        public string? AffiliationNumber { get; set; }
+
+        public int? SchoolTypeId { get; set; }
+
+        public string? GSTNumber { get; set; }
+
+        public string? PANNumber { get; set; }
+
+        public string? ContactPersonRole { get; set; }
     }
 }

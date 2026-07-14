@@ -58,5 +58,35 @@ namespace School.Models.School
 
         [StringLength(100)]
         public string? ContactPersonName { get; set; }
+
+        [StringLength(20)]
+        public string? AlternatePhoneNumber { get; set; }
+
+        [StringLength(500)]
+        public string? WebsiteUrl { get; set; }
+
+        [StringLength(50)]
+        public string ApprovalStatus { get; set; } = "Pending";
+
+        [StringLength(100)]
+        public string? SubDomain { get; set; }
+
+        public int? MaxStudentsAllowed { get; set; }
+
+        public int? AffiliationBoardId { get; set; }
+
+        [StringLength(100)]
+        public string? AffiliationNumber { get; set; }
+
+        public int? SchoolTypeId { get; set; }
+
+        [StringLength(50)]
+        public string? GSTNumber { get; set; }
+
+        [StringLength(50)]
+        public string? PANNumber { get; set; }
+
+        [StringLength(100)]
+        public string? ContactPersonRole { get; set; }
     }
 }
