@@ -71,7 +71,19 @@ namespace School.Infrastructure.Repositories.School
                   u => u.StateId,
                   u => u.CityId,
                   u => u.Logo,
-                  u => u.IsActive
+                  u => u.IsActive,
+                  u => u.AlternatePhoneNumber,
+                  u => u.WebsiteUrl,
+                  u => u.ApprovalStatus,
+                  u => u.SubDomain,
+                  u => u.MaxStudentsAllowed,
+                  u => u.AffiliationBoardId,
+                  u => u.AffiliationNumber,
+                  u => u.SchoolTypeId,
+                  u => u.GSTNumber,
+                  u => u.PANNumber,
+                  u => u.ContactPersonName,
+                  u => u.ContactPersonRole
             });
             return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }

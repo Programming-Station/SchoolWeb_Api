@@ -13,9 +13,8 @@ namespace School.Models.School
         [StringLength(200)]
         public string SchoolName { get; set; }
 
-        [Required(ErrorMessage = "School Code is required.")]
         [StringLength(50)]
-        public string SchoolCode { get; set; }
+        public string? SchoolCode { get; set; }
 
         [Range(1800, 2100)]
         public int EstablishedYear { get; set; }

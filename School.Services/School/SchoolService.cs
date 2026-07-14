@@ -51,6 +51,11 @@ namespace School.Services.School
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(model.SchoolCode))
+                {
+                    model.SchoolCode = await GenerateUniqueSchoolCodeAsync(model.SchoolName);
+                }
+
                 var entity = _mapper.Map<SchoolRegistration>(model);
                 entity = await _schoolRepo.AddSchoolAsync(entity);
                 if (entity != null && entity.Id == 0)
@@ -64,50 +69,90 @@ namespace School.Services.School
                 }
                 else if (entity != null && entity.Id > 0)
                 {
+                    string firstName = "School Admin";
+                    string lastName = string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(model.ContactPersonName))
+                    {
+                        var nameParts = model.ContactPersonName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+                        
+                        var prefixesToIgnore = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                        {
+                            "mr", "mr.", "mrs", "mrs.", "ms", "ms.", "dr", "dr.", "miss", "prof", "prof.", "shri", "shri.", "smt", "smt.", "sir"
+                        };
+
+                        while (nameParts.Count > 0 && prefixesToIgnore.Contains(nameParts[0]))
+                        {
+                            nameParts.RemoveAt(0);
+                        }
+
+                        if (nameParts.Count > 0)
+                        {
+                            firstName = nameParts[0];
+                            if (nameParts.Count > 1)
+                            {
+                                lastName = string.Join(" ", nameParts.Skip(1));
+                            }
+                        }
+                    }
+
                     // Create ApplicationUser
                     var user = new ApplicationUser
                     {
                         UserName = model.Email,
                         Email = model.Email,
-                        FirstName = string.IsNullOrWhiteSpace(model.ContactPersonName) ? "School Admin" : model.ContactPersonName,
-                        LastName = string.Empty,
-                        IsDefaultPassword = true,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        IsDefaultPassword = false,
                         EmailConfirmed = true,
+                        PhoneNumber = model.PhoneNumber,
                         PhoneNumberConfirmed = true,
                         PasswordUpdatedOn = null,
-                        SchoolRegistrationId = entity.Id
+                        SchoolRegistrationId = entity.Id,
+                        StatusId = 1,
+                        IsActive = true
                     };
 
-                    var result = await _userManager.CreateAsync(user, "SchoolAdmin@123");
-                    if (result.Succeeded)
+                    var password = global::School.Utilities.UtilityHellper.GeneratePassword();
+                    var result = await _userManager.CreateAsync(user, password);
+                    if (!result.Succeeded)
                     {
-                        // Ensure role exists
-                        if (!await _roleManager.RoleExistsAsync("SchoolAdmin"))
+                        var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                        return new APIResponse<SchoolRegistrationDto>
                         {
-                            await _roleManager.CreateAsync(new IdentityRole("SchoolAdmin"));
-                        }
-                        await _userManager.AddToRoleAsync(user, "SchoolAdmin");
+                            Message = $"Failed to create school admin user: {errors}",
+                            Success = false,
+                            StatusCode = HttpStatusCode.BadRequest
+                        };
+                    }
 
-                        // Send school approval email using domain-accurate template
-                        if (!string.IsNullOrEmpty(user.Email))
-                        {
-                            await _emailService.SendGenericTemplateAsync(user.Email, "School Approved", new Dictionary<string, string>
-                            {
-                                { "SchoolName", entity.SchoolName },
-                                { "SchoolCode", entity.SchoolCode },
-                                { "Email", entity.Email },
-                                { "PhoneNumber", entity.PhoneNumber },
-                                { "ContactPersonName", model.ContactPersonName ?? "Admin" },
-                                { "Password", "SchoolAdmin@123" },
-                                { "LoginUrl", entity.WebsiteUrl ?? "#" },
-                                { "CurrentDate", DateTime.UtcNow.ToString("dd MMM yyyy") }
-                            });
-                        }
+                    // Ensure role exists
+                    if (!await _roleManager.RoleExistsAsync("SchoolAdmin"))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole("SchoolAdmin"));
+                    }
+                    await _userManager.AddToRoleAsync(user, "SchoolAdmin");
 
-                        // Create SchoolOwner
-                        var owner = new SchoolOwner
+                    // Send school approval email using domain-accurate template
+                    if (!string.IsNullOrEmpty(user.Email))
+                    {
+                        await _emailService.SendGenericTemplateAsync(user.Email, "School Approved", new Dictionary<string, string>
                         {
-                            SchoolRegistrationId = entity.Id,
+                            { "SchoolName", entity.SchoolName },
+                            { "SchoolCode", entity.SchoolCode },
+                            { "Email", entity.Email },
+                            { "PhoneNumber", entity.PhoneNumber },
+                            { "ContactPersonName", model.ContactPersonName ?? "Admin" },
+                            { "Password", password },
+                            { "LoginUrl", entity.WebsiteUrl ?? "#" },
+                            { "CurrentDate", DateTime.UtcNow.ToString("dd MMM yyyy") }
+                        });
+                    }
+
+                    // Create SchoolOwner
+                    var owner = new SchoolOwner
+                    {
+                        SchoolRegistrationId = entity.Id,
                             ApplicationUserId = user.Id,
                             StatusId = 1, // Assuming 1 is Active status ID
                             EmailVerified = true,
@@ -128,11 +173,11 @@ namespace School.Services.School
                             IsActive = true
                         };
                         await _schoolSubscriptionRepo.AddAsync(subscription);
-                    }
-
+                    
                     return new APIResponse<SchoolRegistrationDto>
                     {
                         Data = _mapper.Map<SchoolRegistrationDto>(entity),
+                        Success = true,
                         Message = CommonResource.AddSuccess,
                         StatusCode = HttpStatusCode.Created,
                     };
@@ -310,6 +355,65 @@ namespace School.Services.School
                     StatusCode = HttpStatusCode.InternalServerError
                 };
             }
+        }
+
+        private async Task<string> GenerateUniqueSchoolCodeAsync(string schoolName)
+        {
+            var prefix = GenerateSchoolCodePrefix(schoolName);
+
+            var lastCode = await _schoolRepo.GetAllSchoolsQueryable()
+                .IgnoreQueryFilters()
+                .Where(s => s.SchoolCode.StartsWith(prefix))
+                .OrderByDescending(s => s.SchoolCode)
+                .Select(s => s.SchoolCode)
+                .FirstOrDefaultAsync();
+
+            int nextNum = 1;
+            if (!string.IsNullOrEmpty(lastCode) && lastCode.Length > prefix.Length)
+            {
+                var numStr = lastCode.Substring(prefix.Length);
+                if (int.TryParse(numStr, out int parsedNum))
+                {
+                    nextNum = parsedNum + 1;
+                }
+            }
+
+            return $"{prefix}{nextNum:D3}";
+        }
+
+        private string GenerateSchoolCodePrefix(string schoolName)
+        {
+            if (string.IsNullOrWhiteSpace(schoolName))
+                return "SCH";
+
+            var words = schoolName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string prefix = "";
+
+            if (words.Length >= 4)
+            {
+                prefix = $"{words[0][0]}{words[1][0]}{words[2][0]}";
+                var fourthWord = words[3].ToUpper();
+                prefix += fourthWord.Substring(0, Math.Min(3, fourthWord.Length)).PadRight(3, 'X');
+            }
+            else if (words.Length == 3)
+            {
+                prefix = $"{words[0][0]}{words[1][0]}";
+                var thirdWord = words[2].ToUpper();
+                prefix += thirdWord.Substring(0, Math.Min(3, thirdWord.Length)).PadRight(3, 'X');
+            }
+            else if (words.Length == 2)
+            {
+                prefix = $"{words[0][0]}";
+                var secondWord = words[1].ToUpper();
+                prefix += secondWord.Substring(0, Math.Min(4, secondWord.Length)).PadRight(4, 'X');
+            }
+            else
+            {
+                var word = words[0].ToUpper();
+                prefix = word.Substring(0, Math.Min(5, word.Length)).PadRight(5, 'X');
+            }
+
+            return prefix.ToUpper();
         }
     }
 }

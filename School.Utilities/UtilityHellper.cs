@@ -15,7 +15,7 @@ namespace School.Utilities
             string transKey = $"{DateTime.Now:ddMMyyyyHHmmssffffff}{new Random().Next(123, 9999)}{new Random().Next(1, 122)}";
             return transKey;
         }
-        public static string GeneratePassword()
+        public static string GeneratePassword(int minLength = 12)
         {
 
             var passwordOptions = _identityOptions.Password;
@@ -55,7 +55,9 @@ namespace School.Utilities
             if (string.IsNullOrEmpty(allChars))
                 allChars = digits + lowers + uppers + symbols;
 
-            while (password.Length < passwordOptions.RequiredLength + 2)
+            int targetLength = Math.Max(passwordOptions.RequiredLength, minLength);
+
+            while (password.Length < targetLength + 2)
             {
                 password.Append(allChars[_random.Next(allChars.Length)]);
             }
