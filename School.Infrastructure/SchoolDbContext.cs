@@ -447,10 +447,27 @@ namespace School.Infrastructure
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                if (typeof(School.Domain.BaseEntity.IDeleteEntity).IsAssignableFrom(entityType.ClrType))
+                var isDeleteEntity = typeof(School.Domain.BaseEntity.IDeleteEntity).IsAssignableFrom(entityType.ClrType);
+                var isTenantEntity = typeof(School.Domain.BaseEntity.ITenantEntity).IsAssignableFrom(entityType.ClrType);
+
+                if (isDeleteEntity && isTenantEntity)
                 {
                     var method = typeof(SchoolDbContext)
-                        .GetMethod(nameof(SetGlobalQueryFilterForSoftDelete))
+                        .GetMethod(nameof(ConfigureTenantAndSoftDeleteFilter))
+                        ?.MakeGenericMethod(entityType.ClrType);
+                    method?.Invoke(this, new object[] { modelBuilder });
+                }
+                else if (isDeleteEntity)
+                {
+                    var method = typeof(SchoolDbContext)
+                        .GetMethod(nameof(ConfigureSoftDeleteFilterOnly))
+                        ?.MakeGenericMethod(entityType.ClrType);
+                    method?.Invoke(this, new object[] { modelBuilder });
+                }
+                else if (isTenantEntity)
+                {
+                    var method = typeof(SchoolDbContext)
+                        .GetMethod(nameof(ConfigureTenantFilterOnly))
                         ?.MakeGenericMethod(entityType.ClrType);
                     method?.Invoke(this, new object[] { modelBuilder });
                 }
@@ -489,18 +506,22 @@ namespace School.Infrastructure
             }
         }
 
-        private void SetGlobalQueryFilterForSoftDelete<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
+        public void ConfigureTenantAndSoftDeleteFilter<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity, BaseEntity.ITenantEntity
         {
-            if (typeof(BaseEntity.ITenantEntity).IsAssignableFrom(typeof(T)))
-            {
-                builder.Entity<T>().HasIndex("SchoolRegistrationId", "IsDeleted");
-                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted && (CurrentTenantId == null || ((BaseEntity.ITenantEntity)e).SchoolRegistrationId == CurrentTenantId));
-            }
-            else
-            {
-                builder.Entity<T>().HasIndex("IsDeleted");
-                builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
-            }
+            builder.Entity<T>().HasIndex("SchoolRegistrationId", "IsDeleted");
+            builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted && (CurrentTenantId == null || e.SchoolRegistrationId == CurrentTenantId));
+        }
+
+        public void ConfigureSoftDeleteFilterOnly<T>(ModelBuilder builder) where T : class, BaseEntity.IDeleteEntity
+        {
+            builder.Entity<T>().HasIndex("IsDeleted");
+            builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+        }
+
+        public void ConfigureTenantFilterOnly<T>(ModelBuilder builder) where T : class, BaseEntity.ITenantEntity
+        {
+            builder.Entity<T>().HasIndex("SchoolRegistrationId");
+            builder.Entity<T>().HasQueryFilter(e => CurrentTenantId == null || e.SchoolRegistrationId == CurrentTenantId);
         }
 
 

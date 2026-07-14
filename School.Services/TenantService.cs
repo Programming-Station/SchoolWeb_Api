@@ -30,7 +30,6 @@ namespace School.Services
             var user = _httpContextAccessor.HttpContext?.User;
             if (user == null) return null;
 
-            // In a real application, the SchoolRegistrationId (TenantId) would be stored as a Claim in the JWT
             var tenantClaim = user.Claims.FirstOrDefault(c => c.Type == "TenantId" || c.Type == "SchoolRegistrationId");
             
             if (tenantClaim != null && int.TryParse(tenantClaim.Value, out int tenantId))
@@ -38,7 +37,14 @@ namespace School.Services
                 return tenantId;
             }
 
-            return null;
+            // If the user belongs to the SuperAdmin role, return null (meaning they see all tenants)
+            if (user.IsInRole("SuperAdmin") || user.IsInRole("SUPERADMIN"))
+            {
+                return null;
+            }
+
+            // Fallback: Standard user without a TenantId claim is restricted
+            return -999;
         }
     }
 }
