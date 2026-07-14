@@ -3,6 +3,7 @@ using School.Models.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Text.Json; 
+using System.IO; 
 
 namespace School_API.Middleware
 {
@@ -78,9 +79,11 @@ namespace School_API.Middleware
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            var requestId = context.TraceIdentifier;
+            WriteLogToFile(exception, requestId, context);
+
             var response = new APIResponse();
             var code = HttpStatusCode.InternalServerError;
-            var requestId = context.TraceIdentifier;
             var isDevelopment = _environment.IsDevelopment();
 
             switch (exception)
@@ -178,6 +181,7 @@ namespace School_API.Middleware
                             else if (allowedOrigins == null || allowedOrigins.Count == 0)
                             {
                                 context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
+                                context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
                             }
                         }
                         else
@@ -198,6 +202,45 @@ namespace School_API.Middleware
 
                 var json = JsonSerializer.Serialize(response, jsonOptions);
                 await context.Response.WriteAsync(json);
+            }
+        }
+
+        private static readonly object _fileLock = new object();
+
+        private void WriteLogToFile(Exception exception, string requestId, HttpContext context)
+        {
+            try
+            {
+                var logDir = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+                if (!Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+
+                var logPath = Path.Combine(logDir, $"error_log_{DateTime.UtcNow:yyyyMMdd}.txt");
+                var message = $"========================================\n" +
+                              $"Timestamp: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC\n" +
+                              $"Request ID: {requestId}\n" +
+                              $"Path: {context.Request.Method} {context.Request.Path}\n" +
+                              $"QueryString: {context.Request.QueryString}\n" +
+                              $"Message: {exception.Message}\n" +
+                              $"StackTrace: {exception.StackTrace}\n";
+
+                if (exception.InnerException != null)
+                {
+                    message += $"Inner Exception: {exception.InnerException.Message}\n" +
+                               $"Inner StackTrace: {exception.InnerException.StackTrace}\n";
+                }
+                message += "========================================\n\n";
+
+                lock (_fileLock)
+                {
+                    File.AppendAllText(logPath, message);
+                }
+            }
+            catch
+            {
+                // Suppress file write errors to prevent middleware crash
             }
         }
 

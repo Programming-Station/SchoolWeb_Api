@@ -61,5 +61,8 @@ namespace School_DTOs.School
         public string? PANNumber { get; set; }
 
         public string? ContactPersonRole { get; set; }
+
+        public global::School_DTOs.School.SchoolProfileSettingDto? SchoolProfileSetting { get; set; }
+        public ICollection<global::School_DTOs.School.SchoolSubscriptionDto> SchoolSubscriptions { get; set; } = new List<global::School_DTOs.School.SchoolSubscriptionDto>();
     }
 }

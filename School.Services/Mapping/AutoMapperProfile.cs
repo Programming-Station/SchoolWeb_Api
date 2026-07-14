@@ -134,10 +134,13 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.City, opt => opt.Ignore())
                 .ForMember(dest => dest.State, opt => opt.Ignore())
                 .ForMember(dest => dest.Country, opt => opt.Ignore())
-                .ForMember(dest => dest.SchoolProfileSetting, opt => opt.Ignore())
-                .ForMember(dest => dest.SchoolSubscriptions, opt => opt.Ignore())
                 .ForMember(dest => dest.AffiliationBoard, opt => opt.Ignore())
                 .ForMember(dest => dest.SchoolType, opt => opt.Ignore());
+
+            CreateMap<global::School.Domain.School.SchoolProfileSetting, global::School_DTOs.School.SchoolProfileSettingDto>().ReverseMap();
+            CreateMap<global::School.Domain.School.SchoolProfileSetting, global::School.Models.School.SchoolProfileSettingModel>().ReverseMap();
+            CreateMap<global::School.Domain.School.SchoolSubscription, global::School_DTOs.School.SchoolSubscriptionDto>().ReverseMap();
+            CreateMap<global::School.Domain.School.SchoolSubscription, global::School.Models.School.SchoolSubscriptionModel>().ReverseMap();
 
             CreateMap<global::School.Domain.School.SchoolRegistration, global::School_DTOs.School.SchoolRegistrationDto>();
 

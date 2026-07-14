@@ -55,36 +55,65 @@ namespace School.Infrastructure.Repositories.School
 
         public async Task<SchoolRegistration?> GetSchoolByIdAsync(int id)
         {
-            return await FindAsync(expression: x => x.Id == id) ?? new SchoolRegistration();
+            return await _context.SchoolRegistrations
+                .Include(x => x.SchoolProfileSetting)
+                .Include(x => x.SchoolSubscriptions)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<int> UpdateSchoolAsync(SchoolRegistration entity)
         {
-            Attach(entity, updatedProperties: new Expression<Func<SchoolRegistration, object>>[]
+            var existingEntity = await _context.SchoolRegistrations
+                .Include(x => x.SchoolProfileSetting)
+                .Include(x => x.SchoolSubscriptions)
+                .FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (existingEntity == null)
+                return 0;
+
+            // Update SchoolRegistration scalar properties
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+
+            // Update SchoolProfileSetting (1-to-1 relation)
+            if (entity.SchoolProfileSetting != null)
             {
-                  u => u.SchoolName,
-                  u => u.SchoolCode,
-                  u => u.EstablishedYear,
-                  u => u.Address,
-                  u => u.Pincode,
-                  u => u.CountryId,
-                  u => u.StateId,
-                  u => u.CityId,
-                  u => u.Logo,
-                  u => u.IsActive,
-                  u => u.AlternatePhoneNumber,
-                  u => u.WebsiteUrl,
-                  u => u.ApprovalStatus,
-                  u => u.SubDomain,
-                  u => u.MaxStudentsAllowed,
-                  u => u.AffiliationBoardId,
-                  u => u.AffiliationNumber,
-                  u => u.SchoolTypeId,
-                  u => u.GSTNumber,
-                  u => u.PANNumber,
-                  u => u.ContactPersonName,
-                  u => u.ContactPersonRole
-            });
+                if (existingEntity.SchoolProfileSetting == null)
+                {
+                    existingEntity.SchoolProfileSetting = entity.SchoolProfileSetting;
+                }
+                else
+                {
+                    _context.Entry(existingEntity.SchoolProfileSetting).CurrentValues.SetValues(entity.SchoolProfileSetting);
+                }
+            }
+
+            // Update SchoolSubscriptions (1-to-many relation)
+            if (entity.SchoolSubscriptions != null)
+            {
+                // Remove deleted subscriptions
+                foreach (var existingSub in existingEntity.SchoolSubscriptions.ToList())
+                {
+                    if (!entity.SchoolSubscriptions.Any(s => s.Id == existingSub.Id))
+                    {
+                        _context.SchoolSubscriptions.Remove(existingSub);
+                    }
+                }
+
+                // Add or update subscriptions
+                foreach (var sub in entity.SchoolSubscriptions)
+                {
+                    var existingSub = existingEntity.SchoolSubscriptions.FirstOrDefault(s => s.Id == sub.Id && sub.Id > 0);
+                    if (existingSub == null)
+                    {
+                        existingEntity.SchoolSubscriptions.Add(sub);
+                    }
+                    else
+                    {
+                        _context.Entry(existingSub).CurrentValues.SetValues(sub);
+                    }
+                }
+            }
+
             return await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
     }

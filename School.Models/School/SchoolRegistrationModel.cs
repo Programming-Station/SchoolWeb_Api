@@ -87,5 +87,8 @@ namespace School.Models.School
 
         [StringLength(100)]
         public string? ContactPersonRole { get; set; }
+
+        public SchoolProfileSettingModel? SchoolProfileSetting { get; set; }
+        public ICollection<SchoolSubscriptionModel> SchoolSubscriptions { get; set; } = new List<SchoolSubscriptionModel>();
     }
 }

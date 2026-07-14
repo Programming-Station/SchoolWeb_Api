@@ -88,6 +88,8 @@ builder.Services.AddSwaggerGen(option =>
             Email = "support@b2bapi.com"
         }
     });
+
+    option.CustomSchemaIds(type => type.FullName);
 });
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSignalR();

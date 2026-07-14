@@ -28,6 +28,8 @@ namespace School.Services.School
         private readonly ISchoolOwnerRepository _schoolOwnerRepo;
         private readonly ISchoolSubscriptionRepository _schoolSubscriptionRepo;
         private readonly IEmailService _emailService;
+        private readonly IOrganizationProfileRepository _profileRepo;
+        private readonly global::School.Infrastructure.SchoolDbContext _dbContext;
 
         public SchoolService(
             ISchoolRepository schoolRepo, 
@@ -36,7 +38,9 @@ namespace School.Services.School
             RoleManager<IdentityRole> roleManager,
             ISchoolOwnerRepository schoolOwnerRepo,
             ISchoolSubscriptionRepository schoolSubscriptionRepo,
-            IEmailService emailService)
+            IEmailService emailService,
+            IOrganizationProfileRepository profileRepo,
+            global::School.Infrastructure.SchoolDbContext dbContext)
         {
             _schoolRepo = schoolRepo;
             _mapper = mapper;  
@@ -45,6 +49,8 @@ namespace School.Services.School
             _schoolOwnerRepo = schoolOwnerRepo;
             _schoolSubscriptionRepo = schoolSubscriptionRepo;
             _emailService = emailService;
+            _profileRepo = profileRepo;
+            _dbContext = dbContext;
         }
 
         public async Task<APIResponse<SchoolRegistrationDto>> AddAsync(SchoolRegistrationModel model)
@@ -127,11 +133,11 @@ namespace School.Services.School
                     }
 
                     // Ensure role exists
-                    if (!await _roleManager.RoleExistsAsync("SchoolAdmin"))
+                    if (!await _roleManager.RoleExistsAsync("Owner"))
                     {
-                        await _roleManager.CreateAsync(new IdentityRole("SchoolAdmin"));
+                        await _roleManager.CreateAsync(new IdentityRole("Owner"));
                     }
-                    await _userManager.AddToRoleAsync(user, "SchoolAdmin");
+                    await _userManager.AddToRoleAsync(user, "Owner");
 
                     // Send school approval email using domain-accurate template
                     if (!string.IsNullOrEmpty(user.Email))
@@ -149,19 +155,7 @@ namespace School.Services.School
                         });
                     }
 
-                    // Create SchoolOwner
-                    var owner = new SchoolOwner
-                    {
-                        SchoolRegistrationId = entity.Id,
-                            ApplicationUserId = user.Id,
-                            StatusId = 1, // Assuming 1 is Active status ID
-                            EmailVerified = true,
-                            MobileVerified = true,
-                            IsLocked = false
-                        };
-                        await _schoolOwnerRepo.AddAsync(owner);
-
-                        // Create SchoolSubscription (Default 1-month trial)
+                        // Create SchoolSubscription (Default 1-month trial) first to get its database ID
                         var subscription = new SchoolSubscription
                         {
                             SchoolRegistrationId = entity.Id,
@@ -170,9 +164,66 @@ namespace School.Services.School
                             EndDate = DateTime.UtcNow.AddMonths(1),
                             AmountPaid = 0,
                             PaymentStatus = "Free",
-                            IsActive = true
+                            IsActive = true,
+                            CreatedDate=DateTime.UtcNow,
+                            CreatedBy="Superadmin",
                         };
                         await _schoolSubscriptionRepo.AddAsync(subscription);
+
+                        // Create SchoolOwner referencing the newly created subscription ID
+                        var owner = new SchoolOwner
+                        {
+                            SchoolRegistrationId = entity.Id,
+                            ApplicationUserId = user.Id,
+                            StatusId = 1, // Assuming 1 is Active status ID
+                            EmailVerified = true,
+                            MobileVerified = true,
+                            IsLocked = false,
+                            CreatedDate = DateTime.UtcNow,
+                            CreatedBy = "Superadmin",
+                            SchoolSubscriptionId = subscription.Id
+                        };
+                        await _schoolOwnerRepo.AddAsync(owner);
+
+                        // Fetch names of Country, State, City, and Board to store in OrganizationProfile
+                        var countryName = await _dbContext.Countries.Where(c => c.Id == entity.CountryId).Select(c => c.Name).FirstOrDefaultAsync();
+                        var stateName = await _dbContext.States.Where(s => s.Id == entity.StateId).Select(s => s.Name).FirstOrDefaultAsync();
+                        var cityName = await _dbContext.Cities.Where(c => c.Id == entity.CityId).Select(c => c.Name).FirstOrDefaultAsync();
+                        var boardName = entity.AffiliationBoardId.HasValue 
+                            ? await _dbContext.AffiliationBoards.Where(b => b.Id == entity.AffiliationBoardId.Value).Select(b => b.Name).FirstOrDefaultAsync()
+                            : null;
+
+                        // Create OrganizationProfile
+                        var orgProfile = new global::School.Domain.School.OrganizationProfile
+                        {
+                            SchoolRegistrationId = entity.Id,
+                            OrganizationName = entity.SchoolName,
+                            SchoolName = entity.SchoolName,
+                            SchoolCode = entity.SchoolCode,
+                            ShortName = string.Join("", entity.SchoolName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(w => w[0])).ToUpper(),
+                            Email = entity.Email,
+                            Phone = entity.PhoneNumber,
+                            Mobile = entity.PhoneNumber,
+                            Status = true,
+                            CreatedDate = DateTime.UtcNow,
+                            CreatedBy = "Superadmin",
+                            AffiliationNumber = entity.AffiliationNumber,
+                            AddressLine1 = entity.Address,    
+                            PANNumber = entity.PANNumber,
+                            Board = boardName,
+                            GSTNumber = entity.GSTNumber,
+                            Country = countryName,
+                            State = stateName,
+                            City = cityName,
+                            Pincode=entity.Pincode,
+                            PrimaryColor= "#1e3a8a",
+                            SecondaryColor= "#0d9488",
+                            Theme="Light",
+                            FontFamily= "Inter",
+                            FontSize= "14px",
+                            AccentColor= "#3b82f6",
+                        };
+                        await _profileRepo.AddAsync(orgProfile);
                     
                     return new APIResponse<SchoolRegistrationDto>
                     {
@@ -359,22 +410,30 @@ namespace School.Services.School
 
         private async Task<string> GenerateUniqueSchoolCodeAsync(string schoolName)
         {
-            var prefix = GenerateSchoolCodePrefix(schoolName);
+            var prefix = GenerateSchoolCodePrefix(schoolName).ToUpper();
 
-            var lastCode = await _schoolRepo.GetAllSchoolsQueryable()
+            // Fetch all non-empty school codes from the database
+            var allCodes = await _dbContext.SchoolRegistrations
                 .IgnoreQueryFilters()
-                .Where(s => s.SchoolCode.StartsWith(prefix))
-                .OrderByDescending(s => s.SchoolCode)
-                .Select(s => s.SchoolCode)
-                .FirstOrDefaultAsync();
+                .Where(s => s.SchoolCode != null && s.SchoolCode != "")
+                .Select(s => s.SchoolCode!)
+                .ToListAsync();
 
             int nextNum = 1;
-            if (!string.IsNullOrEmpty(lastCode) && lastCode.Length > prefix.Length)
+            if (allCodes.Any())
             {
-                var numStr = lastCode.Substring(prefix.Length);
-                if (int.TryParse(numStr, out int parsedNum))
+                var matchingNums = allCodes
+                    .Select(c => c.Trim())
+                    .Where(c => c.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    .Select(c => {
+                        var numStr = c.Substring(prefix.Length);
+                        return int.TryParse(numStr, out int parsed) ? parsed : 0;
+                    })
+                    .ToList();
+
+                if (matchingNums.Any())
                 {
-                    nextNum = parsedNum + 1;
+                    nextNum = matchingNums.Max() + 1;
                 }
             }
 
