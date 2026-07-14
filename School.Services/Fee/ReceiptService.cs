@@ -6,6 +6,7 @@ using QuestPDF.Infrastructure;
 using School.Domain.FeeManagnment;
 using School.Infrastructure;
 using School.Services.Interfaces;
+using School.Services.School.ISchoolServices;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,15 +16,19 @@ namespace School.Services.Fee
     public class ReceiptService : IReceiptService
     {
         private readonly SchoolDbContext _dbContext;
+        private readonly IBrandingService _brandingService;
 
-        public ReceiptService(SchoolDbContext dbContext)
+        public ReceiptService(SchoolDbContext dbContext, IBrandingService brandingService)
         {
             _dbContext = dbContext;
+            _brandingService = brandingService;
         }
 
         public async Task<byte[]> GenerateReceiptPdfAsync(int paymentId, string baseUrl)
         {
             QuestPDF.Settings.License = LicenseType.Community;
+
+            var branding = await _brandingService.GetProfileAsync();
 
             var payment = await _dbContext.FeePayments
                 .Include(p => p.Student)
@@ -47,8 +52,8 @@ namespace School.Services.Fee
 
                     page.Header().PaddingBottom(20).Column(col =>
                     {
-                        col.Item().AlignCenter().Text("SCHOOL SAAS SYSTEM")
-                            .Bold().FontSize(22).FontColor(Color.FromHex("#1E3A8A"));
+                        col.Item().AlignCenter().Text(branding.SchoolName ?? branding.OrganizationName)
+                            .Bold().FontSize(22).FontColor(Color.FromHex(branding.PrimaryColor ?? "#1E3A8A"));
 
                         col.Item().AlignCenter().Text("Fee Payment Receipt")
                             .FontColor(Colors.Grey.Darken2).FontSize(14).Bold();
@@ -99,8 +104,15 @@ namespace School.Services.Fee
                             row.RelativeItem().Column(c =>
                             {
                                 c.Item().Text("Terms & Conditions:").Bold().FontSize(8);
-                                c.Item().Text("1. Fees once paid are non-refundable.").FontSize(7);
-                                c.Item().Text("2. This is a computer-generated document and requires no physical signature.").FontSize(7);
+                                if (!string.IsNullOrEmpty(branding.TermsAndConditions))
+                                {
+                                    c.Item().Text(branding.TermsAndConditions).FontSize(7);
+                                }
+                                else
+                                {
+                                    c.Item().Text("1. Fees once paid are non-refundable.").FontSize(7);
+                                    c.Item().Text("2. This is a computer-generated document and requires no physical signature.").FontSize(7);
+                                }
                             });
 
                             row.ConstantItem(85).Column(qr =>
@@ -113,7 +125,7 @@ namespace School.Services.Fee
 
                     page.Footer().AlignCenter().PaddingTop(15).Text(t =>
                     {
-                        t.Span("Generated via School SAAS Billing Gateway").FontSize(8).Italic();
+                        t.Span(branding.ReportFooterText ?? "Generated via School SAAS Billing Gateway").FontSize(8).Italic();
                     });
                 });
             });

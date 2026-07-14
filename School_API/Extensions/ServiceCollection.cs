@@ -147,6 +147,7 @@ namespace School_API
             .AddTransient<IDepartmentRepository, DepartmentRepository>()
             .AddTransient<IFeeTypeRepository, FeeTypeRepository>()
             .AddTransient<ISchoolRepository, SchoolRepository>()
+            .AddTransient<IOrganizationProfileRepository, OrganizationProfileRepository>()
             .AddTransient<ISchoolProfileSettingRepository, SchoolProfileSettingRepository>()
             .AddTransient<IAffiliationBoardRepository, AffiliationBoardRepository>()
             .AddTransient<ISchoolTypeRepository, SchoolTypeRepository>()
@@ -237,12 +238,15 @@ namespace School_API
             services.AddSingleton<IEmailQueue, EmailQueue>();
             services.AddHostedService<EmailQueueProcessor>();
             services.AddHostedService<FineCalculationBackgroundJob>();
+            services.AddHostedService<ScheduledReportService>();
 
             return services
             .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
             .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
             .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
             .AddScoped<IEmailService, EmailService>()
+            .AddScoped<IRdlcReportManager, RdlcReportManager>()
+            .AddScoped<IMessageService, MessageService>()
             .AddScoped<IEmailServerSettingService, EmailServerSettingService>()
             .AddScoped<IEmailTemplateService, EmailTemplateService>()
             .AddScoped<IEmailBrandingService, EmailBrandingService>()
@@ -280,8 +284,18 @@ namespace School_API
             .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<School.Services.Hr.IDepartmentService, School.Services.Hr.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
+            .AddScoped<IRdlcCertificateService, RdlcCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()
+            .AddSingleton<School.Services.School.ISchoolServices.IOrganizationCacheService, School.Services.School.OrganizationCacheService>()
+            .AddScoped<School.Services.School.ISchoolServices.ITenantBrandingProvider, School.Services.School.TenantBrandingProvider>()
+            .AddScoped<School.Services.School.ISchoolServices.IBrandingService, School.Services.School.BrandingService>()
+            .AddScoped<School.Services.School.ISchoolServices.IThemeService, School.Services.School.ThemeService>()
+            .AddScoped<School.Services.School.ISchoolServices.ILogoService, School.Services.School.LogoService>()
+            .AddScoped<School.Services.School.ISchoolServices.ISignatureService, School.Services.School.SignatureService>()
+            .AddScoped<School.Services.School.ISchoolServices.IWatermarkService, School.Services.School.WatermarkService>()
+            .AddScoped<School.Services.School.ISchoolServices.IOrganizationProfileService, School.Services.School.OrganizationProfileService>()
+            .AddScoped<School.Services.School.ISchoolServices.IReportBrandingService, School.Services.School.ReportBrandingService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolProfileSettingService, School.Services.School.SchoolProfileSettingService>()
             .AddScoped<School.Services.School.ISchoolServices.IAffiliationBoardService, School.Services.School.AffiliationBoardService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolTypeService, School.Services.School.SchoolTypeService>()

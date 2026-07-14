@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="EmployeePayslipDataSet"
+           targetNamespace="http://schoolsaas.com/reports/payroll"
+           xmlns="http://schoolsaas.com/reports/payroll"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="EmployeePayslipDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── PayslipDataSet Table ─────────────────────────────────────── -->
+        <!-- Maps to: PayrollRun JOIN Employee JOIN Department               -->
+        <!-- Payroll.PayrollRuns (Schema = Payroll)                          -->
+        <xs:element name="PayslipDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- PayrollRun.Id -->
+              <xs:element name="PayrollRunId"      type="xs:int"    minOccurs="0" msdata:Caption="Payroll Run ID" />
+              <!-- PayrollRun.Month: "2024-06" format -->
+              <xs:element name="PayPeriod"         type="xs:string" minOccurs="0" msdata:Caption="Pay Period (Month)" />
+              <!-- PayrollRun.Status: Draft/Processed/Approved/Locked/Paid -->
+              <xs:element name="RunStatus"         type="xs:string" minOccurs="0" msdata:Caption="Run Status" />
+              <!-- PayrollRun.PaymentMethod: Cash/Cheque/BankTransfer/UPI -->
+              <xs:element name="PaymentMethod"     type="xs:string" minOccurs="0" msdata:Caption="Payment Method" />
+              <xs:element name="PaymentRef"        type="xs:string" minOccurs="0" msdata:Caption="Payment Reference" />
+              <xs:element name="PaidDate"          type="xs:dateTime" minOccurs="0" msdata:Caption="Paid Date" />
+              <!-- PayrollRun.GrossSalary decimal(10,2) -->
+              <xs:element name="GrossSalary"       type="xs:decimal" minOccurs="0" msdata:Caption="Gross Salary" />
+              <!-- PayrollRun.TotalDeductions decimal(10,2) -->
+              <xs:element name="TotalDeductions"   type="xs:decimal" minOccurs="0" msdata:Caption="Total Deductions" />
+              <!-- PayrollRun.NetSalary decimal(10,2) -->
+              <xs:element name="NetPay"            type="xs:decimal" minOccurs="0" msdata:Caption="Net Pay" />
+              <!-- PayrollRun.ApprovedBy -->
+              <xs:element name="ApprovedBy"        type="xs:string"  minOccurs="0" msdata:Caption="Approved By" />
+              <xs:element name="ApprovedDate"      type="xs:dateTime" minOccurs="0" msdata:Caption="Approved Date" />
+
+              <!-- Employee (joined from Hr.Employee) -->
+              <xs:element name="EmployeeId"        type="xs:int"    minOccurs="0" msdata:Caption="Employee ID" />
+              <!-- Employee.EmployeeCode: Auto Generated -->
+              <xs:element name="EmployeeCode"      type="xs:string" minOccurs="0" msdata:Caption="Employee Code" />
+              <!-- Employee.FirstName + LastName -->
+              <xs:element name="EmployeeName"      type="xs:string" minOccurs="0" msdata:Caption="Employee Full Name" />
+              <xs:element name="Email"             type="xs:string" minOccurs="0" msdata:Caption="Email" />
+              <xs:element name="MobileNumber"      type="xs:string" minOccurs="0" msdata:Caption="Mobile" />
+              <xs:element name="Gender"            type="xs:string" minOccurs="0" msdata:Caption="Gender" />
+              <!-- Employee.JoiningDate -->
+              <xs:element name="JoiningDate"       type="xs:dateTime" minOccurs="0" msdata:Caption="Joining Date" />
+              <!-- Employee.Status: active/inactive -->
+              <xs:element name="EmployeeStatus"    type="xs:string"   minOccurs="0" msdata:Caption="Employee Status" />
+
+              <!-- Department (joined) -->
+              <xs:element name="DepartmentName"    type="xs:string"  minOccurs="0" msdata:Caption="Department" />
+              <!-- Designation (joined) -->
+              <xs:element name="DesignationName"   type="xs:string"  minOccurs="0" msdata:Caption="Designation" />
+              <!-- SalaryGrade (joined) -->
+              <xs:element name="SalaryGradeName"   type="xs:string"  minOccurs="0" msdata:Caption="Salary Grade" />
+
+              <!-- PayGroup (joined) -->
+              <xs:element name="PayGroupName"      type="xs:string"  minOccurs="0" msdata:Caption="Pay Group" />
+
+              <!-- Basic Salary from EmployeeSalaryDetail -->
+              <xs:element name="BasicSalary"       type="xs:decimal" minOccurs="0" msdata:Caption="Basic Salary" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int"  minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StudentReportCardDataSet"
+           targetNamespace="http://schoolsaas.com/reports/exam"
+           xmlns="http://schoolsaas.com/reports/exam"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="StudentReportCardDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── ReportCardDataSet Table ─────────────────────────────────── -->
+        <!-- Maps to: ExamResult JOIN Student JOIN Subject JOIN Exam         -->
+        <xs:element name="ReportCardDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Student Identity -->
+              <xs:element name="StudentId"       type="xs:int"    minOccurs="0" msdata:Caption="Student ID (PK)" />
+              <xs:element name="StudentFullName" type="xs:string" minOccurs="0" msdata:Caption="Student Full Name" />
+              <!-- Student.StudentId = Enrollment Code -->
+              <xs:element name="StudentCode"     type="xs:string" minOccurs="0" msdata:Caption="Enrollment / Student Code" />
+              <xs:element name="RollNo"          type="xs:string" minOccurs="0" msdata:Caption="Roll Number" />
+              <xs:element name="ClassName"       type="xs:string" minOccurs="0" msdata:Caption="Class Name" />
+
+              <!-- Exam Context -->
+              <!-- Maps to ExaminationModels / Exam.cs -->
+              <xs:element name="ExamName"        type="xs:string" minOccurs="0" msdata:Caption="Exam Name" />
+              <xs:element name="ExamDate"        type="xs:string" minOccurs="0" msdata:Caption="Exam Date" />
+              <xs:element name="SubjectName"     type="xs:string" minOccurs="0" msdata:Caption="Subject Name" />
+              <xs:element name="SubjectCode"     type="xs:string" minOccurs="0" msdata:Caption="Subject Code" />
+
+              <!-- ExamResult fields -->
+              <!-- Maps to ExamResult: ObtainedMarks, MaxMarks, Grade -->
+              <xs:element name="ObtainedMarks"   type="xs:decimal" minOccurs="0" msdata:Caption="Obtained Marks" />
+              <xs:element name="MaxMarks"        type="xs:decimal" minOccurs="0" msdata:Caption="Max Marks" />
+              <xs:element name="Percentage"      type="xs:decimal" minOccurs="0" msdata:Caption="Percentage" />
+              <xs:element name="Grade"           type="xs:string"  minOccurs="0" msdata:Caption="Grade" />
+              <xs:element name="Remarks"         type="xs:string"  minOccurs="0" msdata:Caption="Remarks" />
+              <xs:element name="IsPassed"        type="xs:boolean" minOccurs="0" msdata:Caption="Pass/Fail" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

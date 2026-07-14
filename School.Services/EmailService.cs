@@ -7,11 +7,14 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using School.Domain.Email;
 using School.Domain.School;
+using School.Domain.Student;
 using School.Infrastructure;
 using School.Infrastructure.Email;
 using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School.Utilities.Security;
+using School_DTOs.Student;
+using School.Services.School.ISchoolServices;
 
 namespace School.Services
 {
@@ -25,6 +28,8 @@ namespace School.Services
         private readonly ITenantService _tenantService;
         private readonly IEncryptionService _encryptionService;
         private readonly IEmailQueue _emailQueue;
+        private readonly IRdlcCertificateService _rdlcService;
+        private readonly IReportBrandingService _reportBrandingService;
 
         private const string SmtpSettingsCacheKeyPrefix = "ActiveSmtpSettings_";
         private const string EmailTemplateCacheKeyPrefix = "EmailTemplate_";
@@ -38,7 +43,9 @@ namespace School.Services
             ILogger<EmailService> logger,
             ITenantService tenantService,
             IEncryptionService encryptionService,
-            IEmailQueue emailQueue)
+            IEmailQueue emailQueue,
+            IRdlcCertificateService rdlcService,
+            IReportBrandingService reportBrandingService)
         {
             _dbContext = dbContext;
             _templateRenderer = templateRenderer;
@@ -48,6 +55,8 @@ namespace School.Services
             _tenantService = tenantService;
             _encryptionService = encryptionService;
             _emailQueue = emailQueue;
+            _rdlcService = rdlcService;
+            _reportBrandingService = reportBrandingService;
         }
 
         public void InvalidateTemplateCache(string templateName)
@@ -67,7 +76,12 @@ namespace School.Services
             _logger.LogInformation("Invalidated SMTP settings cache (Tenant: {TenantId}).", tenantId);
         }
 
-        public void QueueTemplateEmail(string recipientEmail, string templateName, Dictionary<string, string>? placeholders)
+        public void QueueTemplateEmail(
+            string recipientEmail, 
+            string templateName, 
+            Dictionary<string, string>? placeholders, 
+            byte[]? attachmentBytes = null, 
+            string? attachmentName = null)
         {
             var tenantId = _tenantService.GetTenantId() ?? 0;
             _emailQueue.QueueEmail(new EmailQueueItem
@@ -75,9 +89,11 @@ namespace School.Services
                 TenantId = tenantId,
                 RecipientEmail = recipientEmail,
                 TemplateName = templateName,
-                Placeholders = placeholders
+                Placeholders = placeholders,
+                AttachmentBytes = attachmentBytes,
+                AttachmentName = attachmentName
             });
-            _logger.LogInformation("Email queued in background. Template: {TemplateName}, Recipient: {Recipient}, Tenant: {TenantId}",
+            _logger.LogInformation("Email queued in background with attachments. Template: {TemplateName}, Recipient: {Recipient}, Tenant: {TenantId}",
                 templateName, recipientEmail, tenantId);
         }
 
@@ -194,7 +210,12 @@ namespace School.Services
             return template;
         }
 
-        public async Task<bool> SendTemplateAsync(string recipientEmail, string templateName, Dictionary<string, string>? placeholders)
+        public async Task<bool> SendTemplateAsync(
+            string recipientEmail, 
+            string templateName, 
+            Dictionary<string, string>? placeholders, 
+            byte[]? attachmentBytes = null, 
+            string? attachmentName = null)
         {
             var sendTime = DateTime.UtcNow;
             if (string.IsNullOrWhiteSpace(recipientEmail))
@@ -306,41 +327,24 @@ namespace School.Services
                     }
                 }
 
-                if (school != null)
-                {
-                    // Add branding placeholders if not already provided by the service
-                    if (!finalPlaceholders.ContainsKey("SchoolName"))
-                        finalPlaceholders["SchoolName"] = school.SchoolName;
-                    if (!finalPlaceholders.ContainsKey("SchoolLogo"))
-                        finalPlaceholders["SchoolLogo"] = school.Logo ?? "";
-                    if (!finalPlaceholders.ContainsKey("SchoolAddress"))
-                        finalPlaceholders["SchoolAddress"] = school.Address ?? "";
-                    if (!finalPlaceholders.ContainsKey("Website"))
-                        finalPlaceholders["Website"] = school.WebsiteUrl ?? "#";
-                    
-                    if (branding != null)
-                    {
-                        if (!finalPlaceholders.ContainsKey("SupportEmail"))
-                            finalPlaceholders["SupportEmail"] = branding.SupportEmail ?? school.Email;
-                        if (!finalPlaceholders.ContainsKey("SupportPhone"))
-                            finalPlaceholders["SupportPhone"] = branding.SupportPhone ?? school.PhoneNumber;
-                        if (!finalPlaceholders.ContainsKey("PrincipalName"))
-                            finalPlaceholders["PrincipalName"] = branding.PrincipalName ?? school.ContactPersonName ?? "Principal";
-                        if (!finalPlaceholders.ContainsKey("ThemeColor"))
-                            finalPlaceholders["ThemeColor"] = branding.ThemeColor;
-                    }
-                    else
-                    {
-                        if (!finalPlaceholders.ContainsKey("SupportEmail"))
-                            finalPlaceholders["SupportEmail"] = school.Email;
-                        if (!finalPlaceholders.ContainsKey("SupportPhone"))
-                            finalPlaceholders["SupportPhone"] = school.PhoneNumber;
-                        if (!finalPlaceholders.ContainsKey("PrincipalName"))
-                            finalPlaceholders["PrincipalName"] = school.ContactPersonName ?? "Principal";
-                        if (!finalPlaceholders.ContainsKey("ThemeColor"))
-                            finalPlaceholders["ThemeColor"] = "#1e3a8a";
-                    }
-                }
+                var orgBranding = await _reportBrandingService.GetBrandingAsync();
+
+                if (!finalPlaceholders.ContainsKey("SchoolName"))
+                    finalPlaceholders["SchoolName"] = orgBranding.SchoolName ?? orgBranding.OrganizationName;
+                if (!finalPlaceholders.ContainsKey("SchoolLogo"))
+                    finalPlaceholders["SchoolLogo"] = orgBranding.HeaderLogo ?? school?.Logo ?? "";
+                if (!finalPlaceholders.ContainsKey("SchoolAddress"))
+                    finalPlaceholders["SchoolAddress"] = orgBranding.AddressLine1 ?? school?.Address ?? "";
+                if (!finalPlaceholders.ContainsKey("Website"))
+                    finalPlaceholders["Website"] = orgBranding.Website ?? school?.WebsiteUrl ?? "#";
+                if (!finalPlaceholders.ContainsKey("SupportEmail"))
+                    finalPlaceholders["SupportEmail"] = orgBranding.Email ?? school?.Email ?? "";
+                if (!finalPlaceholders.ContainsKey("SupportPhone"))
+                    finalPlaceholders["SupportPhone"] = orgBranding.Phone ?? orgBranding.Mobile ?? school?.PhoneNumber ?? "";
+                if (!finalPlaceholders.ContainsKey("PrincipalName"))
+                    finalPlaceholders["PrincipalName"] = orgBranding.PrincipalName ?? school?.ContactPersonName ?? "Principal";
+                if (!finalPlaceholders.ContainsKey("ThemeColor"))
+                    finalPlaceholders["ThemeColor"] = orgBranding.PrimaryColor ?? "#1e3a8a";
 
                 if (!finalPlaceholders.ContainsKey("CurrentYear"))
                     finalPlaceholders["CurrentYear"] = DateTime.UtcNow.Year.ToString();
@@ -358,6 +362,15 @@ namespace School.Services
 
                 // Process layout injection
                 string rawBody = template.BodyHtml;
+                if (!string.IsNullOrEmpty(rawBody))
+                {
+                    rawBody = rawBody.Replace("CIPC Paramedical Council", "{{SchoolName}}")
+                                     .Replace("CIPC HelpDesk", "{{SchoolName}} HelpDesk")
+                                     .Replace("CIPC", "{{SchoolName}}")
+                                     .Replace("Varanasi, Uttar Pradesh", "{{SchoolAddress}}")
+                                     .Replace("https://www.cipcvns.org", "{{Website}}")
+                                     .Replace("cipcvns.org", "{{Website}}");
+                }
                 string processedBody;
 
                 if (rawBody.Contains("{{EmailHeader}}") || rawBody.Contains("{{EmailFooter}}"))
@@ -379,9 +392,52 @@ namespace School.Services
                     processedBody = $"{headerHtml}{renderedBody}{footerHtml}";
                 }
 
-                string subject = _templateRenderer.Render(template.Subject, finalPlaceholders);
+                string rawSubject = template.Subject;
+                if (!string.IsNullOrEmpty(rawSubject))
+                {
+                    rawSubject = rawSubject.Replace("CIPC Paramedical Council", "{{SchoolName}}")
+                                           .Replace("CIPC HelpDesk", "{{SchoolName}} HelpDesk")
+                                           .Replace("CIPC", "{{SchoolName}}");
+                }
+                string subject = _templateRenderer.Render(rawSubject, finalPlaceholders);
 
-                await _emailProvider.SendEmailAsync(setting, recipientEmail, subject, processedBody);
+                byte[]? renderedAttachmentBytes = null;
+                string? renderedAttachmentName = null;
+
+                if (templateName.Equals("Admission Status Updated", StringComparison.OrdinalIgnoreCase) && finalPlaceholders != null)
+                {
+                    if (finalPlaceholders.TryGetValue("Status", out var status) && (status == "Approved" || status == "Enrolled"))
+                    {
+                        if (finalPlaceholders.TryGetValue("ApplicationNo", out var appNo))
+                        {
+                            var application = await _dbContext.AdmissionApplications
+                                .Include(x => x.Course)
+                                .FirstOrDefaultAsync(x => x.ApplicationNo == appNo);
+
+                            if (application != null)
+                            {
+                                var dto = MapToDto(application);
+                                string baseUrl = "http://localhost:5000"; 
+                                renderedAttachmentBytes = await _rdlcService.GenerateRegistrationCertificateAsync(dto, baseUrl);
+                                renderedAttachmentName = $"{application.FullName.Replace(" ", "_")}_Certificate.pdf";
+                            }
+                        }
+                    }
+                }
+                else if (templateName.Equals("Fee Payment Receipt", StringComparison.OrdinalIgnoreCase) && finalPlaceholders != null)
+                {
+                    if (finalPlaceholders.TryGetValue("PaymentId", out var paymentIdStr) && int.TryParse(paymentIdStr, out var paymentId))
+                    {
+                        string baseUrl = "http://localhost:5000";
+                        renderedAttachmentBytes = await _rdlcService.GenerateFeeReceiptPdfAsync(paymentId, baseUrl);
+                        renderedAttachmentName = $"Fee_Receipt_{paymentId}.pdf";
+                    }
+                }
+
+                var finalAttachmentBytes = attachmentBytes ?? renderedAttachmentBytes;
+                var finalAttachmentName = attachmentName ?? renderedAttachmentName;
+
+                await _emailProvider.SendEmailAsync(setting, recipientEmail, subject, processedBody, finalAttachmentBytes, finalAttachmentName);
 
                 _logger.LogInformation(
                     "Email sent successfully. Template: {TemplateName}, Recipient: {Recipient}, SendTime: {SendTime}, Tenant: {TenantId}, Status: Success",
@@ -461,6 +517,76 @@ namespace School.Services
         public async Task<bool> SendGenericTemplateAsync(string recipientEmail, string templateName, Dictionary<string, string>? placeholders)
         {
             return await SendTemplateAsync(recipientEmail, templateName, placeholders);
+        }
+
+        private AdmissionApplicationDto MapToDto(AdmissionApplication entity)
+        {
+            return new AdmissionApplicationDto
+            {
+                Id = entity.Id,
+                ApplicationNo = entity.ApplicationNo,
+                RegistrationNo = entity.RegistrationNo,
+                AdmissionNo = entity.AdmissionNo,
+                EnrollmentNo = entity.EnrollmentNo,
+                RollNo = entity.RollNo,
+                StudentCode = entity.StudentCode,
+                AcademicYearId = entity.AcademicYearId,
+                CampusId = entity.CampusId,
+                EducationLevelId = entity.EducationLevelId,
+                FacultyId = entity.FacultyId,
+                DepartmentId = entity.DepartmentId,
+                ProgramId = entity.ProgramId,
+                CourseId = entity.CourseId,
+                CourseName = entity.Course?.Name,
+                BranchId = entity.BranchId,
+                YearSemesterId = entity.YearSemesterId,
+                BatchId = entity.BatchId,
+                ClassId = entity.ClassId,
+                SectionId = entity.SectionId,
+                FullName = entity.FullName,
+                DateOfBirth = entity.DateOfBirth,
+                Gender = entity.Gender,
+                Mobile = entity.Mobile,
+                Email = entity.Email,
+                FathersName = entity.FathersName,
+                MothersName = entity.MothersName,
+                GuardianName = entity.GuardianName,
+                GuardianMobile = entity.GuardianMobile,
+                AadhaarNo = entity.AadhaarNo,
+                BloodGroup = entity.BloodGroup,
+                Category = entity.Category,
+                Religion = entity.Religion,
+                Nationality = entity.Nationality,
+                MaritalStatus = entity.MaritalStatus,
+                PhotoUrl = entity.PhotoUrl,
+                PermanentAddress = entity.PermanentAddress,
+                PermanentCity = entity.PermanentCity,
+                PermanentState = entity.PermanentState,
+                PermanentPinCode = entity.PermanentPinCode,
+                PermanentCountry = entity.PermanentCountry,
+                SameAsPermAddress = entity.SameAsPermAddress,
+                CorrespondenceAddress = entity.CorrespondenceAddress,
+                CorrespondenceCity = entity.CorrespondenceCity,
+                CorrespondenceState = entity.CorrespondenceState,
+                CorrespondencePinCode = entity.CorrespondencePinCode,
+                LastQualification = entity.LastQualification,
+                LastInstituteName = entity.LastInstituteName,
+                LastBoardUniversity = entity.LastBoardUniversity,
+                LastPassingYear = entity.LastPassingYear,
+                LastObtainedMarks = entity.LastObtainedMarks,
+                LastTotalMarks = entity.LastTotalMarks,
+                LastPercentage = entity.LastPercentage,
+                LastGrade = entity.LastGrade,
+                PrevEducationJson = entity.PrevEducationJson,
+                DocumentsJson = entity.DocumentsJson,
+                CustomFieldsDataJson = entity.CustomFieldsDataJson,
+                AssignedFeesJson = entity.AssignedFeesJson,
+                Status = entity.Status,
+                Remarks = entity.Remarks,
+                VerificationNotes = entity.VerificationNotes,
+                StudentUserId = entity.StudentUserId,
+                ParentUserId = entity.ParentUserId
+            };
         }
     }
 }

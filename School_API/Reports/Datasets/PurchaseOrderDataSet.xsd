@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PurchaseOrderReportDataSet"
+           targetNamespace="http://schoolsaas.com/reports/inventory"
+           xmlns="http://schoolsaas.com/reports/inventory"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="PurchaseOrderReportDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── PurchaseOrderDataSet Table ───────────────────────────────── -->
+        <!-- Maps to: PurchaseOrder JOIN Vendor                              -->
+        <!-- Inventory.PurchaseOrders table                                  -->
+        <xs:element name="PurchaseOrderDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- PO details -->
+              <xs:element name="PurchaseOrderId" type="xs:int"      minOccurs="0" msdata:Caption="Purchase Order ID" />
+              <xs:element name="PoNumber"        type="xs:string"   minOccurs="0" msdata:Caption="PO Number" />
+              <xs:element name="OrderDate"       type="xs:dateTime" minOccurs="0" msdata:Caption="Order Date" />
+              <xs:element name="DeliveryDate"    type="xs:dateTime" minOccurs="0" msdata:Caption="Delivery Date" />
+              <xs:element name="TaxPercentage"   type="xs:decimal"  minOccurs="0" msdata:Caption="Tax Percentage" />
+              <xs:element name="DiscountAmount"  type="xs:decimal"  minOccurs="0" msdata:Caption="Discount Amount" />
+              <xs:element name="TotalAmount"     type="xs:decimal"  minOccurs="0" msdata:Caption="Total Amount" />
+              <xs:element name="Status"          type="xs:string"   minOccurs="0" msdata:Caption="Status" />
+
+              <!-- Vendor details (joined) -->
+              <xs:element name="VendorId"        type="xs:int"      minOccurs="0" msdata:Caption="Vendor ID" />
+              <xs:element name="VendorName"      type="xs:string"   minOccurs="0" msdata:Caption="Vendor / Supplier Name" />
+              <xs:element name="VendorCode"      type="xs:string"   minOccurs="0" msdata:Caption="Vendor Code" />
+              <xs:element name="VendorContact"   type="xs:string"   minOccurs="0" msdata:Caption="Vendor Contact" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

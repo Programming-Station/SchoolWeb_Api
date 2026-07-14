@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LibraryIssueReportDataSet"
+           targetNamespace="http://schoolsaas.com/reports/library"
+           xmlns="http://schoolsaas.com/reports/library"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="LibraryIssueReportDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── LibraryIssueDataSet Table ────────────────────────────────── -->
+        <!-- Maps to: BookIssueLog JOIN Book JOIN Student                    -->
+        <!-- Library.BookIssueLogs table                                     -->
+        <xs:element name="LibraryIssueDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Issue details -->
+              <xs:element name="IssueLogId"       type="xs:int"      minOccurs="0" msdata:Caption="Issue Log ID" />
+              <xs:element name="IssueDate"        type="xs:dateTime" minOccurs="0" msdata:Caption="Issue Date" />
+              <xs:element name="DueDate"          type="xs:dateTime" minOccurs="0" msdata:Caption="Due Date" />
+              <xs:element name="ReturnDate"       type="xs:dateTime" minOccurs="0" msdata:Caption="Return Date" />
+              <xs:element name="FineAmount"       type="xs:decimal"  minOccurs="0" msdata:Caption="Fine Amount" />
+              <xs:element name="FinePaid"         type="xs:boolean"  minOccurs="0" msdata:Caption="Fine Paid" />
+              <xs:element name="Status"           type="xs:string"   minOccurs="0" msdata:Caption="Status" />
+              <xs:element name="Remarks"          type="xs:string"   minOccurs="0" msdata:Caption="Remarks" />
+
+              <!-- Book details (joined) -->
+              <xs:element name="BookId"           type="xs:int"      minOccurs="0" msdata:Caption="Book ID" />
+              <xs:element name="BookTitle"        type="xs:string"   minOccurs="0" msdata:Caption="Book Title" />
+              <xs:element name="AccessionNumber"  type="xs:string"   minOccurs="0" msdata:Caption="Accession Number" />
+              <xs:element name="Isbn"             type="xs:string"   minOccurs="0" msdata:Caption="ISBN" />
+              <xs:element name="AuthorName"       type="xs:string"   minOccurs="0" msdata:Caption="Author Name" />
+
+              <!-- Student / Library Member (joined) -->
+              <xs:element name="StudentId"        type="xs:int"      minOccurs="0" msdata:Caption="Student ID" />
+              <xs:element name="StudentName"      type="xs:string"   minOccurs="0" msdata:Caption="Student Name" />
+              <xs:element name="StudentCode"      type="xs:string"   minOccurs="0" msdata:Caption="Student Code" />
+              <xs:element name="ClassName"        type="xs:string"   minOccurs="0" msdata:Caption="Class Name" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

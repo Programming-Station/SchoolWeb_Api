@@ -7,30 +7,45 @@ using QuestPDF.Infrastructure;
 using School.Services.Interfaces;
 using School_DTOs.Student;
 using QRCoder;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using School.Services.School.ISchoolServices;
 
 namespace School.Services
 {
     public class PdfCertificateService : IPdfCertificateService
     {
         private readonly SchoolDbContext _dbContext;
+        private readonly IBrandingService _brandingService;
 
-        public PdfCertificateService(SchoolDbContext dbContext)
+        public PdfCertificateService(SchoolDbContext dbContext, IBrandingService brandingService)
         {
             _dbContext = dbContext;
+            _brandingService = brandingService;
         }
 
         public async Task<byte[]> GenerateRegistrationCertificateAsync(AdmissionApplicationDto registration, string baseUrl)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
+            var branding = await _brandingService.GetProfileAsync();
+
             var qrCodeUrl = $"{baseUrl}/api/Admission/GetById/{registration.Id}";
             var qrCodeBytes = GenerateQrCode(qrCodeUrl);
 
-            var bgPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
-            var backgroundImage = File.ReadAllBytes(bgPath);
+            var bgPath = !string.IsNullOrEmpty(branding.ReportBackground)
+                ? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", branding.ReportBackground.TrimStart('/'))
+                : Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
+            if (!File.Exists(bgPath)) bgPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
+            var backgroundImage = File.Exists(bgPath) ? File.ReadAllBytes(bgPath) : Array.Empty<byte>();
 
-            var logoPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "Collegelogo.png");
-            var logoImage = File.ReadAllBytes(logoPath);
+            var logoPath = !string.IsNullOrEmpty(branding.HeaderLogo)
+                ? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", branding.HeaderLogo.TrimStart('/'))
+                : Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "Collegelogo.png");
+            if (!File.Exists(logoPath)) logoPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "Collegelogo.png");
+            var logoImage = File.Exists(logoPath) ? File.ReadAllBytes(logoPath) : Array.Empty<byte>();
 
             byte[] studentPhoto = null;
             if (!string.IsNullOrWhiteSpace(registration.PhotoUrl))
@@ -48,17 +63,23 @@ namespace School.Services
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
 
+                    if (backgroundImage.Length > 0)
+                    {
+                        page.Background().Image(backgroundImage).FitArea();
+                    }
 
-                    page.Background().Image(backgroundImage).FitArea(); // ya .Stretch() 
                     page.Header().PaddingBottom(10).Column(col =>
                     {
-                        col.Item().AlignCenter().Text("School PARAMEDICAL COUNCIL OF INDIA")
-                            .Bold().FontSize(26).FontColor(Color.FromHex("#d9261c"));
+                        col.Item().AlignCenter().Text(branding.SchoolName ?? branding.OrganizationName)
+                            .Bold().FontSize(26).FontColor(Color.FromHex(branding.PrimaryColor ?? "#d9261c"));
 
-                        col.Item().AlignCenter().Text("AN ISO 9001:2015 CERTIFIED")
-                            .FontColor(Color.FromHex("#78c3e6")).FontSize(16);
+                        col.Item().AlignCenter().Text($"AFFILIATED TO {branding.Board ?? "BOARD"} | REC. NO: {branding.RecognitionNumber ?? "AN ISO 9001:2015 CERTIFIED"}")
+                            .FontColor(Color.FromHex(branding.SecondaryColor ?? "#78c3e6")).FontSize(16);
 
-                        col.Item().AlignCenter().Container().Width(80).Height(80).Image(logoImage).FitArea();
+                        if (logoImage.Length > 0)
+                        {
+                            col.Item().AlignCenter().Container().Width(80).Height(80).Image(logoImage).FitArea();
+                        }
 
                         col.Item().PaddingTop(5).AlignCenter()
                             .Text("CERTIFICATE OF REGISTRATION / MEMBERSHIP").Bold().FontSize(18);
@@ -69,7 +90,7 @@ namespace School.Services
                         column.Spacing(6);
 
                         column.Item().Text(
-                            "On the recommendation of the Academic Council & Governing Body of Paramedical Council of India hereby confers upon"
+                            $"On the recommendation of the Academic Council & Governing Body of {(branding.SchoolName ?? branding.OrganizationName)} hereby confers upon"
                         ).AlignCenter().FontSize(9);
 
                         column.Item().AlignCenter()
@@ -84,8 +105,6 @@ namespace School.Services
                                 c.RelativeColumn(3);   // Value
                                 c.ConstantColumn(100); // Photo
                             });
-
-
 
                             table.Cell().Element(CellStyle).Text("Registration No").Bold();
                             table.Cell().Element(CellStyle).Text(registration.AdmissionNo ?? $"ADM/{registration.Id}/25");
@@ -143,11 +162,11 @@ namespace School.Services
                             table.Cell().Element(CellStyle).Text(expiryDate.ToString("dd-MMM-yyyy"));
 
                             table.Cell().Element(CellStyle).Text("Place").Bold();
-                            table.Cell().Element(CellStyle).Text("DELHI");
+                            table.Cell().Element(CellStyle).Text(branding.City ?? "DELHI");
                         });
 
                         column.Item().PaddingTop(6)
-                            .Text("Para Medical Council of India has the right to cancel the certificate if any information is found incorrect.")
+                            .Text(branding.Disclaimer ?? $"{branding.SchoolName ?? branding.OrganizationName} has the right to cancel the certificate if any information is found incorrect.")
                             .FontSize(8).Italic();
 
                         column.Item().PaddingTop(8).AlignRight().Column(qr =>
@@ -162,8 +181,8 @@ namespace School.Services
 
                     page.Footer().AlignCenter().PaddingTop(10).Column(col =>
                     {
-                        col.Item().Text("CHAIRPERSON").Bold().FontSize(10);
-                        col.Item().Text("https://Schoolvns.org | Schoolvns@gmail.com").FontSize(8);
+                        col.Item().Text(branding.ChairmanName ?? "CHAIRPERSON").Bold().FontSize(10);
+                        col.Item().Text($"{(branding.Website ?? "https://Schoolvns.org")} | {(branding.Email ?? "Schoolvns@gmail.com")}").FontSize(8);
                     });
                 });
             });
@@ -186,10 +205,11 @@ namespace School.Services
                 .PaddingHorizontal(5); 
         }
 
-
         public async Task<byte[]> GenerateFeeReceiptPdfAsync(int paymentId, string baseUrl)
         {
             QuestPDF.Settings.License = LicenseType.Community;
+
+            var branding = await _brandingService.GetProfileAsync();
 
             var payment = await _dbContext.FeePayments
                 .Include(p => p.Student)
@@ -213,8 +233,8 @@ namespace School.Services
 
                     page.Header().PaddingBottom(20).Column(col =>
                     {
-                        col.Item().AlignCenter().Text("SCHOOL SAAS SYSTEM")
-                            .Bold().FontSize(22).FontColor(Color.FromHex("#1E3A8A"));
+                        col.Item().AlignCenter().Text(branding.SchoolName ?? branding.OrganizationName)
+                            .Bold().FontSize(22).FontColor(Color.FromHex(branding.PrimaryColor ?? "#1E3A8A"));
 
                         col.Item().AlignCenter().Text("Fee Payment Receipt")
                             .FontColor(Colors.Grey.Darken2).FontSize(14).Bold();
@@ -265,8 +285,15 @@ namespace School.Services
                             row.RelativeItem().Column(c =>
                             {
                                 c.Item().Text("Terms & Conditions:").Bold().FontSize(8);
-                                c.Item().Text("1. Fees once paid are non-refundable.").FontSize(7);
-                                c.Item().Text("2. This is a computer-generated document and requires no physical signature.").FontSize(7);
+                                if (!string.IsNullOrEmpty(branding.TermsAndConditions))
+                                {
+                                    c.Item().Text(branding.TermsAndConditions).FontSize(7);
+                                }
+                                else
+                                {
+                                    c.Item().Text("1. Fees once paid are non-refundable.").FontSize(7);
+                                    c.Item().Text("2. This is a computer-generated document and requires no physical signature.").FontSize(7);
+                                }
                             });
 
                             row.ConstantItem(85).Column(qr =>
@@ -279,7 +306,7 @@ namespace School.Services
 
                     page.Footer().AlignCenter().PaddingTop(15).Text(t =>
                     {
-                        t.Span("Generated via School SAAS Billing Gateway").FontSize(8).Italic();
+                        t.Span(branding.ReportFooterText ?? "Generated via School SAAS Billing Gateway").FontSize(8).Italic();
                     });
                 });
             });
@@ -301,4 +328,3 @@ namespace School.Services
         }
     }
 }
-

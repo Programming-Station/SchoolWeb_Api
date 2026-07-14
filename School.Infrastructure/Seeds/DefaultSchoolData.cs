@@ -374,6 +374,34 @@ namespace School.Infrastructure.Seeds
                     };
                     context.SchoolProfileSettings.Add(profileSetting);
                 }
+
+                // Seed Organization Profile
+                var orgProfileExists = await context.OrganizationProfiles.AnyAsync(s => s.SchoolRegistrationId == school.Id);
+                if (!orgProfileExists)
+                {
+                    var orgProfile = new OrganizationProfile
+                    {
+                        SchoolRegistrationId = school.Id,
+                        OrganizationName = school.SchoolName,
+                        SchoolName = school.SchoolName,
+                        ShortName = school.SchoolCode,
+                        SchoolCode = school.SchoolCode,
+                        Email = school.Email,
+                        Phone = school.PhoneNumber,
+                        AddressLine1 = school.Address,
+                        Pincode = school.Pincode,
+                        HeaderLogo = school.Logo,
+                        PrimaryColor = "#1e3a8a",
+                        SecondaryColor = "#0d9488",
+                        Theme = "Light",
+                        PrincipalName = school.ContactPersonName ?? "Dr. Rajesh Sharma",
+                        Board = "CBSE",
+                        Status = true,
+                        CreatedBy = "System",
+                        CreatedDate = DateTime.UtcNow
+                    };
+                    context.OrganizationProfiles.Add(orgProfile);
+                }
             }
 
             await context.SaveChangesAsync();

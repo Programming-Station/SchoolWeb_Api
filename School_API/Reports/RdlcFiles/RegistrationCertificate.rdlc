@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>11in</Height>
+        <ReportItems>
+          <!-- Background image control -->
+          <Image Name="BackgroundImageControl">
+            <Source>Database</Source>
+            <Value>=Parameters!BackgroundImage.Value</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>0in</Top>
+            <Left>0in</Left>
+            <Height>11in</Height>
+            <Width>8.5in</Width>
+            <ZIndex>1</ZIndex>
+          </Image>
+
+          <!-- Chairperson Header -->
+          <Textbox Name="HeaderTitle">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>PARAMEDICAL COUNCIL OF INDIA</Value>
+                    <Style>
+                      <FontSize>24pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#D9261C</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.6in</Top>
+            <Left>0.5in</Left>
+            <Height>0.5in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="HeaderSub">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>AN ISO 9001:2015 CERTIFIED COUNCIL</Value>
+                    <Style>
+                      <FontSize>12pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#78C3E6</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.1in</Top>
+            <Left>0.5in</Left>
+            <Height>0.3in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Logo Image -->
+          <Image Name="LogoImageControl">
+            <Source>Database</Source>
+            <Value>=Parameters!LogoImage.Value</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>1.5in</Top>
+            <Left>3.75in</Left>
+            <Height>1in</Height>
+            <Width>1in</Width>
+            <ZIndex>2</ZIndex>
+          </Image>
+
+          <Textbox Name="CertificateTitle">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>CERTIFICATE OF REGISTRATION / MEMBERSHIP</Value>
+                    <Style>
+                      <FontSize>16pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>2.7in</Top>
+            <Left>0.5in</Left>
+            <Height>0.4in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Recommendation Text -->
+          <Textbox Name="RecommendationText">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>On the recommendation of the Academic Council &amp; Governing Body of Paramedical Council of India hereby confers upon</Value>
+                    <Style>
+                      <FontSize>10pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>3.2in</Top>
+            <Left>0.5in</Left>
+            <Height>0.3in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Course Name -->
+          <Textbox Name="CourseTitle">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!CourseName.Value</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#1E3A8A</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>3.6in</Top>
+            <Left>0.5in</Left>
+            <Height>0.3in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Grid Table Details -->
+          <Textbox Name="LabelRegNo">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Registration No:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.1in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValRegNo">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!RegistrationNo.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.1in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>2.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Student Name:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.4in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!FullName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.4in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>2.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelFather">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Father's Name:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.7in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValFather">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!FatherName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.7in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>2.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelMother">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Mother's Name:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.0in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValMother">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!MotherName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.0in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>2.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Student Photo Image -->
+          <Image Name="StudentPhotoImage">
+            <Source>Database</Source>
+            <Value>=Parameters!StudentPhoto.Value</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>4.1in</Top>
+            <Left>6.0in</Left>
+            <Height>1.2in</Height>
+            <Width>1.0in</Width>
+            <ZIndex>2</ZIndex>
+          </Image>
+
+          <!-- Grid details part 2 -->
+          <Textbox Name="LabelDOB">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Date of Birth:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.4in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValDOB">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!DateOfBirth.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.4in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>4.1in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelAddress">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Address:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.7in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValAddress">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!Address.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.7in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>4.1in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelExamBody">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Examining Body:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.0in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValExamBody">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!ExaminingBody.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.0in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>4.1in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelIssue">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Date of Issue:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.3in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValIssue">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!DateOfIssue.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.3in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>4.1in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LabelValid">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Up to Valid Date:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.6in</Top><Left>1in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+          <Textbox Name="ValValid">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!ValidUpTo.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>6.6in</Top><Left>2.9in</Left><Height>0.25in</Height><Width>4.1in</Width><ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Disclaimer Text -->
+          <Textbox Name="DisclaimerText">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Para Medical Council of India has the right to cancel the certificate if any information is found incorrect.</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontStyle>Italic</FontStyle>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>7.2in</Top>
+            <Left>1in</Left>
+            <Height>0.25in</Height>
+            <Width>6in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- QR Code Image -->
+          <Image Name="QrCodeImageControl">
+            <Source>Database</Source>
+            <Value>=Parameters!QrCodeImage.Value</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>7.6in</Top>
+            <Left>6.0in</Left>
+            <Height>1in</Height>
+            <Width>1in</Width>
+            <ZIndex>2</ZIndex>
+          </Image>
+
+          <Textbox Name="VerifyText">
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Scan to Verify</Value>
+                    <Style>
+                      <FontSize>7pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>8.65in</Top>
+            <Left>6.0in</Left>
+            <Height>0.2in</Height>
+            <Width>1in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <!-- Signatures -->
+          <Textbox Name="ChairpersonSign">
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>CHAIRPERSON</Value>
+                    <Style>
+                      <FontSize>10pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>9.2in</Top>
+            <Left>1.5in</Left>
+            <Height>0.25in</Height>
+            <Width>2in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+          <Textbox Name="FooterInfo">
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>https://Schoolvns.org | Schoolvns@gmail.com</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>9.6in</Top>
+            <Left>0.5in</Left>
+            <Height>0.25in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>2</ZIndex>
+          </Textbox>
+
+        </ReportItems>
+        <Style />
+      </Body>
+      <Width>8.5in</Width>
+      <Page>
+        <PageHeight>11in</PageHeight>
+        <PageWidth>8.5in</PageWidth>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="RegistrationNo"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter1</Prompt></ReportParameter>
+    <ReportParameter Name="FullName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter2</Prompt></ReportParameter>
+    <ReportParameter Name="FatherName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter3</Prompt></ReportParameter>
+    <ReportParameter Name="MotherName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter4</Prompt></ReportParameter>
+    <ReportParameter Name="CourseName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter5</Prompt></ReportParameter>
+    <ReportParameter Name="PassingYear"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter6</Prompt></ReportParameter>
+    <ReportParameter Name="BloodGroup"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter7</Prompt></ReportParameter>
+    <ReportParameter Name="Address"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter8</Prompt></ReportParameter>
+    <ReportParameter Name="ExaminingBody"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter9</Prompt></ReportParameter>
+    <ReportParameter Name="DateOfBirth"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter10</Prompt></ReportParameter>
+    <ReportParameter Name="DateOfIssue"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter11</Prompt></ReportParameter>
+    <ReportParameter Name="ValidUpTo"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter12</Prompt></ReportParameter>
+    <ReportParameter Name="LogoImage"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter13</Prompt></ReportParameter>
+    <ReportParameter Name="BackgroundImage"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter14</Prompt></ReportParameter>
+    <ReportParameter Name="StudentPhoto"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter15</Prompt></ReportParameter>
+    <ReportParameter Name="QrCodeImage"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>ReportParameter16</Prompt></ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>

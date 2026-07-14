@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StudentBusPassDataSet"
+           targetNamespace="http://schoolsaas.com/reports/transport"
+           xmlns="http://schoolsaas.com/reports/transport"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="StudentBusPassDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── BusPassDataSet Table ─────────────────────────────────────── -->
+        <!-- Maps to: TransportAllocation JOIN Student JOIN TransportRoute   -->
+        <!-- Transport.TransportAllocations table                             -->
+        <xs:element name="BusPassDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Allocation Details -->
+              <xs:element name="AllocationId"    type="xs:int"      minOccurs="0" msdata:Caption="Allocation ID" />
+              <xs:element name="SeatNumber"      type="xs:string"   minOccurs="0" msdata:Caption="Seat Number" />
+              <xs:element name="MonthlyCharge"   type="xs:decimal"  minOccurs="0" msdata:Caption="Monthly Charge" />
+              <xs:element name="StartDate"       type="xs:dateTime" minOccurs="0" msdata:Caption="Start Date" />
+              <xs:element name="ValidTill"       type="xs:dateTime" minOccurs="0" msdata:Caption="Valid Till / End Date" />
+              <xs:element name="Status"          type="xs:string"   minOccurs="0" msdata:Caption="Status" />
+              <xs:element name="RfidTag"         type="xs:string"   minOccurs="0" msdata:Caption="RFID Tag" />
+              <xs:element name="QrCode"          type="xs:string"   minOccurs="0" msdata:Caption="QR Code" />
+
+              <!-- Student (Joined) -->
+              <xs:element name="StudentId"       type="xs:int"      minOccurs="0" msdata:Caption="Student ID" />
+              <xs:element name="StudentName"     type="xs:string"   minOccurs="0" msdata:Caption="Student Name" />
+              <xs:element name="StudentCode"     type="xs:string"   minOccurs="0" msdata:Caption="Student Code" />
+              <xs:element name="ClassName"       type="xs:string"   minOccurs="0" msdata:Caption="Class Name" />
+
+              <!-- Route Details (Joined) -->
+              <xs:element name="RouteName"       type="xs:string"   minOccurs="0" msdata:Caption="Route Name" />
+              <xs:element name="RouteCode"       type="xs:string"   minOccurs="0" msdata:Caption="Route Code" />
+              <xs:element name="BoardingStop"    type="xs:string"   minOccurs="0" msdata:Caption="Boarding Stop" />
+              <xs:element name="DropStop"        type="xs:string"   minOccurs="0" msdata:Caption="Drop Stop" />
+              <xs:element name="PickupTime"      type="xs:string"   minOccurs="0" msdata:Caption="Pickup Time" />
+              <xs:element name="DropTime"        type="xs:string"   minOccurs="0" msdata:Caption="Drop Time" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

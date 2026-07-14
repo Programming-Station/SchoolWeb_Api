@@ -4,6 +4,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
+    [Table("Campuses", Schema = "School")]
     public class Campus : AuditEntity<int>, ITenantEntity
     {
         [Key]

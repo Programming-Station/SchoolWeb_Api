@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="AccountingLedgerDataSet"
+           targetNamespace="http://schoolsaas.com/reports/finance"
+           xmlns="http://schoolsaas.com/reports/finance"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="AccountingLedgerDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── LedgerDataSet Table ──────────────────────────────────────── -->
+        <!-- Maps to: JournalEntry JOIN JournalEntryLine JOIN CoaAccount     -->
+        <!-- Finance.JournalEntries (Schema = Finance)                       -->
+        <xs:element name="LedgerDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- JournalEntry.Id -->
+              <xs:element name="JournalEntryId"  type="xs:int"      minOccurs="0" msdata:Caption="Journal Entry ID" />
+              <!-- JournalEntry.VoucherNo: Auto-generated JV-YYYY-MM-XXXX -->
+              <xs:element name="VoucherNumber"   type="xs:string"   minOccurs="0" msdata:Caption="Voucher Number" />
+              <!-- JournalEntry.EntryDate -->
+              <xs:element name="EntryDate"       type="xs:dateTime" minOccurs="0" msdata:Caption="Entry Date" />
+              <!-- JournalEntry.Narration -->
+              <xs:element name="Narration"       type="xs:string"   minOccurs="0" msdata:Caption="Narration" />
+              <!-- JournalEntry.Reference -->
+              <xs:element name="Reference"       type="xs:string"   minOccurs="0" msdata:Caption="Reference" />
+              <!-- JournalEntry.VoucherType: Journal/Payment/Receipt/Contra/CreditNote/DebitNote -->
+              <xs:element name="VoucherType"     type="xs:string"   minOccurs="0" msdata:Caption="Voucher Type" />
+              <!-- JournalEntry.Source: Manual/Fees/Payroll/Procurement -->
+              <xs:element name="Source"          type="xs:string"   minOccurs="0" msdata:Caption="Source" />
+              <!-- JournalEntry.Status: Pending/Approved/Rejected -->
+              <xs:element name="JournalStatus"   type="xs:string"   minOccurs="0" msdata:Caption="Journal Status" />
+              <xs:element name="ApprovedBy"      type="xs:string"   minOccurs="0" msdata:Caption="Approved By" />
+              <xs:element name="ApprovedDate"    type="xs:dateTime" minOccurs="0" msdata:Caption="Approved Date" />
+              <xs:element name="IsPosted"        type="xs:boolean"  minOccurs="0" msdata:Caption="Is Posted" />
+
+              <!-- JournalEntryLine fields -->
+              <!-- JournalEntryLine.DebitAmount decimal(18,2) -->
+              <xs:element name="DebitAmount"     type="xs:decimal"  minOccurs="0" msdata:Caption="Debit (Dr)" />
+              <!-- JournalEntryLine.CreditAmount decimal(18,2) -->
+              <xs:element name="CreditAmount"    type="xs:decimal"  minOccurs="0" msdata:Caption="Credit (Cr)" />
+              <!-- JournalEntryLine.Description -->
+              <xs:element name="LineDescription" type="xs:string"   minOccurs="0" msdata:Caption="Line Description" />
+
+              <!-- CoaAccount (joined) -->
+              <xs:element name="AccountId"       type="xs:int"      minOccurs="0" msdata:Caption="Account ID" />
+              <xs:element name="AccountName"     type="xs:string"   minOccurs="0" msdata:Caption="Account Name" />
+              <xs:element name="AccountCode"     type="xs:string"   minOccurs="0" msdata:Caption="Account Code" />
+              <xs:element name="AccountType"     type="xs:string"   minOccurs="0" msdata:Caption="Account Type" />
+
+              <!-- CostCenter (joined) -->
+              <xs:element name="CostCenterName"  type="xs:string"   minOccurs="0" msdata:Caption="Cost Center" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

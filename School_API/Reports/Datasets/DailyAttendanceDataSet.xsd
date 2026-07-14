@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DailyAttendanceDataSet"
+           targetNamespace="http://schoolsaas.com/reports/attendance"
+           xmlns="http://schoolsaas.com/reports/attendance"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="DailyAttendanceDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── AttendanceDataSet Table ─────────────────────────────────── -->
+        <!-- Maps to: StudentAttendance JOIN Student JOIN Class              -->
+        <xs:element name="AttendanceDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Student Identity -->
+              <xs:element name="StudentId"       type="xs:int"      minOccurs="0" msdata:Caption="Student ID" />
+              <xs:element name="StudentFullName" type="xs:string"   minOccurs="0" msdata:Caption="Student Full Name" />
+              <!-- Student.StudentId is the enrollment code, not the PK -->
+              <xs:element name="StudentCode"     type="xs:string"   minOccurs="0" msdata:Caption="Enrollment No" />
+              <xs:element name="RollNo"          type="xs:string"   minOccurs="0" msdata:Caption="Roll Number" />
+
+              <!-- Attendance Record -->
+              <!-- Maps directly to StudentAttendance.AttendanceDate -->
+              <xs:element name="AttendanceDate"  type="xs:dateTime" minOccurs="0" msdata:Caption="Attendance Date" />
+              <!-- Maps to StudentAttendance.Status: Present/Absent/Late/Leave/Holiday -->
+              <xs:element name="Status"          type="xs:string"   minOccurs="0" msdata:Caption="Status" />
+              <xs:element name="Remarks"         type="xs:string"   minOccurs="0" msdata:Caption="Remarks" />
+              <xs:element name="PeriodNo"        type="xs:int"      minOccurs="0" msdata:Caption="Period No" />
+              <xs:element name="MarkedBy"        type="xs:string"   minOccurs="0" msdata:Caption="Marked By" />
+
+              <!-- Class / Subject Context -->
+              <xs:element name="ClassName"       type="xs:string"   minOccurs="0" msdata:Caption="Class Name" />
+              <xs:element name="SubjectName"     type="xs:string"   minOccurs="0" msdata:Caption="Subject" />
+              <xs:element name="BatchName"       type="xs:string"   minOccurs="0" msdata:Caption="Batch / Section" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

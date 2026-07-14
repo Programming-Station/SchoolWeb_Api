@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Text;
 using School.Domain.Location;
@@ -8,6 +9,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
+    [Table("SchoolRegistrations", Schema = "School")]
     public class SchoolRegistration : AuditEntity<int>
     {
         [Key]

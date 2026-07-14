@@ -90,6 +90,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSignalR();
 
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
@@ -175,6 +176,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 }
  
 
+app.MapHub<School_API.Hubs.CommunicationHub>("/hubs/communication");
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope())

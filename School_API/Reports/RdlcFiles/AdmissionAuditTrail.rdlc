@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>11in</Height>
+        <ReportItems>
+          <Textbox Name="TitleTxt">
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns><TextRun><Value>=Parameters!ReportTitle.Value</Value><Style><FontSize>16pt</FontSize><FontWeight>Bold</FontWeight><Color>#374151</Color></Style></TextRun></TextRuns>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.5in</Top><Left>0.5in</Left><Height>0.4in</Height><Width>7.5in</Width>
+          </Textbox>
+
+          <Textbox Name="GridHeader1">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Application ID</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.2in</Top><Left>0.5in</Left><Height>0.3in</Height><Width>1.5in</Width>
+            <Style><BackgroundColor>#F3F4F6</BackgroundColor></Style>
+          </Textbox>
+          <Textbox Name="GridHeader2">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Remarks &amp; Comments</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.2in</Top><Left>2.1in</Left><Height>0.3in</Height><Width>4.0in</Width>
+            <Style><BackgroundColor>#F3F4F6</BackgroundColor></Style>
+          </Textbox>
+          <Textbox Name="GridHeader3">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Date Logged</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.2in</Top><Left>6.2in</Left><Height>0.3in</Height><Width>1.8in</Width>
+            <Style><BackgroundColor>#F3F4F6</BackgroundColor></Style>
+          </Textbox>
+
+          <Textbox Name="LogNotice">
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns><TextRun><Value>System audit logs bound to AuditDataSet.</Value><Style><FontSize>9pt</FontSize><FontStyle>Italic</FontStyle></Style></TextRun></TextRuns>
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.7in</Top><Left>0.5in</Left><Height>0.3in</Height><Width>6.5in</Width>
+          </Textbox>
+        </ReportItems>
+        <Style />
+      </Body>
+      <Width>8.5in</Width>
+      <Page>
+        <PageHeight>11in</PageHeight>
+        <PageWidth>8.5in</PageWidth>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="ReportTitle"><DataType>String</DataType></ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>

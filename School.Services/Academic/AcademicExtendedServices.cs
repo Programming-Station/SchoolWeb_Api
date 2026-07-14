@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using School.Domain.Academic;
+using School.Domain.Student;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Services.Interfaces.Academic;
+using School.Services.Interfaces;
+using School.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace School.Services.Academic
 {
@@ -170,7 +174,15 @@ namespace School.Services.Academic
     public class AssignmentService : IAssignmentService
     {
         private readonly IAssignmentRepository _repo;
-        public AssignmentService(IAssignmentRepository repo) => _repo = repo;
+        private readonly IEmailService _emailService;
+        private readonly SchoolDbContext _dbContext;
+
+        public AssignmentService(IAssignmentRepository repo, IEmailService emailService, SchoolDbContext dbContext)
+        {
+            _repo = repo;
+            _emailService = emailService;
+            _dbContext = dbContext;
+        }
 
         public async Task<(bool, string, AssignmentDto)> CreateAsync(CreateAssignmentRequest req, string createdBy, int schoolId)
         {
@@ -183,7 +195,53 @@ namespace School.Services.Academic
                 CreatedByUserId = createdBy, SchoolRegistrationId = schoolId, CreatedBy = createdBy
             };
             await _repo.AddAsync(a);
+
+            // Trigger New Assignment Posted email to all students in the class
+            _ = SendAssignmentPostedEmailsAsync(a);
+
             return (true, "Assignment created.", MapA(a));
+        }
+
+        private async Task SendAssignmentPostedEmailsAsync(Assignment assignment)
+        {
+            try
+            {
+                // Find all active students in the class with linked email accounts
+                var students = await _dbContext.Students
+                    .Include(s => s.ApplicationUser)
+                    .Where(s => !s.IsDeleted && s.ClassId == assignment.ClassId && s.ApplicationUser != null)
+                    .Select(s => new { s.Name, Email = s.ApplicationUser!.Email })
+                    .ToListAsync();
+
+                var subjectName = await _dbContext.Subjects
+                    .Where(sub => sub.Id == assignment.SubjectId)
+                    .Select(sub => sub.Name)
+                    .FirstOrDefaultAsync() ?? "Subject";
+
+                var placeholders = new Dictionary<string, string>
+                {
+                    { "SubjectName", subjectName },
+                    { "Title", assignment.Title },
+                    { "EndDate", assignment.EndDate.ToString("dd MMM yyyy") },
+                    { "Instructions", assignment.Instructions ?? "No specific instructions provided." }
+                };
+
+                foreach (var student in students)
+                {
+                    if (!string.IsNullOrWhiteSpace(student.Email))
+                    {
+                        var studentPlaceholders = new Dictionary<string, string>(placeholders)
+                        {
+                            { "UserName", student.Name }
+                        };
+                        await _emailService.SendGenericTemplateAsync(student.Email, "New Assignment Posted", studentPlaceholders);
+                    }
+                }
+            }
+            catch
+            {
+                // Swallow background exceptions — email failure should not crash core thread
+            }
         }
 
         public async Task<IEnumerable<AssignmentDto>> GetByClassAsync(int classId, int schoolId)

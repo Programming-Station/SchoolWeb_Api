@@ -6,6 +6,7 @@ using School.Domain;
 using School.Domain.Website;
 using School.Domain.Student;
 using School.Domain.School;
+using School.Domain.Academic;
 
 namespace School.Infrastructure
 {

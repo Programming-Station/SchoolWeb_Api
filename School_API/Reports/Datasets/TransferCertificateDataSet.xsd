@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="TransferCertificateDataSet"
+           targetNamespace="http://schoolsaas.com/reports/student"
+           xmlns="http://schoolsaas.com/reports/student"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="TransferCertificateDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── TCDataSet Table ──────────────────────────────────────────── -->
+        <!-- Maps to: Student + AdmissionApplication (for joining dates)     -->
+        <xs:element name="TCDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Student.Id (PK) -->
+              <xs:element name="StudentId"         type="xs:int"    minOccurs="0" msdata:Caption="Student ID" />
+              <!-- Student.Name -->
+              <xs:element name="StudentFullName"   type="xs:string" minOccurs="0" msdata:Caption="Student Full Name" />
+              <!-- Student.StudentId = Enrollment / Admission code -->
+              <xs:element name="AdmissionNumber"   type="xs:string" minOccurs="0" msdata:Caption="Admission / Enrollment No" />
+              <!-- Student.EnrollmentNumber -->
+              <xs:element name="EnrollmentNumber"  type="xs:string" minOccurs="0" msdata:Caption="Enrollment Number" />
+              <!-- Student.FathersName -->
+              <xs:element name="FatherName"        type="xs:string" minOccurs="0" msdata:Caption="Father's Name" />
+              <!-- Student.Gender -->
+              <xs:element name="Gender"            type="xs:string" minOccurs="0" msdata:Caption="Gender" />
+              <!-- Student.DateOfBirth -->
+              <xs:element name="DateOfBirth"       type="xs:string" minOccurs="0" msdata:Caption="Date of Birth" />
+              <!-- Student.Nationality -->
+              <xs:element name="Nationality"       type="xs:string" minOccurs="0" msdata:Caption="Nationality" />
+
+              <!-- Class (joined) -->
+              <xs:element name="ClassName"         type="xs:string" minOccurs="0" msdata:Caption="Last Class Attended" />
+              <xs:element name="CourseName"        type="xs:string" minOccurs="0" msdata:Caption="Course" />
+
+              <!-- AdmissionApplication (joined) -->
+              <!-- AdmissionApplication.CreatedAt = Date of Joining -->
+              <xs:element name="DateOfJoining"     type="xs:dateTime" minOccurs="0" msdata:Caption="Date of Joining" />
+
+              <!-- Leaving date from Student Status transition / manual entry -->
+              <xs:element name="DateOfLeaving"     type="xs:dateTime" minOccurs="0" msdata:Caption="Date of Leaving" />
+
+              <!-- TC-specific fields (computed / manually filled) -->
+              <xs:element name="Conduct"           type="xs:string" minOccurs="0" msdata:Caption="Student Conduct" />
+              <xs:element name="ReasonForLeaving"  type="xs:string" minOccurs="0" msdata:Caption="Reason for Leaving" />
+              <!-- Last qualification (from AdmissionApplication.LastQualification) -->
+              <xs:element name="LastQualification" type="xs:string" minOccurs="0" msdata:Caption="Last Qualification" />
+
+              <!-- Status: Student.StatusId resolves name from Status table -->
+              <xs:element name="StudentStatus"     type="xs:string" minOccurs="0" msdata:Caption="Status" />
+
+              <!-- Contact -->
+              <xs:element name="MobileNo"          type="xs:string" minOccurs="0" msdata:Caption="Mobile No" />
+              <xs:element name="PostalAddress"     type="xs:string" minOccurs="0" msdata:Caption="Postal Address" />
+
+              <!-- TC number (auto-generated at print time) -->
+              <xs:element name="TCNumber"          type="xs:string" minOccurs="0" msdata:Caption="TC Number" />
+              <xs:element name="TCIssuedDate"      type="xs:dateTime" minOccurs="0" msdata:Caption="TC Issue Date" />
+              <xs:element name="IssuedBy"          type="xs:string" minOccurs="0" msdata:Caption="Issued By" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

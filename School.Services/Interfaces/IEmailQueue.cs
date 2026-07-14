@@ -10,6 +10,8 @@ namespace School.Services.Interfaces
         public string RecipientEmail { get; set; } = string.Empty;
         public string TemplateName { get; set; } = string.Empty;
         public Dictionary<string, string>? Placeholders { get; set; }
+        public byte[]? AttachmentBytes { get; set; }
+        public string? AttachmentName { get; set; }
     }
 
     public interface IEmailQueue

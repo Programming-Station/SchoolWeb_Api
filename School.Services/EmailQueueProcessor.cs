@@ -116,7 +116,7 @@ namespace School.Services
                         }
 
                         // Send the email template
-                        isSuccess = await emailService.SendTemplateAsync(item.RecipientEmail, item.TemplateName, item.Placeholders);
+                        isSuccess = await emailService.SendTemplateAsync(item.RecipientEmail, item.TemplateName, item.Placeholders, item.AttachmentBytes, item.AttachmentName);
 
                         if (isSuccess)
                         {

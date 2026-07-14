@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FeePaymentReceiptDataSet"
+           targetNamespace="http://schoolsaas.com/reports/fee"
+           xmlns="http://schoolsaas.com/reports/fee"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="FeePaymentReceiptDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── FeeReceiptDataSet Table ─────────────────────────────────── -->
+        <!-- Maps to: FeePayment JOIN Student JOIN FeeInstallment            -->
+        <!-- Field names match FeePayment.cs entity exactly                 -->
+        <xs:element name="FeeReceiptDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- FeePayment PK -->
+              <xs:element name="PaymentId"           type="xs:int"      minOccurs="0" msdata:Caption="Payment ID" />
+              <!-- FeePayment.ReceiptNo -->
+              <xs:element name="ReceiptNo"           type="xs:string"   minOccurs="0" msdata:Caption="Receipt Number" />
+              <!-- FeePayment.PaymentDate -->
+              <xs:element name="PaymentDate"         type="xs:dateTime" minOccurs="0" msdata:Caption="Payment Date" />
+              <!-- FeePayment.AmountPaid -->
+              <xs:element name="AmountPaid"          type="xs:decimal"  minOccurs="0" msdata:Caption="Amount Paid" />
+              <!-- FeePayment.PaymentMode: Cash/Cheque/Online/DD/NEFT/UPI -->
+              <xs:element name="PaymentMode"         type="xs:string"   minOccurs="0" msdata:Caption="Payment Mode" />
+              <!-- FeePayment.TransactionRef -->
+              <xs:element name="TransactionRef"      type="xs:string"   minOccurs="0" msdata:Caption="Transaction Ref" />
+              <!-- FeePayment.Status: Completed/Cancelled/Refunded -->
+              <xs:element name="PaymentStatus"       type="xs:string"   minOccurs="0" msdata:Caption="Payment Status" />
+              <!-- FeePayment.CollectedBy (UserId) -->
+              <xs:element name="CollectedBy"         type="xs:string"   minOccurs="0" msdata:Caption="Collected By" />
+              <xs:element name="Remarks"             type="xs:string"   minOccurs="0" msdata:Caption="Remarks" />
+
+              <!-- Student (joined) -->
+              <xs:element name="StudentId"           type="xs:int"      minOccurs="0" msdata:Caption="Student ID" />
+              <xs:element name="StudentFullName"     type="xs:string"   minOccurs="0" msdata:Caption="Student Name" />
+              <!-- Student.StudentId = enrollment code -->
+              <xs:element name="StudentCode"         type="xs:string"   minOccurs="0" msdata:Caption="Student Code" />
+              <xs:element name="ClassName"           type="xs:string"   minOccurs="0" msdata:Caption="Class" />
+              <xs:element name="FatherName"          type="xs:string"   minOccurs="0" msdata:Caption="Father's Name" />
+              <xs:element name="MobileNo"            type="xs:string"   minOccurs="0" msdata:Caption="Contact" />
+
+              <!-- FeeInstallment (joined) -->
+              <xs:element name="InstallmentName"     type="xs:string"   minOccurs="0" msdata:Caption="Fee Installment" />
+              <xs:element name="DueDate"             type="xs:dateTime" minOccurs="0" msdata:Caption="Due Date" />
+              <xs:element name="InstallmentAmount"   type="xs:decimal"  minOccurs="0" msdata:Caption="Installment Amount" />
+              <xs:element name="LateFine"            type="xs:decimal"  minOccurs="0" msdata:Caption="Late Fine" />
+              <xs:element name="Concession"          type="xs:decimal"  minOccurs="0" msdata:Caption="Concession" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int"    minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

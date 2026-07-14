@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="AdmissionRegisterDataSet"
+           targetNamespace="http://schoolsaas.com/reports/admission"
+           xmlns="http://schoolsaas.com/reports/admission"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="AdmissionRegisterDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── AdmissionDataSet Table ────────────────────────────────────── -->
+        <!-- Maps to: AdmissionApplication entity                             -->
+        <!-- Student.AdmissionApplication table                               -->
+        <xs:element name="AdmissionDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- AdmissionApplication.Id (PK) -->
+              <xs:element name="ApplicationId"     type="xs:int"      minOccurs="0" msdata:Caption="Application ID" />
+              <!-- AdmissionApplication.ApplicationNo -->
+              <xs:element name="ApplicationNumber" type="xs:string"   minOccurs="0" msdata:Caption="Application No" />
+              <!-- AdmissionApplication.AdmissionNo -->
+              <xs:element name="AdmissionNo"       type="xs:string"   minOccurs="0" msdata:Caption="Admission No" />
+              <!-- AdmissionApplication.RegistrationNo -->
+              <xs:element name="RegistrationNo"    type="xs:string"   minOccurs="0" msdata:Caption="Registration No" />
+              <!-- AdmissionApplication.RollNo -->
+              <xs:element name="RollNo"            type="xs:string"   minOccurs="0" msdata:Caption="Roll No" />
+
+              <!-- Core Applicant Info -->
+              <!-- AdmissionApplication.FullName -->
+              <xs:element name="StudentFullName"   type="xs:string"   minOccurs="0" msdata:Caption="Applicant Name" />
+              <xs:element name="DateOfBirth"       type="xs:dateTime" minOccurs="0" msdata:Caption="Date of Birth" />
+              <xs:element name="Gender"            type="xs:string"   minOccurs="0" msdata:Caption="Gender" />
+              <!-- AdmissionApplication.Mobile -->
+              <xs:element name="ContactNumber"     type="xs:string"   minOccurs="0" msdata:Caption="Mobile / Contact" />
+              <xs:element name="Email"             type="xs:string"   minOccurs="0" msdata:Caption="Email" />
+
+              <!-- Parent/Guardian -->
+              <!-- AdmissionApplication.FathersName -->
+              <xs:element name="ParentName"        type="xs:string"   minOccurs="0" msdata:Caption="Father / Guardian" />
+              <!-- AdmissionApplication.GuardianMobile -->
+              <xs:element name="ParentMobile"      type="xs:string"   minOccurs="0" msdata:Caption="Parent Mobile" />
+
+              <!-- Personal Info -->
+              <xs:element name="Category"          type="xs:string"   minOccurs="0" msdata:Caption="Category" />
+              <xs:element name="Religion"          type="xs:string"   minOccurs="0" msdata:Caption="Religion" />
+              <xs:element name="Nationality"       type="xs:string"   minOccurs="0" msdata:Caption="Nationality" />
+              <xs:element name="BloodGroup"        type="xs:string"   minOccurs="0" msdata:Caption="Blood Group" />
+              <xs:element name="AadhaarNo"         type="xs:string"   minOccurs="0" msdata:Caption="Aadhaar No" />
+
+              <!-- Academic Mapping (joined) -->
+              <xs:element name="AppliedClass"      type="xs:string"   minOccurs="0" msdata:Caption="Class Applied" />
+              <xs:element name="CourseName"        type="xs:string"   minOccurs="0" msdata:Caption="Course" />
+              <xs:element name="ProgramName"       type="xs:string"   minOccurs="0" msdata:Caption="Program" />
+              <xs:element name="EducationLevel"    type="xs:string"   minOccurs="0" msdata:Caption="Education Level" />
+              <xs:element name="AcademicYear"      type="xs:string"   minOccurs="0" msdata:Caption="Academic Year" />
+
+              <!-- Last Qualification -->
+              <!-- AdmissionApplication.LastQualification -->
+              <xs:element name="LastQualification" type="xs:string"   minOccurs="0" msdata:Caption="Last Qualification" />
+              <xs:element name="LastInstitute"     type="xs:string"   minOccurs="0" msdata:Caption="Last Institute" />
+              <xs:element name="LastPercentage"    type="xs:string"   minOccurs="0" msdata:Caption="Last %" />
+
+              <!-- Address -->
+              <!-- AdmissionApplication.PermanentAddress -->
+              <xs:element name="PermanentAddress"  type="xs:string"   minOccurs="0" msdata:Caption="Permanent Address" />
+              <xs:element name="PermanentCity"     type="xs:string"   minOccurs="0" msdata:Caption="City" />
+              <xs:element name="PermanentState"    type="xs:string"   minOccurs="0" msdata:Caption="State" />
+              <xs:element name="PermanentPinCode"  type="xs:string"   minOccurs="0" msdata:Caption="Pin Code" />
+
+              <!-- Workflow -->
+              <!-- AdmissionApplication.Status: Draft/Submitted/Under Verification/Approved/Rejected/Enrolled -->
+              <xs:element name="Status"            type="xs:string"   minOccurs="0" msdata:Caption="Application Status" />
+              <xs:element name="Remarks"           type="xs:string"   minOccurs="0" msdata:Caption="Remarks" />
+              <!-- AdmissionApplication.CreatedAt (from AuditEntity) -->
+              <xs:element name="ApplicationDate"   type="xs:dateTime" minOccurs="0" msdata:Caption="Applied Date" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int"   minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

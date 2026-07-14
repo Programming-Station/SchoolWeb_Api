@@ -116,6 +116,70 @@ namespace School.Infrastructure.Seeds
                 });
             }
 
+            if (!existingNames.Contains("Exam Result Published"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "Exam Result Published",
+                    Subject = "Exam Results Published - {{ExamName}}",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;""><h2 style=""color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px;"">Term Performance report</h2><p>Dear <strong>{{UserName}}</strong>,</p><p>Your results for <strong>{{ExamName}}</strong> ({{ExamType}}) have been successfully compiled and published.</p><div style=""background-color: #1e293b; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #475569;""><table style=""width: 100%; border-collapse: collapse;""><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Marks Obtained:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{MarksObtained}} / {{TotalMarks}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Grade:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{Grade}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Result Status:</strong></td><td style=""color: #38bdf8; padding: 5px 0;""><strong>{{Status}}</strong></td></tr></table></div><p>We have compiled your detailed academic marksheet report. Please review the attached PDF file for marks breakdown.</p></div>",
+                    Placeholder = "{{UserName}}, {{ExamName}}, {{ExamType}}, {{MarksObtained}}, {{TotalMarks}}, {{Grade}}, {{Status}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
+            if (!existingNames.Contains("Fee Payment Receipt"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "Fee Payment Receipt",
+                    Subject = "Fee Payment Confirmation - Ref No: {{PaymentId}}",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;""><h2 style=""color: #22c55e; border-bottom: 1px solid #334155; padding-bottom: 10px;"">Payment Received successfully</h2><p>Dear Parent,</p><p>We have successfully processed your fee payment. The transaction reference details are as follows:</p><div style=""background-color: #1e293b; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #475569;""><table style=""width: 100%; border-collapse: collapse;""><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Receipt Number:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">REC-{{PaymentId}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Transaction Date:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{CurrentDate}}</td></tr></table></div><p>A detailed invoice receipt has been compiled. Please find the attached PDF report for billing itemizations.</p></div>",
+                    Placeholder = "{{PaymentId}}, {{CurrentDate}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
+            if (!existingNames.Contains("New Assignment Posted"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "New Assignment Posted",
+                    Subject = "New Assignment Posted: {{Title}} [{{SubjectName}}]",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;""><h2 style=""color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px;"">Assignment Notice</h2><p>Dear <strong>{{UserName}}</strong>,</p><p>A new class assignment has been posted for the subject <strong>{{SubjectName}}</strong>.</p><div style=""background-color: #1e293b; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #475569;""><table style=""width: 100%; border-collapse: collapse;""><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Assignment Title:</strong></td><td style=""color: #f8fafc; padding: 5px 0;"">{{Title}}</td></tr><tr><td style=""color: #94a3b8; padding: 5px 0;""><strong>Submission Deadline:</strong></td><td style=""color: #ef4444; padding: 5px 0;""><strong>{{EndDate}}</strong></td></tr><tr><td style=""color: #94a3b8; padding: 5px 0; vertical-align: top;""><strong>Instructions:</strong></td><td style=""color: #cbd5e1; padding: 5px 0;"">{{Instructions}}</td></tr></table></div><p>Please review and submit worksheets before the deadline in the student academy panel.</p></div>",
+                    Placeholder = "{{UserName}}, {{SubjectName}}, {{Title}}, {{EndDate}}, {{Instructions}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
+            if (!existingNames.Contains("System Summary Report"))
+            {
+                context.EmailTemplates.Add(new EmailTemplate
+                {
+                    SchoolRegistrationId = schoolId,
+                    TemplateName = "System Summary Report",
+                    Subject = "{{ReportSubject}}",
+                    BodyHtml = @"<div style=""font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background-color: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);""><h1 style=""color: #1e40af; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; font-size: 20px; margin-top: 0;"">Operational Intelligence Summary</h1>{{ReportHtml}}<p style=""margin-top: 30px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px;"">This is an automated system administration report generated by SchoolSaaS ERP.</p></div>",
+                    Placeholder = "{{ReportSubject}}, {{ReportHtml}}",
+                    IsActive = true,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+            }
+
             await context.SaveChangesAsync();
         }
     }

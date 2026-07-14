@@ -16,7 +16,7 @@ namespace School.Infrastructure.Email
             _logger = logger;
         }
 
-        public async Task SendEmailAsync(EmailServerSetting setting, string recipientEmail, string subject, string bodyHtml)
+        public async Task SendEmailAsync(EmailServerSetting setting, string recipientEmail, string subject, string bodyHtml, byte[]? attachmentBytes = null, string? attachmentName = null)
         {
             if (setting == null)
             {
@@ -28,13 +28,18 @@ namespace School.Infrastructure.Email
                 message.To.Add(new MailAddress(recipientEmail));
                 
                 string fromDisplayName = !string.IsNullOrWhiteSpace(setting.DisplayName) 
-                    ? setting.DisplayName 
-                    : setting.FromEmail;
+                     ? setting.DisplayName 
+                     : setting.FromEmail;
                 
                 message.From = new MailAddress(setting.FromEmail, fromDisplayName);
                 message.Subject = subject;
                 message.Body = bodyHtml;
                 message.IsBodyHtml = true;
+
+                if (attachmentBytes != null && attachmentBytes.Length > 0 && !string.IsNullOrEmpty(attachmentName))
+                {
+                    message.Attachments.Add(new Attachment(new MemoryStream(attachmentBytes), attachmentName, "application/pdf"));
+                }
 
                 using (var client = new SmtpClient(setting.HostName, setting.Port))
                 {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="HostelGatePassDataSet"
+           targetNamespace="http://schoolsaas.com/reports/hostel"
+           xmlns="http://schoolsaas.com/reports/hostel"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           attributeFormDefault="qualified"
+           elementFormDefault="qualified">
+
+  <xs:element name="HostelGatePassDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- ─── GatePassDataSet Table ────────────────────────────────────── -->
+        <!-- Maps to: HostelGatePass JOIN Student                            -->
+        <!-- Hostel.HostelGatePasses table                                    -->
+        <xs:element name="GatePassDataSet">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Gate Pass details -->
+              <xs:element name="GatePassId"      type="xs:int"      minOccurs="0" msdata:Caption="Gate Pass ID" />
+              <xs:element name="OutDateTime"     type="xs:dateTime" minOccurs="0" msdata:Caption="Out Date/Time" />
+              <xs:element name="InTime"          type="xs:dateTime" minOccurs="0" msdata:Caption="In Date/Time" />
+              <xs:element name="ExpectedReturn"  type="xs:dateTime" minOccurs="0" msdata:Caption="Expected Return" />
+              <xs:element name="Purpose"         type="xs:string"   minOccurs="0" msdata:Caption="Purpose / Reason" />
+              <xs:element name="WardenApproval"  type="xs:string"   minOccurs="0" msdata:Caption="Warden Approval" />
+              <xs:element name="ParentApproval"  type="xs:string"   minOccurs="0" msdata:Caption="Parent Approval" />
+              <xs:element name="Status"          type="xs:string"   minOccurs="0" msdata:Caption="Status" />
+              <xs:element name="QrCode"          type="xs:string"   minOccurs="0" msdata:Caption="QR Code" />
+
+              <!-- Student details (joined) -->
+              <xs:element name="StudentId"       type="xs:int"      minOccurs="0" msdata:Caption="Student ID" />
+              <xs:element name="StudentName"     type="xs:string"   minOccurs="0" msdata:Caption="Student Full Name" />
+              <xs:element name="StudentCode"     type="xs:string"   minOccurs="0" msdata:Caption="Student Code" />
+              <xs:element name="RoomNumber"      type="xs:string"   minOccurs="0" msdata:Caption="Room Number" />
+              <xs:element name="HostelName"      type="xs:string"   minOccurs="0" msdata:Caption="Hostel / Building Name" />
+
+              <!-- Tenant -->
+              <xs:element name="SchoolRegistrationId" type="xs:int" minOccurs="0" msdata:Caption="School ID" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

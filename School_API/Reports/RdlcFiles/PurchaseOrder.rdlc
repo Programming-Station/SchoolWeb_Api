@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>11in</Height>
+        <ReportItems>
+          <Textbox Name="SchoolNameTxt">
+            <CanGrow>true</CanGrow>
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!SchoolName.Value</Value><Style><FontSize>16pt</FontSize><FontWeight>Bold</FontWeight><Color>#1e3a8a</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+            <Top>0.2in</Top><Left>0.5in</Left><Height>0.35in</Height><Width>7.5in</Width>
+          </Textbox>
+          <Textbox Name="SchoolAddressTxt">
+            <CanGrow>true</CanGrow>
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!SchoolAddress.Value</Value><Style><FontSize>9pt</FontSize><Color>#64748b</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+            <Top>0.58in</Top><Left>0.5in</Left><Height>0.22in</Height><Width>7.5in</Width>
+          </Textbox>
+          <Textbox Name="ReportTitleTxt">
+            <CanGrow>true</CanGrow>
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>PURCHASE ORDER REGISTER</Value><Style><FontSize>13pt</FontSize><FontWeight>Bold</FontWeight><Color>#0f172a</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+            <Top>0.85in</Top><Left>0.5in</Left><Height>0.28in</Height><Width>7.5in</Width>
+            <Style><BackgroundColor>#ede9fe</BackgroundColor><Border><Style>Solid</Style><Color>#c4b5fd</Color></Border></Style>
+          </Textbox>
+          <Tablix Name="POTable">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn><Width>0.35in</Width></TablixColumn>
+                <TablixColumn><Width>1.0in</Width></TablixColumn>
+                <TablixColumn><Width>1.5in</Width></TablixColumn>
+                <TablixColumn><Width>1.0in</Width></TablixColumn>
+                <TablixColumn><Width>1.1in</Width></TablixColumn>
+                <TablixColumn><Width>1.0in</Width></TablixColumn>
+                <TablixColumn><Width>0.8in</Width></TablixColumn>
+                <TablixColumn><Width>0.9in</Width></TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.28in</Height>
+                  <TablixCells>
+                    <TablixCell><CellContents><Textbox Name="H1"><Paragraphs><Paragraph><TextRuns><TextRun><Value>#</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H2"><Paragraphs><Paragraph><TextRuns><TextRun><Value>PO Number</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><PaddingLeft>4pt</PaddingLeft></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H3"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Vendor / Supplier</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><PaddingLeft>4pt</PaddingLeft></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H4"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Order Date</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H5"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Delivery Date</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H6"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Total Amount</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign><PaddingRight>4pt</PaddingRight></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H7"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Status</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="H8"><Paragraphs><Paragraph><TextRuns><TextRun><Value>Tax %</Value><Style><FontWeight>Bold</FontWeight><FontSize>8pt</FontSize><Color>#ffffff</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><BackgroundColor>#4c1d95</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.24in</Height>
+                  <TablixCells>
+                    <TablixCell><CellContents><Textbox Name="D1"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=RowNumber(Nothing)</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D2"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!PoNumber.Value</Value><Style><FontSize>8pt</FontSize><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns><Style><PaddingLeft>4pt</PaddingLeft></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D3"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!VendorName.Value</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style><PaddingLeft>4pt</PaddingLeft></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D4"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Format(Fields!OrderDate.Value,"dd-MMM-yyyy")</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D5"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Format(Fields!DeliveryDate.Value,"dd-MMM-yyyy")</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D6"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Format(Fields!TotalAmount.Value,"₹#,##0.00")</Value><Style><FontSize>8pt</FontSize><FontWeight>Bold</FontWeight><Color>#4c1d95</Color></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign><PaddingRight>4pt</PaddingRight></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D7"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Status.Value</Value><Style><FontSize>8pt</FontSize><Color>=IIF(Fields!Status.Value="Approved","#16a34a",IIF(Fields!Status.Value="Pending","#d97706","#94a3b8"))</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                    <TablixCell><CellContents><Textbox Name="D8"><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!TaxPercentage.Value &amp; "%"</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Style>Solid</Style><Color>#e2e8f0</Color></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents></TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember><KeepWithGroup>After</KeepWithGroup></TablixMember>
+                <TablixMember><Group Name="PODetail"></Group></TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember/><TablixMember/><TablixMember/><TablixMember/><TablixMember/><TablixMember/><TablixMember/><TablixMember/>
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <DataSetName>PurchaseOrderDataSet</DataSetName>
+            <Top>1.45in</Top><Left>0.5in</Left><Width>8in</Width>
+          </Tablix>
+          <Textbox Name="FooterNote">
+            <CanGrow>true</CanGrow>
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>This is a computer-generated procurement document. Authorized signatory required for official PO processing.</Value><Style><FontSize>8pt</FontSize><Color>#94a3b8</Color><FontStyle>Italic</FontStyle></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+            <Top>10.5in</Top><Left>0.5in</Left><Height>0.22in</Height><Width>7.5in</Width>
+          </Textbox>
+        </ReportItems>
+      </Body>
+      <Width>8.5in</Width>
+      <Page><PageHeight>11in</PageHeight><PageWidth>8.5in</PageWidth><LeftMargin>0.25in</LeftMargin><RightMargin>0.25in</RightMargin><TopMargin>0.25in</TopMargin><BottomMargin>0.25in</BottomMargin></Page>
+    </ReportSection>
+  </ReportSections>
+  <DataSets>
+    <DataSet Name="PurchaseOrderDataSet">
+      <Fields>
+        <Field Name="PoNumber"><DataField>PoNumber</DataField></Field>
+        <Field Name="VendorName"><DataField>VendorName</DataField></Field>
+        <Field Name="OrderDate"><DataField>OrderDate</DataField></Field>
+        <Field Name="DeliveryDate"><DataField>DeliveryDate</DataField></Field>
+        <Field Name="TotalAmount"><DataField>TotalAmount</DataField></Field>
+        <Field Name="Status"><DataField>Status</DataField></Field>
+        <Field Name="TaxPercentage"><DataField>TaxPercentage</DataField></Field>
+      </Fields>
+      <Query><DataSourceName>DataSource1</DataSourceName><CommandText></CommandText></Query>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="SchoolName"><DataType>String</DataType><DefaultValue><Values><Value>SchoolSaaS Academy</Value></Values></DefaultValue></ReportParameter>
+    <ReportParameter Name="SchoolAddress"><DataType>String</DataType><DefaultValue><Values><Value>City Campus</Value></Values></DefaultValue></ReportParameter>
+    <ReportParameter Name="ReportGeneratedDate"><DataType>String</DataType><DefaultValue><Values><Value>Today</Value></Values></DefaultValue></ReportParameter>
+    <ReportParameter Name="ReportGeneratedBy"><DataType>String</DataType><DefaultValue><Values><Value>System</Value></Values></DefaultValue></ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>

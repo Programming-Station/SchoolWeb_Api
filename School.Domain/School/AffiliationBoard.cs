@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.School
 {
+    [Table("AffiliationBoards", Schema = "School")]
     public class AffiliationBoard : AuditEntity<int>
     {
         [Key]

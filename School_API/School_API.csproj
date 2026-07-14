@@ -125,4 +125,62 @@
     <Folder Include="uploads\Images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Reports\Datasets\HostelGatePassDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HostelGatePassDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Datasets\LibraryIssueDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LibraryIssueDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Datasets\PurchaseOrderDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PurchaseOrderDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Datasets\StudentBusPassDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StudentBusPassDataSet.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reports\Datasets\HostelGatePassDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HostelGatePassDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\Datasets\LibraryIssueDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>LibraryIssueDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\Datasets\PurchaseOrderDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrderDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\Datasets\StudentBusPassDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StudentBusPassDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\HostelGatePassDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HostelGatePassDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\LibraryIssueDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>LibraryIssueDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\PurchaseOrderDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrderDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Reports\StudentBusPassDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StudentBusPassDataSet.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

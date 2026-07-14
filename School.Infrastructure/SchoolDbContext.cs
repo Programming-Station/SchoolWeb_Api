@@ -59,6 +59,8 @@ namespace School.Infrastructure
         public DbSet<Affiliated> Affiliateds { get; set; } = null!;
         public DbSet<Student> Students { get; set; } = null!;
         public DbSet<SchoolRegistration> SchoolRegistrations { get; set; } = null!;
+        public DbSet<OrganizationProfile> OrganizationProfiles { get; set; } = null!;
+        public DbSet<OrganizationProfileAudit> OrganizationProfileAudits { get; set; } = null!;
         public DbSet<AffiliationBoard> AffiliationBoards { get; set; } = null!;
         public DbSet<SchoolType> SchoolTypes { get; set; } = null!;
         public DbSet<SchoolMedium> SchoolMediums { get; set; } = null!;
@@ -290,6 +292,18 @@ namespace School.Infrastructure
         public DbSet<FeedbackSurvey> FeedbackSurveys { get; set; } = null!;
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; } = null!;
         public DbSet<SurveyResponse> SurveyResponses { get; set; } = null!;
+        public DbSet<Announcement> Announcements { get; set; } = null!;
+        public DbSet<CommunicationMeeting> CommunicationMeetings { get; set; } = null!;
+        public DbSet<SupportTicket> SupportTickets { get; set; } = null!;
+        public DbSet<TicketResponse> TicketResponses { get; set; } = null!;
+        public DbSet<QuickPoll> QuickPolls { get; set; } = null!;
+        public DbSet<PollVote> PollVotes { get; set; } = null!;
+        public DbSet<SharedDocument> SharedDocuments { get; set; } = null!;
+        public DbSet<CommunicationTemplate> CommunicationTemplates { get; set; } = null!;
+        public DbSet<GroupChatRoom> GroupChatRooms { get; set; } = null!;
+        public DbSet<GroupChatMember> GroupChatMembers { get; set; } = null!;
+        public DbSet<GroupChatMessage> GroupChatMessages { get; set; } = null!;
+        public DbSet<CentralNotification> CentralNotifications { get; set; } = null!;
 
         // Analytics Schema
         public DbSet<DashboardConfig> DashboardConfigs { get; set; } = null!;
