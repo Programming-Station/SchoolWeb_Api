@@ -18,6 +18,12 @@ namespace School_API.Common
             Latitude = user?.FindFirstValue(ClaimConstants.Latitude) ?? string.Empty;
             Longitude = user?.FindFirstValue(ClaimConstants.Longitude) ?? string.Empty;
             IsAuthenticated = !string.IsNullOrEmpty(UserId);
+
+            var tenantClaim = user?.FindFirstValue(ClaimConstants.TenantId) ?? user?.FindFirstValue("SchoolRegistrationId");
+            if (int.TryParse(tenantClaim, out int tenantIdValue))
+            {
+                TenantId = tenantIdValue;
+            }
         }
 
         public string SessionId { get; }
@@ -29,6 +35,7 @@ namespace School_API.Common
         public bool IsAuthenticated { get; }
         public string Latitude { get; }
         public string Longitude { get; }
+        public int? TenantId { get; }
     }
 }
 

@@ -11,6 +11,7 @@ namespace School_API.Common.Interface
         bool IsAuthenticated { get; }
         string Latitude { get; }
         string Longitude { get; }
+        int? TenantId { get; }
     }
 }
 

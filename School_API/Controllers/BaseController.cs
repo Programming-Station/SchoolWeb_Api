@@ -21,6 +21,7 @@ namespace School_API.Controllers
         protected string RoleName => _currentUser.RoleName;
         protected string RoleId => _currentUser.RoleId;
         protected bool IsAuthenticated => _currentUser.IsAuthenticated;
+        protected int? TenantId => _currentUser.TenantId;
     }
 }
 
