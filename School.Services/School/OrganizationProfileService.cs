@@ -55,11 +55,24 @@ namespace School.Services.School
             var tenantId = _tenantService.GetTenantId();
             if (!tenantId.HasValue || tenantId.Value == 0)
             {
+                // Fallback for Superadmin or Pre-Login state
                 return new APIResponse<OrganizationProfileDto>
                 {
-                    Success = false,
-                    Message = "No active tenant found in current context",
-                    StatusCode = HttpStatusCode.BadRequest
+                    Success = true,
+                    Data = new OrganizationProfileDto
+                    {
+                        SchoolRegistrationId = 0,
+                        OrganizationName = "SchoolSaaS Master Control",
+                        SchoolName = "SchoolSaaS",
+                        SchoolCode = "SAAS-001",
+                        PrimaryColor = "#1e3a8a",
+                        SecondaryColor = "#0d9488",
+                        Theme = "Light",
+                        HeaderLogo = "assets/images/logo.png", // Or default platform logo
+                        Status = true
+                    },
+                    Message = "Global Platform Profile loaded for Superadmin",
+                    StatusCode = HttpStatusCode.OK
                 };
             }
 

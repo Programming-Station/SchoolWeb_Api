@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using School.Domain;
 using School.Domain.Academic;
 using School.Domain.School;
 
@@ -205,6 +206,151 @@ namespace School.Infrastructure.Seeds
                     await context.SaveChangesAsync();
                 }
             }
+
+            // --- Additional Academic Models Seeding ---
+            var academicYear = await context.AcademicYears.FirstOrDefaultAsync(x => !x.IsDeleted && x.SchoolRegistrationId == schoolId);
+
+            // 7. Education Level
+            if (!await context.EducationLevels.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var edLevels = new List<EducationLevel>
+                {
+                    new() { Name = "Primary Education", Code = "PR", Description = "Grades 1 to 5", SchoolRegistrationId = schoolId },
+                    new() { Name = "Secondary Education", Code = "SEC", Description = "Grades 6 to 10", SchoolRegistrationId = schoolId },
+                    new() { Name = "Higher Secondary", Code = "HSEC", Description = "Grades 11 to 12", SchoolRegistrationId = schoolId }
+                };
+                await context.EducationLevels.AddRangeAsync(edLevels);
+                await context.SaveChangesAsync();
+            }
+
+            var edLevel = await context.EducationLevels.FirstOrDefaultAsync(x => x.SchoolRegistrationId == schoolId);
+
+            // 8. Program
+            if (edLevel != null && !await context.Programs.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var programs = new List<Program>
+                {
+                    new() { Name = "Science Stream", Code = "SCI", EducationLevelId = edLevel.Id, DurationYears = 2, SchoolRegistrationId = schoolId },
+                    new() { Name = "Commerce Stream", Code = "COM", EducationLevelId = edLevel.Id, DurationYears = 2, SchoolRegistrationId = schoolId },
+                    new() { Name = "Arts & Humanities", Code = "ART", EducationLevelId = edLevel.Id, DurationYears = 2, SchoolRegistrationId = schoolId }
+                };
+                await context.Programs.AddRangeAsync(programs);
+                await context.SaveChangesAsync();
+            }
+
+            var program = await context.Programs.FirstOrDefaultAsync(x => x.SchoolRegistrationId == schoolId);
+
+            // 9. Batch & Branch
+            if (program != null && academicYear != null)
+            {
+                if (!await context.Batches.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+                {
+                    var batches = new List<Batch>
+                    {
+                        new() { Name = "Batch 2024-2026", Code = "B24", StartDate = DateTime.Today.AddDays(-100), EndDate = DateTime.Today.AddDays(600), AcademicYearId = academicYear.Id, ProgramId = program.Id, SchoolRegistrationId = schoolId },
+                        new() { Name = "Batch 2025-2027", Code = "B25", StartDate = DateTime.Today.AddDays(200), EndDate = DateTime.Today.AddDays(900), AcademicYearId = academicYear.Id, ProgramId = program.Id, SchoolRegistrationId = schoolId }
+                    };
+                    await context.Batches.AddRangeAsync(batches);
+                    await context.SaveChangesAsync();
+                }
+
+                if (!await context.Branches.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+                {
+                    var branches = new List<Branch>
+                    {
+                        new() { Name = "Main Campus", Code = "MAIN", ProgramId = program.Id, SchoolRegistrationId = schoolId },
+                        new() { Name = "North Wing", Code = "NW", ProgramId = program.Id, SchoolRegistrationId = schoolId }
+                    };
+                    await context.Branches.AddRangeAsync(branches);
+                    await context.SaveChangesAsync();
+                }
+            }
+
+            // 10. Year Semester
+            if (!await context.YearSemesters.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var sems = new List<YearSemester>
+                {
+                    new() { Name = "Semester 1", Code = "SEM1", Sequence = 1, SchoolRegistrationId = schoolId },
+                    new() { Name = "Semester 2", Code = "SEM2", Sequence = 2, SchoolRegistrationId = schoolId }
+                };
+                await context.YearSemesters.AddRangeAsync(sems);
+                await context.SaveChangesAsync();
+            }
+
+            // 11. Timetable Period
+            if (academicYear != null && !await context.TimetablePeriods.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var periods = new List<TimetablePeriod>();
+                for (int d = 1; d <= 5; d++) // Monday to Friday
+                {
+                    for (int p = 1; p <= 6; p++) // 6 periods a day
+                    {
+                        periods.Add(new TimetablePeriod
+                        {
+                            ClassId = cls.Id, SubjectId = sub.Id, DayOfWeek = d, PeriodNo = p,
+                            StartTime = $"{8 + p}:00", EndTime = $"{8 + p}:45", RoomNo = "101",
+                            AcademicYearId = academicYear.Id, SchoolRegistrationId = schoolId,
+                            CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                        });
+                    }
+                }
+                await context.TimetablePeriods.AddRangeAsync(periods);
+                await context.SaveChangesAsync();
+            }
+
+            // 12. Exam Results
+            if (exam != null && !await context.ExamResults.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var results = new List<ExamResult>();
+                for (int i = 1; i <= 25; i++)
+                {
+                    results.Add(new ExamResult
+                    {
+                        ExamId = exam.Id, StudentId = student.Id, SubjectId = sub.Id,
+                        MarksObtained = 40 + i, TotalMarks = 100, Grade = "B", Status = "Pass",
+                        SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                    });
+                }
+                await context.ExamResults.AddRangeAsync(results);
+                await context.SaveChangesAsync();
+            }
+
+            // 13. Subject Enrollments
+            if (academicYear != null && !await context.SubjectEnrollments.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var enrollments = new List<SubjectEnrollment>();
+                for (int i = 1; i <= 25; i++)
+                {
+                    enrollments.Add(new SubjectEnrollment
+                    {
+                        StudentId = student.Id, SubjectId = sub.Id,
+                        YearSemesterId = academicYear.Id, ClassId = cls.Id,
+                        EnrolledDate = DateTime.UtcNow.AddDays(-50), Status = "Enrolled", SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                    });
+                }
+                await context.SubjectEnrollments.AddRangeAsync(enrollments);
+                await context.SaveChangesAsync();
+            }
+
+            // 14. Student Attendance
+            if (academicYear != null && !await context.StudentAttendances.AnyAsync(x => x.SchoolRegistrationId == schoolId))
+            {
+                var attendances = new List<StudentAttendance>();
+                for (int i = 1; i <= 30; i++)
+                {
+                    attendances.Add(new StudentAttendance
+                    {
+                        StudentId = student.Id, ClassId = cls.Id, AttendanceDate = DateTime.Today.AddDays(-i),
+                        Status = i % 10 == 0 ? "Absent" : "Present", Remarks = "",
+                        SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                    });
+                }
+                await context.StudentAttendances.AddRangeAsync(attendances);
+                await context.SaveChangesAsync();
+            }
+
         }
     }
 }
+
