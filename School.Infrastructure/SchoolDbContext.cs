@@ -287,6 +287,15 @@ namespace School.Infrastructure
         public DbSet<Circular> Circulars { get; set; } = null!;
         public DbSet<SmsLog> SmsLogs { get; set; } = null!;
         public DbSet<WhatsAppLog> WhatsAppLogs { get; set; } = null!;
+        public DbSet<WhatsAppAccount> WhatsAppAccounts { get; set; } = null!;
+        public DbSet<WhatsAppTemplate> WhatsAppTemplates { get; set; } = null!;
+        public DbSet<WhatsAppMessage> WhatsAppMessages { get; set; } = null!;
+        public DbSet<WhatsAppQueue> WhatsAppQueues { get; set; } = null!;
+        public DbSet<WhatsAppDeliveryLog> WhatsAppDeliveryLogs { get; set; } = null!;
+        public DbSet<WhatsAppWebhookEvent> WhatsAppWebhookEvents { get; set; } = null!;
+        public DbSet<WhatsAppConversation> WhatsAppConversations { get; set; } = null!;
+        public DbSet<WhatsAppMedia> WhatsAppMediaFiles { get; set; } = null!;
+        public DbSet<WhatsAppAuditLog> WhatsAppAuditLogs { get; set; } = null!;
         public DbSet<PushNotification> PushNotifications { get; set; } = null!;
         public DbSet<ParentTeacherChat> ParentTeacherChats { get; set; } = null!;
         public DbSet<FeedbackSurvey> FeedbackSurveys { get; set; } = null!;

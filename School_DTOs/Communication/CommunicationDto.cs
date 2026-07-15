@@ -429,4 +429,106 @@ namespace School_DTOs.Communication
         public List<int> Values { get; set; } = new();
         public string ChartName { get; set; } = string.Empty;
     }
+
+    // ── WhatsApp Account Setup ──
+    public class WhatsAppAccountDto
+    {
+        public int Id { get; set; }
+        public string PhoneNumberId { get; set; } = null!;
+        public string BusinessAccountId { get; set; } = null!;
+        public string PermanentAccessToken { get; set; } = null!;
+        public string? WebhookVerifyToken { get; set; }
+        public string? WebhookSecret { get; set; }
+        public string? BaseUrl { get; set; }
+        public bool IsSandbox { get; set; }
+        public string Status { get; set; } = "Active";
+    }
+
+    // ── WhatsApp Templates ──
+    public class WhatsAppTemplateDto
+    {
+        public int Id { get; set; }
+        public string TemplateName { get; set; } = null!;
+        public string Category { get; set; } = null!;
+        public string LanguageCode { get; set; } = "en_US";
+        public string BodyTemplate { get; set; } = null!;
+        public string Status { get; set; } = "Approved";
+    }
+
+    // ── WhatsApp Messages ──
+    public class WhatsAppMessageDto
+    {
+        public int Id { get; set; }
+        public string RecipientPhone { get; set; } = null!;
+        public string MessageText { get; set; } = null!;
+        public string MessageType { get; set; } = "Text";
+        public string? MetaMessageId { get; set; }
+        public string Status { get; set; } = "Sent";
+        public DateTime SentDate { get; set; }
+    }
+
+    // ── WhatsApp Queue ──
+    public class WhatsAppQueueDto
+    {
+        public int Id { get; set; }
+        public string RecipientPhone { get; set; } = null!;
+        public string MessagePayload { get; set; } = null!;
+        public DateTime ScheduledTime { get; set; }
+        public int RetryCount { get; set; }
+        public string Status { get; set; } = "Pending";
+    }
+
+    // ── WhatsApp Delivery Log ──
+    public class WhatsAppDeliveryLogDto
+    {
+        public int Id { get; set; }
+        public string MetaMessageId { get; set; } = null!;
+        public string RecipientPhone { get; set; } = null!;
+        public string Status { get; set; } = null!;
+        public DateTime StatusTimestamp { get; set; }
+        public string? ErrorMessage { get; set; }
+    }
+
+    // ── WhatsApp Webhook Event ──
+    public class WhatsAppWebhookEventDto
+    {
+        public int Id { get; set; }
+        public string EventType { get; set; } = null!;
+        public string Payload { get; set; } = null!;
+        public bool Processed { get; set; }
+        public DateTime ReceivedDate { get; set; }
+    }
+
+    // ── WhatsApp Conversation ──
+    public class WhatsAppConversationDto
+    {
+        public int Id { get; set; }
+        public string RecipientPhone { get; set; } = null!;
+        public string MetaConversationId { get; set; } = null!;
+        public DateTime StartedDate { get; set; }
+        public DateTime? ExpiresDate { get; set; }
+        public string Category { get; set; } = "Service";
+    }
+
+    // ── WhatsApp Media ──
+    public class WhatsAppMediaDto
+    {
+        public int Id { get; set; }
+        public string MetaMediaId { get; set; } = null!;
+        public string FileName { get; set; } = null!;
+        public string FilePath { get; set; } = null!;
+        public string MimeType { get; set; } = null!;
+        public long FileSize { get; set; }
+    }
+
+    // ── WhatsApp Audit Log ──
+    public class WhatsAppAuditLogDto
+    {
+        public int Id { get; set; }
+        public string Action { get; set; } = null!;
+        public string PerformedBy { get; set; } = null!;
+        public DateTime ActionTimestamp { get; set; }
+        public string? IPAddress { get; set; }
+        public string? Details { get; set; }
+    }
 }

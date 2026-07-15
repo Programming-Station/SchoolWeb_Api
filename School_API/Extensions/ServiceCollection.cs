@@ -239,6 +239,7 @@ namespace School_API
             services.AddHostedService<EmailQueueProcessor>();
             services.AddHostedService<FineCalculationBackgroundJob>();
             services.AddHostedService<ScheduledReportService>();
+            services.AddHostedService<WhatsAppQueueProcessor>();
 
             return services
             .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
@@ -338,6 +339,10 @@ namespace School_API
             .AddScoped<IAccountingService, AccountingService>()
             .AddScoped<IProcurementService, ProcurementService>()
             .AddScoped<ICommunicationService, CommunicationService>()
+            .AddScoped<IWhatsAppService, WhatsAppService>()
+            .AddScoped<IWhatsAppQueueService, WhatsAppQueueService>()
+            .AddScoped<IWhatsAppTemplateService, WhatsAppTemplateService>()
+            .AddScoped<IWhatsAppWebhookService, WhatsAppWebhookService>()
 
             // Academic
             .AddScoped<School.Services.Interfaces.Academic.IExamService, School.Services.Academic.ExamService>()

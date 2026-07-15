@@ -15,10 +15,12 @@ namespace School.Services.Communication
     public class CommunicationService : ICommunicationService
     {
         private readonly SchoolDbContext _context;
+        private readonly IMessageService _messageService;
 
-        public CommunicationService(SchoolDbContext context)
+        public CommunicationService(SchoolDbContext context, IMessageService messageService)
         {
             _context = context;
+            _messageService = messageService;
         }
 
         private int GetCurrentSchoolId()
@@ -244,16 +246,14 @@ namespace School.Services.Communication
 
         public async Task<APIResponse<bool>> SendSmsAsync(SmsLogDto dto, string userName)
         {
-            var entity = new SmsLog
+            var isSent = await _messageService.SendSmsAsync(dto.RecipientNo, dto.Message);
+            return new APIResponse<bool>
             {
-                RecipientNo = dto.RecipientNo, Message = dto.Message,
-                SentStatus = "Sent", SentDate = DateTime.UtcNow,
-                ProviderResponse = "REF-" + Guid.NewGuid().ToString("N")[..8],
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Success = isSent,
+                StatusCode = isSent ? HttpStatusCode.OK : HttpStatusCode.InternalServerError,
+                Message = isSent ? "SMS dispatched successfully" : "Failed to dispatch SMS",
+                Data = isSent
             };
-            _context.SmsLogs.Add(entity);
-            await _context.SaveChangesAsync();
-            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Message = "SMS dispatched", Data = true };
         }
 
         // ════════════════════════════════════════════════════════════════════════
@@ -298,15 +298,14 @@ namespace School.Services.Communication
 
         public async Task<APIResponse<bool>> SendWhatsAppAsync(WhatsAppLogDto dto, string userName)
         {
-            var entity = new WhatsAppLog
+            var isSent = await _messageService.SendWhatsAppAsync(dto.RecipientPhone, dto.Message);
+            return new APIResponse<bool>
             {
-                RecipientPhone = dto.RecipientPhone, Message = dto.Message,
-                Status = "Delivered", SentDate = DateTime.UtcNow,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Success = isSent,
+                StatusCode = isSent ? HttpStatusCode.OK : HttpStatusCode.InternalServerError,
+                Message = isSent ? "WhatsApp message dispatched successfully" : "Failed to dispatch WhatsApp message via gateway",
+                Data = isSent
             };
-            _context.WhatsAppLogs.Add(entity);
-            await _context.SaveChangesAsync();
-            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Message = "WhatsApp message sent", Data = true };
         }
 
         // ════════════════════════════════════════════════════════════════════════

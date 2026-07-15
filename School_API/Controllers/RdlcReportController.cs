@@ -284,7 +284,18 @@ namespace School_API.Controllers
                         .Include(x => x.Class)
                         .Where(x => id == null || x.Id == id)
                         .ToListAsync();
-                    dataSources.Add("TCDataSet", st);
+
+                    var mappedTC = st.Select(x => new
+                    {
+                        StudentFullName = x.Name,
+                        AdmissionNumber = x.StudentId,
+                        ClassName = x.Class != null ? $"{x.Class.Name}{(string.IsNullOrEmpty(x.Class.Section) ? "" : " - " + x.Class.Section)}" : "General",
+                        DateOfJoining = x.CreatedDate,
+                        DateOfLeaving = DateTime.Today,
+                        Conduct = "Good"
+                    }).ToList();
+
+                    dataSources.Add("TCDataSet", mappedTC);
                     break;
 
                 case "DailyAttendanceRegister":
@@ -442,7 +453,18 @@ namespace School_API.Controllers
                         .Include(x => x.Class)
                         .Where(x => request.Id == null || x.Id == request.Id)
                         .ToListAsync();
-                    dataSources.Add("TCDataSet", st);
+
+                    var mappedTC = st.Select(x => new
+                    {
+                        StudentFullName = x.Name,
+                        AdmissionNumber = x.StudentId,
+                        ClassName = x.Class != null ? $"{x.Class.Name}{(string.IsNullOrEmpty(x.Class.Section) ? "" : " - " + x.Class.Section)}" : "General",
+                        DateOfJoining = x.CreatedDate,
+                        DateOfLeaving = DateTime.Today,
+                        Conduct = "Good"
+                    }).ToList();
+
+                    dataSources.Add("TCDataSet", mappedTC);
                     break;
 
                 case "DailyAttendanceRegister":
