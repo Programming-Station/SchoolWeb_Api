@@ -12,10 +12,57 @@ namespace School.Services
     public class RdlcReportManager : IRdlcReportManager
     {
         private readonly IReportBrandingService _brandingService;
+        private readonly string _storagePath;
 
-        public RdlcReportManager(IReportBrandingService brandingService)
+        public RdlcReportManager(IReportBrandingService brandingService, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _brandingService = brandingService;
+
+            var configuredPath = configuration.GetSection("AppSettings:ImageStoragePath").Value;
+            if (string.IsNullOrWhiteSpace(configuredPath))
+            {
+                _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
+            }
+            else
+            {
+                _storagePath = Path.GetFullPath(configuredPath.Trim().Replace('/', Path.DirectorySeparatorChar));
+            }
+        }
+
+        private string GetBase64FromFile(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return string.Empty;
+            
+            if (path.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
+            {
+                var parts = path.Split(',');
+                return parts.Length > 1 ? parts[1] : parts[0];
+            }
+            
+            try
+            {
+                string physicalPath;
+                if (path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var relative = path.Substring("/uploads/".Length).TrimStart('/');
+                    physicalPath = Path.Combine(_storagePath, relative.Replace('/', Path.DirectorySeparatorChar));
+                }
+                else if (path.StartsWith("/") || path.StartsWith("\\"))
+                {
+                    physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path.TrimStart('/', '\\'));
+                }
+                else
+                {
+                    physicalPath = path;
+                }
+                    
+                if (File.Exists(physicalPath))
+                {
+                    return Convert.ToBase64String(File.ReadAllBytes(physicalPath));
+                }
+            }
+            catch {}
+            return string.Empty;
         }
 
         public async Task<byte[]> RenderReportAsync(
@@ -58,28 +105,28 @@ namespace School.Services
             TryAddParam("OrganizationName", branding.OrganizationName);
             TryAddParam("SchoolAddress", branding.AddressLine1 ?? string.Empty);
             TryAddParam("Address", branding.AddressLine1 ?? string.Empty);
-            TryAddParam("Logo", branding.HeaderLogo ?? string.Empty);
-            TryAddParam("HeaderLogo", branding.HeaderLogo ?? string.Empty);
-            TryAddParam("FooterLogo", branding.FooterLogo ?? string.Empty);
-            TryAddParam("LogoLight", branding.LogoLight ?? string.Empty);
-            TryAddParam("LogoDark", branding.LogoDark ?? string.Empty);
+            TryAddParam("Logo", GetBase64FromFile(branding.HeaderLogo));
+            TryAddParam("HeaderLogo", GetBase64FromFile(branding.HeaderLogo));
+            TryAddParam("FooterLogo", GetBase64FromFile(branding.FooterLogo));
+            TryAddParam("LogoLight", GetBase64FromFile(branding.LogoLight));
+            TryAddParam("LogoDark", GetBase64FromFile(branding.LogoDark));
             TryAddParam("Phone", branding.Phone ?? branding.Mobile ?? string.Empty);
             TryAddParam("Email", branding.Email ?? string.Empty);
             TryAddParam("Website", branding.Website ?? string.Empty);
             TryAddParam("Affiliation", branding.AffiliationNumber ?? string.Empty);
             TryAddParam("PrincipalName", branding.PrincipalName ?? string.Empty);
-            TryAddParam("PrincipalSignature", branding.PrincipalSignature ?? string.Empty);
-            TryAddParam("DirectorSignature", branding.DirectorSignature ?? string.Empty);
-            TryAddParam("Seal", branding.OfficialSeal ?? string.Empty);
-            TryAddParam("OfficialSeal", branding.OfficialSeal ?? string.Empty);
-            TryAddParam("Watermark", branding.ReportWatermark ?? string.Empty);
+            TryAddParam("PrincipalSignature", GetBase64FromFile(branding.PrincipalSignature));
+            TryAddParam("DirectorSignature", GetBase64FromFile(branding.DirectorSignature));
+            TryAddParam("Seal", GetBase64FromFile(branding.OfficialSeal));
+            TryAddParam("OfficialSeal", GetBase64FromFile(branding.OfficialSeal));
+            TryAddParam("Watermark", GetBase64FromFile(branding.ReportWatermark));
             TryAddParam("ThemeColor", branding.PrimaryColor ?? "#1e3a8a");
             TryAddParam("CurrentDate", DateTime.Now.ToString("dd-MMM-yyyy"));
             TryAddParam("GeneratedDate", DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt"));
             TryAddParam("GeneratedBy", "System Administrator");
             TryAddParam("AcademicSession", branding.CurrentAcademicSession ?? string.Empty);
             TryAddParam("BranchName", branding.CampusName ?? string.Empty);
-            TryAddParam("DigitalSignature", branding.DigitalSignature ?? string.Empty);
+            TryAddParam("DigitalSignature", GetBase64FromFile(branding.DigitalSignature));
             TryAddParam("Footer", branding.ReportFooterText ?? string.Empty);
             TryAddParam("CopyrightText", branding.CopyrightText ?? string.Empty);
             TryAddParam("Disclaimer", branding.Disclaimer ?? string.Empty);

@@ -19,11 +19,22 @@ namespace School.Services
     {
         private readonly SchoolDbContext _dbContext;
         private readonly IReportBrandingService _brandingService;
+        private readonly string _storagePath;
 
-        public RdlcCertificateService(SchoolDbContext dbContext, IReportBrandingService brandingService)
+        public RdlcCertificateService(SchoolDbContext dbContext, IReportBrandingService brandingService, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _dbContext = dbContext;
             _brandingService = brandingService;
+
+            var configuredPath = configuration.GetSection("AppSettings:ImageStoragePath").Value;
+            if (string.IsNullOrWhiteSpace(configuredPath))
+            {
+                _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
+            }
+            else
+            {
+                _storagePath = Path.GetFullPath(configuredPath.Trim().Replace('/', Path.DirectorySeparatorChar));
+            }
         }
 
         private string GetBase64FromFile(string? path)
@@ -38,9 +49,20 @@ namespace School.Services
             
             try
             {
-                string physicalPath = path.StartsWith("/") 
-                    ? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path.TrimStart('/'))
-                    : path;
+                string physicalPath;
+                if (path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var relative = path.Substring("/uploads/".Length).TrimStart('/');
+                    physicalPath = Path.Combine(_storagePath, relative.Replace('/', Path.DirectorySeparatorChar));
+                }
+                else if (path.StartsWith("/") || path.StartsWith("\\"))
+                {
+                    physicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path.TrimStart('/', '\\'));
+                }
+                else
+                {
+                    physicalPath = path;
+                }
                     
                 if (File.Exists(physicalPath))
                 {
