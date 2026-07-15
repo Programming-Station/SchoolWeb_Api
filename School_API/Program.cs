@@ -151,6 +151,21 @@ else if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
+var configuredImagePath = builder.Configuration.GetSection("AppSettings:ImageStoragePath").Value;
+if (!string.IsNullOrWhiteSpace(configuredImagePath))
+{
+    var storageFullPath = Path.GetFullPath(configuredImagePath.Trim().Replace('/', Path.DirectorySeparatorChar));
+    if (!Directory.Exists(storageFullPath))
+    {
+        Directory.CreateDirectory(storageFullPath);
+    }
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(storageFullPath),
+        RequestPath = "/uploads"
+    });
+}
+
 app.UseRouting();
 
 app.UseCors("CorsPolicy");

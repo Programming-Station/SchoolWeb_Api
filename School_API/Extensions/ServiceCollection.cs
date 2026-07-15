@@ -269,6 +269,7 @@ namespace School_API
             .AddScoped<IEmployeeService, EmployeeService>()
            
             .AddScoped<IImageService, ImageService>()
+            .AddScoped<IDocumentService, School.Services.DocumentManagement.DocumentService>()
             .AddScoped<ICityService, CityService>()
             .AddScoped<IStateService, StateService>()
             .AddScoped<IAffiliatedService, AffiliatedService>()

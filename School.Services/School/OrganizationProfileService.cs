@@ -31,6 +31,7 @@ namespace School.Services.School
         private readonly IWebHostEnvironment _env;
         private readonly SchoolDbContext _dbContext;
         private readonly IOrganizationCacheService _cacheService;
+        private readonly IDocumentService _documentService;
 
         public OrganizationProfileService(
             IOrganizationProfileRepository profileRepo,
@@ -39,7 +40,8 @@ namespace School.Services.School
             IMapper mapper,
             IWebHostEnvironment env,
             SchoolDbContext dbContext,
-            IOrganizationCacheService cacheService)
+            IOrganizationCacheService cacheService,
+            IDocumentService documentService)
         {
             _profileRepo = profileRepo;
             _schoolRepo = schoolRepo;
@@ -48,6 +50,7 @@ namespace School.Services.School
             _env = env;
             _dbContext = dbContext;
             _cacheService = cacheService;
+            _documentService = documentService;
         }
 
         public async Task<APIResponse<OrganizationProfileDto>> GetMyProfileAsync()
@@ -268,19 +271,8 @@ namespace School.Services.School
                     };
                 }
 
-                string uploadFolder = Path.Combine(_env.WebRootPath, "uploads", "branding", tenantId.ToString());
-                if (!Directory.Exists(uploadFolder))
-                {
-                    Directory.CreateDirectory(uploadFolder);
-                }
-
-                string safeFileName = $"{fileType.ToLower()}_{Guid.NewGuid()}{extension}";
-                string fullPath = Path.Combine(uploadFolder, safeFileName);
-                await File.WriteAllBytesAsync(fullPath, bytes);
-
-                GenerateThumbnail(bytes, uploadFolder, safeFileName, extension);
-
-                string webPath = $"/uploads/branding/{tenantId}/{safeFileName}";
+                string folderName = $"branding_{tenantId}";
+                string webPath = await _documentService.UploadAsync(bytes, fileName, folderName);
                 return new APIResponse<string>
                 {
                     Success = true,
