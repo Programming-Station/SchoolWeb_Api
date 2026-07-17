@@ -1360,11 +1360,13 @@ namespace School.Services.Payroll
     {
         private readonly IRepository<ReimbursementClaim> _repo;
         private readonly IUnitOfWork _uow;
+        private readonly IAccountingService _accountingService;
 
-        public ReimbursementClaimService(IRepository<ReimbursementClaim> repo, IUnitOfWork uow)
+        public ReimbursementClaimService(IRepository<ReimbursementClaim> repo, IUnitOfWork uow, IAccountingService accountingService)
         {
             _repo = repo;
             _uow = uow;
+            _accountingService = accountingService;
         }
 
         public async Task<APIResponse<List<ReimbursementClaimDto>>> GetAllAsync()
@@ -1443,6 +1445,56 @@ namespace School.Services.Payroll
 
             _repo.Update(e);
             await _uow.CommitAsync();
+
+            // Post General Ledger Voucher automatically when settled
+            if (dto.Status.Equals("Settled", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var coaResponse = await _accountingService.GetChartOfAccountsAsync(e.SchoolRegistrationId);
+                    var coaList = coaResponse?.Data;
+                    
+                    var expenseAcc = coaList?.FirstOrDefault(a => a.Code == "50000") ?? coaList?.FirstOrDefault(a => a.AccountType.Equals("Expense", StringComparison.OrdinalIgnoreCase));
+                    var assetAcc = coaList?.FirstOrDefault(a => a.Code == "11000") ?? coaList?.FirstOrDefault(a => a.Code == "10000") ?? coaList?.FirstOrDefault(a => a.AccountType.Equals("Asset", StringComparison.OrdinalIgnoreCase));
+
+                    if (expenseAcc != null && assetAcc != null)
+                    {
+                        var journalDto = new School_DTOs.Finance.CreateJournalEntryDto
+                        {
+                            EntryDate = DateTime.UtcNow,
+                            Narration = $"Settlement of Reimbursement Claim #{e.Id} - {e.ClaimType} for employee #{e.EmployeeId}. Ref: {dto.SettlementRef}",
+                            Reference = $"CLAIM-{e.Id}",
+                            Source = "Payroll",
+                            VoucherType = "Payment",
+                            Lines = new List<School_DTOs.Finance.CreateJournalEntryLineDto>
+                            {
+                                new School_DTOs.Finance.CreateJournalEntryLineDto
+                                {
+                                    AccountId = expenseAcc.Id,
+                                    DebitAmount = e.Amount,
+                                    CreditAmount = 0,
+                                    Description = $"Debit Reimbursement Expense: {e.Description ?? e.ClaimType}"
+                                },
+                                new School_DTOs.Finance.CreateJournalEntryLineDto
+                                {
+                                    AccountId = assetAcc.Id,
+                                    DebitAmount = 0,
+                                    CreditAmount = e.Amount,
+                                    Description = $"Credit Cash/Bank settlement Account"
+                                }
+                            }
+                        };
+
+                        await _accountingService.PostJournalEntryAsync(e.SchoolRegistrationId, journalDto, username);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle the exception to prevent rollback of status update if ledger fails
+                    Console.WriteLine("Ledger posting failed: " + ex.Message);
+                }
+            }
+
             return new APIResponse<object> { StatusCode = HttpStatusCode.OK, Message = $"Claim status updated to {dto.Status}" };
         }
 

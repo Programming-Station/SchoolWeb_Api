@@ -587,6 +587,18 @@ namespace School.Services.Finance
                     {
                         account.CurrentBalance += (line.CreditAmount - line.DebitAmount);
                     }
+
+                    // Consume budget for instantly approved expense vouchers
+                    if (account.AccountType.Equals("Expense", StringComparison.OrdinalIgnoreCase) && line.DebitAmount > 0)
+                    {
+                        var budget = await _context.BudgetPlans
+                            .FirstOrDefaultAsync(b => b.SchoolRegistrationId == schoolId && b.AccountId == line.AccountId && !b.IsDeleted);
+                        if (budget != null)
+                        {
+                            budget.UtilizedAmount += line.DebitAmount;
+                            _context.BudgetPlans.Update(budget);
+                        }
+                    }
                 }
 
                 entry.Lines.Add(new JournalEntryLine
@@ -693,7 +705,35 @@ namespace School.Services.Finance
             if (entry == null) return new APIResponse<bool> { Success = false, Message = "Voucher not found" };
             if (entry.Status == "Approved") return new APIResponse<bool> { Success = false, Message = "Voucher is already approved" };
 
-            // Update ledger balances now
+            // 1. Proactive Budget Checks & Consumption updates
+            foreach (var line in entry.Lines)
+            {
+                var account = await _context.CoaAccounts.FindAsync(line.AccountId);
+                if (account != null && account.AccountType.Equals("Expense", StringComparison.OrdinalIgnoreCase) && line.DebitAmount > 0)
+                {
+                    var budget = await _context.BudgetPlans
+                        .FirstOrDefaultAsync(b => b.SchoolRegistrationId == schoolId && b.AccountId == line.AccountId && !b.IsDeleted);
+                    
+                    if (budget != null)
+                    {
+                        if (budget.UtilizedAmount + line.DebitAmount > budget.AllocatedAmount)
+                        {
+                            return new APIResponse<bool>
+                            {
+                                Success = false,
+                                StatusCode = HttpStatusCode.BadRequest,
+                                Message = $"Voucher rejected: Approving this transaction would exceed the allocated budget of ₹{budget.AllocatedAmount} on account '{account.Name}' by ₹{(budget.UtilizedAmount + line.DebitAmount) - budget.AllocatedAmount}.",
+                                Data = false
+                            };
+                        }
+                        // Consume budget
+                        budget.UtilizedAmount += line.DebitAmount;
+                        _context.BudgetPlans.Update(budget);
+                    }
+                }
+            }
+
+            // 2. Update ledger balances now
             foreach (var line in entry.Lines)
             {
                 var account = await _context.CoaAccounts.FindAsync(line.AccountId);
