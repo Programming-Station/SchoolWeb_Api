@@ -391,6 +391,10 @@ namespace School_API
             .AddScoped<IAnalyticsService, AnalyticsService>()
             .AddScoped<IAdministrationService, AdministrationService>()
             .AddScoped<IAiService, AiService>()
+            .AddScoped<IComplaintService, ComplaintService>()
+            .AddScoped<IVisitorService, VisitorService>()
+            .AddScoped<ICertificateService, CertificateService>()
+            .AddScoped<INotificationLogService, NotificationLogService>()
             ;
         }
         public static IServiceCollection AddSessionWithOptions(this IServiceCollection services)

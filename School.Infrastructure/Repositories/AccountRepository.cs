@@ -477,7 +477,6 @@ namespace School.Infrastructure.Repositories
             }
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
-
             if (!result.Succeeded)
             {
                 return new APIResponse
@@ -486,6 +485,15 @@ namespace School.Infrastructure.Repositories
                     StatusCode = HttpStatusCode.Unauthorized,
                 };
             }
+            
+            // Security: Revoke all existing refresh tokens so other active sessions are logged out
+            var tokens = await _context.RefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
+            if (tokens.Any())
+            {
+                _context.RefreshTokens.RemoveRange(tokens);
+                await _context.SaveChangesAsync();
+            }
+
             return new APIResponse
             {
                 Message = CommonResource.UpdateSuccess,
@@ -503,7 +511,7 @@ namespace School.Infrastructure.Repositories
                 {
                     Message = CommonResource.PleaseTryAgain,
                     StatusCode = HttpStatusCode.NotFound,
-
+                    Success = false
                 };
             }
             if (user.PhoneNumber != model.MobileNumber)
@@ -512,9 +520,8 @@ namespace School.Infrastructure.Repositories
                 {
                     Message = "Mobile number mismatch. Please enter your correct mobile number",
                     StatusCode = HttpStatusCode.NotFound,
-
+                    Success = false
                 };
-
             }
             if (user.Email != model.Email)
             {
@@ -522,22 +529,22 @@ namespace School.Infrastructure.Repositories
                 {
                     Message = "Email id mismatch. Please enter your correct email id",
                     StatusCode = HttpStatusCode.NotFound,
-
+                    Success = false
                 };
-
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             return new APIResponse<ForgotPasswordDto>
             {
-                Message = "Token generated successfuly. Forget password vailid for 5 minutes",
+                Message = "Token generated successfully. Forgot password valid for 5 minutes.",
                 Data = new ForgotPasswordDto
                 {
                     ExpireTime = DateTime.Now.AddMinutes(5),
                     Token = token,
                 },
-                StatusCode = HttpStatusCode.Unauthorized,
+                StatusCode = HttpStatusCode.OK,
+                Success = true
             };
         }
 
@@ -548,8 +555,9 @@ namespace School.Infrastructure.Repositories
             {
                 return new APIResponse
                 {
-                    Message = $"This user <b> {model.EmailId} </b>  does not exist.",
+                    Message = $"This user <b> {model.EmailId} </b> does not exist.",
                     StatusCode = HttpStatusCode.NotFound,
+                    Success = false
                 };
             }
 
@@ -558,9 +566,18 @@ namespace School.Infrastructure.Repositories
             {
                 return new APIResponse
                 {
-                    Message = result?.Errors.Select(e => e.Description).ToString()!,
-                    StatusCode = HttpStatusCode.BadRequest
+                    Message = string.Join(", ", result.Errors.Select(e => e.Description)),
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Success = false
                 };
+            }
+            
+            // Security: Revoke all existing refresh tokens so other active sessions are logged out
+            var tokens = await _context.RefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
+            if (tokens.Any())
+            {
+                _context.RefreshTokens.RemoveRange(tokens);
+                await _context.SaveChangesAsync();
             }
             return new APIResponse
             {

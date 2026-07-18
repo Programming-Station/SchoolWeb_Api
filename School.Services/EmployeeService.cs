@@ -91,7 +91,9 @@ namespace School.Services
                     SchoolRegistrationId = entity.SchoolRegistrationId
                 };
 
-                var createResult = await _userManager.CreateAsync(user, "School@123");
+                // BUG-005 FIX: Generate a secure random password meeting Identity policy (12+ chars, upper, lower, digit, special)
+                var tempPassword = GenerateSecurePassword();
+                var createResult = await _userManager.CreateAsync(user, tempPassword);
                 if (createResult.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Employee");
@@ -99,8 +101,8 @@ namespace School.Services
                     _employeeRepository.Update(entity);
                     await _unitOfWork.CommitAsync();
 
-                    // Send Welcome Email using template
-                    await _emailService.SendWelcomeEmailAsync(model.Email, generatedCode, "School@123", "Approved");
+                    // Send Welcome Email with generated credentials
+                    await _emailService.SendWelcomeEmailAsync(model.Email, generatedCode, tempPassword, "Approved");
                 }
                 else
                 {
@@ -202,24 +204,36 @@ namespace School.Services
                                          e.Email.ToLower().Contains(lowerSearch));
             }
 
-            if (!string.IsNullOrEmpty(filter.SortBy))
+            // BUG-001 FIX: safe column map — EF.Property<object> crashes on navigation properties
+            bool isDesc = filter.SortDirection?.ToLower() == "desc";
+            query = (filter.SortBy?.ToLower()) switch
             {
-                bool isDesc = filter.SortDirection?.ToLower() == "desc";
-                query = isDesc 
-                    ? query.OrderByDescending(e => EF.Property<object>(e, filter.SortBy))
-                    : query.OrderBy(e => EF.Property<object>(e, filter.SortBy));
-            }
-            else
-            {
-                query = query.OrderByDescending(e => e.Id);
-            }
+                "firstname"       => isDesc ? query.OrderByDescending(e => e.FirstName)      : query.OrderBy(e => e.FirstName),
+                "lastname"        => isDesc ? query.OrderByDescending(e => e.LastName)       : query.OrderBy(e => e.LastName),
+                "employeecode"    => isDesc ? query.OrderByDescending(e => e.EmployeeCode)   : query.OrderBy(e => e.EmployeeCode),
+                "email"           => isDesc ? query.OrderByDescending(e => e.Email)          : query.OrderBy(e => e.Email),
+                "mobilenumber"    => isDesc ? query.OrderByDescending(e => e.MobileNumber)   : query.OrderBy(e => e.MobileNumber),
+                "status"          => isDesc ? query.OrderByDescending(e => e.Status)         : query.OrderBy(e => e.Status),
+                "joiningdate"     => isDesc ? query.OrderByDescending(e => e.JoiningDate)    : query.OrderBy(e => e.JoiningDate),
+                "createddate"     => isDesc ? query.OrderByDescending(e => e.CreatedDate)    : query.OrderBy(e => e.CreatedDate),
+                "designationname" or "designation" =>
+                    isDesc ? query.OrderByDescending(e => e.Designation != null ? e.Designation.Name : "")
+                           : query.OrderBy(e => e.Designation != null ? e.Designation.Name : ""),
+                "departmentname" or "department" =>
+                    isDesc ? query.OrderByDescending(e => e.Department != null ? e.Department.Name : "")
+                           : query.OrderBy(e => e.Department != null ? e.Department.Name : ""),
+                _ => query.OrderByDescending(e => e.Id)
+            };
 
+            // BUG-007 FIX: count before Include to avoid unnecessary join in COUNT query
             var totalRecords = await query.CountAsync();
+
+            // BUG-007 FIX: Include only after pagination to prevent N+1
             var entities = await query
-                .Include(e => e.Department)
-                .Include(e => e.Designation)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
+                .Include(e => e.Department)
+                .Include(e => e.Designation)
                 .ToListAsync();
 
             var pagedResponse = new PagedResponse<EmployeeDto>
@@ -283,5 +297,47 @@ namespace School.Services
             int updatedCount = await _employeeRepository.BulkStatusUpdateAsync(ids, status, username);
             return new APIResponse<int> { Success = true, StatusCode = HttpStatusCode.OK, Data = updatedCount, Message = $"{updatedCount} records updated." };
         }
+
+        // ─── Private Helpers ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Generates a cryptographically secure temporary password satisfying ASP.NET Identity policy:
+        /// minimum 12 characters, at least one uppercase, lowercase, digit, and special character.
+        /// </summary>
+        private static string GenerateSecurePassword()
+        {
+            const string upper   = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+            const string lower   = "abcdefghjkmnpqrstuvwxyz";
+            const string digits  = "23456789";
+            const string special = "!@#$%^&*";
+            const string all     = upper + lower + digits + special;
+
+            var rng   = System.Security.Cryptography.RandomNumberGenerator.Create();
+            var bytes = new byte[18];
+            rng.GetBytes(bytes);
+
+            // Guarantee at least one character from each required set
+            var pwd = new System.Text.StringBuilder();
+            pwd.Append(upper[bytes[0]   % upper.Length]);
+            pwd.Append(lower[bytes[1]   % lower.Length]);
+            pwd.Append(digits[bytes[2]  % digits.Length]);
+            pwd.Append(special[bytes[3] % special.Length]);
+
+            // Fill remaining 8 characters from the full set
+            for (int i = 4; i < 14; i++)
+                pwd.Append(all[bytes[i] % all.Length]);
+
+            // Fisher-Yates shuffle using fresh random bytes
+            rng.GetBytes(bytes);
+            var arr = pwd.ToString().ToCharArray();
+            for (int i = arr.Length - 1; i > 0; i--)
+            {
+                int j = bytes[i % bytes.Length] % (i + 1);
+                (arr[i], arr[j]) = (arr[j], arr[i]);
+            }
+
+            return new string(arr);
+        }
     }
 }
+

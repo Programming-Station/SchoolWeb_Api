@@ -6,12 +6,14 @@ using School.Models.Account;
 using School_DTOs;
 using School.Infrastructure.JWTAuthenticationManager.Interfaces;
 using School.Services.Interfaces;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace School_API.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer,Basic")]
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [EnableRateLimiting("api")]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -29,6 +31,7 @@ namespace School_API.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -175,7 +178,8 @@ namespace School_API.Controllers
                 return Ok(new APIResponse
                 {
                     Message = "The token has expired.",
-                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                    StatusCode = System.Net.HttpStatusCode.BadRequest,
+                    Success = false
                 });
             }
             return Ok(await _accountService.ResetPasswordAsync(model));
@@ -187,7 +191,7 @@ namespace School_API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState.ToList());
+                return BadRequest(ModelState);
             }
             var res = await _accountService.ChangePasswordAsync(resetPasswordDto);
             return Ok(res);

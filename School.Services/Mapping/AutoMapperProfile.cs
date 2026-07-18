@@ -373,6 +373,16 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate.HasValue ? src.UpdatedDate.Value.ToString("dd-MM-yyyy hh:mm:ss tt") : null));
 
             CreateMap<global::School_DTOs.AI.AiPredictionDto, global::School.Domain.AI.AiPrediction>();
+
+            // New Mappings
+            CreateMap<global::School.Domain.Administration.Complaint, global::School_DTOs.Administration.ComplaintDto>().ReverseMap();
+            CreateMap<global::School.Domain.Administration.Complaint, global::School_DTOs.Administration.CreateComplaintDto>().ReverseMap();
+            CreateMap<global::School.Domain.Administration.Visitor, global::School_DTOs.Administration.VisitorDto>().ReverseMap();
+            CreateMap<global::School.Domain.Administration.Visitor, global::School_DTOs.Administration.CreateVisitorDto>().ReverseMap();
+            CreateMap<global::School.Domain.Administration.CertificateIssuanceLog, global::School_DTOs.Administration.CertificateIssuanceLogDto>().ReverseMap();
+            CreateMap<global::School.Domain.Administration.CertificateIssuanceLog, global::School_DTOs.Administration.CreateCertificateIssuanceDto>().ReverseMap();
+            CreateMap<global::School.Domain.Communication.NotificationLog, global::School_DTOs.Communication.NotificationLogDto>().ReverseMap();
+            CreateMap<global::School.Domain.Communication.NotificationLog, global::School_DTOs.Communication.CreateNotificationDto>().ReverseMap();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

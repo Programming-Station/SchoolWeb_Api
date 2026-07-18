@@ -327,6 +327,12 @@ namespace School.Infrastructure
         public DbSet<WorkflowInstance> WorkflowInstances { get; set; } = null!;
         public DbSet<ApprovalLog> ApprovalLogs { get; set; } = null!;
         public DbSet<AdminAuditLog> AdminAuditLogs { get; set; } = null!;
+        public DbSet<Complaint> Complaints { get; set; } = null!;
+        public DbSet<Visitor> Visitors { get; set; } = null!;
+        public DbSet<CertificateIssuanceLog> CertificateIssuanceLogs { get; set; } = null!;
+
+        // Communication Schema (continued)
+        public DbSet<NotificationLog> NotificationLogs { get; set; } = null!;
 
         // AI Schema
         public DbSet<AiPrediction> AiPredictions { get; set; } = null!;

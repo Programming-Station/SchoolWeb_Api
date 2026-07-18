@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using School.Domain.Auth;
 using School.Infrastructure;
 using School.Models.Configuration;
@@ -10,8 +12,43 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ─── Rate Limiting ────────────────────────────────────────────────────────────
+builder.Services.AddRateLimiter(options =>
+{
+    // Strict policy for auth endpoints (login / forgot-password)
+    options.AddFixedWindowLimiter("auth", o =>
+    {
+        o.PermitLimit = 10;
+        o.Window = TimeSpan.FromMinutes(1);
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit = 0;
+    });
+
+    // General API throttle — per IP, sliding window
+    options.AddSlidingWindowLimiter("api", o =>
+    {
+        o.PermitLimit = 200;
+        o.Window = TimeSpan.FromMinutes(1);
+        o.SegmentsPerWindow = 4;
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit = 20;
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { success = false, message = "Too many requests. Please slow down and try again later." },
+            token);
+    };
+});
 
 
 builder.Services.AddControllers(options =>
@@ -95,6 +132,8 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSignalR();
 
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 var appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -165,6 +204,8 @@ if (!string.IsNullOrWhiteSpace(configuredImagePath))
         RequestPath = "/uploads"
     });
 }
+
+app.UseRateLimiter();
 
 app.UseRouting();
 
