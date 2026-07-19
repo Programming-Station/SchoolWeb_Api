@@ -6,6 +6,7 @@ using static School.Domain.BaseEntity;
 namespace School.Domain.Email
 {
     #nullable disable
+    [Table("EmailTemplates", Schema = "Communication")]
     public class EmailTemplate : AuditEntity<int>, ITenantEntity
     {
         [Key]

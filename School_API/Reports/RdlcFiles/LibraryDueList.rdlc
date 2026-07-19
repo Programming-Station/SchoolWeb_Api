@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>11in</Height>
+        <ReportItems>
+          <!-- Header title -->
+          <Textbox Name="HeaderTitle">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>SCHOOL SAAS ERP SYSTEM</Value>
+                    <Style>
+                      <FontSize>22pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#1E3A8A</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.5in</Top>
+            <Left>0.5in</Left>
+            <Height>0.4in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="HeaderSub">
+            <CanGrow>true</CanGrow>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Library Book Defaulters &amp; Dues</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#495057</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.95in</Top>
+            <Left>0.5in</Left>
+            <Height>0.3in</Height>
+            <Width>7.5in</Width>
+            <ZIndex>1</ZIndex>
+          </Textbox>
+
+          <!-- Receipt parameters table details -->
+          <Textbox Name="LblReceiptNo">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Library ID:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.5in</Top><Left>1.0in</Left><Height>0.25in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValReceiptNo">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!LibraryID.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.5in</Top><Left>2.6in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LblPaymentDate">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Generated On:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.8in</Top><Left>1.0in</Left><Height>0.25in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValPaymentDate">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!GeneratedDate.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.8in</Top><Left>2.6in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LblPaymentMode">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Member Type:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.1in</Top><Left>1.0in</Left><Height>0.25in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValPaymentMode">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!MemberType.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.1in</Top><Left>2.6in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LblTransactionRef">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Total Fine:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.4in</Top><Left>1.0in</Left><Height>0.25in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValTransactionRef">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!TotalFine.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.4in</Top><Left>2.6in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <!-- Sibling/Right side details -->
+          <Textbox Name="LblStudentName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Student:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.5in</Top><Left>4.7in</Left><Height>0.25in</Height><Width>1.2in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValStudentName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!StudentName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.5in</Top><Left>6.0in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LblClassName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Class Name:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.8in</Top><Left>4.7in</Left><Height>0.25in</Height><Width>1.2in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValClassName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!ClassName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>1.8in</Top><Left>6.0in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <Textbox Name="LblFatherName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Father's Name:</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.1in</Top><Left>4.7in</Left><Height>0.25in</Height><Width>1.2in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ValFatherName">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!FatherName.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>2.1in</Top><Left>6.0in</Left><Height>0.25in</Height><Width>1.8in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <!-- Listing table details layout -->
+          <Textbox Name="ColHdrDesc">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Book Title &amp; Author</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.2in</Top><Left>1.0in</Left><Height>0.3in</Height><Width>3.2in</Width><ZIndex>1</ZIndex>
+            <Style><BackgroundColor>#E2E8F0</BackgroundColor></Style>
+          </Textbox>
+          <Textbox Name="ColHdrStatus">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Due Date</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.2in</Top><Left>4.3in</Left><Height>0.3in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+            <Style><BackgroundColor>#E2E8F0</BackgroundColor></Style>
+          </Textbox>
+          <Textbox Name="ColHdrAmount">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Fine Amount</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.2in</Top><Left>5.9in</Left><Height>0.3in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+            <Style><BackgroundColor>#E2E8F0</BackgroundColor></Style>
+          </Textbox>
+
+          <Textbox Name="ColValDesc">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!BookTitle.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.55in</Top><Left>1.0in</Left><Height>0.3in</Height><Width>3.2in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ColValStatus">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!DueDate.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.55in</Top><Left>4.3in</Left><Height>0.3in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="ColValAmount">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Parameters!FineAmount.Value</Value></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>3.55in</Top><Left>5.9in</Left><Height>0.3in</Height><Width>1.5in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <!-- Rules Terms -->
+          <Textbox Name="TermsTitle">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Terms &amp; Conditions:</Value><Style><FontSize>8pt</FontSize><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>4.2in</Top><Left>1.0in</Left><Height>0.2in</Height><Width>3.0in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+          <Textbox Name="TermsDesc">
+            <Paragraphs>
+              <Paragraph><TextRuns><TextRun><Value>1. Fees once paid are non-refundable.&#xD;&#xA;2. This is a computer-generated document requiring no physical signature.</Value><Style><FontSize>7pt</FontSize></Style></TextRun></TextRuns></Paragraph>
+            </Paragraphs>
+            <Top>4.4in</Top><Left>1.0in</Left><Height>0.4in</Height><Width>4.0in</Width><ZIndex>1</ZIndex>
+          </Textbox>
+
+          <!-- QR verification -->
+          <Image Name="QrCodeImageControl">
+            <Source>Database</Source>
+            <Value>=Parameters!QrCodeImage.Value</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>4.2in</Top><Left>6.0in</Left><Height>0.8in</Height><Width>0.8in</Width><ZIndex>1</ZIndex>
+          </Image>
+          <Textbox Name="VerifyText">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Verify Receipt</Value><Style><FontSize>6pt</FontSize></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.05in</Top><Left>6.0in</Left><Height>0.15in</Height><Width>0.8in</Width><ZIndex>1</ZIndex>
+            <Style><TextAlign>Center</TextAlign></Style>
+          </Textbox>
+
+          <!-- Footer -->
+          <Textbox Name="FooterInfo">
+            <Paragraphs><Paragraph><TextRuns><TextRun><Value>Generated via School SAAS Billing Gateway</Value><Style><FontSize>8pt</FontSize><FontStyle>Italic</FontStyle></Style></TextRun></TextRuns></Paragraph></Paragraphs>
+            <Top>5.4in</Top><Left>1.0in</Left><Height>0.25in</Height><Width>6.4in</Width><ZIndex>1</ZIndex>
+            <Style><TextAlign>Center</TextAlign></Style>
+          </Textbox>
+
+        </ReportItems>
+        <Style />
+      </Body>
+      <Width>8.5in</Width>
+      <Page>
+        <PageHeight>11in</PageHeight>
+        <PageWidth>8.5in</PageWidth>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="LibraryID"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P1</Prompt></ReportParameter>
+    <ReportParameter Name="GeneratedDate"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P2</Prompt></ReportParameter>
+    <ReportParameter Name="MemberType"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P3</Prompt></ReportParameter>
+    <ReportParameter Name="TotalFine"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P4</Prompt></ReportParameter>
+    <ReportParameter Name="StudentName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P5</Prompt></ReportParameter>
+    <ReportParameter Name="ClassName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P6</Prompt></ReportParameter>
+    <ReportParameter Name="FatherName"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P7</Prompt></ReportParameter>
+    <ReportParameter Name="BookTitle"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P8</Prompt></ReportParameter>
+    <ReportParameter Name="DueDate"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P9</Prompt></ReportParameter>
+    <ReportParameter Name="FineAmount"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P10</Prompt></ReportParameter>
+    <ReportParameter Name="QrCodeImage"><DataType>String</DataType><Nullable>true</Nullable><AllowBlank>true</AllowBlank><Prompt>P11</Prompt></ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>
+
+

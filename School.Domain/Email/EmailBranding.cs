@@ -5,6 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Email
 {
+    [Table("EmailBrandings", Schema = "Communication")]
     public class EmailBranding : AuditEntity<int>, ITenantEntity
     {
         [Key]

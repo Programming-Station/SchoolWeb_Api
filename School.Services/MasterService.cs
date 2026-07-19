@@ -1415,7 +1415,7 @@ public async Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync()
 
         public async Task<APIResponse<IEnumerable<DropdownDto>>> GetReportTemplatesAsync()
         {
-            var entity = await _dbContext.ReportTemplates.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
+            var entity = await _dbContext.ReportTemplates.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.ReportName, Id = x.Id }).ToListAsync();
             return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
         }
 

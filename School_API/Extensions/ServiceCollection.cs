@@ -47,6 +47,8 @@ using School.Services.Communication;
 using School.Services.Analytics;
 using School.Services.Administration;
 using School.Services.AI;
+using School.Services.Reporting;
+using School.Infrastructure.Repositories;
 
 
 namespace School_API
@@ -224,6 +226,8 @@ namespace School_API
             // Library Module Repositories
             .AddTransient<IBookRepository, BookRepository>()
             .AddTransient<IBookIssueLogRepository, BookIssueLogRepository>()
+            // Communication - Recipients
+            .AddTransient<IRecipientRepository, RecipientRepository>()
             ;
         }
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -238,11 +242,15 @@ namespace School_API
             services.AddSingleton<IEmailQueue, EmailQueue>();
             services.AddHostedService<EmailQueueProcessor>();
             services.AddHostedService<FineCalculationBackgroundJob>();
-            services.AddHostedService<ScheduledReportService>();
+            // Reporting Schedule Engine (DB-driven, replaces old ScheduledReportService)
+            services.AddSingleton<IReportScheduleService, ReportScheduleService>();
+            services.AddHostedService<ReportScheduleService>(sp =>
+                (ReportScheduleService)sp.GetRequiredService<IReportScheduleService>());
             services.AddHostedService<WhatsAppQueueProcessor>();
 
             return services
             .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
+            .AddScoped<IRecipientService, School.Services.Communication.RecipientService>()
             .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
             .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
             .AddScoped<IEmailService, EmailService>()
@@ -298,7 +306,18 @@ namespace School_API
             .AddScoped<School.Services.School.ISchoolServices.ISignatureService, School.Services.School.SignatureService>()
             .AddScoped<School.Services.School.ISchoolServices.IWatermarkService, School.Services.School.WatermarkService>()
             .AddScoped<School.Services.School.ISchoolServices.IOrganizationProfileService, School.Services.School.OrganizationProfileService>()
-            .AddScoped<School.Services.School.ISchoolServices.IReportBrandingService, School.Services.School.ReportBrandingService>()
+
+            // ─── Enterprise Reporting Engine ──────────────────────────────
+            .AddScoped<ReportingRepository>()
+            .AddScoped<IReportingEngineService, ReportingEngineService>()
+            .AddScoped<IReportCategoryService, ReportCategoryService>()
+            .AddScoped<IReportTemplateService, ReportTemplateService>()
+            .AddScoped<IReportHistoryService, ReportHistoryService>()
+            .AddScoped<IReportPermissionService, ReportPermissionService>()
+            .AddScoped<IReportingBrandingService, ReportingBrandingService>()
+            .AddScoped<IQrBarcodeService, QrBarcodeService>()
+            .AddScoped<IReportEmailService, ReportEmailService>()
+            .AddScoped<IReportExportService, ReportExportService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolProfileSettingService, School.Services.School.SchoolProfileSettingService>()
             .AddScoped<School.Services.School.ISchoolServices.IAffiliationBoardService, School.Services.School.AffiliationBoardService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolTypeService, School.Services.School.SchoolTypeService>()

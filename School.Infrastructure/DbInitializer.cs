@@ -267,6 +267,8 @@ namespace School.Infrastructure
             DefaultInventoryData.SeedAsync(context).Wait();
             DefaultLibraryData.SeedAsync(context).Wait();
             DefaultCommunicationData.SeedAsync(context).Wait();
+            DefaultReportingData.SeedAsync(context).Wait();
+            DefaultRecipientData.SeedAsync(context).Wait();
         }
     }
 }

@@ -28,9 +28,12 @@ using School.Domain.Library;
 using School.Domain.Finance;
 using School.Domain.Inventory;
 using School.Domain.Communication;
+using School.Domain.Communication.Recipients;
 using School.Domain.Analytics;
 using School.Domain.Administration;
 using School.Domain.AI;
+using School.Domain.Reporting;
+using ReportingTemplate = School.Domain.Reporting.ReportTemplate;
 
 namespace School.Infrastructure
 {
@@ -325,8 +328,31 @@ namespace School.Infrastructure
         // Analytics Schema
         public DbSet<DashboardConfig> DashboardConfigs { get; set; } = null!;
         public DbSet<DashboardWidget> DashboardWidgets { get; set; } = null!;
-        public DbSet<ReportTemplate> ReportTemplates { get; set; } = null!;
         public DbSet<AnalyticsKpi> AnalyticsKpis { get; set; } = null!;
+
+        // ─── Enterprise Reporting Engine ──────────────────────────────────────
+        public DbSet<ReportCategory> ReportCategories { get; set; } = null!;
+        public DbSet<ReportingTemplate> ReportTemplates { get; set; } = null!;
+        public DbSet<ReportParameter> ReportParameters { get; set; } = null!;
+        public DbSet<ReportBranding> ReportBrandings { get; set; } = null!;
+        public DbSet<ReportHistory> ReportHistories { get; set; } = null!;
+        public DbSet<ReportSchedule> ReportSchedules { get; set; } = null!;
+        public DbSet<ReportPermission> ReportPermissions { get; set; } = null!;
+        public DbSet<ReportExecution> ReportExecutions { get; set; } = null!;
+
+        // Communication - Recipients
+        public DbSet<Recipient> Recipients { get; set; } = null!;
+        public DbSet<RecipientCategory> RecipientCategories { get; set; } = null!;
+        public DbSet<RecipientGroup> RecipientGroups { get; set; } = null!;
+        public DbSet<RecipientGroupMember> RecipientGroupMembers { get; set; } = null!;
+        public DbSet<RecipientTag> RecipientTags { get; set; } = null!;
+        public DbSet<RecipientPreference> RecipientPreferences { get; set; } = null!;
+        public DbSet<RecipientHistory> RecipientHistories { get; set; } = null!;
+        public DbSet<RecipientBlacklist> RecipientBlacklists { get; set; } = null!;
+        public DbSet<RecipientActivity> RecipientActivities { get; set; } = null!;
+        public DbSet<DistributionList> DistributionLists { get; set; } = null!;
+        public DbSet<EmailRecipient> EmailRecipients { get; set; } = null!;
+        public DbSet<EmailAttachment> EmailAttachments { get; set; } = null!;
 
         // Administration Schema
         public DbSet<SchoolBranch> SchoolBranches { get; set; } = null!;

@@ -6,6 +6,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Email
 {
+    [Table("EmailServerSettings", Schema = "Communication")]
     public class EmailServerSetting : AuditEntity<int>, ITenantEntity
     {
         public EmailServerSetting()

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Infrastructure;
 
@@ -11,9 +12,11 @@ using School.Infrastructure;
 namespace School.Infrastructure.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260719100812_UpdateRecipientTableNames")]
+    partial class UpdateRecipientTableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6496,98 +6499,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId", "IsDeleted");
 
-                    b.ToTable("DistributionLists", "Communication");
-                });
-
-            modelBuilder.Entity("School.Domain.Communication.Recipients.EmailRecipient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AcademicSessionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AddressBookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApprovalStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("EmailMessageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FinancialYearId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RecipientType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkflowStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressBookId");
-
-                    b.HasIndex("EmailMessageId");
-
-                    b.HasIndex("SchoolRegistrationId", "IsDeleted");
-
-                    b.ToTable("EmailRecipients", "Communication");
+                    b.ToTable("DistributionList", "Communication");
                 });
 
             modelBuilder.Entity("School.Domain.Communication.Recipients.Recipient", b =>
@@ -9227,94 +9139,6 @@ namespace School.Infrastructure.Migrations
                     b.ToTable("EducationLevels");
                 });
 
-            modelBuilder.Entity("School.Domain.Email.EmailAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AcademicSessionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApprovalStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmailLogId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("FileBytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("FinancialYearId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("SchoolRegistrationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkflowStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmailLogId");
-
-                    b.HasIndex("SchoolRegistrationId", "IsDeleted");
-
-                    b.ToTable("EmailAttachments", "Communication");
-                });
-
             modelBuilder.Entity("School.Domain.Email.EmailBranding", b =>
                 {
                     b.Property<int>("Id")
@@ -9404,7 +9228,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId", "IsDeleted");
 
-                    b.ToTable("EmailBrandings", "Communication");
+                    b.ToTable("EmailBrandings");
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailLog", b =>
@@ -9455,12 +9279,6 @@ namespace School.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDraft")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsScheduled")
-                        .HasColumnType("bit");
-
                     b.Property<string>("RecipientEmail")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -9474,9 +9292,6 @@ namespace School.Infrastructure.Migrations
 
                     b.Property<byte[]>("RowVersion")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<DateTime?>("ScheduledTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("SchoolRegistrationId")
                         .HasColumnType("int");
@@ -9518,7 +9333,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId", "IsDeleted");
 
-                    b.ToTable("EmailLogs", "Communication");
+                    b.ToTable("EmailLogs");
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailServerSetting", b =>
@@ -9620,7 +9435,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId", "IsDeleted");
 
-                    b.ToTable("EmailServerSettings", "Communication");
+                    b.ToTable("EmailServerSettings");
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailTemplate", b =>
@@ -9712,7 +9527,7 @@ namespace School.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRegistrationId", "IsDeleted");
 
-                    b.ToTable("EmailTemplates", "Communication");
+                    b.ToTable("EmailTemplates");
                 });
 
             modelBuilder.Entity("School.Domain.Event", b =>
@@ -28255,31 +28070,6 @@ namespace School.Infrastructure.Migrations
                     b.Navigation("Poll");
                 });
 
-            modelBuilder.Entity("School.Domain.Communication.Recipients.EmailRecipient", b =>
-                {
-                    b.HasOne("School.Domain.Communication.Recipients.Recipient", "AddressBook")
-                        .WithMany()
-                        .HasForeignKey("AddressBookId");
-
-                    b.HasOne("School.Domain.Email.EmailLog", "EmailMessage")
-                        .WithMany("EmailRecipients")
-                        .HasForeignKey("EmailMessageId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("AddressBook");
-
-                    b.Navigation("EmailMessage");
-
-                    b.Navigation("SchoolRegistration");
-                });
-
             modelBuilder.Entity("School.Domain.Communication.Recipients.RecipientActivity", b =>
                 {
                     b.HasOne("School.Domain.Communication.Recipients.Recipient", "Recipient")
@@ -28431,25 +28221,6 @@ namespace School.Infrastructure.Migrations
                         .HasForeignKey("SchoolRegistrationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("SchoolRegistration");
-                });
-
-            modelBuilder.Entity("School.Domain.Email.EmailAttachment", b =>
-                {
-                    b.HasOne("School.Domain.Email.EmailLog", "EmailLog")
-                        .WithMany("EmailAttachments")
-                        .HasForeignKey("EmailLogId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("School.Domain.School.SchoolRegistration", "SchoolRegistration")
-                        .WithMany()
-                        .HasForeignKey("SchoolRegistrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("EmailLog");
 
                     b.Navigation("SchoolRegistration");
                 });
@@ -32013,13 +31784,6 @@ namespace School.Infrastructure.Migrations
             modelBuilder.Entity("School.Domain.Communication.Recipients.RecipientGroup", b =>
                 {
                     b.Navigation("Members");
-                });
-
-            modelBuilder.Entity("School.Domain.Email.EmailLog", b =>
-                {
-                    b.Navigation("EmailAttachments");
-
-                    b.Navigation("EmailRecipients");
                 });
 
             modelBuilder.Entity("School.Domain.Email.EmailServerSetting", b =>

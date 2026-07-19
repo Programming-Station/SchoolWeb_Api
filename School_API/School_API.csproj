@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ReportsImages\**" />
+    <Compile Remove="uploads\**" />
+    <Content Remove="ReportsImages\**" />
+    <Content Remove="uploads\**" />
+    <EmbeddedResource Remove="ReportsImages\**" />
+    <EmbeddedResource Remove="uploads\**" />
+    <None Remove="ReportsImages\**" />
+    <None Remove="uploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="C:\Users\HP\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-net472\cs\System.CommandLine.resources.dll" />
     <Content Remove="C:\Users\HP\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-net472\de\System.CommandLine.resources.dll" />
     <Content Remove="C:\Users\HP\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-net472\es\System.CommandLine.resources.dll" />
@@ -121,11 +132,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ReportsImages\" />
-    <Folder Include="uploads\Images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Reports\Datasets\HostelGatePassDataSet.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -181,6 +187,82 @@
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>StudentBusPassDataSet.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\OFL.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-ThinItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Thin.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-SemiBoldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-SemiBold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-MediumItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Medium.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-LightItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Light.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Italic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-ExtraLightItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-ExtraLight.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-ExtraBoldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-ExtraBold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-BoldItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Bold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-BlackItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\HP\.nuget\packages\questpdf\2024.12.1\buildTransitive\..\LatoFont\Lato-Black.ttf" />
   </ItemGroup>
 
 </Project>

@@ -168,6 +168,14 @@ namespace School.Services.Mapping
                 .ForMember(dest => dest.AssetCode, opt => opt.MapFrom(src => src.SchoolAsset != null ? src.SchoolAsset.AssetCode : string.Empty))
                 .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee != null ? (src.Employee.FirstName + " " + src.Employee.LastName) : string.Empty));
 
+            // Communication - Recipients Module
+            CreateMap<global::School.Domain.Communication.Recipients.Recipient, global::School_DTOs.Communication.Recipients.RecipientDto>()
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.GroupMembers.Select(gm => gm.Group)))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.TagName)));
+
+            CreateMap<global::School.Domain.Communication.Recipients.RecipientGroup, global::School_DTOs.Communication.Recipients.RecipientGroupDto>()
+                .ForMember(dest => dest.MemberCount, opt => opt.MapFrom(src => src.Members.Count));
+
             // Hostel Module Custom Projections
             CreateMap<global::School.Domain.Hostel.Building, global::School_DTOs.Hostel.BuildingDto>()
                 .ForMember(dest => dest.HostelName, opt => opt.MapFrom(src => src.Hostel != null ? src.Hostel.Name : string.Empty));
