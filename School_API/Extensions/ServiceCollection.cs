@@ -286,6 +286,7 @@ namespace School_API
             .AddScoped<global::School.Services.Interfaces.IDepartmentService, School.Services.DepartmentService>()
             .AddScoped<School.Services.Hr.IDepartmentService, School.Services.Hr.DepartmentService>()
             .AddScoped<IPdfCertificateService, PdfCertificateService>()
+            .AddScoped<global::School.Services.Interfaces.IAutoNumberService, global::School.Services.Administration.AutoNumberService>()
             .AddScoped<IRdlcCertificateService, RdlcCertificateService>()
             .AddScoped<IFeeTypeService, FeeTypeService>()
             .AddScoped<School.Services.School.ISchoolServices.ISchoolService, School.Services.School.SchoolService>()

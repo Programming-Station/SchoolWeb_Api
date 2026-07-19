@@ -67,5 +67,19 @@ namespace School_API.Controllers.Location
             var result = await _service.GetDropdownAsync();
             return Ok(result);
         }
+
+        [HttpPost("bulk-delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] System.Collections.Generic.IEnumerable<int> ids)
+        {
+            var result = await _service.BulkDeleteAsync(ids, UserName);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-status-change")]
+        public async Task<IActionResult> BulkStatusChange([FromBody] School_DTOs.Hr.BulkStatusChangeDto dto)
+        {
+            var result = await _service.BulkStatusChangeAsync(dto.Ids, dto.Status == "active" || dto.Status == "True" || dto.Status == "true", UserName);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }

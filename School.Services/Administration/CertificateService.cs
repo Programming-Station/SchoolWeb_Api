@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,11 +17,13 @@ namespace School.Services.Administration
     {
         private readonly SchoolDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IPdfCertificateService _pdfService;
 
-        public CertificateService(SchoolDbContext context, IMapper mapper)
+        public CertificateService(SchoolDbContext context, IMapper mapper, IPdfCertificateService pdfService)
         {
             _context = context;
             _mapper = mapper;
+            _pdfService = pdfService;
         }
 
         public async Task<APIResponse<List<CertificateIssuanceLogDto>>> GetCertificatesAsync(CertificateFilterDto filter, int schoolId)
@@ -108,10 +110,51 @@ namespace School.Services.Administration
             return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true };
         }
 
-        public Task<APIResponse<byte[]>> GeneratePdfAsync(int id, int schoolId)
+        public async Task<APIResponse<byte[]>> GeneratePdfAsync(int id, int schoolId)
         {
-            // TODO: Integrate with RDLC/Razor PDF generation engine
-            return Task.FromResult(new APIResponse<byte[]> { Success = false, StatusCode = HttpStatusCode.NotImplemented, Message = "PDF generation not yet configured" });
+            var cert = await _context.CertificateIssuanceLogs
+                .Where(c => c.Id == id && c.SchoolRegistrationId == schoolId && !c.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (cert == null)
+            {
+                return new APIResponse<byte[]> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "Certificate record not found" };
+            }
+
+            var dto = _mapper.Map<CertificateIssuanceLogDto>(cert);
+
+            if (string.IsNullOrEmpty(dto.AcademicYearName))
+            {
+                var ay = await _context.AcademicYears.FindAsync(cert.AcademicYearId);
+                if (ay != null)
+                {
+                    dto.AcademicYearName = ay.YearName;
+                }
+            }
+
+            var pdfBytes = await _pdfService.GenerateStudentCertificatePdfAsync(dto, "http://localhost:5000");
+
+            try
+            {
+                var uploadsFolder = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads", "certificates");
+                if (!System.IO.Directory.Exists(uploadsFolder))
+                {
+                    System.IO.Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = $"{cert.CertificateNumber}_{DateTime.UtcNow.Ticks}.pdf";
+                var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+                await System.IO.File.WriteAllBytesAsync(filePath, pdfBytes);
+
+                cert.PdfUrl = $"/uploads/certificates/{fileName}";
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Fallback gracefully if filesystem write fails (e.g. read-only environment)
+            }
+
+            return new APIResponse<byte[]> { Success = true, StatusCode = HttpStatusCode.OK, Data = pdfBytes };
         }
 
         private async Task<string> GenerateCertificateNumber(string type, int schoolId)

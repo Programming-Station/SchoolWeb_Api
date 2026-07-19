@@ -76,6 +76,27 @@ namespace School_API.Controllers.Hr
 
             return StatusCode((int)result.StatusCode, result);
         }
+
+        [HttpGet("lookup")]
+        public async Task<IActionResult> Lookup()
+        {
+            var result = await _masterService.GetLookupAsync();
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-delete")]
+        public async Task<IActionResult> BulkDelete([FromBody] System.Collections.Generic.IEnumerable<int> ids)
+        {
+            var result = await _masterService.BulkDeleteAsync(ids, UserName);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-status-change")]
+        public async Task<IActionResult> BulkStatusChange([FromBody] BulkStatusChangeDto dto)
+        {
+            var result = await _masterService.BulkStatusChangeAsync(dto.Ids, dto.Status, UserName);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 }
 

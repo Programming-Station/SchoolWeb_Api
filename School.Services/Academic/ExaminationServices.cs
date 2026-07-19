@@ -317,15 +317,70 @@ namespace School.Services.Academic
 
         public async Task<(bool, string, int)> BulkPromoteAsync(BulkPromotionRequest req, string promotedBy, int schoolId)
         {
-            var list = req.StudentIds.Select(sid => new StudentPromotion
+            var fromYear = await _ctx.AcademicYears.FindAsync(req.FromAcademicYearId);
+            var toYear = await _ctx.AcademicYears.FindAsync(req.ToAcademicYearId);
+
+            if (fromYear == null || toYear == null)
             {
-                StudentId = sid, FromClassId = req.FromClassId, ToClassId = req.ToClassId,
-                FromAcademicYearId = req.FromAcademicYearId, ToAcademicYearId = req.ToAcademicYearId,
-                ExamId = req.ExamId, Status = req.Status, Remarks = req.Remarks,
-                PromotionDate = DateTime.Today, SchoolRegistrationId = schoolId, CreatedBy = promotedBy
-            }).ToList();
-            await _repo.AddRangeAsync(list);
-            return (true, $"{list.Count} student(s) promoted.", list.Count);
+                return (false, "One or both academic years do not exist.", 0);
+            }
+
+            if (toYear.StartDate <= fromYear.StartDate)
+            {
+                return (false, "Target academic year must be chronological after the current academic year.", 0);
+            }
+
+            var toClassExists = await _ctx.Classes.AnyAsync(c => c.Id == req.ToClassId && c.SchoolRegistrationId == schoolId && !c.IsDeleted);
+            if (!toClassExists)
+            {
+                return (false, "Target class does not exist or belongs to another school.", 0);
+            }
+
+            using var transaction = await _ctx.Database.BeginTransactionAsync();
+            try
+            {
+                var students = await _ctx.Students
+                    .Where(s => req.StudentIds.Contains(s.Id) && s.SchoolRegistrationId == schoolId && !s.IsDeleted)
+                    .ToListAsync();
+
+                if (!students.Any())
+                {
+                    return (false, "No valid students found for promotion.", 0);
+                }
+
+                var list = new List<StudentPromotion>();
+                foreach (var student in students)
+                {
+                    list.Add(new StudentPromotion
+                    {
+                        StudentId = student.Id,
+                        FromClassId = req.FromClassId,
+                        ToClassId = req.ToClassId,
+                        FromAcademicYearId = req.FromAcademicYearId,
+                        ToAcademicYearId = req.ToAcademicYearId,
+                        ExamId = req.ExamId,
+                        Status = req.Status,
+                        Remarks = req.Remarks,
+                        PromotionDate = DateTime.Today,
+                        SchoolRegistrationId = schoolId,
+                        CreatedBy = promotedBy
+                    });
+
+                    // Update the student's current active class in database
+                    student.ClassId = req.ToClassId;
+                }
+
+                await _repo.AddRangeAsync(list);
+                await _ctx.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return (true, $"{list.Count} student(s) successfully promoted to the next academic year.", list.Count);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<IEnumerable<PromotionDto>> GetByClassAsync(int fromClassId, int schoolId)

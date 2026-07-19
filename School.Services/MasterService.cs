@@ -60,7 +60,8 @@ namespace School.Services
                     };
                 }
 
-                _cache.SetString(key, JsonSerializer.Serialize(entity));
+                var options = new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60) };
+                _cache.SetString(key, JsonSerializer.Serialize(entity), options);
                 result = entity;
             }
 
@@ -95,7 +96,7 @@ namespace School.Services
 
         public async Task<APIResponse<IEnumerable<DropdownDto>>> GetCoursesAsync(int courseTypeId)
         {
-            string key = "Courses";
+            string key = $"Courses_{courseTypeId}";
 
             if (!TryGetFromCache<IEnumerable<DropdownDto>>(key, out var result) || result == null)
             {
@@ -110,7 +111,9 @@ namespace School.Services
                     };
                 }
 
-                _cache.SetString(key, JsonSerializer.Serialize(entity));
+                var options = new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60) };
+                _cache.SetString(key, JsonSerializer.Serialize(entity), options);
+                result = entity;
             }
 
             return new APIResponse<IEnumerable<DropdownDto>>
@@ -139,7 +142,9 @@ namespace School.Services
                     };
                 }
 
-                _cache.SetString(key, JsonSerializer.Serialize(entity));
+                var options = new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60) };
+                _cache.SetString(key, JsonSerializer.Serialize(entity), options);
+                result = entity;
             }
 
             return new APIResponse<IEnumerable<DropdownDto>>
@@ -1472,6 +1477,109 @@ public async Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync()
         {
             var entity = await _dbContext.AiChatMessages.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Sender, Id = x.Id }).ToListAsync();
             return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
+        }
+
+        public async Task<APIResponse<bool>> BulkDeleteAsync(global::School.Utilities.Enums.SourceName table, System.Collections.Generic.IEnumerable<int> ids, string username)
+        {
+            var entityType = _dbContext.Model.GetEntityTypes().FirstOrDefault(t => t.ClrType.Name == table.ToString());
+            if (entityType == null)
+            {
+                return new APIResponse<bool> { Success = false, StatusCode = HttpStatusCode.BadRequest, Message = $"Table {table} not found." };
+            }
+
+            var clrType = entityType.ClrType;
+            foreach (var id in ids)
+            {
+                var entity = await _dbContext.FindAsync(clrType, id);
+                if (entity != null)
+                {
+                    if (entity is global::School.Domain.BaseEntity.IDeleteEntity deleteEntity)
+                    {
+                        deleteEntity.IsDeleted = true;
+                        deleteEntity.DeletedDate = DateTime.Now;
+                        deleteEntity.DeletedBy = username;
+                        _dbContext.Entry(entity).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        _dbContext.Remove(entity);
+                    }
+                }
+            }
+            await EvictCacheForTableAsync(table, ids);
+            await _dbContext.SaveChangesAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Bulk delete completed." };
+        }
+
+        public async Task<APIResponse<bool>> BulkStatusChangeAsync(global::School.Utilities.Enums.SourceName table, System.Collections.Generic.IEnumerable<int> ids, string status, string username)
+        {
+            var entityType = _dbContext.Model.GetEntityTypes().FirstOrDefault(t => t.ClrType.Name == table.ToString());
+            if (entityType == null)
+            {
+                return new APIResponse<bool> { Success = false, StatusCode = HttpStatusCode.BadRequest, Message = $"Table {table} not found." };
+            }
+
+            var clrType = entityType.ClrType;
+            foreach (var id in ids)
+            {
+                var entity = await _dbContext.FindAsync(clrType, id);
+                if (entity != null)
+                {
+                    var statusProp = clrType.GetProperty("Status");
+                    if (statusProp != null && statusProp.PropertyType == typeof(string))
+                    {
+                        statusProp.SetValue(entity, status);
+                    }
+                    else
+                    {
+                        var isActiveProp = clrType.GetProperty("IsActive");
+                        if (isActiveProp != null && isActiveProp.PropertyType == typeof(bool))
+                        {
+                            isActiveProp.SetValue(entity, status.ToLower() == "active" || status.ToLower() == "true");
+                        }
+                    }
+
+                    if (entity is global::School.Domain.BaseEntity.IAuditEntity auditEntity)
+                    {
+                        auditEntity.UpdatedDate = DateTime.Now;
+                        auditEntity.UpdatedBy = username;
+                    }
+                    _dbContext.Entry(entity).State = EntityState.Modified;
+                }
+            }
+            await EvictCacheForTableAsync(table, ids);
+            await _dbContext.SaveChangesAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Bulk status update completed." };
+        }
+
+        private async Task EvictCacheForTableAsync(global::School.Utilities.Enums.SourceName table, System.Collections.Generic.IEnumerable<int> ids)
+        {
+            if (table == global::School.Utilities.Enums.SourceName.State)
+            {
+                foreach (var id in ids)
+                {
+                    var state = await _dbContext.States.FindAsync(id);
+                    if (state != null)
+                    {
+                        await _cache.RemoveAsync($"States_{state.CountryId}");
+                    }
+                }
+            }
+            else if (table == global::School.Utilities.Enums.SourceName.Course)
+            {
+                foreach (var id in ids)
+                {
+                    var course = await _dbContext.Courses.FindAsync(id);
+                    if (course != null)
+                    {
+                        await _cache.RemoveAsync($"Courses_{(int)course.CourseType!}");
+                    }
+                }
+            }
+            else if (table == global::School.Utilities.Enums.SourceName.AcademicYear)
+            {
+                await _cache.RemoveAsync("AcademicYear");
+            }
         }
     }
 }

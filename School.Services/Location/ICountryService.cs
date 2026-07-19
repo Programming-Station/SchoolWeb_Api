@@ -13,5 +13,7 @@ namespace School.Services.Location
         Task<APIResponse<object>> DeleteAsync(int id, string username);
         Task<APIResponse<object>> ToggleStatusAsync(int id, string username);
         Task<APIResponse<IEnumerable<DropdownDto>>> GetDropdownAsync();
+        Task<APIResponse<bool>> BulkDeleteAsync(IEnumerable<int> ids, string username);
+        Task<APIResponse<bool>> BulkStatusChangeAsync(IEnumerable<int> ids, bool isActive, string username);
     }
 }

@@ -54,6 +54,7 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
+    options.Filters.Add<School_API.Filters.ApiResponseFilter>();
     options.MaxModelBindingCollectionSize = 1000; // Limit collection size
 });
 builder.Services.Configure<JsonOptions>(options =>

@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using School.Infrastructure;
 
+using School.Infrastructure.Interfaces;
+
 namespace School.Services
 {
     public class StudentService : IStudentService
@@ -20,13 +22,17 @@ namespace School.Services
         private readonly IMapper _mapper;
         private readonly SchoolDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly IAutoNumberService _autoNumberService;
+        private readonly ITenantService _tenantService;
 
-        public StudentService(IStudentRepository studentRepository, IMapper mapper, SchoolDbContext context, IEmailService emailService)
+        public StudentService(IStudentRepository studentRepository, IMapper mapper, SchoolDbContext context, IEmailService emailService, IAutoNumberService autoNumberService, ITenantService tenantService)
         {
             _studentRepository = studentRepository;
             _mapper = mapper;
             _context = context;
             _emailService = emailService;
+            _autoNumberService = autoNumberService;
+            _tenantService = tenantService;
         }
 
         public async Task<APIResponse<StudentDto>> CreateStudentAsync(StudentModel model)
@@ -49,34 +55,18 @@ namespace School.Services
                     }
                 }
 
+                var tenantId = _tenantService.GetTenantId() ?? 1;
+
                 string studentId = model.StudentId;
                 if (string.IsNullOrWhiteSpace(studentId))
                 {
-                    studentId = await _studentRepository.GenerateStudentIdAsync();
-                    if (string.IsNullOrWhiteSpace(studentId))
-                    {
-                        return new APIResponse<StudentDto>
-                        {
-                            Success = false,
-                            Message = "Failed to generate Student ID",
-                            StatusCode = HttpStatusCode.InternalServerError
-                        };
-                    }
+                    studentId = await _autoNumberService.GenerateNextNumberAsync("Student", tenantId);
                 }
 
                 string enrollmentNumber = model.EnrollmentNumber;
                 if (string.IsNullOrWhiteSpace(enrollmentNumber))
                 {
-                    enrollmentNumber = await _studentRepository.GenerateEnrollmentNumberAsync();
-                    if (string.IsNullOrWhiteSpace(enrollmentNumber))
-                    {
-                        return new APIResponse<StudentDto>
-                        {
-                            Success = false,
-                            Message = "Failed to generate Enrollment Number",
-                            StatusCode = HttpStatusCode.InternalServerError
-                        };
-                    }
+                    enrollmentNumber = await _autoNumberService.GenerateNextNumberAsync("Enrollment", tenantId);
                 }
 
                 var entity = _mapper.Map<Student>(model);
@@ -433,17 +423,8 @@ namespace School.Services
         {
             try
             {
-                string studentId = await _studentRepository.GenerateStudentIdAsync();
-                if (string.IsNullOrWhiteSpace(studentId))
-                {
-                    return new APIResponse<string>
-                    {
-                        Success = false,
-                        Message = "Failed to generate Student ID",
-                        StatusCode = HttpStatusCode.InternalServerError,
-                        Data = ""
-                    };
-                }
+                var tenantId = _tenantService.GetTenantId() ?? 1;
+                string studentId = await _autoNumberService.GenerateNextNumberAsync("Student", tenantId);
 
                 return new APIResponse<string>
                 {

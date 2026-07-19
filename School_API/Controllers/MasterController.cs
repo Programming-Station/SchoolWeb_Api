@@ -1244,6 +1244,20 @@ namespace School_API.Controllers
             var res = await _masterService.GetStudentsAsync();
             return Ok(res);
         }
+
+        [HttpPost("bulk-delete")]
+        public async Task<IActionResult> BulkDelete([FromQuery] global::School.Utilities.Enums.SourceName table, [FromBody] System.Collections.Generic.IEnumerable<int> ids)
+        {
+            var res = await _masterService.BulkDeleteAsync(table, ids, UserName);
+            return StatusCode((int)res.StatusCode, res);
+        }
+
+        [HttpPost("bulk-status-change")]
+        public async Task<IActionResult> BulkStatusChange([FromQuery] global::School.Utilities.Enums.SourceName table, [FromBody] School_DTOs.Hr.BulkStatusChangeDto dto)
+        {
+            var res = await _masterService.BulkStatusChangeAsync(table, dto.Ids, dto.Status, UserName);
+            return StatusCode((int)res.StatusCode, res);
+        }
     }
 }
 

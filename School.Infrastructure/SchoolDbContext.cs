@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using School.Domain.Auth;
 using School.Domain;
+using School.Domain.Administration;
 using School.Domain.Student;
 using School.Domain.FeeManagnment;
 using School.Domain.School;
@@ -35,13 +37,19 @@ namespace School.Infrastructure
     public class SchoolDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly ITenantService _tenantService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public int? CurrentTenantId => _tenantService?.GetTenantId();
 
-        public SchoolDbContext(DbContextOptions<SchoolDbContext> options, ITenantService tenantService = null) : base(options)
+        public SchoolDbContext(
+            DbContextOptions<SchoolDbContext> options, 
+            ITenantService tenantService = null,
+            IHttpContextAccessor httpContextAccessor = null) : base(options)
         {
             _tenantService = tenantService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        public DbSet<AutoNumberSetting> AutoNumberSettings { get; set; } = null!;
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         public DbSet<Menu> Menus { get; set; } = null!;
         public DbSet<SubMenu> SubMenus { get; set; } = null!;
@@ -491,18 +499,19 @@ namespace School.Infrastructure
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            SetTenantId();
+            SetAuditProperties();
             return base.SaveChangesAsync(cancellationToken);
         }
 
         public override int SaveChanges()
         {
-            SetTenantId();
+            SetAuditProperties();
             return base.SaveChanges();
         }
 
-        private void SetTenantId()
+        private void SetAuditProperties()
         {
+            var username = _httpContextAccessor?.HttpContext?.User?.FindFirst(School.Utilities.Constants.ClaimConstants.UserName)?.Value ?? "System";
             var tenantId = CurrentTenantId;
             int resolvedTenantId = tenantId ?? 1;
 
@@ -516,6 +525,34 @@ namespace School.Infrastructure
                         {
                             tenantEntity.SchoolRegistrationId = resolvedTenantId;
                         }
+                    }
+                    if (entry.Entity is BaseEntity.IAuditEntity auditEntity)
+                    {
+                        auditEntity.CreatedDate = DateTime.Now;
+                        auditEntity.CreatedBy = username;
+                    }
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    if (entry.Entity is BaseEntity.IAuditEntity auditEntity)
+                    {
+                        auditEntity.UpdatedDate = DateTime.Now;
+                        auditEntity.UpdatedBy = username;
+                    }
+                    if (entry.Entity is BaseEntity.IDeleteEntity deleteEntity && deleteEntity.IsDeleted && deleteEntity.DeletedDate == null)
+                    {
+                        deleteEntity.DeletedDate = DateTime.Now;
+                        deleteEntity.DeletedBy = username;
+                    }
+                }
+                else if (entry.State == EntityState.Deleted)
+                {
+                    if (entry.Entity is BaseEntity.IDeleteEntity deleteEntity)
+                    {
+                        entry.State = EntityState.Modified;
+                        deleteEntity.IsDeleted = true;
+                        deleteEntity.DeletedDate = DateTime.Now;
+                        deleteEntity.DeletedBy = username;
                     }
                 }
             }

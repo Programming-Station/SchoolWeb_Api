@@ -13,5 +13,8 @@ namespace School.Services.Hr
         Task<APIResponse<object>> UpdateAsync(int id, object dto, string username);
         Task<APIResponse<bool>> DeleteAsync(int id, string username);
         Task<APIResponse<bool>> ToggleStatusAsync(int id, string username);
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetLookupAsync();
+        Task<APIResponse<bool>> BulkDeleteAsync(IEnumerable<int> ids, string username);
+        Task<APIResponse<bool>> BulkStatusChangeAsync(IEnumerable<int> ids, string status, string username);
     }
 }

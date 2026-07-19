@@ -326,5 +326,109 @@ namespace School.Services
 
             return passYear;
         }
+
+        public async Task<byte[]> GenerateStudentCertificatePdfAsync(global::School_DTOs.Administration.CertificateIssuanceLogDto cert, string baseUrl)
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            var branding = await _brandingService.GetProfileAsync();
+
+            var qrCodeUrl = $"{baseUrl}/verify/certificate/{cert.CertificateNumber}";
+            var qrCodeBytes = GenerateQrCode(qrCodeUrl);
+
+            var bgPath = !string.IsNullOrEmpty(branding.ReportBackground)
+                ? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", branding.ReportBackground.TrimStart('/'))
+                : Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
+            if (!File.Exists(bgPath)) bgPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "certificate-bg.png");
+            var backgroundImage = File.Exists(bgPath) ? File.ReadAllBytes(bgPath) : Array.Empty<byte>();
+
+            var logoPath = !string.IsNullOrEmpty(branding.HeaderLogo)
+                ? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", branding.HeaderLogo.TrimStart('/'))
+                : Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "Collegelogo.png");
+            if (!File.Exists(logoPath)) logoPath = Path.Combine(Directory.GetCurrentDirectory(), "ReportsImages", "Collegelogo.png");
+            var logoImage = File.Exists(logoPath) ? File.ReadAllBytes(logoPath) : Array.Empty<byte>();
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(30);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(11).FontFamily("Arial"));
+
+                    if (backgroundImage.Length > 0)
+                    {
+                        page.Background().Image(backgroundImage).FitArea();
+                    }
+
+                    page.Header().PaddingBottom(10).Column(col =>
+                    {
+                        col.Item().AlignCenter().Text(branding.SchoolName ?? branding.OrganizationName)
+                            .Bold().FontSize(26).FontColor(Color.FromHex(branding.PrimaryColor ?? "#d9261c"));
+
+                        col.Item().AlignCenter().Text($"AFFILIATED TO {branding.Board ?? "BOARD"} | REC. NO: {branding.RecognitionNumber ?? "AN ISO 9001:2015 CERTIFIED"}")
+                            .FontColor(Color.FromHex(branding.SecondaryColor ?? "#78c3e6")).FontSize(16);
+
+                        if (logoImage.Length > 0)
+                        {
+                            col.Item().AlignCenter().Container().Width(80).Height(80).Image(logoImage).FitArea();
+                        }
+
+                        col.Item().PaddingTop(15).AlignCenter()
+                            .Text($"{cert.CertificateType.ToUpper()} CERTIFICATE").Bold().FontSize(20);
+                    });
+
+                    page.Content().PaddingTop(20).Column(column =>
+                    {
+                        column.Spacing(12);
+
+                        column.Item().Text($"Certificate No: {cert.CertificateNumber}").Bold().FontSize(12);
+                        column.Item().Text($"Date: {cert.IssuedDate:dd-MMM-yyyy}").Bold().FontSize(12);
+
+                        column.Item().PaddingTop(10).Text(t =>
+                        {
+                            t.Span("This is to certify that ").FontSize(12);
+                            t.Span(cert.StudentName ?? "N/A").Bold().Underline().FontSize(12);
+                            t.Span(", bearing Admission/Roll Number ").FontSize(12);
+                            t.Span(cert.AdmissionNumber ?? "N/A").Bold().FontSize(12);
+                            t.Span(", was a student of Class ").FontSize(12);
+                            t.Span(cert.ClassName ?? "N/A").Bold().FontSize(12);
+                            t.Span(" during the academic session ").FontSize(12);
+                            t.Span(cert.AcademicYearName ?? "N/A").Bold().FontSize(12);
+                            t.Span(".").FontSize(12);
+                        });
+
+                        if (!string.IsNullOrEmpty(cert.Reason))
+                        {
+                            column.Item().Text($"Reason for Issuance: {cert.Reason}").FontSize(11).Italic();
+                        }
+
+                        column.Item().PaddingTop(30).Row(row =>
+                        {
+                            row.RelativeItem().Column(signature =>
+                            {
+                                signature.Item().Height(40);
+                                signature.Item().Text("Principal").Bold();
+                                signature.Item().Text(branding.SchoolName ?? branding.OrganizationName).FontSize(9);
+                            });
+
+                            row.ConstantItem(100).Column(qr =>
+                            {
+                                qr.Item().Width(70).Height(70).Image(qrCodeBytes).FitArea();
+                                qr.Item().AlignCenter().Text("Verify Certificate").FontSize(6);
+                            });
+                        });
+                    });
+
+                    page.Footer().AlignCenter().PaddingTop(15).Text(t =>
+                    {
+                        t.Span(branding.ReportFooterText ?? "Generated via School SAAS Administration Engine").FontSize(8).Italic();
+                    });
+                });
+            });
+
+            return await Task.Run(() => document.GeneratePdf());
+        }
     }
 }

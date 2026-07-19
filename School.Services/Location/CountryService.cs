@@ -144,5 +144,36 @@ namespace School.Services.Location
                 .ToListAsync();
             return new APIResponse<IEnumerable<DropdownDto>> { Success = true, StatusCode = HttpStatusCode.OK, Data = data };
         }
+
+        public async Task<APIResponse<bool>> BulkDeleteAsync(IEnumerable<int> ids, string username)
+        {
+            foreach (var id in ids)
+            {
+                var entity = await _repository.FindAsync(x => x.Id == id);
+                if (entity != null)
+                {
+                    _repository.Delete(entity);
+                }
+            }
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Bulk delete successful" };
+        }
+
+        public async Task<APIResponse<bool>> BulkStatusChangeAsync(IEnumerable<int> ids, bool isActive, string username)
+        {
+            foreach (var id in ids)
+            {
+                var entity = await _repository.FindAsync(x => x.Id == id);
+                if (entity != null)
+                {
+                    entity.IsActive = isActive;
+                    entity.UpdatedBy = username;
+                    entity.UpdatedDate = DateTime.UtcNow;
+                    _repository.Update(entity);
+                }
+            }
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Bulk status change successful" };
+        }
     }
 }

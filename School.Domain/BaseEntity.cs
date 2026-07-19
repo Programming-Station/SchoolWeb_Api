@@ -5,6 +5,8 @@ namespace School.Domain
         public interface IDeleteEntity
         {
             bool IsDeleted { get; set; }
+            DateTime? DeletedDate { get; set; }
+            string? DeletedBy { get; set; }
         }
 
         public interface IDeleteEntity<TKey> : IDeleteEntity
@@ -31,6 +33,8 @@ namespace School.Domain
         public abstract class DeleteEntity<TKey> : IDeleteEntity<TKey>
         {
             public bool IsDeleted { get; set; } = false;
+            public DateTime? DeletedDate { get; set; }
+            public string? DeletedBy { get; set; }
         }
 
         public abstract class AuditEntity<TKey> : DeleteEntity<TKey>, IAuditEntity<TKey>
@@ -39,6 +43,18 @@ namespace School.Domain
             public string? CreatedBy { get; set; }
             public DateTime? UpdatedDate { get; set; }
             public string? UpdatedBy { get; set; }
+
+            // Enterprise ERP Extensions
+            public string? Code { get; set; }
+            public int? TenantId { get; set; }
+            public int? BranchId { get; set; }
+            public int? AcademicSessionId { get; set; }
+            public int? FinancialYearId { get; set; }
+            public byte[]? RowVersion { get; set; }
+            public string? Remarks { get; set; }
+            public string? ApprovalStatus { get; set; }
+            public string? WorkflowStatus { get; set; }
+            public virtual bool IsActive { get; set; } = true;
         }
     }
 }

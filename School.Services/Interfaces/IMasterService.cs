@@ -1,4 +1,4 @@
-﻿using School_DTOs;
+using School_DTOs;
 using School_DTOs.Account;
 
 namespace School.Services.Interfaces
@@ -222,7 +222,9 @@ Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetAiGenerationsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetAiChatSessionsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetAiChatMessagesAsync();
-}
+        Task<APIResponse<bool>> BulkDeleteAsync(global::School.Utilities.Enums.SourceName table, System.Collections.Generic.IEnumerable<int> ids, string username);
+        Task<APIResponse<bool>> BulkStatusChangeAsync(global::School.Utilities.Enums.SourceName table, System.Collections.Generic.IEnumerable<int> ids, string status, string username);
+    }
 }
 
 

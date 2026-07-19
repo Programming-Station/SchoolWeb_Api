@@ -23,4 +23,10 @@ namespace School_DTOs.Hr
     {
         public int Id { get; set; }
     }
+
+    public class BulkStatusChangeDto
+    {
+        public System.Collections.Generic.IEnumerable<int> Ids { get; set; } = null!;
+        public string Status { get; set; } = null!;
+    }
 }

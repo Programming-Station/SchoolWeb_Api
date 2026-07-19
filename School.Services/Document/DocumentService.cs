@@ -410,6 +410,21 @@ namespace School.Services.DocumentManagement
                 throw new ArgumentException($"File type '{extension}' is not allowed.");
             }
 
+            var allowedMimeTypes = new[]
+            {
+                "image/jpeg", "image/png", "image/gif", "image/webp",
+                "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/zip", "application/x-zip-compressed", "application/x-rar-compressed", "text/plain",
+                "text/csv", "application/json", "application/xml", "text/xml", "application/vnd.android.package-archive"
+            };
+
+            if (!allowedMimeTypes.Contains(file.ContentType.ToLowerInvariant()))
+            {
+                throw new ArgumentException($"MIME type '{file.ContentType}' is not allowed.");
+            }
+
             return Task.FromResult(true);
         }
 

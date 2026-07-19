@@ -138,6 +138,52 @@ namespace School.Services.Hr
 
             return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true };
         }
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetLookupAsync()
+        {
+            var entities = await _repository.List().ToListAsync();
+            var result = entities.Select(e => new DropdownDto
+            {
+                Id = (int)(e.GetType().GetProperty("Id")?.GetValue(e) ?? 0),
+                Name = e.GetType().GetProperty("Name")?.GetValue(e)?.ToString() ?? string.Empty,
+                Code = e.GetType().GetProperty("Code")?.GetValue(e)?.ToString()
+            });
+            return new APIResponse<IEnumerable<DropdownDto>> { Success = true, StatusCode = HttpStatusCode.OK, Data = result };
+        }
+
+        public async Task<APIResponse<bool>> BulkDeleteAsync(IEnumerable<int> ids, string username)
+        {
+            foreach (var id in ids)
+            {
+                var entity = await _repository.FindAsync(e => EF.Property<int>(e, "Id") == id);
+                if (entity != null)
+                {
+                    entity.IsDeleted = true;
+                    entity.UpdatedBy = username;
+                    entity.UpdatedDate = DateTime.Now;
+                    _repository.Update(entity);
+                }
+            }
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Records deleted successfully." };
+        }
+
+        public async Task<APIResponse<bool>> BulkStatusChangeAsync(IEnumerable<int> ids, string status, string username)
+        {
+            foreach (var id in ids)
+            {
+                var entity = await _repository.FindAsync(e => EF.Property<int>(e, "Id") == id);
+                if (entity != null)
+                {
+                    entity.GetType().GetProperty("Status")?.SetValue(entity, status);
+                    entity.UpdatedBy = username;
+                    entity.UpdatedDate = DateTime.Now;
+                    _repository.Update(entity);
+                }
+            }
+            await _unitOfWork.CommitAsync();
+            return new APIResponse<bool> { Success = true, StatusCode = HttpStatusCode.OK, Data = true, Message = "Status updated successfully." };
+        }
     }
 }
 
