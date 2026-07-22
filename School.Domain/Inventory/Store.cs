@@ -11,9 +11,6 @@ namespace School.Domain.Inventory
         [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Code { get; set; } = null!;
-
         [Required, MaxLength(150)]
         public string Name { get; set; } = null!;
 
@@ -22,8 +19,6 @@ namespace School.Domain.Inventory
 
         [MaxLength(100)]
         public string? ContactPerson { get; set; }
-
-        public bool IsActive { get; set; } = true;
 
         [Required]
         public int SchoolRegistrationId { get; set; }

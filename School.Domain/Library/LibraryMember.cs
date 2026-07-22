@@ -54,9 +54,6 @@ namespace School.Domain.Library
         [MaxLength(20)]
         public string Status { get; set; } = "Active";
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration? SchoolRegistration { get; set; }

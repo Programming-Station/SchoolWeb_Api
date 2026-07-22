@@ -14,10 +14,6 @@ namespace School.Domain
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty; // e.g. Batch 2024-2028
 
-        [Required]
-        [MaxLength(50)]
-        public string Code { get; set; } = string.Empty;
-
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }

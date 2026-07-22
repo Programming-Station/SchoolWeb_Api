@@ -12,8 +12,7 @@ namespace School.Domain.FeeManagnment
         [Required, MaxLength(100)]
         public string Name { get; set; }
         [MaxLength(50)]
-        public string description { get; set; }
-        public bool IsActive { get; set; } = true;
+        public string description { get; set; } = string.Empty;
 
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]

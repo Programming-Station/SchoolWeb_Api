@@ -18,7 +18,6 @@ namespace School.Domain.Location
         [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(CountryId))]
         public virtual Country Country { get; set; } = null!;
 
-        public bool IsActive { get; set; } = true;
         public virtual ICollection<City> Cities { get; set; } = new List<City>();
     }
 }

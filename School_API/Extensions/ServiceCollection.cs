@@ -25,6 +25,7 @@ using School.Services.Administration;
 using School.Services.AI;
 using School.Services.Analytics;
 using School.Services.Communication;
+using School.Services.CMS;
 using School.Services.Email;
 using School.Services.Finance;
 using School.Services.Hostel;
@@ -56,7 +57,10 @@ namespace School_API
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<SchoolDbContext>(options =>
-                options.UseSqlServer(configuration?.GetConnectionString("SchoolConnection") ?? string.Empty));
+            {
+                options.UseSqlServer(configuration?.GetConnectionString("SchoolConnection") ?? string.Empty);
+                options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+            });
 
             services.AddScoped<Func<SchoolDbContext>>((provider) => () => provider.GetService<SchoolDbContext>()!);
             services.AddScoped<DbFactory>();
@@ -131,6 +135,9 @@ namespace School_API
             .AddTransient<ICategoryModuleRepository, CategoryModuleRepository>()
             .AddTransient<ICourseRepository, CourseRepository>()
             .AddTransient<IClassRepository, ClassRepository>()
+            .AddTransient<ISectionRepository, SectionRepository>()
+            .AddTransient<IExpenseRepository, ExpenseRepository>()
+            .AddTransient<IIncomeRepository, IncomeRepository>()
             .AddTransient<IStudentRepository, StudentRepository>()
 
             .AddTransient<ICityRepository, CityRepository>()
@@ -274,6 +281,10 @@ namespace School_API
             .AddScoped<ICategoryModuleService, CategoryModuleService>()
             .AddScoped<ICourseService, CourseService>()
             .AddScoped<IClassService, ClassService>()
+            .AddScoped<ISectionService, SectionService>()
+            .AddScoped<IExpenseService, ExpenseService>()
+            .AddScoped<IIncomeService, IncomeService>()
+            .AddScoped<IRolePermissionService, RolePermissionService>()
             .AddScoped<IStudentService, StudentService>()
             .AddScoped<IEmployeeService, EmployeeService>()
 
@@ -288,6 +299,8 @@ namespace School_API
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
             .AddScoped<ISuperAdminDashboardService, SuperAdminDashboardService>()
+            .AddScoped<ITenantAdminService, TenantAdminService>()
+            .AddScoped<ICmsService, CmsService>()
             .AddScoped<IEmployeeDashboardService, EmployeeDashboardService>()
             .AddScoped<IStudentDashboardService, StudentDashboardService>()
             .AddScoped<IFacultyService, FacultyService>()

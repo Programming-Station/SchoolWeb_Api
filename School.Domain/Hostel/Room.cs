@@ -37,9 +37,6 @@ namespace School.Domain.Hostel
         [Required, MaxLength(20)]
         public string Status { get; set; } = "active"; // active, inactive, maintenance
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(HostelId))]

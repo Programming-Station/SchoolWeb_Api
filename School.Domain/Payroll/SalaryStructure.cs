@@ -26,8 +26,6 @@ namespace School.Domain.Payroll
         [ForeignKey(nameof(PayGroupId))]
         public virtual PayGroup PayGroup { get; set; } = null!;
 
-        public bool IsActive { get; set; } = true;
-
         [Required]
         public int SchoolRegistrationId { get; set; }
 

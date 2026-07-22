@@ -29,7 +29,6 @@ namespace School.Domain
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        public bool IsActive { get; set; } = true;
         public string? ImagePath { get; set; } = null!;
 
         public int SchoolRegistrationId { get; set; }

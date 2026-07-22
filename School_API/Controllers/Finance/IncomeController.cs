@@ -1,103 +1,61 @@
-using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using School.Infrastructure;
-using School.Infrastructure.Interfaces;
+using School.Models.Finance;
 using School.Services.Interfaces;
+using School.Infrastructure.Interfaces;
 using School_API.Common.Interface;
-using School_DTOs;
-using School_DTOs.Finance;
 
 namespace School_API.Controllers.Finance
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
     public class IncomeController : BaseController
     {
-        private readonly IAccountingService _svc;
-        private readonly SchoolDbContext _context;
-        private readonly ITenantService _tenant;
+        private readonly IIncomeService _incomeService;
+        private readonly ITenantService _tenantService;
 
-        public IncomeController(IAccountingService svc, SchoolDbContext context, ITenantService tenant, ICurrentUserService cur) : base(cur)
+        public IncomeController(
+            IIncomeService incomeService,
+            ITenantService tenantService,
+            ICurrentUserService currentUser) : base(currentUser)
         {
-            _svc = svc;
-            _context = context;
-            _tenant = tenant;
+            _incomeService = incomeService;
+            _tenantService = tenantService;
         }
 
-        private int SchoolId => _tenant.GetTenantId() ?? 1;
+        private int SchoolId => _tenantService.GetTenantId() ?? 1;
 
-        public class CreateIncomeRequest
+        [HttpPost]
+        public async Task<IActionResult> CreateIncome([FromBody] IncomeModel model)
         {
-            public int IncomeAccountId { get; set; }
-            public int CashBankAccountId { get; set; }
-            public decimal Amount { get; set; }
-            public DateTime Date { get; set; } = DateTime.UtcNow;
-            public string? Reference { get; set; }
-            public string? Narration { get; set; }
-            public int? CostCenterId { get; set; }
-            public string? AttachmentUrl { get; set; }
+            var result = await _incomeService.CreateIncomeAsync(model, SchoolId);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetIncomeById(int id)
+        {
+            var result = await _incomeService.GetIncomeByIdAsync(id, SchoolId);
+            return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetIncomes([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+        public async Task<IActionResult> GetIncomes()
         {
-            // Fetch journal entries of VoucherType "Receipt" (which represents income)
-            var res = await _svc.GetJournalEntriesAsync(SchoolId, fromDate, toDate, null, null);
-            if (!res.Success || res.Data == null) return StatusCode((int)res.StatusCode, res);
-
-            var receipts = res.Data.Where(j => j.VoucherType == "Receipt").ToList();
-            return Ok(new APIResponse<List<JournalEntryDto>>
-            {
-                Success = true,
-                StatusCode = HttpStatusCode.OK,
-                Data = receipts
-            });
+            var result = await _incomeService.GetAllIncomesAsync(SchoolId);
+            return StatusCode((int)result.StatusCode, result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateIncome([FromBody] CreateIncomeRequest req)
+        [HttpPut]
+        public async Task<IActionResult> UpdateIncome([FromBody] IncomeModel model)
         {
-            if (req.Amount <= 0) return BadRequest(new { message = "Amount must be greater than zero." });
-
-            var journalDto = new CreateJournalEntryDto
-            {
-                EntryDate = req.Date,
-                Narration = req.Narration,
-                Reference = req.Reference,
-                Source = "IncomeModule",
-                VoucherType = "Receipt",
-                CostCenterId = req.CostCenterId,
-                AttachmentUrl = req.AttachmentUrl,
-                Lines = new List<CreateJournalEntryLineDto>
-                {
-                    // Debit Cash/Bank Account (Asset)
-                    new CreateJournalEntryLineDto
-                    {
-                        AccountId = req.CashBankAccountId,
-                        DebitAmount = req.Amount,
-                        CreditAmount = 0,
-                        Description = req.Narration
-                    },
-                    // Credit Income Account (Revenue)
-                    new CreateJournalEntryLineDto
-                    {
-                        AccountId = req.IncomeAccountId,
-                        DebitAmount = 0,
-                        CreditAmount = req.Amount,
-                        Description = req.Narration
-                    }
-                }
-            };
-
-            var res = await _svc.PostJournalEntryAsync(SchoolId, journalDto, UserName);
-            return StatusCode((int)res.StatusCode, res);
+            var result = await _incomeService.UpdateIncomeAsync(model, SchoolId);
+            return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIncome(int id)
         {
-            var res = await _svc.DeleteJournalEntryAsync(SchoolId, id, UserName);
-            return res.Success ? Ok(res) : StatusCode((int)res.StatusCode, res);
+            var result = await _incomeService.DeleteIncomeAsync(id, SchoolId);
+            return StatusCode((int)result.StatusCode, result);
         }
     }
 }

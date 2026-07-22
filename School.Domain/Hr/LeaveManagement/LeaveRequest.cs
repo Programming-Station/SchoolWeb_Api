@@ -35,9 +35,6 @@ namespace School.Domain.Hr.LeaveManagement
         [ForeignKey(nameof(ApprovedById))]
         public virtual Employee? ApprovedBy { get; set; }
 
-        [MaxLength(1000)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;

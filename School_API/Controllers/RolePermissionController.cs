@@ -69,5 +69,19 @@ namespace School_API.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<Microsoft.AspNetCore.Identity.IdentityRole>>> GetRoles(CancellationToken ct)
+        {
+            var items = await _service.GetRolesAsync(ct);
+            return Ok(items);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<Permission>>> GetPermissions(CancellationToken ct)
+        {
+            var items = await _service.GetPermissionsAsync(ct);
+            return Ok(items);
+        }
     }
 }

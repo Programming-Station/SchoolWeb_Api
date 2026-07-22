@@ -20,8 +20,6 @@ namespace School.Domain.Payroll
         [Required, MaxLength(10)]
         public string Currency { get; set; } = "INR";
 
-        public bool IsActive { get; set; } = true;
-
         [Required]
         public int SchoolRegistrationId { get; set; }
 

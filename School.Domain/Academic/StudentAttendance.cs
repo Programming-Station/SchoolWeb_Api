@@ -38,9 +38,6 @@ namespace School.Domain.Academic
         [MaxLength(450)]
         public string MarkedBy { get; set; } // UserId of teacher
 
-        [MaxLength(200)]
-        public string Remarks { get; set; }
-
         /// <summary>Period number (1st period, 2nd period...)</summary>
         public int? PeriodNo { get; set; }
 

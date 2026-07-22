@@ -29,9 +29,6 @@ namespace School.Domain.Inventory
         [ForeignKey(nameof(DepartmentId))]
         public virtual Department Department { get; set; } = null!;
 
-        [MaxLength(1000)]
-        public string? Remarks { get; set; }
-
         [Required, MaxLength(30)]
         public string Status { get; set; } = "Draft"; // Draft, PendingApproval, Approved, Rejected
 

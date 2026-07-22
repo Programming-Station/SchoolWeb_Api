@@ -32,8 +32,6 @@ namespace School.Domain.Student
         [MaxLength(500)]
         public string ErrorMessage { get; set; } = string.Empty;
 
-        public bool IsActive { get; set; } = true;
-
         [ForeignKey(nameof(CampusId))]
         public virtual Campus Campus { get; set; } = null!;
 

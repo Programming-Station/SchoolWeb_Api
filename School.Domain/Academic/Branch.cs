@@ -15,10 +15,6 @@ namespace School.Domain
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(50)]
-        public string Code { get; set; } = string.Empty;
-
-        [Required]
         public int ProgramId { get; set; }
 
         [Required]

@@ -57,5 +57,11 @@ namespace School.Services
             await _context.SaveChangesAsync(ct);
             return true;
         }
+
+        public async Task<IReadOnlyList<Microsoft.AspNetCore.Identity.IdentityRole>> GetRolesAsync(CancellationToken ct = default) =>
+            await _context.Roles.ToListAsync(ct);
+
+        public async Task<IReadOnlyList<Permission>> GetPermissionsAsync(CancellationToken ct = default) =>
+            await _context.Permissions.ToListAsync(ct);
     }
 }

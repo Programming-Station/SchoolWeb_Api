@@ -22,8 +22,6 @@ namespace School.Domain.School
 
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
-        public string ApprovalStatus { get; set; } = "Pending"; // Pending, Approved, Rejected
-
         public string? SubDomain { get; set; }
         public int? MaxStudentsAllowed { get; set; }
 
@@ -54,8 +52,6 @@ namespace School.Domain.School
         public virtual City City { get; set; } = null!;
 
         public string? Logo { get; set; }
-
-        public bool IsActive { get; set; } = true;
 
         public virtual SchoolProfileSetting? SchoolProfileSetting { get; set; }
         public virtual ICollection<SchoolSubscription> SchoolSubscriptions { get; set; } = new List<SchoolSubscription>();

@@ -76,13 +76,10 @@ namespace School.Domain.Student
         public int? ClassId { get; set; }
         public int StatusId { get; set; } // active, inactive, graduated, transferred
 
-        [MaxLength(1000)]
-        public string? Remarks { get; set; }
-
         [ForeignKey(nameof(StatusId))]
-        public virtual Status Status { get; set; }
+        public virtual Status Status { get; set; } = null!;
         [ForeignKey(nameof(CourseId))]
-        public virtual Course Course { get; set; }
+        public virtual Course Course { get; set; } = null!;
         [ForeignKey(nameof(ClassId))]
         public virtual Class? Class { get; set; }
 

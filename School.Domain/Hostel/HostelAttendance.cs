@@ -21,9 +21,6 @@ namespace School.Domain.Hostel
         [Required, MaxLength(50)]
         public string Status { get; set; } = null!; // Present, Absent, Leave
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(StudentId))]

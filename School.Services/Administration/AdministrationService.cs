@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text;
+using System.IO;
+using Microsoft.Data.SqlClient;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Administration;
@@ -503,30 +505,179 @@ namespace School.Services.Administration
             };
         }
 
-        public async Task<APIResponse<bool>> TriggerBackupAsync(int schoolId)
+        public async Task<APIResponse<string>> TriggerBackupAsync(int schoolId)
         {
-            // Simulate a backup process by logging and returning success
-            await Task.Delay(200); // Simulate network/disk IO
-            return new APIResponse<bool>
+            try
             {
-                Success = true,
-                StatusCode = HttpStatusCode.OK,
-                Message = "Database backup completed successfully.",
-                Data = true
-            };
+                var connectionString = _context.Database.GetDbConnection().ConnectionString;
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                var databaseName = builder.InitialCatalog;
+
+                string backupFileName = $"{databaseName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+                string backupPath = "";
+
+                // Query the SQL Server's default backup directory
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = @"
+                            DECLARE @BackupDir NVARCHAR(4000); 
+                            EXEC master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'BackupDirectory', @BackupDir OUTPUT; 
+                            SELECT @BackupDir;
+                        ";
+                        var result = await command.ExecuteScalarAsync();
+                        string defaultDir = result?.ToString() ?? "C:\\Temp";
+                        
+                        if (!Directory.Exists(defaultDir))
+                        {
+                            Directory.CreateDirectory(defaultDir);
+                        }
+
+                        backupPath = Path.Combine(defaultDir, backupFileName);
+                    }
+                }
+
+                // Execute backup command
+                string sql = $"BACKUP DATABASE [{databaseName}] TO DISK = @path WITH FORMAT, INIT;";
+                await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@path", backupPath));
+
+                // Also copy the backup file to a web accessible directory so users can download it
+                string webBackupsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "Uploads", "Backups");
+                if (!Directory.Exists(webBackupsDir))
+                {
+                    Directory.CreateDirectory(webBackupsDir);
+                }
+
+                string webBackupPath = Path.Combine(webBackupsDir, backupFileName);
+                if (File.Exists(backupPath))
+                {
+                    File.Copy(backupPath, webBackupPath, true);
+                }
+
+                return new APIResponse<string>
+                {
+                    Success = true,
+                    StatusCode = HttpStatusCode.OK,
+                    Message = $"Database backup completed successfully. File: {backupFileName}",
+                    Data = backupFileName
+                };
+            }
+            catch (Exception ex)
+            {
+                return new APIResponse<string>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = $"Backup failed: {ex.Message}",
+                    Data = string.Empty
+                };
+            }
         }
 
         public async Task<APIResponse<bool>> TriggerRestoreAsync(string backupFile, int schoolId)
         {
-            // Simulate a restore process
-            await Task.Delay(200); // Simulate network/disk IO
-            return new APIResponse<bool>
+            // Security: Prevent directory traversal attacks
+            if (string.IsNullOrEmpty(backupFile) || 
+                backupFile.Contains("..") || 
+                Path.GetFileName(backupFile) != backupFile)
             {
-                Success = true,
-                StatusCode = HttpStatusCode.OK,
-                Message = $"Database restored from backup {backupFile} successfully.",
-                Data = true
-            };
+                return new APIResponse<bool>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Message = "Invalid backup filename. Path traversal is not allowed.",
+                    Data = false
+                };
+            }
+
+            try
+            {
+                var connectionString = _context.Database.GetDbConnection().ConnectionString;
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                var databaseName = builder.InitialCatalog;
+
+                // Find the backup file in SQL Server's default backup directory
+                string defaultDir = "";
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = @"
+                            DECLARE @BackupDir NVARCHAR(4000); 
+                            EXEC master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'BackupDirectory', @BackupDir OUTPUT; 
+                            SELECT @BackupDir;
+                        ";
+                        var result = await command.ExecuteScalarAsync();
+                        defaultDir = result?.ToString() ?? "C:\\Temp";
+                    }
+                }
+
+                string backupPath = Path.Combine(defaultDir, backupFile);
+
+                // If not found in default backup folder, check the web uploads backups folder and copy it there
+                if (!File.Exists(backupPath))
+                {
+                    string webBackupPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "Uploads", "Backups", backupFile);
+                    if (File.Exists(webBackupPath))
+                    {
+                        if (!Directory.Exists(defaultDir))
+                        {
+                            Directory.CreateDirectory(defaultDir);
+                        }
+                        File.Copy(webBackupPath, backupPath, true);
+                    }
+                    else
+                    {
+                        return new APIResponse<bool>
+                        {
+                            Success = false,
+                            StatusCode = HttpStatusCode.NotFound,
+                            Message = "Backup file not found in system storage.",
+                            Data = false
+                        };
+                    }
+                }
+
+                // Restore database from master connection to drop active connections of this DB
+                var masterBuilder = new SqlConnectionStringBuilder(connectionString);
+                masterBuilder.InitialCatalog = "master";
+
+                using (var masterConnection = new SqlConnection(masterBuilder.ConnectionString))
+                {
+                    await masterConnection.OpenAsync();
+                    using (var command = masterConnection.CreateCommand())
+                    {
+                        command.CommandText = $@"
+                            ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                            RESTORE DATABASE [{databaseName}] FROM DISK = @path WITH REPLACE;
+                            ALTER DATABASE [{databaseName}] SET MULTI_USER;
+                        ";
+                        command.Parameters.Add(new SqlParameter("@path", backupPath));
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                return new APIResponse<bool>
+                {
+                    Success = true,
+                    StatusCode = HttpStatusCode.OK,
+                    Message = $"Database restored from backup {backupFile} successfully.",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new APIResponse<bool>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = $"Restore failed: {ex.Message}",
+                    Data = false
+                };
+            }
         }
 
         public async Task<APIResponse<bool>> ImportDataAsync(string entityName, byte[] fileData, int schoolId)

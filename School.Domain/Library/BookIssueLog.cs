@@ -51,9 +51,6 @@ namespace School.Domain.Library
         public bool IsRenewed { get; set; } = false;
         public int RenewalCount { get; set; } = 0;
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration? SchoolRegistration { get; set; }

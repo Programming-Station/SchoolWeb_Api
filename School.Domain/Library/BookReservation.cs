@@ -30,9 +30,6 @@ namespace School.Domain.Library
 
         public DateTime? NotifiedAt { get; set; }
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration? SchoolRegistration { get; set; }

@@ -2,33 +2,19 @@ namespace School.Utilities.Constants
 {
     public static class Constants
     {
-        // Role GUIDs (generated)
-        public static readonly string SuperAdmin = Guid.NewGuid().ToString();
+        // Deterministic Fixed Role GUIDs
+        public static readonly string SuperAdmin = "a184b067-32b2-4beb-8a27-0248464303b5";
         public static readonly string SuperAdminUser = SuperAdmin;
-        public static readonly string PlatformOwner = Guid.NewGuid().ToString();
-        public static readonly string SaaSOwner = Guid.NewGuid().ToString();
-        public static readonly string SystemAdministrator = Guid.NewGuid().ToString();
+        public static readonly string PlatformOwner = "b284b067-32b2-4beb-8a27-0248464303b6";
+        public static readonly string SaaSOwner = "c384b067-32b2-4beb-8a27-0248464303b7";
+        public static readonly string SystemAdministrator = "c7b3d8e0-1234-5678-9abc-def012345678";
         public static readonly string Admin = SystemAdministrator;
-        public static readonly string AdminUser = Guid.NewGuid().ToString();
+        public static readonly string AdminUser = "d8b3d8e0-1234-5678-9abc-def012345679";
 
-        public static readonly string Employee = Guid.NewGuid().ToString();
-        public static readonly string Owner = Guid.NewGuid().ToString();
+        public static readonly string Employee = "e89f210a-4567-89ab-cdef-0123456789ab";
+        public static readonly string EmployeeUser = Employee;
+        public static readonly string Owner = "f90a321b-5678-9abc-def0-123456789abc";
         public static readonly string OwnerUser = Owner;
-        public static readonly string TechnicalAdministrator = Guid.NewGuid().ToString();
-        public static readonly string DevOpsAdministrator = Guid.NewGuid().ToString();
-        public static readonly string DatabaseAdministrator = Guid.NewGuid().ToString();
-        public static readonly string SecurityAdministrator = Guid.NewGuid().ToString();
-        public static readonly string SupportEngineer = Guid.NewGuid().ToString();
-        public static readonly string CustomerSuccessManager = Guid.NewGuid().ToString();
-        public static readonly string TenantOwner = Guid.NewGuid().ToString();
-        public static readonly string OrganizationOwner = Guid.NewGuid().ToString();
-        public static readonly string SchoolOwner = Guid.NewGuid().ToString();
-        public static readonly string CampusAdministrator = Guid.NewGuid().ToString();
-        public static readonly string BranchAdministrator = Guid.NewGuid().ToString();
-        public static readonly string Chairman = Guid.NewGuid().ToString();
-        public static readonly string ViceChairman = Guid.NewGuid().ToString();
-        public static readonly string ManagingDirector = Guid.NewGuid().ToString();
-        public static readonly string Director = Guid.NewGuid().ToString();
         public static readonly string JointDirector = Guid.NewGuid().ToString();
         public static readonly string Principal = Guid.NewGuid().ToString();
         public static readonly string VicePrincipal = Guid.NewGuid().ToString();
@@ -128,7 +114,6 @@ namespace School.Utilities.Constants
         public static readonly string HousekeepingSupervisor = Guid.NewGuid().ToString();
         public static readonly string HousekeepingStaff = Guid.NewGuid().ToString();
         public static readonly string Gardener = Guid.NewGuid().ToString();
-        public static readonly string Vendor = Guid.NewGuid().ToString();
         public static readonly string Supplier = Guid.NewGuid().ToString();
         public static readonly string Visitor = Guid.NewGuid().ToString();
         public static readonly string Inspector = Guid.NewGuid().ToString();
@@ -137,6 +122,5 @@ namespace School.Utilities.Constants
         // Add any other existing constants below
         public static readonly List<string> LoginSupportedApps = ["WEB", "APP"];
         public static readonly string User = Guid.NewGuid().ToString();
-        public static readonly string EmployeeUser = Guid.NewGuid().ToString();
     }
 }

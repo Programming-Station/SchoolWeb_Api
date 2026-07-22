@@ -26,8 +26,6 @@ namespace School.Domain.School
 
         [MaxLength(100)]
         public string? TransactionId { get; set; }
-
-        public bool IsActive { get; set; } = true;
     }
 }
 

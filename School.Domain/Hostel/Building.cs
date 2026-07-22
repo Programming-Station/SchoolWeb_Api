@@ -16,9 +16,6 @@ namespace School.Domain.Hostel
         [Required, MaxLength(200)]
         public string Name { get; set; } = null!;
 
-        [Required, MaxLength(50)]
-        public string Code { get; set; } = null!;
-
         public int NumberOfFloors { get; set; }
 
         public int ConstructionYear { get; set; }

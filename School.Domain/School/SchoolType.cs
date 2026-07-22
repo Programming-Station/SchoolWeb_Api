@@ -16,8 +16,6 @@ namespace School.Domain.School
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
         public virtual ICollection<SchoolRegistration> SchoolRegistrations { get; set; } = new List<SchoolRegistration>();
     }
 }

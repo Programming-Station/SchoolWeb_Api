@@ -15,9 +15,6 @@ namespace School.Domain.Hostel
         public string Name { get; set; } = null!;
 
         [Required, MaxLength(50)]
-        public string Code { get; set; } = null!;
-
-        [Required, MaxLength(50)]
         public string HostelType { get; set; } = null!; // Boys, Girls, Staff
 
         public int Capacity { get; set; }

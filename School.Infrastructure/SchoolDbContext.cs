@@ -11,6 +11,7 @@ using School.Domain.AI;
 using School.Domain.Analytics;
 using School.Domain.Auth;
 using School.Domain.Communication;
+using School.Domain.CMS;
 using School.Domain.Communication.Recipients;
 using School.Domain.Email;
 using School.Domain.Entities;
@@ -93,6 +94,7 @@ namespace School.Infrastructure
         public DbSet<Exam> Exams { get; set; } = null!;
         public DbSet<ExamResult> ExamResults { get; set; } = null!;
         public DbSet<TimetableSlot> TimetableSlots { get; set; } = null!;
+        public DbSet<Section> Sections { get; set; } = null!;
 
         public DbSet<Event> Events { get; set; } = null!;
         public DbSet<Faculty> Faculties { get; set; } = null!;
@@ -268,12 +270,19 @@ namespace School.Infrastructure
         public DbSet<CoaAccount> CoaAccounts { get; set; } = null!;
         public DbSet<JournalEntry> JournalEntries { get; set; } = null!;
         public DbSet<JournalEntryLine> JournalEntryLines { get; set; } = null!;
+        public DbSet<Expense> Expenses { get; set; } = null!;
+        public DbSet<Income> Incomes { get; set; } = null!;
         public DbSet<CashBankTransaction> CashBankTransactions { get; set; } = null!;
         public DbSet<BudgetPlan> BudgetPlans { get; set; } = null!;
         public DbSet<TaxConfig> TaxConfigs { get; set; } = null!;
         public DbSet<FinancialYear> FinancialYears { get; set; } = null!;
         public DbSet<CostCenter> CostCenters { get; set; } = null!;
         public DbSet<ChequeBook> ChequeBooks { get; set; } = null!;
+
+        // CMS Schema
+        public DbSet<CmsPage> CmsPages { get; set; } = null!;
+        public DbSet<CmsBanner> CmsBanners { get; set; } = null!;
+        public DbSet<CmsNotice> CmsNotices { get; set; } = null!;
 
         // Inventory Schema
         public DbSet<ItemCategory> ItemCategories { get; set; } = null!;

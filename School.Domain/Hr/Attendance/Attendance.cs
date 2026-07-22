@@ -23,9 +23,6 @@ namespace School.Domain.Hr.Attendance
         [Required, MaxLength(50)]
         public string Status { get; set; } = "Present"; // Present, Absent, HalfDay, Leave, Holiday
 
-        [MaxLength(1000)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;

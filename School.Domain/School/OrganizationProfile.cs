@@ -14,8 +14,6 @@ namespace School.Domain.School
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
 
-        public int? BranchId { get; set; }
-
         [Required, MaxLength(200)]
         public string OrganizationName { get; set; } = string.Empty;
 

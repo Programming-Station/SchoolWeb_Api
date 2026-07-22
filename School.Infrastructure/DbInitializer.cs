@@ -139,7 +139,7 @@ namespace School.Infrastructure
             var superAdminUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "SUPERADMIN");
             var superAdminRole = allRoles.FirstOrDefault(r => 
-                r.NormalizedName != null && r.NormalizedName.ToUpper() == "SUPERADMIN");
+                r.NormalizedName != null && (r.NormalizedName.ToUpper() == "SUPERADMIN" || r.NormalizedName.ToUpper() == "SYSTEMADMINISTRATOR"));
             if (superAdminUser != null && superAdminRole != null)
             {
                 if (!existingUserRoles.Any(ur => ur.UserId == superAdminUser.Id && ur.RoleId == superAdminRole.Id))
@@ -155,7 +155,7 @@ namespace School.Infrastructure
             var adminUser = allUsers.FirstOrDefault(u => 
                 u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "ADMIN");
             var adminRole = allRoles.FirstOrDefault(r => 
-                r.NormalizedName != null && r.NormalizedName.ToUpper() == "ADMIN");
+                r.NormalizedName != null && (r.NormalizedName.ToUpper() == "ADMIN" || r.NormalizedName.ToUpper() == "SYSTEMADMINISTRATOR"));
             if (adminUser != null && adminRole != null)
             {
                 if (!existingUserRoles.Any(ur => ur.UserId == adminUser.Id && ur.RoleId == adminRole.Id))
@@ -187,7 +187,7 @@ namespace School.Infrastructure
             var ownerUser = allUsers.FirstOrDefault(u =>
                u.NormalizedUserName != null && u.NormalizedUserName.ToUpper() == "OWNER");
             var ownerRole = allRoles.FirstOrDefault(r =>
-                r.NormalizedName != null && r.NormalizedName.ToUpper() == "OWNER");
+                r.NormalizedName != null && (r.NormalizedName.ToUpper() == "OWNER" || r.NormalizedName.ToUpper() == "SCHOOLOWNER" || r.NormalizedName.ToUpper() == "TENANTOWNER"));
             if (ownerUser != null && ownerRole != null)
             {
                 if (!existingUserRoles.Any(ur => ur.UserId == ownerUser.Id && ur.RoleId == ownerRole.Id))

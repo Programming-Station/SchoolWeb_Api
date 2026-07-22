@@ -13,5 +13,7 @@ namespace School.Services.Interfaces
         Task<RolePermission> CreateAsync(RolePermission rolePermission, CancellationToken ct = default);
         Task<RolePermission?> UpdateAsync(Guid id, RolePermission rolePermission, CancellationToken ct = default);
         Task<bool> DeleteAsync(Guid id, CancellationToken ct = default);
+        Task<IReadOnlyList<Microsoft.AspNetCore.Identity.IdentityRole>> GetRolesAsync(CancellationToken ct = default);
+        Task<IReadOnlyList<Permission>> GetPermissionsAsync(CancellationToken ct = default);
     }
 }

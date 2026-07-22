@@ -41,9 +41,6 @@ namespace School.Domain.Academic
 
         public DateTime? DroppedDate { get; set; }
 
-        [MaxLength(500)]
-        public string Remarks { get; set; }
-
         [Required]
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]

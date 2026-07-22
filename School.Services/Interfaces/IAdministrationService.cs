@@ -29,7 +29,7 @@ namespace School.Services.Interfaces
         // System Settings & Operations
         Task<APIResponse<Dictionary<string, string>>> GetSystemSettingsAsync(int schoolId);
         Task<APIResponse<bool>> SaveSystemSettingsAsync(Dictionary<string, string> settings, int schoolId);
-        Task<APIResponse<bool>> TriggerBackupAsync(int schoolId);
+        Task<APIResponse<string>> TriggerBackupAsync(int schoolId);
         Task<APIResponse<bool>> TriggerRestoreAsync(string backupFile, int schoolId);
         Task<APIResponse<bool>> ImportDataAsync(string entityName, byte[] fileData, int schoolId);
         Task<APIResponse<byte[]>> ExportDataAsync(string entityName, int schoolId);

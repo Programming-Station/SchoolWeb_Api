@@ -13,6 +13,9 @@ using School.Services.Mapping;
 using School_API;
 using School_API.Filters;
 using School_API.Middleware;
+using School_API.Common.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +52,12 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider>();
+    options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
+});
 
 builder.Services.AddControllers(options =>
 {
@@ -177,9 +186,37 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 });
 
 
+var redisConnection = builder.Configuration.GetConnectionString("RedisConnection");
+if (!string.IsNullOrEmpty(redisConnection))
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConnection;
+    });
+}
+else
+{
+    builder.Services.AddDistributedMemoryCache();
+}
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("Database")
+    .AddCheck<RedisHealthCheck>("Redis");
+
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
+
+app.UseResponseCompression();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    await next();
+});
 
 if (app.Environment.IsProduction() && appSettings?.RequireHttps == true)
 {
@@ -239,6 +276,27 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 
 app.MapHub<School_API.Hubs.CommunicationHub>("/hubs/communication");
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var response = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(entry => new
+            {
+                name = entry.Key,
+                status = entry.Value.Status.ToString(),
+                description = entry.Value.Description,
+                duration = entry.Value.Duration.ToString()
+            }),
+            totalDuration = report.TotalDuration.ToString()
+        };
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+});
 
 using (var scope = app.Services.CreateScope())
 {

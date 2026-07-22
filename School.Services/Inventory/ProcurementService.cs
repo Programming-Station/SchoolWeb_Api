@@ -1395,10 +1395,11 @@ namespace School.Services.Inventory
             if (transactions.Any())
             {
                 // Native Exponential Smoothing model calculation:
-                // Forecast(t+1) = alpha * Actual(t) + (1 - alpha) * Forecast(t)
                 double alpha = 0.3; // smoothing factor
                 double movingAverage = (double)transactions.Average(t => t.Quantity);
-                forecast = Math.Round(movingAverage * 1.15, 2); // projected standard outbound factor
+                double lastActual = (double)transactions.Last().Quantity;
+                double smoothedForecast = alpha * lastActual + (1.0 - alpha) * movingAverage;
+                forecast = Math.Round(smoothedForecast * 1.15, 2); // projected standard outbound factor
             }
             else
             {

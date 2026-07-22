@@ -391,6 +391,18 @@ namespace School.Services.Mapping
             CreateMap<global::School.Domain.Administration.CertificateIssuanceLog, global::School_DTOs.Administration.CreateCertificateIssuanceDto>().ReverseMap();
             CreateMap<global::School.Domain.Communication.NotificationLog, global::School_DTOs.Communication.NotificationLogDto>().ReverseMap();
             CreateMap<global::School.Domain.Communication.NotificationLog, global::School_DTOs.Communication.CreateNotificationDto>().ReverseMap();
+
+            // Finance Mappings
+            CreateMap<global::School.Domain.Finance.Expense, global::School_DTOs.Finance.ExpenseDto>()
+                .ForMember(dest => dest.CoaAccountName, opt => opt.MapFrom(src => src.CoaAccount != null ? src.CoaAccount.Name : string.Empty))
+                .ForMember(dest => dest.VendorName, opt => opt.MapFrom(src => src.Vendor != null ? src.Vendor.Name : string.Empty))
+                .ReverseMap();
+            CreateMap<global::School.Models.Finance.ExpenseModel, global::School.Domain.Finance.Expense>().ReverseMap();
+
+            CreateMap<global::School.Domain.Finance.Income, global::School_DTOs.Finance.IncomeDto>()
+                .ForMember(dest => dest.CoaAccountName, opt => opt.MapFrom(src => src.CoaAccount != null ? src.CoaAccount.Name : string.Empty))
+                .ReverseMap();
+            CreateMap<global::School.Models.Finance.IncomeModel, global::School.Domain.Finance.Income>().ReverseMap();
         }
 
         private static DateTime ParseDateOfBirth(string? dateOfBirth)

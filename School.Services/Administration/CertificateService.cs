@@ -145,7 +145,7 @@ namespace School.Services.Administration
                 cert.PdfUrl = $"/uploads/certificates/{fileName}";
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Fallback gracefully if filesystem write fails (e.g. read-only environment)
             }

@@ -210,27 +210,51 @@ namespace School.Infrastructure.Seeds
             var allDbMenus = await context.Menus.Where(m => m.SchoolRegistrationId == defaultSchoolId).ToListAsync();
             var allDbSubMenus = await context.SubMenus.Where(s => s.SchoolRegistrationId == defaultSchoolId).ToListAsync();
 
-            var adminRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "ADMIN");
-            var ownerRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
+            var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name != null && 
+                (r.Name.ToUpper() == "ADMIN" || r.Name.ToUpper() == "SYSTEMADMINISTRATOR" || r.Name.ToUpper() == "SUPERADMIN"));
+            var ownerRole = await context.Roles.FirstOrDefaultAsync(r => r.Name != null && 
+                (r.Name.ToUpper() == "OWNER" || r.Name.ToUpper() == "SCHOOLOWNER" || r.Name.ToUpper() == "TENANTOWNER"));
 
-            string adminRoleId = adminRole?.Id ?? Constants.Admin;
-            string ownerRoleId = ownerRole?.Id ?? Constants.Owner;
+            if (adminRole == null && ownerRole == null) return;
+
+            string? adminRoleId = adminRole?.Id;
+            string? ownerRoleId = ownerRole?.Id;
 
             // Admin Role Permissions
-            foreach (var menu in allDbMenus)
+            if (adminRoleId != null)
             {
-                var subMenus = allDbSubMenus.Where(s => s.MenuId == menu.Id).ToList();
-                if (subMenus.Any())
+                foreach (var menu in allDbMenus)
                 {
-                    foreach (var sm in subMenus)
+                    var subMenus = allDbSubMenus.Where(s => s.MenuId == menu.Id).ToList();
+                    if (subMenus.Any())
                     {
-                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
+                        foreach (var sm in subMenus)
+                        {
+                            var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
+                            if (!hasPerm)
+                            {
+                                context.MenuPermessions.Add(new MenuPermession
+                                {
+                                    MenuId = menu.Id,
+                                    SubMenuId = sm.Id,
+                                    RoleId = adminRoleId,
+                                    IsVisible = true,
+                                    SchoolRegistrationId = defaultSchoolId,
+                                    CreatedBy = "System",
+                                    CreatedDate = DateTime.UtcNow
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
                         if (!hasPerm)
                         {
                             context.MenuPermessions.Add(new MenuPermession
                             {
                                 MenuId = menu.Id,
-                                SubMenuId = sm.Id,
+                                SubMenuId = null,
                                 RoleId = adminRoleId,
                                 IsVisible = true,
                                 SchoolRegistrationId = defaultSchoolId,
@@ -240,40 +264,43 @@ namespace School.Infrastructure.Seeds
                         }
                     }
                 }
-                else
-                {
-                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == adminRoleId && p.SchoolRegistrationId == defaultSchoolId);
-                    if (!hasPerm)
-                    {
-                        context.MenuPermessions.Add(new MenuPermession
-                        {
-                            MenuId = menu.Id,
-                            SubMenuId = null,
-                            RoleId = adminRoleId,
-                            IsVisible = true,
-                            SchoolRegistrationId = defaultSchoolId,
-                            CreatedBy = "System",
-                            CreatedDate = DateTime.UtcNow
-                        });
-                    }
-                }
             }
 
             // Owner Role Permissions
-            foreach (var menu in allDbMenus)
+            if (ownerRoleId != null)
             {
-                var subMenus = allDbSubMenus.Where(s => s.MenuId == menu.Id).ToList();
-                if (subMenus.Any())
+                foreach (var menu in allDbMenus)
                 {
-                    foreach (var sm in subMenus)
+                    var subMenus = allDbSubMenus.Where(s => s.MenuId == menu.Id).ToList();
+                    if (subMenus.Any())
                     {
-                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
+                        foreach (var sm in subMenus)
+                        {
+                            var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == sm.Id && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
+                            if (!hasPerm)
+                            {
+                                context.MenuPermessions.Add(new MenuPermession
+                                {
+                                    MenuId = menu.Id,
+                                    SubMenuId = sm.Id,
+                                    RoleId = ownerRoleId,
+                                    IsVisible = true,
+                                    SchoolRegistrationId = defaultSchoolId,
+                                    CreatedBy = "System",
+                                    CreatedDate = DateTime.UtcNow
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
                         if (!hasPerm)
                         {
                             context.MenuPermessions.Add(new MenuPermession
                             {
                                 MenuId = menu.Id,
-                                SubMenuId = sm.Id,
+                                SubMenuId = null,
                                 RoleId = ownerRoleId,
                                 IsVisible = true,
                                 SchoolRegistrationId = defaultSchoolId,
@@ -281,23 +308,6 @@ namespace School.Infrastructure.Seeds
                                 CreatedDate = DateTime.UtcNow
                             });
                         }
-                    }
-                }
-                else
-                {
-                    var hasPerm = await context.MenuPermessions.AnyAsync(p => p.MenuId == menu.Id && p.SubMenuId == null && p.RoleId == ownerRoleId && p.SchoolRegistrationId == defaultSchoolId);
-                    if (!hasPerm)
-                    {
-                        context.MenuPermessions.Add(new MenuPermession
-                        {
-                            MenuId = menu.Id,
-                            SubMenuId = null,
-                            RoleId = ownerRoleId,
-                            IsVisible = true,
-                            SchoolRegistrationId = defaultSchoolId,
-                            CreatedBy = "System",
-                            CreatedDate = DateTime.UtcNow
-                        });
                     }
                 }
             }

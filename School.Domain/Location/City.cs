@@ -18,8 +18,6 @@ namespace School.Domain.Location
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
         [ForeignKey(nameof(StateId))]
         public virtual State State { get; set; }
     }

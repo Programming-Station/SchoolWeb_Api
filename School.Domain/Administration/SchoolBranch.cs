@@ -13,13 +13,8 @@ namespace School.Domain.Administration
         [Required, MaxLength(150)]
         public string BranchName { get; set; } = null!;
 
-        [Required, MaxLength(20)]
-        public string Code { get; set; } = null!;
-
         [MaxLength(500)]
         public string? Address { get; set; }
-
-        public bool IsActive { get; set; } = true;
 
         public int SchoolRegistrationId { get; set; }
     }

@@ -30,9 +30,6 @@ namespace School.Domain.Hostel
         [Required, MaxLength(50)]
         public string Status { get; set; } = "Collected"; // Collected, InProgress, Ready, Delivered
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(StudentId))]

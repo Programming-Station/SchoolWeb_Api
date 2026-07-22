@@ -13,9 +13,6 @@ namespace School.Domain
         [Required, MaxLength(200)]
         public string Name { get; set; } = null!;
 
-        [MaxLength(50)]
-        public string? Code { get; set; }
-
         [Required]
         public int FacultyId { get; set; }
 

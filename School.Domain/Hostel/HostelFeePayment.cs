@@ -27,9 +27,6 @@ namespace School.Domain.Hostel
         [MaxLength(200)]
         public string? TransactionReference { get; set; }
 
-        [MaxLength(500)]
-        public string? Remarks { get; set; }
-
         public int SchoolRegistrationId { get; set; }
 
         [ForeignKey(nameof(AllocationId))]

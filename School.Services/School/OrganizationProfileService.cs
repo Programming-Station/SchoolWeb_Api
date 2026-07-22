@@ -3,6 +3,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 using School.Domain.School;
 using School.Infrastructure;
 using School.Infrastructure.Interfaces;
@@ -721,27 +723,30 @@ namespace School.Services.School
 
     public class OrganizationCacheService : IOrganizationCacheService
     {
-        private readonly IMemoryCache _cache;
+        private readonly IDistributedCache _cache;
         private const string CacheKeyPrefix = "OrgProfile_";
         private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(2);
 
-        public OrganizationCacheService(IMemoryCache cache)
+        public OrganizationCacheService(IDistributedCache cache)
         {
             _cache = cache;
         }
 
         public OrganizationProfileDto? Get(int tenantId)
         {
-            _cache.TryGetValue(GetCacheKey(tenantId), out OrganizationProfileDto? profile);
-            return profile;
+            var data = _cache.GetString(GetCacheKey(tenantId));
+            if (string.IsNullOrEmpty(data)) return null;
+            return JsonSerializer.Deserialize<OrganizationProfileDto>(data);
         }
 
         public void Set(int tenantId, OrganizationProfileDto profile)
         {
-            _cache.Set(GetCacheKey(tenantId), profile, new MemoryCacheEntryOptions
+            var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = CacheDuration
-            });
+            };
+            var data = JsonSerializer.Serialize(profile);
+            _cache.SetString(GetCacheKey(tenantId), data, options);
         }
 
         public void Remove(int tenantId)

@@ -17,8 +17,6 @@ namespace School.Domain.Location
         public string? Currency { get; set; }
         public string? CurrencySymbol { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
         public virtual ICollection<State> States { get; set; } = new List<State>();
     }
 }
