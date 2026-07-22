@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using School.Models.Event;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace School_API.Controllers
 {

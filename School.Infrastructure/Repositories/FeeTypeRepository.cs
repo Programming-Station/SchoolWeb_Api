@@ -1,21 +1,18 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace School.Infrastructure.Repositories
 {
-    
-    public class FeeTypeRepository: Repository<FeeType>, IFeeTypeRepository
+
+    public class FeeTypeRepository : Repository<FeeType>, IFeeTypeRepository
     {
         private readonly SchoolDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
-        public FeeTypeRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork):base(dbFactory)
+        public FeeTypeRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
         {
             _context = context;
             _unitOfWork = unitOfWork;
@@ -23,8 +20,8 @@ namespace School.Infrastructure.Repositories
         public async Task<FeeType> AddFeeTypeAsync(FeeType entity)
         {
             var existingFeeType = await DbSet.FirstOrDefaultAsync(x => x.Name.ToUpper() == entity.Name.ToLower() &&
-                                                                  x.SchoolRegistrationId==entity.SchoolRegistrationId);
-            if(existingFeeType != null)
+                                                                  x.SchoolRegistrationId == entity.SchoolRegistrationId);
+            if (existingFeeType != null)
             {
                 existingFeeType.Id = 0;
                 return existingFeeType;
@@ -34,8 +31,8 @@ namespace School.Infrastructure.Repositories
             return entity;
 
         }
-        
-        public async Task<IEnumerable<FeeType>> GetFeeTypeBySchoolIdAsync(int? schoolId =null)
+
+        public async Task<IEnumerable<FeeType>> GetFeeTypeBySchoolIdAsync(int? schoolId = null)
         {
             return schoolId == null ? await List(expression: x => !x.IsDeleted).ToListAsync() :
                 await List(expression: x => !x.IsDeleted && x.SchoolRegistrationId == schoolId).ToListAsync();
@@ -46,7 +43,7 @@ namespace School.Infrastructure.Repositories
             Attach(entity, updatedProperties: new Expression<Func<FeeType, object>>[]
             {
                 u => u.Name!,
-              
+
                 u=>u.Name!,
                 u=>u.description!,
                 u=>u.UpdatedBy!,
@@ -58,7 +55,7 @@ namespace School.Infrastructure.Repositories
         {
             var entity = await FindAsync(expression: x => x.Id == id && !x.IsDeleted);
             var result = await FindAsync(expression: x => x.Id == id);
-             if(result != null)
+            if (result != null)
             {
                 result.UpdatedDate = DateTime.Now;
                 Delete(result);

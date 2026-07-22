@@ -1,5 +1,3 @@
-using School_DTOs;
-
 namespace School_DTOs.Department
 {
     public class DepartmentDto : BaseDto

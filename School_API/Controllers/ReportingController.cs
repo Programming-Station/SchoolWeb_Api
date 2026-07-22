@@ -1,9 +1,9 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Infrastructure;
 using School.Services.Interfaces;
 using School_DTOs.Reporting;
-using System.Security.Claims;
 
 namespace School_API.Controllers
 {

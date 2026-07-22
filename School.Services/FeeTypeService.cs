@@ -1,6 +1,5 @@
+using System.Net;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using School.Domain;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.Fee;
@@ -8,10 +7,6 @@ using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Fee;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 
 namespace School.Services
 {
@@ -23,7 +18,7 @@ namespace School.Services
         {
             _feeTypeRepository = feeService;
             _mapper = mapper;
-        } 
+        }
 
         public async Task<APIResponse<FeeTypeDto>> AddFeeTypeAsync(FeeTypeModel model)
         {

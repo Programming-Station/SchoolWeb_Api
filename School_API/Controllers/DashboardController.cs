@@ -1,7 +1,7 @@
-using School.Services.Interfaces;
-using School_API.Common.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using School.Services.Interfaces;
+using School_API.Common.Interface;
 
 namespace School_API.Controllers
 {
@@ -12,7 +12,7 @@ namespace School_API.Controllers
     {
         private readonly IDashboardService _dashboardService;
 
-        public DashboardController(IDashboardService dashboardService, ICurrentUserService currentUserService) 
+        public DashboardController(IDashboardService dashboardService, ICurrentUserService currentUserService)
             : base(currentUserService)
         {
             _dashboardService = dashboardService;

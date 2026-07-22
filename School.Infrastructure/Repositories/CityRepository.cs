@@ -1,9 +1,9 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using School.Domain.Location;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using School.Domain.Location;
 
 namespace School.Infrastructure.Repositories
 {
@@ -12,7 +12,7 @@ namespace School.Infrastructure.Repositories
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CityRepository(DbFactory dbFactory,IUnitOfWork unitOfWork)
+        public CityRepository(DbFactory dbFactory, IUnitOfWork unitOfWork)
             : base(dbFactory)
         {
             _unitOfWork = unitOfWork;

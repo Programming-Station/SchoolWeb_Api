@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using School.Domain.Academic;
-using School.Domain.Student;
 using School.Infrastructure;
 using School.Services.Interfaces;
 
@@ -108,7 +102,7 @@ namespace School.Services
                         Leave = g.Count(x => x.Status == "Leave")
                     }).ToList();
 
-                var classTableRows = string.Join("", classSummaries.Select(c => 
+                var classTableRows = string.Join("", classSummaries.Select(c =>
                     $"<tr><td style='padding: 8px; border: 1px solid #ddd;'>{c.ClassName}</td>" +
                     $"<td style='padding: 8px; border: 1px solid #ddd; text-align: center; color: #22c55e;'>{c.Present}</td>" +
                     $"<td style='padding: 8px; border: 1px solid #ddd; text-align: center; color: #ef4444;'>{c.Absent}</td>" +

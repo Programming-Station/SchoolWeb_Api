@@ -1,13 +1,11 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.FeeManagnment;
 using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.FeeManagnment
 {
-    #nullable disable
+#nullable disable
     public class FeeInstallment : AuditEntity<int>, ITenantEntity
     {
         [Key]

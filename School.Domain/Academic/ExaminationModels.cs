@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
@@ -7,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Academic
 {
-    #nullable disable
+#nullable disable
 
     /// <summary>5.1 — Exam Schedule: which subject on which date/time</summary>
     public class ExamSchedule : AuditEntity<int>, ITenantEntity

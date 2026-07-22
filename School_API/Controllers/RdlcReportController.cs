@@ -1,21 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using School.Infrastructure;
 using School.Services.Interfaces;
-using School_DTOs.Student;
-using School.Domain.FeeManagnment;
-using School.Domain.Library;
-using School.Domain.Payroll;
-using School.Domain.Transport;
-using School.Domain.Hostel;
-using School.Domain.Inventory;
-using School.Domain.Finance;
-using School.Domain.Academic;
 
 namespace School_API.Controllers
 {
@@ -31,7 +17,7 @@ namespace School_API.Controllers
         private readonly IEmailService _emailService;
 
         public RdlcReportController(
-            IRdlcCertificateService rdlcService, 
+            IRdlcCertificateService rdlcService,
             IAdmissionService admissionService,
             IRdlcReportManager reportManager,
             SchoolDbContext dbContext,
@@ -58,7 +44,7 @@ namespace School_API.Controllers
 
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var pdfBytes = await _rdlcService.GenerateRegistrationCertificateAsync(admissionRes.Data, baseUrl);
-            
+
             if (pdfBytes == null || pdfBytes.Length == 0)
                 return BadRequest(new { message = "Failed to generate certificate." });
 
@@ -92,9 +78,9 @@ namespace School_API.Controllers
         /// <summary>Generates and downloads the admissions pipeline status analytics report via RDLC.</summary>
         [HttpGet("AdmissionsPipeline")]
         public async Task<IActionResult> DownloadAdmissionsPipelineReport(
-            [FromQuery] string? status, 
-            [FromQuery] string? courseName, 
-            [FromQuery] DateTime? fromDate, 
+            [FromQuery] string? status,
+            [FromQuery] string? courseName,
+            [FromQuery] DateTime? fromDate,
             [FromQuery] DateTime? toDate)
         {
             var pdfBytes = await _rdlcService.GenerateAdmissionsPipelineReportAsync(status, courseName, fromDate, toDate);
@@ -107,7 +93,7 @@ namespace School_API.Controllers
         /// <summary>Generates and downloads the student class directory report via RDLC.</summary>
         [HttpGet("StudentClassDirectory")]
         public async Task<IActionResult> DownloadStudentClassDirectory(
-            [FromQuery] int classId, 
+            [FromQuery] int classId,
             [FromQuery] int? sectionId)
         {
             var pdfBytes = await _rdlcService.GenerateStudentClassDirectoryAsync(classId, sectionId);
@@ -120,7 +106,7 @@ namespace School_API.Controllers
         /// <summary>Generates and downloads the admission verification audit trail report via RDLC.</summary>
         [HttpGet("AdmissionAuditTrail")]
         public async Task<IActionResult> DownloadAdmissionAuditTrail(
-            [FromQuery] DateTime? fromDate, 
+            [FromQuery] DateTime? fromDate,
             [FromQuery] DateTime? toDate)
         {
             var pdfBytes = await _rdlcService.GenerateAdmissionAuditTrailReportAsync(fromDate, toDate);
@@ -133,7 +119,7 @@ namespace School_API.Controllers
         /// <summary>Generates and downloads the academic qualification analysis report via RDLC.</summary>
         [HttpGet("AcademicQualificationAnalysis")]
         public async Task<IActionResult> DownloadAcademicQualificationAnalysis(
-            [FromQuery] string? boardName, 
+            [FromQuery] string? boardName,
             [FromQuery] string? passingYear)
         {
             var pdfBytes = await _rdlcService.GenerateAcademicQualificationAnalysisAsync(boardName, passingYear);
@@ -168,8 +154,8 @@ namespace School_API.Controllers
         /// <summary>Generates and downloads reports dynamically across all ERP modules.</summary>
         [HttpGet("Export/{module}/{reportName}")]
         public async Task<IActionResult> ExportReport(
-            [FromRoute] string module, 
-            [FromRoute] string reportName, 
+            [FromRoute] string module,
+            [FromRoute] string reportName,
             [FromQuery] string format = "PDF",
             [FromQuery] int? id = null,
             [FromQuery] int? classId = null,
@@ -493,10 +479,10 @@ namespace School_API.Controllers
 
                 // Queue the template email with the compiled PDF attached
                 _emailService.QueueTemplateEmail(
-                    request.RecipientEmail, 
-                    request.TemplateName, 
-                    request.Placeholders, 
-                    fileBytes, 
+                    request.RecipientEmail,
+                    request.TemplateName,
+                    request.Placeholders,
+                    fileBytes,
                     $"{request.ReportName}_Document.pdf");
 
                 return Ok(new { success = true, message = "Report compiled and queued for background email dispatch successfully." });
@@ -531,12 +517,12 @@ namespace School_API.Controllers
     }
 
     public record EmailReportRequest(
-        string RecipientEmail, 
-        string TemplateName, 
-        string Module, 
-        string ReportName, 
-        int? Id, 
-        int? ClassId, 
+        string RecipientEmail,
+        string TemplateName,
+        string Module,
+        string ReportName,
+        int? Id,
+        int? ClassId,
         Dictionary<string, string>? Placeholders);
 
     public record WhatsAppRequest(string RecipientPhone, string Message);

@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using School.Domain.Academic;
 using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Academic;
 
 namespace School.Services.Academic
@@ -31,15 +26,15 @@ namespace School.Services.Academic
 
                 var entity = new SubjectEnrollment
                 {
-                    StudentId          = request.StudentId,
-                    SubjectId          = subjectId,
-                    BatchId            = request.BatchId,
-                    YearSemesterId     = request.YearSemesterId,
-                    ClassId            = request.ClassId,
-                    Status             = "Enrolled",
-                    EnrolledDate       = DateTime.Now,
+                    StudentId = request.StudentId,
+                    SubjectId = subjectId,
+                    BatchId = request.BatchId,
+                    YearSemesterId = request.YearSemesterId,
+                    ClassId = request.ClassId,
+                    Status = "Enrolled",
+                    EnrolledDate = DateTime.Now,
                     SchoolRegistrationId = schoolRegistrationId,
-                    CreatedBy          = enrolledBy
+                    CreatedBy = enrolledBy
                 };
 
                 await _repo.AddAsync(entity);
@@ -81,22 +76,22 @@ namespace School.Services.Academic
 
         private static SubjectEnrollmentDto MapToDto(SubjectEnrollment e) => new()
         {
-            Id              = e.Id,
-            StudentId       = e.StudentId,
-            StudentName     = e.Student?.Name ?? string.Empty,
-            StudentCode     = e.Student?.StudentId ?? string.Empty,
-            SubjectId       = e.SubjectId,
-            SubjectName     = e.Subject?.Name ?? string.Empty,
-            SubjectCode     = e.Subject?.Code,
-            BatchId         = e.BatchId,
-            BatchName       = e.Batch?.Name,
-            YearSemesterId  = e.YearSemesterId,
+            Id = e.Id,
+            StudentId = e.StudentId,
+            StudentName = e.Student?.Name ?? string.Empty,
+            StudentCode = e.Student?.StudentId ?? string.Empty,
+            SubjectId = e.SubjectId,
+            SubjectName = e.Subject?.Name ?? string.Empty,
+            SubjectCode = e.Subject?.Code,
+            BatchId = e.BatchId,
+            BatchName = e.Batch?.Name,
+            YearSemesterId = e.YearSemesterId,
             YearSemesterName = e.YearSemester?.Name,
-            ClassId         = e.ClassId,
-            ClassName       = e.Class?.Name,
-            Status          = e.Status,
-            EnrolledDate    = e.EnrolledDate,
-            Remarks         = e.Remarks
+            ClassId = e.ClassId,
+            ClassName = e.Class?.Name,
+            Status = e.Status,
+            EnrolledDate = e.EnrolledDate,
+            Remarks = e.Remarks
         };
     }
 }

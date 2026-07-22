@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using School.Domain.Inventory;
 using School.Domain.Finance;
+using School.Domain.Inventory;
 using School.Infrastructure;
 using School.Services.Interfaces;
 using School_DTOs;
@@ -29,7 +25,8 @@ namespace School.Services.Inventory
             var csv = string.Join(",", properties.Select(p => $"\"{p.Name}\"")) + "\n";
             foreach (var item in items)
             {
-                var line = string.Join(",", properties.Select(p => {
+                var line = string.Join(",", properties.Select(p =>
+                {
                     var val = p.GetValue(item);
                     return val == null ? "\"\"" : $"\"{val.ToString().Replace("\"", "\"\"")}\"";
                 }));
@@ -1460,10 +1457,19 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new InventoryItemDto
                 {
-                    Id = i.Id, Sku = i.Sku, Name = i.Name, CategoryId = i.CategoryId, CategoryName = i.Category.Name,
-                    Uom = i.Uom, MinStockLevel = i.MinStockLevel, CurrentStock = i.CurrentStock, UnitPrice = i.UnitPrice,
-                    AssetAccountId = i.AssetAccountId, AssetAccountName = i.AssetAccount?.Name,
-                    ExpenseAccountId = i.ExpenseAccountId, ExpenseAccountName = i.ExpenseAccount?.Name
+                    Id = i.Id,
+                    Sku = i.Sku,
+                    Name = i.Name,
+                    CategoryId = i.CategoryId,
+                    CategoryName = i.Category.Name,
+                    Uom = i.Uom,
+                    MinStockLevel = i.MinStockLevel,
+                    CurrentStock = i.CurrentStock,
+                    UnitPrice = i.UnitPrice,
+                    AssetAccountId = i.AssetAccountId,
+                    AssetAccountName = i.AssetAccount?.Name,
+                    ExpenseAccountId = i.ExpenseAccountId,
+                    ExpenseAccountName = i.ExpenseAccount?.Name
                 }
             };
         }
@@ -1478,8 +1484,14 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new CreateInventoryItemDto
                 {
-                    Sku = i.Sku, Name = i.Name, CategoryId = i.CategoryId, Uom = i.Uom, MinStockLevel = i.MinStockLevel,
-                    UnitPrice = i.UnitPrice, AssetAccountId = i.AssetAccountId, ExpenseAccountId = i.ExpenseAccountId
+                    Sku = i.Sku,
+                    Name = i.Name,
+                    CategoryId = i.CategoryId,
+                    Uom = i.Uom,
+                    MinStockLevel = i.MinStockLevel,
+                    UnitPrice = i.UnitPrice,
+                    AssetAccountId = i.AssetAccountId,
+                    ExpenseAccountId = i.ExpenseAccountId
                 }
             };
         }
@@ -1495,8 +1507,15 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new VendorDto
                 {
-                    Id = v.Id, Code = v.Code, Name = v.Name, ContactPerson = v.ContactPerson, Email = v.Email, Phone = v.Phone,
-                    TaxRegistrationNo = v.TaxRegistrationNo, CreditorAccountId = v.CreditorAccountId, CreditorAccountName = v.CreditorAccount?.Name
+                    Id = v.Id,
+                    Code = v.Code,
+                    Name = v.Name,
+                    ContactPerson = v.ContactPerson,
+                    Email = v.Email,
+                    Phone = v.Phone,
+                    TaxRegistrationNo = v.TaxRegistrationNo,
+                    CreditorAccountId = v.CreditorAccountId,
+                    CreditorAccountName = v.CreditorAccount?.Name
                 }
             };
         }
@@ -1512,11 +1531,22 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new PurchaseRequisitionDto
                 {
-                    Id = r.Id, RequisitionNo = r.RequisitionNo, RequestedBy = r.RequestedBy, RequestDate = r.RequestDate,
-                    DepartmentId = r.DepartmentId, DepartmentName = r.Department.Name, Remarks = r.Remarks, Status = r.Status,
+                    Id = r.Id,
+                    RequisitionNo = r.RequisitionNo,
+                    RequestedBy = r.RequestedBy,
+                    RequestDate = r.RequestDate,
+                    DepartmentId = r.DepartmentId,
+                    DepartmentName = r.Department.Name,
+                    Remarks = r.Remarks,
+                    Status = r.Status,
                     Items = r.Items.Select(x => new PurchaseRequisitionItemDto
                     {
-                        Id = x.Id, ItemId = x.ItemId, ItemName = x.Item.Name, ItemSku = x.Item.Sku, Quantity = x.Quantity, EstimatedCost = x.EstimatedCost
+                        Id = x.Id,
+                        ItemId = x.ItemId,
+                        ItemName = x.Item.Name,
+                        ItemSku = x.Item.Sku,
+                        Quantity = x.Quantity,
+                        EstimatedCost = x.EstimatedCost
                     }).ToList()
                 }
             };
@@ -1533,12 +1563,24 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new PurchaseOrderDto
                 {
-                    Id = po.Id, PoNumber = po.PoNumber, VendorId = po.VendorId, VendorName = po.Vendor.Name, OrderDate = po.OrderDate,
-                    DeliveryDate = po.DeliveryDate, TaxPercentage = po.TaxPercentage, DiscountAmount = po.DiscountAmount, TotalAmount = po.TotalAmount,
+                    Id = po.Id,
+                    PoNumber = po.PoNumber,
+                    VendorId = po.VendorId,
+                    VendorName = po.Vendor.Name,
+                    OrderDate = po.OrderDate,
+                    DeliveryDate = po.DeliveryDate,
+                    TaxPercentage = po.TaxPercentage,
+                    DiscountAmount = po.DiscountAmount,
+                    TotalAmount = po.TotalAmount,
                     Status = po.Status,
                     Items = po.Items.Select(x => new PurchaseOrderItemDto
                     {
-                        Id = x.Id, ItemId = x.ItemId, ItemName = x.Item.Name, QuantityOrdered = x.QuantityOrdered, QuantityReceived = x.QuantityReceived, UnitPrice = x.UnitPrice
+                        Id = x.Id,
+                        ItemId = x.ItemId,
+                        ItemName = x.Item.Name,
+                        QuantityOrdered = x.QuantityOrdered,
+                        QuantityReceived = x.QuantityReceived,
+                        UnitPrice = x.UnitPrice
                     }).ToList()
                 }
             };
@@ -1555,12 +1597,23 @@ namespace School.Services.Inventory
                 StatusCode = HttpStatusCode.OK,
                 Data = new GoodsReceiptNoteDto
                 {
-                    Id = grn.Id, GrnNumber = grn.GrnNumber, PurchaseOrderId = grn.PurchaseOrderId, PoNumber = grn.PurchaseOrder.PoNumber,
-                    VendorName = grn.PurchaseOrder.Vendor.Name, ReceivedDate = grn.ReceivedDate, InvoiceNo = grn.InvoiceNo, ReceivedBy = grn.ReceivedBy,
+                    Id = grn.Id,
+                    GrnNumber = grn.GrnNumber,
+                    PurchaseOrderId = grn.PurchaseOrderId,
+                    PoNumber = grn.PurchaseOrder.PoNumber,
+                    VendorName = grn.PurchaseOrder.Vendor.Name,
+                    ReceivedDate = grn.ReceivedDate,
+                    InvoiceNo = grn.InvoiceNo,
+                    ReceivedBy = grn.ReceivedBy,
                     Status = grn.Status,
                     Items = grn.Items.Select(x => new GoodsReceiptNoteItemDto
                     {
-                        Id = x.Id, ItemId = x.ItemId, ItemName = x.Item.Name, QuantityAccepted = x.QuantityAccepted, QuantityRejected = x.QuantityRejected, UnitPrice = x.UnitPrice
+                        Id = x.Id,
+                        ItemId = x.ItemId,
+                        ItemName = x.Item.Name,
+                        QuantityAccepted = x.QuantityAccepted,
+                        QuantityRejected = x.QuantityRejected,
+                        UnitPrice = x.UnitPrice
                     }).ToList()
                 }
             };

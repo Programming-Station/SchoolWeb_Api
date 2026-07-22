@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using School.Domain.Location;
 using School.Infrastructure.Repositories.IRepositories;
@@ -6,7 +7,6 @@ using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.City;
-using System.Net;
 
 namespace School.Services
 {

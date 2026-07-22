@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Student;
 using School.Infrastructure.Repositories.IRepositories;
@@ -46,9 +42,9 @@ namespace School.Infrastructure.Repositories
                     .Include(x => x.Campus)
                     .Include(x => x.EducationLevel)
                     .Include(x => x.Program)
-                    .FirstOrDefaultAsync(x => x.CampusId == campusId && 
-                                               x.EducationLevelId == educationLevelId && 
-                                               x.ProgramId == programId.Value && 
+                    .FirstOrDefaultAsync(x => x.CampusId == campusId &&
+                                               x.EducationLevelId == educationLevelId &&
+                                               x.ProgramId == programId.Value &&
                                                x.IsActive && !x.IsDeleted);
                 if (config != null) return config;
             }
@@ -58,9 +54,9 @@ namespace School.Infrastructure.Repositories
                 .Include(x => x.Campus)
                 .Include(x => x.EducationLevel)
                 .Include(x => x.Program)
-                .FirstOrDefaultAsync(x => x.CampusId == campusId && 
-                                           x.EducationLevelId == educationLevelId && 
-                                           x.ProgramId == null && 
+                .FirstOrDefaultAsync(x => x.CampusId == campusId &&
+                                           x.EducationLevelId == educationLevelId &&
+                                           x.ProgramId == null &&
                                            x.IsActive && !x.IsDeleted);
         }
 

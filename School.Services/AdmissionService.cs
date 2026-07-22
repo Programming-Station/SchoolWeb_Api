@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 using AutoMapper;
 using QRCoder;
 using School.Domain;
@@ -11,17 +7,17 @@ using School.Domain.FeeManagnment;
 using School.Domain.School;
 using School.Domain.Student;
 using School.Infrastructure.Repositories.IRepositories;
-using School.Models.School;
 using School.Models.Academic;
-using School.Models.Student;
 using School.Models.Fee;
+using School.Models.School;
+using School.Models.Student;
 using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
-using School_DTOs.School;
 using School_DTOs.Academic;
-using School_DTOs.Student;
 using School_DTOs.Fee;
+using School_DTOs.School;
+using School_DTOs.Student;
 
 namespace School.Services
 {
@@ -430,7 +426,7 @@ namespace School.Services
             var entity = _mapper.Map<FeeStructure>(model);
             entity.CreatedBy = username;
             entity.CreatedDate = DateTime.Now;
-            
+
             entity = await _feeStructureRepository.AddAsync(entity);
 
             if (model.FeeStructureItems != null)
@@ -513,8 +509,8 @@ namespace School.Services
         #region Core Admission Applications
         public async Task<APIResponse<AdmissionApplicationDto>> SaveDraftAsync(AdmissionApplicationModel model, string username, int tenantId)
         {
-            var entity = model.Id.HasValue && model.Id.Value > 0 
-                ? await _applicationRepository.GetByIdAsync(model.Id.Value) 
+            var entity = model.Id.HasValue && model.Id.Value > 0
+                ? await _applicationRepository.GetByIdAsync(model.Id.Value)
                 : new AdmissionApplication();
 
             bool isNew = entity.Id == 0;
@@ -589,8 +585,8 @@ namespace School.Services
                 }
             }
 
-            var entity = model.Id.HasValue && model.Id.Value > 0 
-                ? await _applicationRepository.GetByIdAsync(model.Id.Value) 
+            var entity = model.Id.HasValue && model.Id.Value > 0
+                ? await _applicationRepository.GetByIdAsync(model.Id.Value)
                 : new AdmissionApplication();
 
             bool isNew = entity.Id == 0;

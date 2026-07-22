@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -12,9 +8,9 @@ using School.Infrastructure;
 using School.Infrastructure.Email;
 using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
+using School.Services.School.ISchoolServices;
 using School.Utilities.Security;
 using School_DTOs.Student;
-using School.Services.School.ISchoolServices;
 
 namespace School.Services
 {
@@ -77,10 +73,10 @@ namespace School.Services
         }
 
         public void QueueTemplateEmail(
-            string recipientEmail, 
-            string templateName, 
-            Dictionary<string, string>? placeholders, 
-            byte[]? attachmentBytes = null, 
+            string recipientEmail,
+            string templateName,
+            Dictionary<string, string>? placeholders,
+            byte[]? attachmentBytes = null,
             string? attachmentName = null)
         {
             var tenantId = _tenantService.GetTenantId() ?? 0;
@@ -211,10 +207,10 @@ namespace School.Services
         }
 
         public async Task<bool> SendTemplateAsync(
-            string recipientEmail, 
-            string templateName, 
-            Dictionary<string, string>? placeholders, 
-            byte[]? attachmentBytes = null, 
+            string recipientEmail,
+            string templateName,
+            Dictionary<string, string>? placeholders,
+            byte[]? attachmentBytes = null,
             string? attachmentName = null)
         {
             var sendTime = DateTime.UtcNow;
@@ -417,7 +413,7 @@ namespace School.Services
                             if (application != null)
                             {
                                 var dto = MapToDto(application);
-                                string baseUrl = "http://localhost:5000"; 
+                                string baseUrl = "http://localhost:5000";
                                 renderedAttachmentBytes = await _rdlcService.GenerateRegistrationCertificateAsync(dto, baseUrl);
                                 renderedAttachmentName = $"{application.FullName.Replace(" ", "_")}_Certificate.pdf";
                             }

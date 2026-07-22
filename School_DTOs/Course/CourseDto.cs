@@ -1,6 +1,6 @@
 namespace School_DTOs.Course
 {
-    public class CourseDto:BaseDto
+    public class CourseDto : BaseDto
     {
         public string Name { get; set; } = null!;
         public string CourseCode { get; set; } = null!;

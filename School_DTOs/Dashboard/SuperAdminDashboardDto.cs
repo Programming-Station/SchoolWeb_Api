@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Dashboard
 {
     public class SuperAdminDashboardDto
@@ -127,16 +124,16 @@ namespace School_DTOs.Dashboard
         public decimal TodayRevenue { get; set; }
         public decimal MonthlyRevenue { get; set; }
         public decimal YearlyRevenue { get; set; }
-        
+
         public int PendingPaymentsCount { get; set; }
         public decimal PendingPaymentsAmount { get; set; }
-        
+
         public int SuccessfulPaymentsCount { get; set; }
         public decimal SuccessfulPaymentsAmount { get; set; }
-        
+
         public int FailedPaymentsCount { get; set; }
         public decimal FailedPaymentsAmount { get; set; }
-        
+
         public List<ChartDataPoint<string, decimal>> RevenueByPlan { get; set; } = new List<ChartDataPoint<string, decimal>>();
     }
 

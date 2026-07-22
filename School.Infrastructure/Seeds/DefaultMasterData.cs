@@ -1,5 +1,4 @@
 using School.Domain.School;
-using System.Collections.Generic;
 
 namespace School.Infrastructure.Seeds
 {

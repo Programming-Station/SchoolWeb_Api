@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
@@ -6,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.FeeManagnment
 {
-    #nullable disable
+#nullable disable
 
     /// <summary>6.4 — Late Fine per installment</summary>
     public class FeeFine : AuditEntity<int>, ITenantEntity

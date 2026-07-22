@@ -1,15 +1,14 @@
+using System.Net;
+using System.Text.Json;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using School.Infrastructure;
-using School.Infrastructure.Seeds;
 using School.Services.Interfaces;
 using School.Utilities.Enums;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Account;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Net;
-using System.Text.Json;
 
 namespace School.Services
 {
@@ -217,7 +216,7 @@ namespace School.Services
         {
             var roles = await _dbContext.Roles.Where(x => x.Name != Roles.SuperAdmin.ToString()).Select(x => new RoleDto
             {
-                Id = x.Id,
+                Id = x.Id.ToString(),
                 Name = x.Name!,
                 NormalizedName = x.NormalizedName!
 
@@ -518,8 +517,8 @@ namespace School.Services
             var entity = await _dbContext.Vehicles.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id, Code = x.RegistrationNumber }).ToListAsync();
             return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };
         }
-    
-public async Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync()
+
+        public async Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync()
         {
             var entity = await _dbContext.Students.Where(x => !x.IsDeleted).Select(x => new DropdownDto { Name = x.Name, Id = x.Id }).ToListAsync();
             return new APIResponse<IEnumerable<DropdownDto>> { Data = entity, Message = CommonResource.FetchSuccess, Success = true, StatusCode = HttpStatusCode.OK };

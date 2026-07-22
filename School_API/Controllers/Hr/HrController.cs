@@ -3,11 +3,10 @@ using School.Services.Hr;
 using School_API.Common.Interface;
 using School_DTOs.Common;
 using School_DTOs.Hr;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers.Hr
 {
-    
+
     public abstract class HrController<TEntity> : BaseController where TEntity : class, global::School.Domain.BaseEntity.IAuditEntity<int>, global::School.Domain.BaseEntity.ITenantEntity
     {
         private readonly IHrMasterService<TEntity> _masterService;

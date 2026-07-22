@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
 using School.Infrastructure.Repositories.IRepositories;
@@ -69,7 +65,7 @@ namespace School.Infrastructure.Repositories
                     && !x.IsDeleted);
 
             if (from.HasValue) query = query.Where(x => x.AttendanceDate >= from.Value);
-            if (to.HasValue)   query = query.Where(x => x.AttendanceDate <= to.Value);
+            if (to.HasValue) query = query.Where(x => x.AttendanceDate <= to.Value);
 
             return await query.OrderByDescending(x => x.AttendanceDate).ToListAsync();
         }
@@ -96,15 +92,15 @@ namespace School.Infrastructure.Repositories
                 && !x.IsDeleted);
 
             if (from.HasValue) query = query.Where(x => x.AttendanceDate >= from.Value);
-            if (to.HasValue)   query = query.Where(x => x.AttendanceDate <= to.Value);
+            if (to.HasValue) query = query.Where(x => x.AttendanceDate <= to.Value);
 
             var records = await query.ToListAsync();
             return (
                 Present: records.Count(x => x.Status == "Present"),
-                Absent:  records.Count(x => x.Status == "Absent"),
-                Late:    records.Count(x => x.Status == "Late"),
-                Leave:   records.Count(x => x.Status == "Leave"),
-                Total:   records.Count
+                Absent: records.Count(x => x.Status == "Absent"),
+                Late: records.Count(x => x.Status == "Late"),
+                Leave: records.Count(x => x.Status == "Leave"),
+                Total: records.Count
             );
         }
 

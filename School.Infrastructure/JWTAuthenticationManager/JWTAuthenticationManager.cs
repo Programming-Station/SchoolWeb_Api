@@ -1,20 +1,19 @@
-using School.Domain.Auth;
-using School_DTOs;
-using School_DTOs.Account;
-using School.Models.Account;
-using School.Models.Configuration;
-using School.Infrastructure;
-using School.Infrastructure.JWTAuthenticationManager.Interfaces;
-using School.Infrastructure.UnitOfWork;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using School.Domain.Auth;
+using School.Infrastructure.JWTAuthenticationManager.Interfaces;
+using School.Infrastructure.UnitOfWork;
+using School.Infrastructure.UnitOfWork.Interfaces;
+using School.Models.Account;
+using School.Models.Configuration;
+using School_DTOs;
+using School_DTOs.Account;
 
 namespace School.Infrastructure.JWTAuthenticationManager
 {

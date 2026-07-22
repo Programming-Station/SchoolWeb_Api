@@ -1,11 +1,11 @@
-using School.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using School.Services.Interfaces;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace School.Services
 {
@@ -266,10 +266,10 @@ namespace School.Services
                 if (Path.IsPathRooted(imagePath) && (imagePath.Length >= 2 && imagePath[1] == ':' || imagePath.StartsWith("\\\\")))
                 {
                     fullPath = imagePath;
-                    
+
                     var normalizedImagePath = Path.GetFullPath(imagePath);
                     var normalizedStoragePath = Path.GetFullPath(_imageStoragePath);
-                    
+
                     if (!normalizedImagePath.StartsWith(normalizedStoragePath, StringComparison.OrdinalIgnoreCase))
                     {
                         _logger.LogWarning($"Attempted to access file outside image storage path: {imagePath}");

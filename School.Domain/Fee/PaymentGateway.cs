@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
@@ -6,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.FeeManagnment
 {
-    #nullable disable
+#nullable disable
 
     /// <summary>6.2 — Payment Gateway Configuration</summary>
     public class PaymentGateway : AuditEntity<int>, ITenantEntity

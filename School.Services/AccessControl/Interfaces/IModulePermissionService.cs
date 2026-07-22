@@ -10,7 +10,7 @@ namespace School.Services.AccessControl.Interfaces
         Task<APIResponse> AssignModulesToUserAsync(AssignModulesToUserModel model);
         Task<APIResponse> RemoveModulePermissionAsync(int moduleId, string userId);
         Task<APIResponse<IEnumerable<ModulePermissionDto>>> GetModulePermissionsByUserIdAsync(string userId);
-        
+
         // Basic CRUD support for ModulePermission entity
         Task<APIResponse> AddModulePermissionAsync(ModulePermissionModel model);
         Task<APIResponse> DeleteModulePermissionAsync(int id);

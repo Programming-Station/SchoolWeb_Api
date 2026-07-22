@@ -1,12 +1,7 @@
-using School.Infrastructure.Repositories.IRepositories;
-using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
 using School.Infrastructure.Repositories.School;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using School_DTOs;
+﻿using School_DTOs;
 using School_DTOs.Administration;
 
 namespace School.Services.Interfaces

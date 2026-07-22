@@ -1,16 +1,149 @@
-using System;
-
 namespace School.Utilities.Enums
 {
     public enum Roles
     {
+        // Super Platform Roles
         SuperAdmin,
-        Admin,
+        PlatformOwner,
+        SaaSOwner,
+        SystemAdministrator,
+        TechnicalAdministrator,
+        DevOpsAdministrator,
+        DatabaseAdministrator,
+        SecurityAdministrator,
+        SupportEngineer,
+        CustomerSuccessManager,
+        // Tenant Management
+        TenantOwner,
+        OrganizationOwner,
+        SchoolOwner,
+        CampusAdministrator,
+        BranchAdministrator,
+        // Management Roles
+        Chairman,
+        ViceChairman,
+        ManagingDirector,
+        Director,
+        JointDirector,
+        Principal,
+        VicePrincipal,
+        Dean,
+        Registrar,
+        ControllerOfExamination,
+        AcademicDirector,
+        AdministrativeOfficer,
+        CampusHead,
+        // Academic Roles
+        AcademicCoordinator,
+        HeadOfDepartment,
+        ProgramCoordinator,
+        CourseCoordinator,
+        SubjectCoordinator,
+        ClassTeacher,
+        SubjectTeacher,
+        Lecturer,
+        AssistantProfessor,
+        AssociateProfessor,
+        Professor,
+        LabIncharge,
+        LabAssistant,
+        ResearchGuide,
+        Trainer,
+        Instructor,
+        GuestFaculty,
+        // Admission Department
+        AdmissionManager,
+        AdmissionOfficer,
+        AdmissionCounselor,
+        Receptionist,
+        FrontOfficeExecutive,
+        // Student Roles
         Student,
-        User,
-        Owner,
-        Employee
+        StudentRepresentative,
+        Alumni,
+        ProspectiveStudent,
+        // Parent Roles
+        Parent,
+        Guardian,
+        // Examination Department
+        ExamController,
+        ExamCoordinator,
+        PaperSetter,
+        Invigilator,
+        ResultProcessingOfficer,
+        // Finance Department
+        FinanceManager,
+        Accountant,
+        SeniorAccountant,
+        Cashier,
+        BillingExecutive,
+        FeeCollectionOfficer,
+        Auditor,
+        // HR Department
+        HRManager,
+        HRExecutive,
+        PayrollOfficer,
+        RecruitmentOfficer,
+        AttendanceOfficer,
+        // Library Department
+        ChiefLibrarian,
+        Librarian,
+        AssistantLibrarian,
+        LibraryClerk,
+        // Hostel Department
+        HostelWarden,
+        AssistantWarden,
+        HostelManager,
+        MessManager,
+        MessStaff,
+        // Transport Department
+        TransportManager,
+        RouteManager,
+        Driver,
+        Conductor,
+        VehicleSupervisor,
+        // Store & Inventory
+        StoreManager,
+        StoreKeeper,
+        PurchaseManager,
+        PurchaseOfficer,
+        InventoryManager,
+        InventoryExecutive,
+        VendorManager,
+        // IT Department
+        ITManager,
+        NetworkAdministrator,
+        HelpdeskExecutive,
+        SoftwareSupportEngineer,
+        // Communication Department
+        CommunicationManager,
+        MarketingManager,
+        SocialMediaManager,
+        ContentManager,
+        WebsiteAdministrator,
+        // Medical Department
+        MedicalOfficer,
+        StaffNurse,
+        Counselor,
+        Psychologist,
+        // Security Department
+        SecurityManager,
+        SecurityGuard,
+        CCTVOperator,
+        // Maintenance Department
+        MaintenanceManager,
+        Electrician,
+        Plumber,
+        Carpenter,
+        HousekeepingSupervisor,
+        HousekeepingStaff,
+        Gardener,
+        // External Users
+        Vendor,
+        Supplier,
+        Visitor,
+        Inspector,
+        AccreditingAuthority,
+        GovernmentOfficer
     }
-
-
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Library;
 using School.Infrastructure;
@@ -10,7 +6,7 @@ using School_DTOs.Library;
 
 namespace School.Services.Library
 {
-    #nullable disable
+#nullable disable
 
     public class LibraryService : ILibraryService
     {
@@ -51,7 +47,9 @@ namespace School.Services.Library
             return new PagedResultDto<BookDto>
             {
                 Items = items.Select(MapBook).ToList(),
-                TotalItems = total, PageNumber = page, PageSize = pageSize
+                TotalItems = total,
+                PageNumber = page,
+                PageSize = pageSize
             };
         }
 
@@ -66,19 +64,39 @@ namespace School.Services.Library
         {
             var entity = new Book
             {
-                Title = dto.Title, ISBN = dto.ISBN, AccessionNumber = dto.AccessionNumber,
+                Title = dto.Title,
+                ISBN = dto.ISBN,
+                AccessionNumber = dto.AccessionNumber,
                 Barcode = dto.Barcode ?? Guid.NewGuid().ToString("N")[..12].ToUpper(),
-                Edition = dto.Edition, Volume = dto.Volume, Language = dto.Language ?? "English",
-                Author = dto.Author, CoAuthor = dto.CoAuthor, AuthorId = dto.AuthorId,
-                Publisher = dto.Publisher, PublisherId = dto.PublisherId, VendorId = dto.VendorId,
-                CategoryId = dto.CategoryId, SubjectCategory = dto.SubjectCategory,
-                BookType = dto.BookType ?? "General", Status = dto.Status ?? "Available",
-                PurchaseDate = dto.PurchaseDate, PurchasePrice = dto.PurchasePrice,
-                Shelf = dto.Shelf, Rack = dto.Rack, Row = dto.Row, Cupboard = dto.Cupboard,
-                RackLocation = dto.RackLocation, TotalCopies = dto.TotalCopies,
-                AvailableCopies = dto.TotalCopies, MinimumStock = dto.MinimumStock,
-                MaximumStock = dto.MaximumStock, Keywords = dto.Keywords, Description = dto.Description,
-                SchoolRegistrationId = schoolId, CreatedBy = userId, CreatedDate = DateTime.UtcNow
+                Edition = dto.Edition,
+                Volume = dto.Volume,
+                Language = dto.Language ?? "English",
+                Author = dto.Author,
+                CoAuthor = dto.CoAuthor,
+                AuthorId = dto.AuthorId,
+                Publisher = dto.Publisher,
+                PublisherId = dto.PublisherId,
+                VendorId = dto.VendorId,
+                CategoryId = dto.CategoryId,
+                SubjectCategory = dto.SubjectCategory,
+                BookType = dto.BookType ?? "General",
+                Status = dto.Status ?? "Available",
+                PurchaseDate = dto.PurchaseDate,
+                PurchasePrice = dto.PurchasePrice,
+                Shelf = dto.Shelf,
+                Rack = dto.Rack,
+                Row = dto.Row,
+                Cupboard = dto.Cupboard,
+                RackLocation = dto.RackLocation,
+                TotalCopies = dto.TotalCopies,
+                AvailableCopies = dto.TotalCopies,
+                MinimumStock = dto.MinimumStock,
+                MaximumStock = dto.MaximumStock,
+                Keywords = dto.Keywords,
+                Description = dto.Description,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.UtcNow
             };
             _db.Books.Add(entity);
             await _db.SaveChangesAsync();
@@ -154,7 +172,9 @@ namespace School.Services.Library
             return new PagedResultDto<BookIssueLogDto>
             {
                 Items = items.Select(MapLog).ToList(),
-                TotalItems = total, PageNumber = page, PageSize = pageSize
+                TotalItems = total,
+                PageNumber = page,
+                PageSize = pageSize
             };
         }
 
@@ -184,10 +204,17 @@ namespace School.Services.Library
             var dueDate = DateTime.UtcNow.Date.AddDays(dto.DaysToBorrow);
             var log = new BookIssueLog
             {
-                BookId = dto.BookId, StudentId = dto.StudentId, MemberId = dto.MemberId,
-                IssueDate = DateTime.UtcNow.Date, DueDate = dueDate, OriginalDueDate = dueDate,
-                Status = "Issued", BookConditionOnIssue = dto.BookConditionOnIssue ?? "Good",
-                SchoolRegistrationId = schoolId, CreatedBy = userId, CreatedDate = DateTime.UtcNow
+                BookId = dto.BookId,
+                StudentId = dto.StudentId,
+                MemberId = dto.MemberId,
+                IssueDate = DateTime.UtcNow.Date,
+                DueDate = dueDate,
+                OriginalDueDate = dueDate,
+                Status = "Issued",
+                BookConditionOnIssue = dto.BookConditionOnIssue ?? "Good",
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.UtcNow
             };
 
             _db.BookIssueLogs.Add(log);
@@ -260,9 +287,13 @@ namespace School.Services.Library
                 .OrderBy(c => c.Name).ToListAsync();
             return list.Select(c => new BookCategoryDto
             {
-                Id = c.Id, Name = c.Name, Description = c.Description,
-                CategoryType = c.CategoryType, ColorCode = c.ColorCode,
-                ParentCategoryId = c.ParentCategoryId, Status = c.Status
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                CategoryType = c.CategoryType,
+                ColorCode = c.ColorCode,
+                ParentCategoryId = c.ParentCategoryId,
+                Status = c.Status
             });
         }
 
@@ -270,9 +301,14 @@ namespace School.Services.Library
         {
             var entity = new BookCategory
             {
-                Name = dto.Name, Description = dto.Description, CategoryType = dto.CategoryType,
-                ColorCode = dto.ColorCode, ParentCategoryId = dto.ParentCategoryId,
-                SchoolRegistrationId = schoolId, CreatedBy = userId, CreatedDate = DateTime.UtcNow
+                Name = dto.Name,
+                Description = dto.Description,
+                CategoryType = dto.CategoryType,
+                ColorCode = dto.ColorCode,
+                ParentCategoryId = dto.ParentCategoryId,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.UtcNow
             };
             _db.BookCategories.Add(entity);
             await _db.SaveChangesAsync();
@@ -420,14 +456,25 @@ namespace School.Services.Library
             {
                 Items = items.Select(m => new LibraryMemberDto
                 {
-                    Id = m.Id, MembershipNumber = m.MembershipNumber, MemberType = m.MemberType,
-                    MemberName = m.MemberName, Email = m.Email, Phone = m.Phone, StudentId = m.StudentId,
-                    JoiningDate = m.JoiningDate, ExpiryDate = m.ExpiryDate, BorrowLimit = m.BorrowLimit,
-                    CurrentBorrowCount = m.CurrentBorrowCount, MembershipBarcode = m.MembershipBarcode,
-                    Status = m.Status, IsExpired = m.ExpiryDate < now,
+                    Id = m.Id,
+                    MembershipNumber = m.MembershipNumber,
+                    MemberType = m.MemberType,
+                    MemberName = m.MemberName,
+                    Email = m.Email,
+                    Phone = m.Phone,
+                    StudentId = m.StudentId,
+                    JoiningDate = m.JoiningDate,
+                    ExpiryDate = m.ExpiryDate,
+                    BorrowLimit = m.BorrowLimit,
+                    CurrentBorrowCount = m.CurrentBorrowCount,
+                    MembershipBarcode = m.MembershipBarcode,
+                    Status = m.Status,
+                    IsExpired = m.ExpiryDate < now,
                     DaysToExpiry = (m.ExpiryDate - now).Days
                 }).ToList(),
-                TotalItems = total, PageNumber = page, PageSize = pageSize
+                TotalItems = total,
+                PageNumber = page,
+                PageSize = pageSize
             };
         }
 
@@ -445,11 +492,20 @@ namespace School.Services.Library
             var memberNo = $"LM{schoolId:D3}{(count + 1):D5}";
             var entity = new LibraryMember
             {
-                MembershipNumber = memberNo, MemberType = dto.MemberType, MemberName = dto.MemberName,
-                Email = dto.Email, Phone = dto.Phone, StudentId = dto.StudentId, EmployeeUserId = dto.EmployeeUserId,
-                JoiningDate = DateTime.UtcNow, ExpiryDate = dto.ExpiryDate,
-                BorrowLimit = dto.BorrowLimit, MembershipBarcode = memberNo,
-                SchoolRegistrationId = schoolId, CreatedBy = userId, CreatedDate = DateTime.UtcNow
+                MembershipNumber = memberNo,
+                MemberType = dto.MemberType,
+                MemberName = dto.MemberName,
+                Email = dto.Email,
+                Phone = dto.Phone,
+                StudentId = dto.StudentId,
+                EmployeeUserId = dto.EmployeeUserId,
+                JoiningDate = DateTime.UtcNow,
+                ExpiryDate = dto.ExpiryDate,
+                BorrowLimit = dto.BorrowLimit,
+                MembershipBarcode = memberNo,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.UtcNow
             };
             _db.LibraryMembers.Add(entity);
             await _db.SaveChangesAsync();
@@ -492,9 +548,14 @@ namespace School.Services.Library
             var queuePos = await _db.BookReservations.CountAsync(r => r.BookId == dto.BookId && r.Status == "Pending" && !r.IsDeleted) + 1;
             var entity = new BookReservation
             {
-                BookId = dto.BookId, MemberId = dto.MemberId, ReservationDate = DateTime.UtcNow,
-                ExpiryDate = DateTime.UtcNow.AddDays(7), QueuePosition = queuePos,
-                SchoolRegistrationId = schoolId, CreatedBy = userId, CreatedDate = DateTime.UtcNow
+                BookId = dto.BookId,
+                MemberId = dto.MemberId,
+                ReservationDate = DateTime.UtcNow,
+                ExpiryDate = DateTime.UtcNow.AddDays(7),
+                QueuePosition = queuePos,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.UtcNow
             };
             _db.BookReservations.Add(entity);
             await _db.SaveChangesAsync();
@@ -668,17 +729,42 @@ namespace School.Services.Library
         // ════════════════════════════════════════════════════════════════════
         private static BookDto MapBook(Book b) => new()
         {
-            Id = b.Id, Title = b.Title, ISBN = b.ISBN, AccessionNumber = b.AccessionNumber,
-            Barcode = b.Barcode, QRCode = b.QRCode, Edition = b.Edition, Volume = b.Volume,
-            Language = b.Language, Author = b.Author, CoAuthor = b.CoAuthor, AuthorId = b.AuthorId,
-            Publisher = b.Publisher, PublisherId = b.PublisherId, VendorId = b.VendorId,
-            CategoryId = b.CategoryId, CategoryName = b.Category?.Name, SubjectCategory = b.SubjectCategory,
-            BookType = b.BookType, Status = b.Status, PurchaseDate = b.PurchaseDate,
-            PurchasePrice = b.PurchasePrice, Shelf = b.Shelf, Rack = b.Rack, Row = b.Row,
-            Cupboard = b.Cupboard, RackLocation = b.RackLocation, TotalCopies = b.TotalCopies,
-            AvailableCopies = b.AvailableCopies, MinimumStock = b.MinimumStock,
-            MaximumStock = b.MaximumStock, BookImagePath = b.BookImagePath, PdfAttachmentPath = b.PdfAttachmentPath,
-            Keywords = b.Keywords, Description = b.Description, CreatedDate = b.CreatedDate ?? DateTime.MinValue
+            Id = b.Id,
+            Title = b.Title,
+            ISBN = b.ISBN,
+            AccessionNumber = b.AccessionNumber,
+            Barcode = b.Barcode,
+            QRCode = b.QRCode,
+            Edition = b.Edition,
+            Volume = b.Volume,
+            Language = b.Language,
+            Author = b.Author,
+            CoAuthor = b.CoAuthor,
+            AuthorId = b.AuthorId,
+            Publisher = b.Publisher,
+            PublisherId = b.PublisherId,
+            VendorId = b.VendorId,
+            CategoryId = b.CategoryId,
+            CategoryName = b.Category?.Name,
+            SubjectCategory = b.SubjectCategory,
+            BookType = b.BookType,
+            Status = b.Status,
+            PurchaseDate = b.PurchaseDate,
+            PurchasePrice = b.PurchasePrice,
+            Shelf = b.Shelf,
+            Rack = b.Rack,
+            Row = b.Row,
+            Cupboard = b.Cupboard,
+            RackLocation = b.RackLocation,
+            TotalCopies = b.TotalCopies,
+            AvailableCopies = b.AvailableCopies,
+            MinimumStock = b.MinimumStock,
+            MaximumStock = b.MaximumStock,
+            BookImagePath = b.BookImagePath,
+            PdfAttachmentPath = b.PdfAttachmentPath,
+            Keywords = b.Keywords,
+            Description = b.Description,
+            CreatedDate = b.CreatedDate ?? DateTime.MinValue
         };
 
         private static BookIssueLogDto MapLog(BookIssueLog l)
@@ -686,14 +772,25 @@ namespace School.Services.Library
             var overdue = l.ReturnDate.HasValue ? (int)(l.ReturnDate.Value.Date - l.DueDate.Date).TotalDays : (int)(DateTime.UtcNow.Date - l.DueDate.Date).TotalDays;
             return new BookIssueLogDto
             {
-                Id = l.Id, BookId = l.BookId, BookTitle = l.Book?.Title ?? "N/A",
-                BookAuthor = l.Book?.Author ?? "N/A", Barcode = l.Book?.Barcode,
-                StudentId = l.StudentId, StudentName = l.Student?.Name ?? "N/A",
-                StudentCode = l.Student?.StudentId ?? "", MemberId = l.MemberId,
-                IssueDate = l.IssueDate, DueDate = l.DueDate, ReturnDate = l.ReturnDate,
-                FineAmount = l.FineAmount, FinePaid = l.FinePaid, Status = l.Status,
-                BookConditionOnIssue = l.BookConditionOnIssue, BookConditionOnReturn = l.BookConditionOnReturn,
-                IsRenewed = l.IsRenewed, RenewalCount = l.RenewalCount,
+                Id = l.Id,
+                BookId = l.BookId,
+                BookTitle = l.Book?.Title ?? "N/A",
+                BookAuthor = l.Book?.Author ?? "N/A",
+                Barcode = l.Book?.Barcode,
+                StudentId = l.StudentId,
+                StudentName = l.Student?.Name ?? "N/A",
+                StudentCode = l.Student?.StudentId ?? "",
+                MemberId = l.MemberId,
+                IssueDate = l.IssueDate,
+                DueDate = l.DueDate,
+                ReturnDate = l.ReturnDate,
+                FineAmount = l.FineAmount,
+                FinePaid = l.FinePaid,
+                Status = l.Status,
+                BookConditionOnIssue = l.BookConditionOnIssue,
+                BookConditionOnReturn = l.BookConditionOnReturn,
+                IsRenewed = l.IsRenewed,
+                RenewalCount = l.RenewalCount,
                 OverdueDays = Math.Max(0, overdue)
             };
         }

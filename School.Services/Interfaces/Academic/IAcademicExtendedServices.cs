@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace School.Services.Interfaces.Academic
 {
     // ─── Timetable ───────────────────────────────────────────────────────────
@@ -15,7 +11,7 @@ namespace School.Services.Interfaces.Academic
         public int? TeacherId { get; set; }
         public string? TeacherName { get; set; }
         public int DayOfWeek { get; set; }
-        public string DayName => DayOfWeek switch { 1=>"Monday",2=>"Tuesday",3=>"Wednesday",4=>"Thursday",5=>"Friday",6=>"Saturday",_=>"" };
+        public string DayName => DayOfWeek switch { 1 => "Monday", 2 => "Tuesday", 3 => "Wednesday", 4 => "Thursday", 5 => "Friday", 6 => "Saturday", _ => "" };
         public int PeriodNo { get; set; }
         public string StartTime { get; set; } = null!;
         public string EndTime { get; set; } = null!;
@@ -238,7 +234,7 @@ namespace School.Services.Interfaces.Academic
         Task<IEnumerable<LessonPlanDto>> GetLessonPlansByChapterAsync(int chapterId);
         Task<IEnumerable<LessonPlanDto>> GetLessonPlansByDateAsync(int classId, DateTime date, int schoolId);
         Task<(bool Success, string Message)> UpdateLessonPlanStatusAsync(int id, string status, string? notes);
-        
+
         Task<IEnumerable<SyllabusTopicDto>> GetByClassAsync(int classId, int schoolId);
         Task<(bool Success, string Message)> ToggleCompleteAsync(int topicId, bool isCompleted, int schoolId);
         Task<(bool Success, string Message)> SaveTopicAsync(int classId, int subjectId, string topicName, string chapter, string createdBy, int schoolId);

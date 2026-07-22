@@ -1,11 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.AccessControl;
-using School.Domain.School;
 using School.Utilities.Constants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -214,8 +210,8 @@ namespace School.Infrastructure.Seeds
             var allDbMenus = await context.Menus.Where(m => m.SchoolRegistrationId == defaultSchoolId).ToListAsync();
             var allDbSubMenus = await context.SubMenus.Where(s => s.SchoolRegistrationId == defaultSchoolId).ToListAsync();
 
-            var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "ADMIN");
-            var ownerRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
+            var adminRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "ADMIN");
+            var ownerRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
 
             string adminRoleId = adminRole?.Id ?? Constants.Admin;
             string ownerRoleId = ownerRole?.Id ?? Constants.Owner;

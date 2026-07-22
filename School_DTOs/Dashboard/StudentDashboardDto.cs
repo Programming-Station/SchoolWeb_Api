@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Dashboard
 {
     public class StudentDashboardDto

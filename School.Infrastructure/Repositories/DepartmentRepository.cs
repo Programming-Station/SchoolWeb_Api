@@ -1,9 +1,9 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories
 {
@@ -21,7 +21,7 @@ namespace School.Infrastructure.Repositories
         public async Task<Department> AddDepartmentAsync(Department entity)
         {
             var existingDepartment = await DbSet.FirstOrDefaultAsync(x =>
-                               (x.Name.ToLower() == entity.Name.ToLower() || 
+                               (x.Name.ToLower() == entity.Name.ToLower() ||
                                 (!string.IsNullOrEmpty(entity.Code) && x.Code != null && x.Code.ToLower() == entity.Code.ToLower())) &&
                                x.FacultyId == entity.FacultyId &&
                                !x.IsDeleted);

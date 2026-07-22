@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace School.Models.School
 {
     public class SchoolProfileSettingModel

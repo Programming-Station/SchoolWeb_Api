@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Inventory
 {
     // Item Category DTOs

@@ -1,9 +1,6 @@
 using School_DTOs;
-using School_DTOs.Hr;
 using School_DTOs.Common;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using School_DTOs.Hr;
 
 namespace School.Services.Interfaces
 {

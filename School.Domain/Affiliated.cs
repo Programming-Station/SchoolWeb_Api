@@ -49,8 +49,8 @@ namespace School.Domain
         public bool IsActive { get; set; } = true;
 
         [ForeignKey(nameof(StateId))]
-        public virtual State State { get; set; } = null!; 
-        
+        public virtual State State { get; set; } = null!;
+
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;

@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
-using School.Domain.Student;
 using School.Infrastructure.JWTAuthenticationManager.Interfaces;
 using School.Infrastructure.Repositories.IRepositories;
 using School_DTOs;

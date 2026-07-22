@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -9,8 +9,9 @@ namespace School.Domain.Reporting
     /// Role-based permission matrix for report access.
     /// Controls which roles can view, export, print, email, and schedule each report.
     /// </summary>
-    [Table("ReportPermissions" , Schema = "Reporting")]
-    public class ReportPermission : AuditEntity<int>, ITenantEntity{
+    [Table("ReportPermissions", Schema = "Reporting")]
+    public class ReportPermission : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

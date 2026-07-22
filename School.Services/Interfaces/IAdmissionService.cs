@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using School_DTOs;
-using School_DTOs.School;
-using School_DTOs.Academic;
-using School_DTOs.Student;
-using School_DTOs.Fee;
-using School.Models.School;
 using School.Models.Academic;
-using School.Models.Student;
 using School.Models.Fee;
+using School.Models.School;
+using School.Models.Student;
+using School_DTOs;
+using School_DTOs.Academic;
+using School_DTOs.Fee;
+using School_DTOs.School;
+using School_DTOs.Student;
 
 namespace School.Services.Interfaces
 {

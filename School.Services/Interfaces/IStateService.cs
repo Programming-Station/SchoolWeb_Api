@@ -1,9 +1,6 @@
 using School.Models.State;
 using School_DTOs;
 using School_DTOs.State;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace School.Services.Interfaces
 {

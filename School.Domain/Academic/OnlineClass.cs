@@ -1,13 +1,12 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.School;
 using School.Domain.Hr;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Academic
 {
-    #nullable disable
+#nullable disable
     /// <summary>4.6 — Online Class / Live Session</summary>
     public class OnlineClass : AuditEntity<int>, ITenantEntity
     {

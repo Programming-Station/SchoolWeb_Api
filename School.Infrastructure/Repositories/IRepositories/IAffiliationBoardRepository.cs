@@ -1,6 +1,4 @@
 using School.Domain.School;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {

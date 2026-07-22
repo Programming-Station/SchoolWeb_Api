@@ -1,6 +1,5 @@
-using School.Infrastructure;
-using School.Infrastructure.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.UnitOfWork
 {

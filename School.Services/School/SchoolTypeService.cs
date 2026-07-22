@@ -1,16 +1,11 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
 using School.Infrastructure.Repositories.School;
 using School.Services.School.ISchoolServices;
-using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.School;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Services.School
 {
@@ -44,7 +39,7 @@ namespace School.Services.School
 
                 var totalCount = await query.CountAsync();
                 var items = await query.OrderByDescending(x => x.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-                
+
                 return new PagedResponse<SchoolTypeDto>
                 {
                     Success = true,

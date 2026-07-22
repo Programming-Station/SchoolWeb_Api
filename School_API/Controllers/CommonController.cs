@@ -1,7 +1,7 @@
-using School.Services.Interfaces; 
+using Microsoft.AspNetCore.Mvc;
+using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_DTOs;
-using Microsoft.AspNetCore.Mvc;
 
 namespace School_API.Controllers
 {
@@ -61,9 +61,9 @@ namespace School_API.Controllers
             }
 
             var decodedPath = Uri.UnescapeDataString(path);
-            
+
             var filePath = _imageService.GetImageFilePath(decodedPath);
-            
+
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound(new APIResponse<string>
@@ -76,7 +76,7 @@ namespace School_API.Controllers
             var fileInfo = new System.IO.FileInfo(filePath);
             var contentType = GetContentType(fileInfo.Extension);
             var fileStream = System.IO.File.OpenRead(filePath);
-            
+
             return File(fileStream, contentType, fileInfo.Name);
         }
 

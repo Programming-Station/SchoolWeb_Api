@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using School.Infrastructure.Interfaces;
 using School_API.Attributes;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School_API.Filters
 {

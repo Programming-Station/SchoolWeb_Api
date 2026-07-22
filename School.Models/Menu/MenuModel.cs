@@ -1,6 +1,6 @@
-using School.Models.CustomeVailidation;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using School.Models.CustomeVailidation;
 
 namespace School.Models.Menu
 {

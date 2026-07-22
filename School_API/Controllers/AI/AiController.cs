@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using School_DTOs;
 using School_DTOs.AI;
 
 namespace School_API.Controllers.AI

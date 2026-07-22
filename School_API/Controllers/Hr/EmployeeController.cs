@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using School_DTOs.Hr;
 using School_DTOs.Common;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using School_DTOs.Hr;
 
 namespace School_API.Controllers.Hr
 {

@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using School.Services.Interfaces;
-using School.Infrastructure.Interfaces;
 using School.Infrastructure;
+using School.Infrastructure.Interfaces;
+using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_DTOs;
 using School_DTOs.Finance;

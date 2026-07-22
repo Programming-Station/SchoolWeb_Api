@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Email
 {
-    #nullable disable
+#nullable disable
     [Table("EmailTemplates", Schema = "Communication")]
     public class EmailTemplate : AuditEntity<int>, ITenantEntity
     {

@@ -1,5 +1,3 @@
-using System;
-
 namespace School.Utilities.Enums
 {
     public enum CourseType

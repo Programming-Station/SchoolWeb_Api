@@ -1,9 +1,9 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories
 {
@@ -143,7 +143,7 @@ namespace School.Infrastructure.Repositories
         public async Task<int> UpdateAcademicYearAsync(AcademicYear entity)
         {
             var existingYear = await _context.AcademicYears
-                .FirstOrDefaultAsync(ay => ay.YearName.ToLower() == entity.YearName.ToLower() && 
+                .FirstOrDefaultAsync(ay => ay.YearName.ToLower() == entity.YearName.ToLower() &&
                     ay.Id != entity.Id && !ay.IsDeleted);
 
             if (existingYear != null)

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School.Domain.Student;
 
 namespace School.Infrastructure.Repositories.IRepositories

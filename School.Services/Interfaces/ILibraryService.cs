@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School_DTOs.Library;
 
 namespace School.Services.Interfaces

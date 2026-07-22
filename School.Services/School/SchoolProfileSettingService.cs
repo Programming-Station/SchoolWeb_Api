@@ -1,15 +1,12 @@
+using System.Net;
 using AutoMapper;
 using School.Domain.School;
 using School.Infrastructure.Interfaces;
-using School.Services.Interfaces;
+using School.Infrastructure.Repositories.School;
 using School.Services.School.ISchoolServices;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.School;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using School.Infrastructure.Repositories.School;
 
 namespace School.Services.School
 {
@@ -20,8 +17,8 @@ namespace School.Services.School
         private readonly IMapper _mapper;
 
         public SchoolProfileSettingService(
-            ISchoolProfileSettingRepository profileSettingRepo, 
-            ITenantService tenantService, 
+            ISchoolProfileSettingRepository profileSettingRepo,
+            ITenantService tenantService,
             IMapper mapper)
         {
             _profileSettingRepo = profileSettingRepo;
@@ -45,7 +42,7 @@ namespace School.Services.School
                 }
 
                 var entity = await _profileSettingRepo.GetBySchoolIdAsync(tenantId.Value);
-                
+
                 if (entity == null)
                 {
                     // Return empty DTO if not found

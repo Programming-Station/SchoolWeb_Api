@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using School.Domain.Communication;
@@ -268,7 +263,7 @@ namespace School.Services.Communication
                 {
                     var apiVersion = "v20.0";
                     var requestUrl = $"https://graph.facebook.com/{apiVersion}/{account.PhoneNumberId}/messages";
-                    
+
                     var components = new List<object>();
                     if (variables != null && variables.Count > 0)
                     {
@@ -363,7 +358,7 @@ namespace School.Services.Communication
                 {
                     var apiVersion = "v20.0";
                     var requestUrl = $"https://graph.facebook.com/{apiVersion}/{account.PhoneNumberId}/messages";
-                    
+
                     var payload = new
                     {
                         messaging_product = "whatsapp",

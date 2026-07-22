@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Finance;
-using School.Domain.School;
-using School.Domain.FeeManagnment;
 using School.Infrastructure;
 using School.Services.Interfaces;
 using School_DTOs;
@@ -249,7 +243,7 @@ namespace School.Services.Finance
         {
             var res = await GetChartOfAccountsAsync(schoolId, accountType, isActive, search);
             var data = res.Data ?? new List<CoaAccountDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Code", "Name", "Type", "Parent Account Name", "Current Balance", "Is Active" },
                 item => new[] {
                     item.Id.ToString(),
@@ -486,7 +480,7 @@ namespace School.Services.Finance
         {
             var res = await GetJournalEntriesAsync(schoolId, fromDate, toDate, status, search);
             var data = res.Data ?? new List<JournalEntryDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Voucher No", "Date", "Narration", "Reference", "Type", "Status", "Is Posted" },
                 item => new[] {
                     item.Id.ToString(),
@@ -713,7 +707,7 @@ namespace School.Services.Finance
                 {
                     var budget = await _context.BudgetPlans
                         .FirstOrDefaultAsync(b => b.SchoolRegistrationId == schoolId && b.AccountId == line.AccountId && !b.IsDeleted);
-                    
+
                     if (budget != null)
                     {
                         if (budget.UtilizedAmount + line.DebitAmount > budget.AllocatedAmount)
@@ -1003,7 +997,7 @@ namespace School.Services.Finance
         {
             var res = await GetChequeBooksAsync(schoolId, accountId, isExhausted);
             var data = res.Data ?? new List<ChequeBookDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Bank Account ID", "Bank Account Name", "Series Prefix", "Start Cheque No", "End Cheque No", "Next Cheque No", "Is Exhausted" },
                 item => new[] {
                     item.Id.ToString(),
@@ -1193,7 +1187,7 @@ namespace School.Services.Finance
         {
             var res = await GetBudgetPlansAsync(schoolId, financialYear, departmentId, accountId);
             var data = res.Data ?? new List<BudgetPlanDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Financial Year", "Department Name", "Account Target", "Allocated Amount", "Utilized Amount", "Remaining" },
                 item => new[] {
                     item.Id.ToString(),
@@ -1308,7 +1302,7 @@ namespace School.Services.Finance
         {
             var res = await GetCostCentersAsync(schoolId, isActive, search);
             var data = res.Data ?? new List<CostCenterDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Code", "Name", "Is Active" },
                 item => new[] {
                     item.Id.ToString(),
@@ -1465,7 +1459,7 @@ namespace School.Services.Finance
         {
             var res = await GetFinancialYearsAsync(schoolId, isClosed, isLocked, search);
             var data = res.Data ?? new List<FinancialYearDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Year Name", "Start Date", "End Date", "Is Closed", "Is Locked" },
                 item => new[] {
                     item.Id.ToString(),
@@ -2071,7 +2065,7 @@ namespace School.Services.Finance
         {
             var res = await GetTaxConfigsAsync(schoolId, isActive, search);
             var data = res.Data ?? new List<TaxConfigDto>();
-            var csvBytes = ExportToCsv(data, 
+            var csvBytes = ExportToCsv(data,
                 new[] { "ID", "Tax Name", "Percentage", "Associated Account ID", "Associated Account Name", "Is Active" },
                 item => new[] {
                     item.Id.ToString(),

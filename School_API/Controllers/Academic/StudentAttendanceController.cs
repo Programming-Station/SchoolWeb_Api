@@ -14,7 +14,7 @@ namespace School_API.Controllers.Academic
             : base(currentUser)
         {
             _service = service;
-            _tenant  = tenant;
+            _tenant = tenant;
         }
 
         /// <summary>Teacher marks bulk attendance for a class on a given date.</summary>

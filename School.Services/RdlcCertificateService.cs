@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Reporting.NETCore;
 using QRCoder;
-using School.Domain.FeeManagnment;
 using School.Infrastructure;
 using School.Services.Interfaces;
-using School_DTOs.Student;
-
 using School.Services.School.ISchoolServices;
+using School_DTOs.Student;
 
 namespace School.Services
 {
@@ -40,13 +33,13 @@ namespace School.Services
         private string GetBase64FromFile(string? path)
         {
             if (string.IsNullOrWhiteSpace(path)) return string.Empty;
-            
+
             if (path.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
             {
                 var parts = path.Split(',');
                 return parts.Length > 1 ? parts[1] : parts[0];
             }
-            
+
             try
             {
                 string physicalPath;
@@ -63,13 +56,13 @@ namespace School.Services
                 {
                     physicalPath = path;
                 }
-                    
+
                 if (File.Exists(physicalPath))
                 {
                     return Convert.ToBase64String(File.ReadAllBytes(physicalPath));
                 }
             }
-            catch {}
+            catch { }
             return string.Empty;
         }
 
@@ -133,7 +126,7 @@ namespace School.Services
 
             var report = new LocalReport();
             var reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RdlcFiles", "RegistrationCertificate.rdlc");
-            
+
             // Ensure directory and mock file exist so it compiles and runs without IO exception
             EnsureReportFileExists(reportPath, "RegistrationCertificate");
             report.ReportPath = reportPath;
@@ -161,7 +154,7 @@ namespace School.Services
 
             await ApplyBrandingParametersAsync(report, parameters);
             report.SetParameters(parameters);
-            
+
             // Add DTO as a datasource for listing items if requested by template
             report.DataSources.Add(new ReportDataSource("RegistrationDataSet", new List<AdmissionApplicationDto> { registration }));
 
@@ -184,7 +177,7 @@ namespace School.Services
 
             var report = new LocalReport();
             var reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RdlcFiles", "FeeReceipt.rdlc");
-            
+
             EnsureReportFileExists(reportPath, "FeeReceipt");
             report.ReportPath = reportPath;
 

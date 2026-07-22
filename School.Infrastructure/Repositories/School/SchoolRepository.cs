@@ -1,20 +1,15 @@
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.School;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace School.Infrastructure.Repositories.School
 {
-    public class SchoolRepository:Repository<SchoolRegistration>, ISchoolRepository
+    public class SchoolRepository : Repository<SchoolRegistration>, ISchoolRepository
     {
         private readonly SchoolDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
-        public SchoolRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork):base(dbFactory)
+        public SchoolRepository(DbFactory dbFactory, SchoolDbContext context, IUnitOfWork unitOfWork) : base(dbFactory)
         {
             _context = context;
             _unitOfWork = unitOfWork;
@@ -25,7 +20,7 @@ namespace School.Infrastructure.Repositories.School
             entity = await base.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
-          
+
         }
 
         public async Task<int> DeleteSchoolAsync(int id)
@@ -38,9 +33,9 @@ namespace School.Infrastructure.Repositories.School
                 this.Delete(result);
                 return await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
-           else
-               return 0;
-           
+            else
+                return 0;
+
         }
 
         public async Task<IEnumerable<SchoolRegistration>> GetAllSchoolsAsync()

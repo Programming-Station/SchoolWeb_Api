@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.FeeManagnment;
 using School.Infrastructure;
@@ -24,9 +20,9 @@ namespace School.Services
             SchoolDbContext dbContext)
         {
             _installmentRepo = installmentRepo;
-            _paymentRepo     = paymentRepo;
-            _structureRepo   = structureRepo;
-            _dbContext       = dbContext;
+            _paymentRepo = paymentRepo;
+            _structureRepo = structureRepo;
+            _dbContext = dbContext;
         }
 
         public async Task<(bool Success, string Message, List<FeeInstallmentDto> Installments)> GenerateInstallmentsAsync(
@@ -48,17 +44,17 @@ namespace School.Services
             {
                 installments.Add(new FeeInstallment
                 {
-                    FeeStructureId      = request.FeeStructureId,
-                    StudentId           = request.StudentId,
-                    InstallmentNo       = i,
-                    InstallmentName     = $"Installment {i}",
-                    Amount              = i == request.NumberOfInstallments
+                    FeeStructureId = request.FeeStructureId,
+                    StudentId = request.StudentId,
+                    InstallmentNo = i,
+                    InstallmentName = $"Installment {i}",
+                    Amount = i == request.NumberOfInstallments
                         ? totalAmount - (perInstallment * (request.NumberOfInstallments - 1)) // last = remainder
                         : perInstallment,
-                    DueDate             = request.FirstDueDate.AddMonths(i - 1),
-                    Status              = "Pending",
+                    DueDate = request.FirstDueDate.AddMonths(i - 1),
+                    Status = "Pending",
                     SchoolRegistrationId = schoolRegistrationId,
-                    CreatedBy           = createdBy
+                    CreatedBy = createdBy
                 });
             }
 
@@ -84,18 +80,18 @@ namespace School.Services
 
             var payment = new FeePayment
             {
-                FeeInstallmentId     = request.FeeInstallmentId,
-                StudentId            = request.StudentId,
-                AmountPaid           = request.AmountPaid,
-                PaymentDate          = DateTime.Now,
-                PaymentMode          = request.PaymentMode,
-                TransactionRef       = request.TransactionRef,
-                ReceiptNo            = receiptNo,
-                CollectedBy          = collectedBy,
-                Remarks              = request.Remarks,
-                Status               = "Completed",
+                FeeInstallmentId = request.FeeInstallmentId,
+                StudentId = request.StudentId,
+                AmountPaid = request.AmountPaid,
+                PaymentDate = DateTime.Now,
+                PaymentMode = request.PaymentMode,
+                TransactionRef = request.TransactionRef,
+                ReceiptNo = receiptNo,
+                CollectedBy = collectedBy,
+                Remarks = request.Remarks,
+                Status = "Completed",
                 SchoolRegistrationId = schoolRegistrationId,
-                CreatedBy            = collectedBy
+                CreatedBy = collectedBy
             };
 
             await _paymentRepo.AddAsync(payment);
@@ -140,13 +136,13 @@ namespace School.Services
         public async Task<FeeCollectionSummaryDto> GetCollectionSummaryAsync(DateTime from, DateTime to, int schoolRegistrationId)
         {
             var collected = await _paymentRepo.GetTotalCollectedAsync(from, to, schoolRegistrationId);
-            var overdues  = await _installmentRepo.GetOverdueAsync(schoolRegistrationId);
-            var pending   = overdues.Sum(x => x.Amount + x.FineAmount - x.DiscountAmount);
+            var overdues = await _installmentRepo.GetOverdueAsync(schoolRegistrationId);
+            var pending = overdues.Sum(x => x.Amount + x.FineAmount - x.DiscountAmount);
 
             return new FeeCollectionSummaryDto
             {
-                TotalCollected  = collected,
-                TotalPending    = pending,
+                TotalCollected = collected,
+                TotalPending = pending,
                 OverdueStudents = overdues.Select(x => x.StudentId).Distinct().Count()
             };
         }
@@ -161,38 +157,38 @@ namespace School.Services
         // ── Mappers ──────────────────────────────────────────────────────────
         private static FeeInstallmentDto MapInstallmentDto(FeeInstallment x) => new()
         {
-            Id               = x.Id,
-            StudentId        = x.StudentId,
-            StudentName      = x.Student?.Name ?? string.Empty,
+            Id = x.Id,
+            StudentId = x.StudentId,
+            StudentName = x.Student?.Name ?? string.Empty,
             EnrollmentNumber = x.Student?.EnrollmentNumber,
-            FeeStructureId   = x.FeeStructureId,
+            FeeStructureId = x.FeeStructureId,
             FeeStructureName = x.FeeStructure?.Name ?? string.Empty,
-            InstallmentNo    = x.InstallmentNo,
-            InstallmentName  = x.InstallmentName,
-            Amount           = x.Amount,
-            FineAmount       = x.FineAmount,
-            DiscountAmount   = x.DiscountAmount,
-            DueDate          = x.DueDate,
-            Status           = x.Status,
-            PaidDate         = x.PaidDate,
-            Remarks          = x.Remarks
+            InstallmentNo = x.InstallmentNo,
+            InstallmentName = x.InstallmentName,
+            Amount = x.Amount,
+            FineAmount = x.FineAmount,
+            DiscountAmount = x.DiscountAmount,
+            DueDate = x.DueDate,
+            Status = x.Status,
+            PaidDate = x.PaidDate,
+            Remarks = x.Remarks
         };
 
         private static FeePaymentDto MapPaymentDto(FeePayment p, FeeInstallment? inst) => new()
         {
-            Id                = p.Id,
-            StudentId         = p.StudentId,
-            StudentName       = p.Student?.Name ?? string.Empty,
-            FeeInstallmentId  = p.FeeInstallmentId,
-            InstallmentName   = inst?.InstallmentName ?? string.Empty,
-            AmountPaid        = p.AmountPaid,
-            PaymentDate       = p.PaymentDate,
-            PaymentMode       = p.PaymentMode,
-            TransactionRef    = p.TransactionRef,
-            ReceiptNo         = p.ReceiptNo,
-            CollectedBy       = p.CollectedBy,
-            Remarks           = p.Remarks,
-            Status            = p.Status
+            Id = p.Id,
+            StudentId = p.StudentId,
+            StudentName = p.Student?.Name ?? string.Empty,
+            FeeInstallmentId = p.FeeInstallmentId,
+            InstallmentName = inst?.InstallmentName ?? string.Empty,
+            AmountPaid = p.AmountPaid,
+            PaymentDate = p.PaymentDate,
+            PaymentMode = p.PaymentMode,
+            TransactionRef = p.TransactionRef,
+            ReceiptNo = p.ReceiptNo,
+            CollectedBy = p.CollectedBy,
+            Remarks = p.Remarks,
+            Status = p.Status
         };
 
         public async Task<IEnumerable<FeeInstallmentDto>> GetPendingByClassAsync(int classId, int schoolRegistrationId)

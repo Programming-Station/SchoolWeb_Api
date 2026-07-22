@@ -1,8 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using School_DTOs;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School_API.Filters
 {
@@ -13,7 +12,7 @@ namespace School_API.Filters
             if (context.Result is ObjectResult objectResult)
             {
                 var valueType = objectResult.Value?.GetType();
-                var isAlreadyApiResponse = valueType != null && 
+                var isAlreadyApiResponse = valueType != null &&
                     (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(APIResponse<>) ||
                      valueType == typeof(APIResponse<object>));
 

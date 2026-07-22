@@ -10,14 +10,14 @@ namespace School.Domain
         [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(100)] 
+        [Required, MaxLength(100)]
         public string Name { get; set; } = null!;
 
         [MaxLength(50)]
         public string? Section { get; set; }
 
         [Required]
-        public int CourseId { get; set; } 
+        public int CourseId { get; set; }
 
         [Required]
         [MaxLength(20)]
@@ -35,7 +35,7 @@ namespace School.Domain
         [MaxLength(50)]
         public string? RoomNumber { get; set; }
 
-        [Required, MaxLength(50)] 
+        [Required, MaxLength(50)]
         public string Status { get; set; } = "active"; // active or inactive
 
         [ForeignKey(nameof(CourseId))]

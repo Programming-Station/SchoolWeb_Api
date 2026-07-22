@@ -1,8 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.School;
 using School.Domain.Email;
+using School.Domain.School;
 
 namespace School.Domain.Communication.Recipients
 {

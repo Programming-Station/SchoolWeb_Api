@@ -1,20 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Transport;
-using School.Domain.Student;
-using School.Domain.Hr;
-using School.Domain;
 using School.Infrastructure;
-using School_DTOs.Transport;
 using School.Services.Interfaces;
+using School_DTOs.Transport;
 
 namespace School.Services.Transport
 {
-    #nullable disable
+#nullable disable
 
     public class TransportService : ITransportService
     {

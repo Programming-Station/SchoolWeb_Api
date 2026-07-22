@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Communication;
 using School.Infrastructure;
@@ -54,7 +50,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(n => n.IsPinned).ThenByDescending(n => n.PublishedDate).ToListAsync();
             return new APIResponse<IEnumerable<NoticeBoardDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(MapNotice)
             };
         }
@@ -71,11 +68,15 @@ namespace School.Services.Communication
         {
             var entity = new NoticeBoard
             {
-                Title = dto.Title, Content = dto.Content,
+                Title = dto.Title,
+                Content = dto.Content,
                 TargetAudience = dto.TargetAudience,
                 PublishedDate = dto.PublishedDate == default ? DateTime.UtcNow : dto.PublishedDate,
-                ExpiryDate = dto.ExpiryDate, IsPinned = dto.IsPinned,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                ExpiryDate = dto.ExpiryDate,
+                IsPinned = dto.IsPinned,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.NoticeBoards.Add(entity);
             await _context.SaveChangesAsync();
@@ -110,11 +111,17 @@ namespace School.Services.Communication
 
         private static NoticeBoardDto MapNotice(NoticeBoard n) => new()
         {
-            Id = n.Id, Title = n.Title, Content = n.Content,
-            TargetAudience = n.TargetAudience, PublishedDate = n.PublishedDate,
-            ExpiryDate = n.ExpiryDate, IsPinned = n.IsPinned,
-            CreatedBy = n.CreatedBy, CreatedDate = n.CreatedDate,
-            UpdatedBy = n.UpdatedBy, UpdatedDate = n.UpdatedDate
+            Id = n.Id,
+            Title = n.Title,
+            Content = n.Content,
+            TargetAudience = n.TargetAudience,
+            PublishedDate = n.PublishedDate,
+            ExpiryDate = n.ExpiryDate,
+            IsPinned = n.IsPinned,
+            CreatedBy = n.CreatedBy,
+            CreatedDate = n.CreatedDate,
+            UpdatedBy = n.UpdatedBy,
+            UpdatedDate = n.UpdatedDate
         };
 
         // ════════════════════════════════════════════════════════════════════════
@@ -140,7 +147,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(c => c.PublishDate).ToListAsync();
             return new APIResponse<IEnumerable<CircularDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(MapCircular)
             };
         }
@@ -157,10 +165,15 @@ namespace School.Services.Communication
         {
             var entity = new Circular
             {
-                CircularNo = dto.CircularNo, Subject = dto.Subject, Content = dto.Content,
-                AttachmentPath = dto.AttachmentPath, TargetAudience = dto.TargetAudience,
+                CircularNo = dto.CircularNo,
+                Subject = dto.Subject,
+                Content = dto.Content,
+                AttachmentPath = dto.AttachmentPath,
+                TargetAudience = dto.TargetAudience,
                 PublishDate = dto.PublishDate == default ? DateTime.UtcNow : dto.PublishDate,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.Circulars.Add(entity);
             await _context.SaveChangesAsync();
@@ -194,10 +207,17 @@ namespace School.Services.Communication
 
         private static CircularDto MapCircular(Circular c) => new()
         {
-            Id = c.Id, CircularNo = c.CircularNo, Subject = c.Subject, Content = c.Content,
-            AttachmentPath = c.AttachmentPath, TargetAudience = c.TargetAudience, PublishDate = c.PublishDate,
-            CreatedBy = c.CreatedBy, CreatedDate = c.CreatedDate,
-            UpdatedBy = c.UpdatedBy, UpdatedDate = c.UpdatedDate
+            Id = c.Id,
+            CircularNo = c.CircularNo,
+            Subject = c.Subject,
+            Content = c.Content,
+            AttachmentPath = c.AttachmentPath,
+            TargetAudience = c.TargetAudience,
+            PublishDate = c.PublishDate,
+            CreatedBy = c.CreatedBy,
+            CreatedDate = c.CreatedDate,
+            UpdatedBy = c.UpdatedBy,
+            UpdatedDate = c.UpdatedDate
         };
 
         // ════════════════════════════════════════════════════════════════════════
@@ -223,11 +243,16 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(l => l.SentDate).ToListAsync();
             return new APIResponse<IEnumerable<SmsLogDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(l => new SmsLogDto
                 {
-                    Id = l.Id, RecipientNo = l.RecipientNo, Message = l.Message,
-                    SentStatus = l.SentStatus, SentDate = l.SentDate, ProviderResponse = l.ProviderResponse
+                    Id = l.Id,
+                    RecipientNo = l.RecipientNo,
+                    Message = l.Message,
+                    SentStatus = l.SentStatus,
+                    SentDate = l.SentDate,
+                    ProviderResponse = l.ProviderResponse
                 })
             };
         }
@@ -239,7 +264,8 @@ namespace School.Services.Communication
                 return new APIResponse<SmsLogDto> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "SMS log not found" };
             return new APIResponse<SmsLogDto>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = new SmsLogDto { Id = l.Id, RecipientNo = l.RecipientNo, Message = l.Message, SentStatus = l.SentStatus, SentDate = l.SentDate, ProviderResponse = l.ProviderResponse }
             };
         }
@@ -279,7 +305,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(l => l.SentDate).ToListAsync();
             return new APIResponse<IEnumerable<WhatsAppLogDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(l => new WhatsAppLogDto { Id = l.Id, RecipientPhone = l.RecipientPhone, Message = l.Message, Status = l.Status, SentDate = l.SentDate })
             };
         }
@@ -291,7 +318,8 @@ namespace School.Services.Communication
                 return new APIResponse<WhatsAppLogDto> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "WhatsApp log not found" };
             return new APIResponse<WhatsAppLogDto>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = new WhatsAppLogDto { Id = l.Id, RecipientPhone = l.RecipientPhone, Message = l.Message, Status = l.Status, SentDate = l.SentDate }
             };
         }
@@ -329,7 +357,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(p => p.SentDate).ToListAsync();
             return new APIResponse<IEnumerable<PushNotificationDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(p => new PushNotificationDto { Id = p.Id, RecipientUserId = p.RecipientUserId, Title = p.Title, Body = p.Body, IsRead = p.IsRead, SentDate = p.SentDate })
             };
         }
@@ -341,7 +370,8 @@ namespace School.Services.Communication
                 return new APIResponse<PushNotificationDto> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "Notification not found" };
             return new APIResponse<PushNotificationDto>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = new PushNotificationDto { Id = p.Id, RecipientUserId = p.RecipientUserId, Title = p.Title, Body = p.Body, IsRead = p.IsRead, SentDate = p.SentDate }
             };
         }
@@ -350,9 +380,14 @@ namespace School.Services.Communication
         {
             var entity = new PushNotification
             {
-                RecipientUserId = dto.RecipientUserId, Title = dto.Title, Body = dto.Body,
-                IsRead = false, SentDate = DateTime.UtcNow,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                RecipientUserId = dto.RecipientUserId,
+                Title = dto.Title,
+                Body = dto.Body,
+                IsRead = false,
+                SentDate = DateTime.UtcNow,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.PushNotifications.Add(entity);
             await _context.SaveChangesAsync();
@@ -390,14 +425,18 @@ namespace School.Services.Communication
 
             return new APIResponse<IEnumerable<ParentTeacherChatDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = chats.Select(c => new ParentTeacherChatDto
                 {
-                    Id = c.Id, SenderUserId = c.SenderUserId,
+                    Id = c.Id,
+                    SenderUserId = c.SenderUserId,
                     SenderUserName = users.GetValueOrDefault(c.SenderUserId, "User"),
                     ReceiverUserId = c.ReceiverUserId,
                     ReceiverUserName = users.GetValueOrDefault(c.ReceiverUserId, "User"),
-                    MessageContent = c.MessageContent, SentTime = c.SentTime, IsRead = c.IsRead
+                    MessageContent = c.MessageContent,
+                    SentTime = c.SentTime,
+                    IsRead = c.IsRead
                 })
             };
         }
@@ -409,7 +448,8 @@ namespace School.Services.Communication
                 return new APIResponse<ParentTeacherChatDto> { Success = false, StatusCode = HttpStatusCode.NotFound, Message = "Message not found" };
             return new APIResponse<ParentTeacherChatDto>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = new ParentTeacherChatDto { Id = c.Id, SenderUserId = c.SenderUserId, ReceiverUserId = c.ReceiverUserId, MessageContent = c.MessageContent, SentTime = c.SentTime, IsRead = c.IsRead }
             };
         }
@@ -418,9 +458,14 @@ namespace School.Services.Communication
         {
             var entity = new ParentTeacherChat
             {
-                SenderUserId = dto.SenderUserId, ReceiverUserId = dto.ReceiverUserId,
-                MessageContent = dto.MessageContent, SentTime = DateTime.UtcNow, IsRead = false,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                SenderUserId = dto.SenderUserId,
+                ReceiverUserId = dto.ReceiverUserId,
+                MessageContent = dto.MessageContent,
+                SentTime = DateTime.UtcNow,
+                IsRead = false,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.ParentTeacherChats.Add(entity);
             await _context.SaveChangesAsync();
@@ -469,7 +514,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(s => s.CreatedDate).ToListAsync();
             return new APIResponse<IEnumerable<FeedbackSurveyDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(MapSurvey)
             };
         }
@@ -487,16 +533,24 @@ namespace School.Services.Communication
             var schoolId = GetCurrentSchoolId();
             var entity = new FeedbackSurvey
             {
-                Title = dto.Title, Description = dto.Description,
-                TargetAudience = dto.TargetAudience, IsActive = dto.IsActive,
-                SchoolRegistrationId = schoolId, CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Title = dto.Title,
+                Description = dto.Description,
+                TargetAudience = dto.TargetAudience,
+                IsActive = dto.IsActive,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             foreach (var q in dto.Questions)
             {
                 entity.Questions.Add(new SurveyQuestion
                 {
-                    QuestionText = q.QuestionText, QuestionType = q.QuestionType,
-                    OptionsJson = q.OptionsJson, SchoolRegistrationId = schoolId, CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    OptionsJson = q.OptionsJson,
+                    SchoolRegistrationId = schoolId,
+                    CreatedBy = userName,
+                    CreatedDate = DateTime.UtcNow
                 });
             }
             _context.FeedbackSurveys.Add(entity);
@@ -526,8 +580,12 @@ namespace School.Services.Communication
             {
                 entity.Questions.Add(new SurveyQuestion
                 {
-                    QuestionText = q.QuestionText, QuestionType = q.QuestionType,
-                    OptionsJson = q.OptionsJson, SchoolRegistrationId = schoolId, CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    OptionsJson = q.OptionsJson,
+                    SchoolRegistrationId = schoolId,
+                    CreatedBy = userName,
+                    CreatedDate = DateTime.UtcNow
                 });
             }
 
@@ -549,9 +607,13 @@ namespace School.Services.Communication
         {
             var entity = new SurveyResponse
             {
-                SurveyId = dto.SurveyId, RespondentUserId = dto.RespondentUserId,
-                AnswersJson = dto.AnswersJson, SubmittedDate = DateTime.UtcNow,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                SurveyId = dto.SurveyId,
+                RespondentUserId = dto.RespondentUserId,
+                AnswersJson = dto.AnswersJson,
+                SubmittedDate = DateTime.UtcNow,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.SurveyResponses.Add(entity);
             await _context.SaveChangesAsync();
@@ -572,25 +634,38 @@ namespace School.Services.Communication
 
             return new APIResponse<IEnumerable<SurveyResponseDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = responses.Select(r => new SurveyResponseDto
                 {
-                    Id = r.Id, SurveyId = r.SurveyId, RespondentUserId = r.RespondentUserId,
+                    Id = r.Id,
+                    SurveyId = r.SurveyId,
+                    RespondentUserId = r.RespondentUserId,
                     RespondentName = users.GetValueOrDefault(r.RespondentUserId, "User"),
-                    AnswersJson = r.AnswersJson, SubmittedDate = r.SubmittedDate
+                    AnswersJson = r.AnswersJson,
+                    SubmittedDate = r.SubmittedDate
                 })
             };
         }
 
         private static FeedbackSurveyDto MapSurvey(FeedbackSurvey s) => new()
         {
-            Id = s.Id, Title = s.Title, Description = s.Description,
-            TargetAudience = s.TargetAudience, CreatedDate = s.CreatedDate ?? DateTime.UtcNow,
-            IsActive = s.IsActive, CreatedBy = s.CreatedBy, UpdatedBy = s.UpdatedBy, UpdatedDate = s.UpdatedDate,
+            Id = s.Id,
+            Title = s.Title,
+            Description = s.Description,
+            TargetAudience = s.TargetAudience,
+            CreatedDate = s.CreatedDate ?? DateTime.UtcNow,
+            IsActive = s.IsActive,
+            CreatedBy = s.CreatedBy,
+            UpdatedBy = s.UpdatedBy,
+            UpdatedDate = s.UpdatedDate,
             Questions = s.Questions.Where(q => !q.IsDeleted).Select(q => new SurveyQuestionDto
             {
-                Id = q.Id, SurveyId = q.SurveyId, QuestionText = q.QuestionText,
-                QuestionType = q.QuestionType, OptionsJson = q.OptionsJson
+                Id = q.Id,
+                SurveyId = q.SurveyId,
+                QuestionText = q.QuestionText,
+                QuestionType = q.QuestionType,
+                OptionsJson = q.OptionsJson
             }).ToList()
         };
 
@@ -622,7 +697,8 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(a => a.IsPinned).ThenByDescending(a => a.CreatedDate).ToListAsync();
             return new APIResponse<IEnumerable<AnnouncementDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(MapAnnouncement)
             };
         }
@@ -639,11 +715,18 @@ namespace School.Services.Communication
         {
             var entity = new Announcement
             {
-                Title = dto.Title, Content = dto.Content, Scope = dto.Scope,
-                TargetReferenceId = dto.TargetReferenceId, Priority = dto.Priority,
-                AttachmentPath = dto.AttachmentPath, ImagePath = dto.ImagePath,
-                IsPinned = dto.IsPinned, ExpiryDate = dto.ExpiryDate,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Title = dto.Title,
+                Content = dto.Content,
+                Scope = dto.Scope,
+                TargetReferenceId = dto.TargetReferenceId,
+                Priority = dto.Priority,
+                AttachmentPath = dto.AttachmentPath,
+                ImagePath = dto.ImagePath,
+                IsPinned = dto.IsPinned,
+                ExpiryDate = dto.ExpiryDate,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.Announcements.Add(entity);
             await _context.SaveChangesAsync();
@@ -678,12 +761,20 @@ namespace School.Services.Communication
 
         private static AnnouncementDto MapAnnouncement(Announcement a) => new()
         {
-            Id = a.Id, Title = a.Title, Content = a.Content, Scope = a.Scope,
-            TargetReferenceId = a.TargetReferenceId, Priority = a.Priority,
-            AttachmentPath = a.AttachmentPath, ImagePath = a.ImagePath,
-            IsPinned = a.IsPinned, ExpiryDate = a.ExpiryDate,
-            CreatedBy = a.CreatedBy, CreatedDate = a.CreatedDate,
-            UpdatedBy = a.UpdatedBy, UpdatedDate = a.UpdatedDate
+            Id = a.Id,
+            Title = a.Title,
+            Content = a.Content,
+            Scope = a.Scope,
+            TargetReferenceId = a.TargetReferenceId,
+            Priority = a.Priority,
+            AttachmentPath = a.AttachmentPath,
+            ImagePath = a.ImagePath,
+            IsPinned = a.IsPinned,
+            ExpiryDate = a.ExpiryDate,
+            CreatedBy = a.CreatedBy,
+            CreatedDate = a.CreatedDate,
+            UpdatedBy = a.UpdatedBy,
+            UpdatedDate = a.UpdatedDate
         };
 
 
@@ -714,7 +805,8 @@ namespace School.Services.Communication
             var list = await q.OrderBy(m => m.StartTime).ToListAsync();
             return new APIResponse<IEnumerable<MeetingDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(MapMeeting)
             };
         }
@@ -731,10 +823,22 @@ namespace School.Services.Communication
         {
             var entity = new CommunicationMeeting
             {
-                Title = dto.Title, Description = dto.Description, StartTime = dto.StartTime, EndTime = dto.EndTime,
-                Platform = dto.Platform, MeetingLink = dto.MeetingLink, MeetingId = dto.MeetingId, MeetingPassword = dto.MeetingPassword,
-                Agenda = dto.Agenda, MinutesOfMeeting = dto.MinutesOfMeeting, RecordingLink = dto.RecordingLink, Status = dto.Status,
-                TargetAudience = dto.TargetAudience, SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Title = dto.Title,
+                Description = dto.Description,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                Platform = dto.Platform,
+                MeetingLink = dto.MeetingLink,
+                MeetingId = dto.MeetingId,
+                MeetingPassword = dto.MeetingPassword,
+                Agenda = dto.Agenda,
+                MinutesOfMeeting = dto.MinutesOfMeeting,
+                RecordingLink = dto.RecordingLink,
+                Status = dto.Status,
+                TargetAudience = dto.TargetAudience,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.CommunicationMeetings.Add(entity);
             await _context.SaveChangesAsync();
@@ -786,11 +890,24 @@ namespace School.Services.Communication
 
         private static MeetingDto MapMeeting(CommunicationMeeting m) => new()
         {
-            Id = m.Id, Title = m.Title, Description = m.Description, StartTime = m.StartTime, EndTime = m.EndTime,
-            Platform = m.Platform, MeetingLink = m.MeetingLink, MeetingId = m.MeetingId, MeetingPassword = m.MeetingPassword,
-            Agenda = m.Agenda, MinutesOfMeeting = m.MinutesOfMeeting, RecordingLink = m.RecordingLink, Status = m.Status,
-            TargetAudience = m.TargetAudience, CreatedBy = m.CreatedBy, CreatedDate = m.CreatedDate,
-            UpdatedBy = m.UpdatedBy, UpdatedDate = m.UpdatedDate
+            Id = m.Id,
+            Title = m.Title,
+            Description = m.Description,
+            StartTime = m.StartTime,
+            EndTime = m.EndTime,
+            Platform = m.Platform,
+            MeetingLink = m.MeetingLink,
+            MeetingId = m.MeetingId,
+            MeetingPassword = m.MeetingPassword,
+            Agenda = m.Agenda,
+            MinutesOfMeeting = m.MinutesOfMeeting,
+            RecordingLink = m.RecordingLink,
+            Status = m.Status,
+            TargetAudience = m.TargetAudience,
+            CreatedBy = m.CreatedBy,
+            CreatedDate = m.CreatedDate,
+            UpdatedBy = m.UpdatedBy,
+            UpdatedDate = m.UpdatedDate
         };
 
 
@@ -824,16 +941,29 @@ namespace School.Services.Communication
 
             return new APIResponse<IEnumerable<SupportTicketDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(t => new SupportTicketDto
                 {
-                    Id = t.Id, TicketNumber = t.TicketNumber, Subject = t.Subject, Description = t.Description,
-                    Category = t.Category, Status = t.Status, Priority = t.Priority,
-                    RaisedByUserId = t.RaisedByUserId, RaisedByUserName = users.GetValueOrDefault(t.RaisedByUserId, "Parent"),
-                    AssignedStaffId = t.AssignedStaffId, AssignedStaffName = t.AssignedStaffId != null ? users.GetValueOrDefault(t.AssignedStaffId, "Staff") : "Unassigned",
-                    SLAExpiryDate = t.SLAExpiryDate, ResolutionNotes = t.ResolutionNotes, FeedbackRating = t.FeedbackRating,
-                    FeedbackComments = t.FeedbackComments, CreatedBy = t.CreatedBy, CreatedDate = t.CreatedDate,
-                    UpdatedBy = t.UpdatedBy, UpdatedDate = t.UpdatedDate
+                    Id = t.Id,
+                    TicketNumber = t.TicketNumber,
+                    Subject = t.Subject,
+                    Description = t.Description,
+                    Category = t.Category,
+                    Status = t.Status,
+                    Priority = t.Priority,
+                    RaisedByUserId = t.RaisedByUserId,
+                    RaisedByUserName = users.GetValueOrDefault(t.RaisedByUserId, "Parent"),
+                    AssignedStaffId = t.AssignedStaffId,
+                    AssignedStaffName = t.AssignedStaffId != null ? users.GetValueOrDefault(t.AssignedStaffId, "Staff") : "Unassigned",
+                    SLAExpiryDate = t.SLAExpiryDate,
+                    ResolutionNotes = t.ResolutionNotes,
+                    FeedbackRating = t.FeedbackRating,
+                    FeedbackComments = t.FeedbackComments,
+                    CreatedBy = t.CreatedBy,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedBy = t.UpdatedBy,
+                    UpdatedDate = t.UpdatedDate
                 })
             };
         }
@@ -856,18 +986,34 @@ namespace School.Services.Communication
 
             var dto = new SupportTicketDto
             {
-                Id = t.Id, TicketNumber = t.TicketNumber, Subject = t.Subject, Description = t.Description,
-                Category = t.Category, Status = t.Status, Priority = t.Priority,
-                RaisedByUserId = t.RaisedByUserId, RaisedByUserName = users.GetValueOrDefault(t.RaisedByUserId, "User"),
-                AssignedStaffId = t.AssignedStaffId, AssignedStaffName = t.AssignedStaffId != null ? users.GetValueOrDefault(t.AssignedStaffId, "Staff") : "Unassigned",
-                SLAExpiryDate = t.SLAExpiryDate, ResolutionNotes = t.ResolutionNotes, FeedbackRating = t.FeedbackRating,
-                FeedbackComments = t.FeedbackComments, CreatedBy = t.CreatedBy, CreatedDate = t.CreatedDate,
-                UpdatedBy = t.UpdatedBy, UpdatedDate = t.UpdatedDate,
+                Id = t.Id,
+                TicketNumber = t.TicketNumber,
+                Subject = t.Subject,
+                Description = t.Description,
+                Category = t.Category,
+                Status = t.Status,
+                Priority = t.Priority,
+                RaisedByUserId = t.RaisedByUserId,
+                RaisedByUserName = users.GetValueOrDefault(t.RaisedByUserId, "User"),
+                AssignedStaffId = t.AssignedStaffId,
+                AssignedStaffName = t.AssignedStaffId != null ? users.GetValueOrDefault(t.AssignedStaffId, "Staff") : "Unassigned",
+                SLAExpiryDate = t.SLAExpiryDate,
+                ResolutionNotes = t.ResolutionNotes,
+                FeedbackRating = t.FeedbackRating,
+                FeedbackComments = t.FeedbackComments,
+                CreatedBy = t.CreatedBy,
+                CreatedDate = t.CreatedDate,
+                UpdatedBy = t.UpdatedBy,
+                UpdatedDate = t.UpdatedDate,
                 Responses = responses.Select(r => new TicketResponseDto
                 {
-                    Id = r.Id, TicketId = r.TicketId, SenderUserId = r.SenderUserId,
+                    Id = r.Id,
+                    TicketId = r.TicketId,
+                    SenderUserId = r.SenderUserId,
                     SenderUserName = users.GetValueOrDefault(r.SenderUserId, "User"),
-                    Content = r.Content, IsInternalNote = r.IsInternalNote, AttachmentPath = r.AttachmentPath,
+                    Content = r.Content,
+                    IsInternalNote = r.IsInternalNote,
+                    AttachmentPath = r.AttachmentPath,
                     CreatedDate = r.CreatedDate ?? DateTime.UtcNow
                 }).ToList()
             };
@@ -882,11 +1028,18 @@ namespace School.Services.Communication
 
             var entity = new SupportTicket
             {
-                TicketNumber = ticketNo, Subject = dto.Subject, Description = dto.Description,
-                Category = dto.Category, Status = "Open", Priority = dto.Priority,
-                RaisedByUserId = dto.RaisedByUserId, AssignedStaffId = dto.AssignedStaffId,
+                TicketNumber = ticketNo,
+                Subject = dto.Subject,
+                Description = dto.Description,
+                Category = dto.Category,
+                Status = "Open",
+                Priority = dto.Priority,
+                RaisedByUserId = dto.RaisedByUserId,
+                AssignedStaffId = dto.AssignedStaffId,
                 SLAExpiryDate = DateTime.UtcNow.AddDays(dto.Priority == "Urgent" ? 1 : dto.Priority == "High" ? 2 : 5),
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
 
             _context.SupportTickets.Add(entity);
@@ -907,9 +1060,14 @@ namespace School.Services.Communication
 
             var entity = new TicketResponse
             {
-                TicketId = ticketId, SenderUserId = dto.SenderUserId, Content = dto.Content,
-                IsInternalNote = dto.IsInternalNote, AttachmentPath = dto.AttachmentPath,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                TicketId = ticketId,
+                SenderUserId = dto.SenderUserId,
+                Content = dto.Content,
+                IsInternalNote = dto.IsInternalNote,
+                AttachmentPath = dto.AttachmentPath,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
 
             _context.TicketResponses.Add(entity);
@@ -966,14 +1124,24 @@ namespace School.Services.Communication
 
             var result = polls.Select(p => new QuickPollDto
             {
-                Id = p.Id, Question = p.Question, OptionsJson = p.OptionsJson,
-                StartDate = p.StartDate, EndDate = p.EndDate, IsActive = p.IsActive,
-                TargetAudience = p.TargetAudience, CreatedBy = p.CreatedBy, CreatedDate = p.CreatedDate,
+                Id = p.Id,
+                Question = p.Question,
+                OptionsJson = p.OptionsJson,
+                StartDate = p.StartDate,
+                EndDate = p.EndDate,
+                IsActive = p.IsActive,
+                TargetAudience = p.TargetAudience,
+                CreatedBy = p.CreatedBy,
+                CreatedDate = p.CreatedDate,
                 UserHasVoted = userVotes.ContainsKey(p.Id),
                 UserVotedOption = userVotes.GetValueOrDefault(p.Id),
                 Votes = votes.Where(v => v.PollId == p.Id).Select(v => new PollVoteDto
                 {
-                    Id = v.Id, PollId = v.PollId, UserId = v.UserId, SelectedOption = v.SelectedOption, VotedAt = v.VotedAt
+                    Id = v.Id,
+                    PollId = v.PollId,
+                    UserId = v.UserId,
+                    SelectedOption = v.SelectedOption,
+                    VotedAt = v.VotedAt
                 }).ToList()
             });
 
@@ -984,11 +1152,15 @@ namespace School.Services.Communication
         {
             var entity = new QuickPoll
             {
-                Question = dto.Question, OptionsJson = dto.OptionsJson,
+                Question = dto.Question,
+                OptionsJson = dto.OptionsJson,
                 StartDate = dto.StartDate == default ? DateTime.UtcNow : dto.StartDate,
                 EndDate = dto.EndDate == default ? DateTime.UtcNow.AddDays(7) : dto.EndDate,
-                IsActive = dto.IsActive, TargetAudience = dto.TargetAudience,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                IsActive = dto.IsActive,
+                TargetAudience = dto.TargetAudience,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.QuickPolls.Add(entity);
             await _context.SaveChangesAsync();
@@ -1008,7 +1180,10 @@ namespace School.Services.Communication
 
             var vote = new PollVote
             {
-                PollId = pollId, UserId = userId, SelectedOption = selectedOption, VotedAt = DateTime.UtcNow,
+                PollId = pollId,
+                UserId = userId,
+                SelectedOption = selectedOption,
+                VotedAt = DateTime.UtcNow,
                 SchoolRegistrationId = GetCurrentSchoolId()
             };
             _context.PollVotes.Add(vote);
@@ -1033,7 +1208,8 @@ namespace School.Services.Communication
                 var count = votes.Count(v => v.SelectedOption == opt);
                 return new PollResultDto
                 {
-                    Option = opt, VoteCount = count,
+                    Option = opt,
+                    VoteCount = count,
                     Percentage = totalVotes > 0 ? Math.Round((double)count / totalVotes * 100, 1) : 0
                 };
             });
@@ -1063,13 +1239,24 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(d => d.CreatedDate).ToListAsync();
             return new APIResponse<IEnumerable<SharedDocumentDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(d => new SharedDocumentDto
                 {
-                    Id = d.Id, FileName = d.FileName, Description = d.Description, FilePath = d.FilePath,
-                    FileSize = d.FileSize, FileType = d.FileType, TargetAudience = d.TargetAudience,
-                    ExpiryDate = d.ExpiryDate, DownloadCount = d.DownloadCount, IsPublicLink = d.IsPublicLink,
-                    CreatedBy = d.CreatedBy, CreatedDate = d.CreatedDate, UpdatedBy = d.UpdatedBy, UpdatedDate = d.UpdatedDate
+                    Id = d.Id,
+                    FileName = d.FileName,
+                    Description = d.Description,
+                    FilePath = d.FilePath,
+                    FileSize = d.FileSize,
+                    FileType = d.FileType,
+                    TargetAudience = d.TargetAudience,
+                    ExpiryDate = d.ExpiryDate,
+                    DownloadCount = d.DownloadCount,
+                    IsPublicLink = d.IsPublicLink,
+                    CreatedBy = d.CreatedBy,
+                    CreatedDate = d.CreatedDate,
+                    UpdatedBy = d.UpdatedBy,
+                    UpdatedDate = d.UpdatedDate
                 })
             };
         }
@@ -1078,10 +1265,18 @@ namespace School.Services.Communication
         {
             var entity = new SharedDocument
             {
-                FileName = dto.FileName, Description = dto.Description, FilePath = dto.FilePath,
-                FileSize = dto.FileSize, FileType = dto.FileType, TargetAudience = dto.TargetAudience,
-                ExpiryDate = dto.ExpiryDate, IsPublicLink = dto.IsPublicLink, DownloadCount = 0,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                FileName = dto.FileName,
+                Description = dto.Description,
+                FilePath = dto.FilePath,
+                FileSize = dto.FileSize,
+                FileType = dto.FileType,
+                TargetAudience = dto.TargetAudience,
+                ExpiryDate = dto.ExpiryDate,
+                IsPublicLink = dto.IsPublicLink,
+                DownloadCount = 0,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.SharedDocuments.Add(entity);
             await _context.SaveChangesAsync();
@@ -1129,11 +1324,18 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(t => t.CreatedDate).ToListAsync();
             return new APIResponse<IEnumerable<TemplateDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(t => new TemplateDto
                 {
-                    Id = t.Id, Name = t.Name, Type = t.Type, SubjectTemplate = t.SubjectTemplate,
-                    BodyTemplate = t.BodyTemplate, IsActive = t.IsActive, CreatedBy = t.CreatedBy, CreatedDate = t.CreatedDate ?? DateTime.UtcNow
+                    Id = t.Id,
+                    Name = t.Name,
+                    Type = t.Type,
+                    SubjectTemplate = t.SubjectTemplate,
+                    BodyTemplate = t.BodyTemplate,
+                    IsActive = t.IsActive,
+                    CreatedBy = t.CreatedBy,
+                    CreatedDate = t.CreatedDate ?? DateTime.UtcNow
                 })
             };
         }
@@ -1142,9 +1344,14 @@ namespace School.Services.Communication
         {
             var entity = new CommunicationTemplate
             {
-                Name = dto.Name, Type = dto.Type, SubjectTemplate = dto.SubjectTemplate,
-                BodyTemplate = dto.BodyTemplate, IsActive = dto.IsActive,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Name = dto.Name,
+                Type = dto.Type,
+                SubjectTemplate = dto.SubjectTemplate,
+                BodyTemplate = dto.BodyTemplate,
+                IsActive = dto.IsActive,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.CommunicationTemplates.Add(entity);
             await _context.SaveChangesAsync();
@@ -1165,7 +1372,9 @@ namespace School.Services.Communication
             await _context.SaveChangesAsync();
             return new APIResponse<TemplateDto>
             {
-                Success = true, StatusCode = HttpStatusCode.OK, Message = "Template updated",
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
+                Message = "Template updated",
                 Data = new TemplateDto { Id = entity.Id, Name = entity.Name, Type = entity.Type, SubjectTemplate = entity.SubjectTemplate, BodyTemplate = entity.BodyTemplate, IsActive = entity.IsActive, CreatedBy = entity.CreatedBy, CreatedDate = entity.CreatedDate ?? DateTime.UtcNow }
             };
         }
@@ -1208,8 +1417,12 @@ namespace School.Services.Communication
 
                 results.Add(new GroupChatRoomDto
                 {
-                    Id = r.Id, Name = r.Name, Type = r.Type, TargetReferenceId = r.TargetReferenceId,
-                    MemberCount = memberCount, LastMessageContent = lastMsg?.MessageContent ?? "No messages yet",
+                    Id = r.Id,
+                    Name = r.Name,
+                    Type = r.Type,
+                    TargetReferenceId = r.TargetReferenceId,
+                    MemberCount = memberCount,
+                    LastMessageContent = lastMsg?.MessageContent ?? "No messages yet",
                     LastMessageTime = lastMsg?.SentTime
                 });
             }
@@ -1221,8 +1434,12 @@ namespace School.Services.Communication
         {
             var room = new GroupChatRoom
             {
-                Name = dto.Name, Type = dto.Type, TargetReferenceId = dto.TargetReferenceId,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                Name = dto.Name,
+                Type = dto.Type,
+                TargetReferenceId = dto.TargetReferenceId,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.GroupChatRooms.Add(room);
             await _context.SaveChangesAsync();
@@ -1257,7 +1474,9 @@ namespace School.Services.Communication
 
             var member = new GroupChatMember
             {
-                RoomId = roomId, UserId = userId, JoinedAt = DateTime.UtcNow,
+                RoomId = roomId,
+                UserId = userId,
+                JoinedAt = DateTime.UtcNow,
                 SchoolRegistrationId = GetCurrentSchoolId()
             };
             _context.GroupChatMembers.Add(member);
@@ -1279,10 +1498,14 @@ namespace School.Services.Communication
 
             var result = list.Select(m => new GroupChatMessageDto
             {
-                Id = m.Id, RoomId = m.RoomId, SenderUserId = m.SenderUserId,
+                Id = m.Id,
+                RoomId = m.RoomId,
+                SenderUserId = m.SenderUserId,
                 SenderUserName = users.ContainsKey(m.SenderUserId) ? users[m.SenderUserId].Name : "User",
                 SenderRoleName = users.ContainsKey(m.SenderUserId) ? users[m.SenderUserId].Role : "Guest",
-                MessageContent = m.MessageContent, AttachmentPath = m.AttachmentPath, SentTime = m.SentTime
+                MessageContent = m.MessageContent,
+                AttachmentPath = m.AttachmentPath,
+                SentTime = m.SentTime
             });
 
             return new APIResponse<IEnumerable<GroupChatMessageDto>> { Success = true, StatusCode = HttpStatusCode.OK, Data = result };
@@ -1292,9 +1515,14 @@ namespace School.Services.Communication
         {
             var entity = new GroupChatMessage
             {
-                RoomId = dto.RoomId, SenderUserId = dto.SenderUserId, MessageContent = dto.MessageContent,
-                AttachmentPath = dto.AttachmentPath, SentTime = DateTime.UtcNow,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = userName, CreatedDate = DateTime.UtcNow
+                RoomId = dto.RoomId,
+                SenderUserId = dto.SenderUserId,
+                MessageContent = dto.MessageContent,
+                AttachmentPath = dto.AttachmentPath,
+                SentTime = DateTime.UtcNow,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = userName,
+                CreatedDate = DateTime.UtcNow
             };
             _context.GroupChatMessages.Add(entity);
             await _context.SaveChangesAsync();
@@ -1328,12 +1556,21 @@ namespace School.Services.Communication
             var list = await q.OrderByDescending(n => n.SentDate).ToListAsync();
             return new APIResponse<IEnumerable<CentralNotificationDto>>
             {
-                Success = true, StatusCode = HttpStatusCode.OK,
+                Success = true,
+                StatusCode = HttpStatusCode.OK,
                 Data = list.Select(n => new CentralNotificationDto
                 {
-                    Id = n.Id, RecipientUserId = n.RecipientUserId, Title = n.Title, Body = n.Body,
-                    Category = n.Category, Priority = n.Priority, ActionUrl = n.ActionUrl,
-                    IsRead = n.IsRead, IsStarred = n.IsStarred, IsArchived = n.IsArchived, SentDate = n.SentDate
+                    Id = n.Id,
+                    RecipientUserId = n.RecipientUserId,
+                    Title = n.Title,
+                    Body = n.Body,
+                    Category = n.Category,
+                    Priority = n.Priority,
+                    ActionUrl = n.ActionUrl,
+                    IsRead = n.IsRead,
+                    IsStarred = n.IsStarred,
+                    IsArchived = n.IsArchived,
+                    SentDate = n.SentDate
                 })
             };
         }
@@ -1378,10 +1615,19 @@ namespace School.Services.Communication
         {
             var notification = new CentralNotification
             {
-                RecipientUserId = recipientUserId, Title = title, Body = body,
-                Category = category, Priority = priority, ActionUrl = actionUrl,
-                IsRead = false, IsStarred = false, IsArchived = false, SentDate = DateTime.UtcNow,
-                SchoolRegistrationId = GetCurrentSchoolId(), CreatedBy = "system", CreatedDate = DateTime.UtcNow
+                RecipientUserId = recipientUserId,
+                Title = title,
+                Body = body,
+                Category = category,
+                Priority = priority,
+                ActionUrl = actionUrl,
+                IsRead = false,
+                IsStarred = false,
+                IsArchived = false,
+                SentDate = DateTime.UtcNow,
+                SchoolRegistrationId = GetCurrentSchoolId(),
+                CreatedBy = "system",
+                CreatedDate = DateTime.UtcNow
             };
             _context.CentralNotifications.Add(notification);
             await _context.SaveChangesAsync();

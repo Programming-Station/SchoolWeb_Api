@@ -1,11 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain;
 using School.Domain.Student;
-using School.Domain.School;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -28,7 +22,7 @@ namespace School.Infrastructure.Seeds
             {
                 var defaultState = await context.States.FirstOrDefaultAsync();
                 var defaultCity = await context.Cities.FirstOrDefaultAsync();
-                var defaultStatus = await context.Statuses.FirstOrDefaultAsync(s => s.Name == "Active") 
+                var defaultStatus = await context.Statuses.FirstOrDefaultAsync(s => s.Name == "Active")
                                     ?? await context.Statuses.FirstOrDefaultAsync();
 
                 if (defaultStatus == null) return;

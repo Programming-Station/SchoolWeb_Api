@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
@@ -6,7 +7,6 @@ using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Faculty;
-using System.Net;
 
 namespace School.Services
 {
@@ -25,7 +25,7 @@ namespace School.Services
         {
             var entity = _mapper.Map<Faculty>(model);
             entity = await _facultyRepository.AddFacultyAsync(entity);
-            
+
             if (entity != null && entity.Id == 0)
             {
                 return new APIResponse<FacultyDto>
@@ -84,7 +84,7 @@ namespace School.Services
         public async Task<APIResponse<IEnumerable<FacultyDto>>> GetAllFacultiesAsync()
         {
             var result = await _facultyRepository.GetAllFacultiesAsync();
-            
+
             if (result != null && result.Any())
             {
                 return new APIResponse<IEnumerable<FacultyDto>>
@@ -109,7 +109,7 @@ namespace School.Services
         {
             var entity = _mapper.Map<Faculty>(model);
             var result = await _facultyRepository.UpdateFacultyAsync(entity);
-            
+
             if (result > 0)
             {
                 return new APIResponse

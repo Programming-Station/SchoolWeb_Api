@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using School.Infrastructure.Interfaces;
 using School_DTOs.Transport;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers.Transport
 {

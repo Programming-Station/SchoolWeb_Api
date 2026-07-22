@@ -1,9 +1,9 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Email;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System.Linq.Expressions;
 
 namespace School.Infrastructure.Repositories.Email
 {

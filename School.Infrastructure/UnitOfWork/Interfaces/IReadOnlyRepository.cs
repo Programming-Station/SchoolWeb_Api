@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace School.Infrastructure.UnitOfWork.Interfaces

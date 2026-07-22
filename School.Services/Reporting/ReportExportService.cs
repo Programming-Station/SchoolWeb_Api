@@ -1,9 +1,8 @@
+using System.Text;
+using System.Text.Json;
 using ClosedXML.Excel;
 using Microsoft.Extensions.Logging;
 using School.Services.Interfaces;
-using System.Text;
-using System.Xml.Serialization;
-using System.Text.Json;
 
 namespace School.Services.Reporting
 {

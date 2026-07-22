@@ -1,6 +1,4 @@
 using School_DTOs.Fee;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School.Services.Interfaces
 {

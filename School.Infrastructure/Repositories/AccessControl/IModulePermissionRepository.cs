@@ -11,7 +11,7 @@ namespace School.Infrastructure.Repositories.AccessControl
         Task<int> UpdateModulePermissionAsync(ModulePermission entity);
         Task<int> DeleteModulePermissionAsync(int id);
         Task<int> ToggleModulePermissionStatusAsync(int id);
-        
+
         Task<IEnumerable<Module>> GetModulesByUserIdAsync(string userId);
         Task<int> AssignModulesToUserAsync(string userId, List<int> moduleIds, string? createdBy = null);
         Task<int> RemoveModulePermissionAsync(int moduleId, string userId);

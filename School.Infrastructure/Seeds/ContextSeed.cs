@@ -1,7 +1,7 @@
-using School.Domain;
-using School.Domain.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using School.Domain;
+using School.Domain.Auth;
 
 namespace School.Infrastructure.Seeds
 {

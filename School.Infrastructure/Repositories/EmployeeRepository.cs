@@ -2,10 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using School.Domain.Hr;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 namespace School.Infrastructure.Repositories
 {
@@ -50,9 +46,9 @@ namespace School.Infrastructure.Repositories
                 query = query.Where(e => e.Id != excludeId.Value);
             }
 
-            return await query.AnyAsync(e => 
-                e.Email == email || 
-                e.MobileNumber == mobile || 
+            return await query.AnyAsync(e =>
+                e.Email == email ||
+                e.MobileNumber == mobile ||
                 (e.EmployeeDetail != null && !string.IsNullOrEmpty(aadhaar) && e.EmployeeDetail.AadhaarNumber == aadhaar) ||
                 (e.EmployeeDetail != null && !string.IsNullOrEmpty(pan) && e.EmployeeDetail.PANNumber == pan)
             );

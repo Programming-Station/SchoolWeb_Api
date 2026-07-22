@@ -1,10 +1,7 @@
-using School.Models.City;
-using School.Models.State;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using School.Models.City;
+using School.Models.State;
 
 namespace School.Models.AffiliationCollege
 {

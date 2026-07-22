@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -52,7 +52,8 @@ namespace School.Domain.Reporting
     /// Replaces the thin Analytics.ReportTemplate with a full metadata model.
     /// </summary>
     [Table("ReportTemplates", Schema = "Reporting")]
-    public class ReportTemplate : AuditEntity<int>, ITenantEntity{
+    public class ReportTemplate : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

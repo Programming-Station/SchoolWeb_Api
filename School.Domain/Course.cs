@@ -1,7 +1,7 @@
-using School.Utilities.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
+using School.Utilities.Enums;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain
@@ -11,10 +11,10 @@ namespace School.Domain
         [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(200)] 
+        [Required, MaxLength(200)]
         public string Name { get; set; } = null!;
 
-        [Required, MaxLength(50)] 
+        [Required, MaxLength(50)]
         public string CourseCode { get; set; } = null!;
 
         [Required, MaxLength(20)]

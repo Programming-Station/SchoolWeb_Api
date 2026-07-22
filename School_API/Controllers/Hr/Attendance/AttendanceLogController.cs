@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces.Hr.Attendance;
 using School_API.Common.Interface;
-using School_DTOs.Common;
 using School_DTOs.Hr.Attendance;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers.Hr.Attendance
 {

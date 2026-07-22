@@ -1,10 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using School.Domain.School;
 using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories.School
 {

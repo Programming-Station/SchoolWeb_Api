@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School.Services.Fee;
 
 namespace School.Services.Interfaces

@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using School.Models.AffiliationCollege;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using Microsoft.AspNetCore.Mvc;
 
 namespace School_API.Controllers
 {

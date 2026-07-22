@@ -1,7 +1,4 @@
-using System;
-using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using School.Services.Interfaces;
 
 namespace School.Services
@@ -25,7 +22,7 @@ namespace School.Services
         public void QueueEmail(EmailQueueItem emailItem)
         {
             if (emailItem == null) throw new ArgumentNullException(nameof(emailItem));
-            
+
             // Try to write. If full, we write synchronously/wait or discard. Since it's BoundedChannelFullMode.Wait,
             // we use TryWrite. If it fails, we write async.
             if (!_queue.Writer.TryWrite(emailItem))

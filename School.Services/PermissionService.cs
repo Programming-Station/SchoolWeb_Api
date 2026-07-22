@@ -1,10 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using School.Infrastructure;
 using School.Infrastructure.Interfaces;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace School.Services
 {
@@ -33,8 +31,8 @@ namespace School.Services
 
             var hasPermission = await _context.ModulePermissions
                 .Include(mp => mp.Module)
-                .AnyAsync(mp => mp.IsActive && 
-                                mp.Module.Name.ToLower() == moduleName.ToLower() && 
+                .AnyAsync(mp => mp.IsActive &&
+                                mp.Module.Name.ToLower() == moduleName.ToLower() &&
                                 (mp.UserId == userId || (roleClaim != null && mp.Role.Name == roleClaim)));
 
             return hasPermission;

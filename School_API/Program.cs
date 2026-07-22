@@ -1,19 +1,18 @@
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using School.Domain.Auth;
 using School.Infrastructure;
 using School.Models.Configuration;
 using School.Services.Mapping;
 using School_API;
+using School_API.Filters;
 using School_API.Middleware;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.RateLimiting;
-using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +54,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
     options.Filters.Add<School_API.Filters.ApiResponseFilter>();
+    options.Filters.Add<AuditActionFilter>(); // Global audit logging
     options.MaxModelBindingCollectionSize = 1000; // Limit collection size
 });
 builder.Services.Configure<JsonOptions>(options =>
@@ -68,7 +68,9 @@ builder.Services
     .AddServices(builder.Configuration)
    .AddSessionWithOptions()
    .AddAuthentication(builder.Configuration)
-   .AddCorsPolicy(builder.Configuration);
+   .AddCorsPolicy(builder.Configuration)
+   .AddHttpContextAccessor()
+   .AddScoped<AuditActionFilter>();
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -165,7 +167,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
- 
+
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
 {
@@ -233,7 +235,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
         o.DefaultModelsExpandDepth(-1); // Hide schemas by default
     });
 }
- 
+
 
 app.MapHub<School_API.Hubs.CommunicationHub>("/hubs/communication");
 app.MapControllers();

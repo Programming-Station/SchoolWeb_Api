@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Dashboard
 {
     public class DashboardDto
@@ -181,7 +178,7 @@ namespace School_DTOs.Dashboard
         public List<ChartDataPoint<string, decimal>> MonthlyFeeCollection { get; set; } = new List<ChartDataPoint<string, decimal>>();
         public List<ChartDataPoint<string, int>> EmployeeGrowth { get; set; } = new List<ChartDataPoint<string, int>>();
         public List<ChartDataPoint<string, int>> StudentGrowth { get; set; } = new List<ChartDataPoint<string, int>>();
-        
+
         // Owner specific trends
         public List<ChartDataPoint<string, decimal>> RevenueTrend { get; set; } = new List<ChartDataPoint<string, decimal>>();
         public List<ChartDataPoint<string, decimal>> FeeCollectionTrend { get; set; } = new List<ChartDataPoint<string, decimal>>();

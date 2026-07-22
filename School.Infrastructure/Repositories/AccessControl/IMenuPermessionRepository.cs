@@ -13,7 +13,7 @@ namespace School.Infrastructure.Repositories.AccessControl
         Task<int> UpdateMenuPermissionAsync(MenuPermession entity);
         Task<int> DeleteMenuPermissionAsync(int id);
         Task<int> ToggleMenuPermissionStatusAsync(int id);
-        
+
         Task<MenuPermissionsDto> GetMenuPermissionAsync(string? roleId);
         Task<int> GiveMenuPermissionAsync(MenuPermissionModel model);
     }

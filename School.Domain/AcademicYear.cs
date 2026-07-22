@@ -10,7 +10,7 @@ namespace School.Domain
         [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(50)] 
+        [Required, MaxLength(50)]
         public string YearName { get; set; } = null!; // e.g., "2024-2025"
 
         [Required]

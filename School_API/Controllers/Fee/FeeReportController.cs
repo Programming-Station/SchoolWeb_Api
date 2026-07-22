@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;

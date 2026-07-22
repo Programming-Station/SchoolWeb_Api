@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
-using System;
 using System.Data;
-using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace School.Utilities
 {

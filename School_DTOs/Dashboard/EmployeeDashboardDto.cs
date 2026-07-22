@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Dashboard
 {
     public class EmployeeDashboardDto
@@ -36,18 +33,18 @@ namespace School_DTOs.Dashboard
         public int TotalAssignedClassesCount { get; set; }
         public string TodayAttendanceStatus { get; set; } = "Not Checked In";
         public double MonthlyAttendanceRate { get; set; }
-        
+
         public int PendingLeavesCount { get; set; }
         public int ApprovedLeavesCount { get; set; }
         public int RejectedLeavesCount { get; set; }
-        
+
         public int AssignmentsPendingCount { get; set; }
         public int AssignmentsCheckedCount { get; set; }
-        
+
         public int UpcomingExamsCount { get; set; }
         public string SalaryStatus { get; set; } = "Paid";
         public int UnreadNotificationsCount { get; set; }
-        
+
         // Clock In / Check-in properties
         public string ClockInTime { get; set; } = string.Empty;
         public string ClockOutTime { get; set; } = string.Empty;

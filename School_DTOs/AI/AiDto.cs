@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.AI
 {
     public class AiPredictionDto : BaseDto

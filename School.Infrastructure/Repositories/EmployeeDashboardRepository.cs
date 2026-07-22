@@ -1,16 +1,8 @@
-using School.Infrastructure;
+using System.Net;
+using Microsoft.EntityFrameworkCore;
 using School.Infrastructure.Repositories.IRepositories;
 using School_DTOs;
 using School_DTOs.Dashboard;
-using School.Domain.Hr;
-using School.Domain.Academic;
-using School.Domain.School;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories
 {
@@ -70,7 +62,7 @@ namespace School.Infrastructure.Repositories
 
                 // ─── Stats & Counters ──────────────────────────────────────────────
                 var stats = new EmployeeStatsDto();
-                
+
                 // Leaves (Database bound)
                 stats.PendingLeavesCount = await _context.LeaveRequests
                     .CountAsync(lr => !lr.IsDeleted && lr.EmployeeId == employee.Id && lr.Status.ToLower() == "pending");
@@ -78,7 +70,7 @@ namespace School.Infrastructure.Repositories
                     .CountAsync(lr => !lr.IsDeleted && lr.EmployeeId == employee.Id && lr.Status.ToLower() == "approved");
                 stats.RejectedLeavesCount = await _context.LeaveRequests
                     .CountAsync(lr => !lr.IsDeleted && lr.EmployeeId == employee.Id && lr.Status.ToLower() == "rejected");
-                
+
                 stats.LeaveBalance = 18.0 - (stats.ApprovedLeavesCount + stats.PendingLeavesCount);
 
                 // Classes Count (Query database or fall back)
@@ -101,7 +93,7 @@ namespace School.Infrastructure.Repositories
                 var employeeAttendances = await _context.Attendances
                     .Where(a => !a.IsDeleted && a.EmployeeId == employee.Id && a.AttendanceDate.Month == currentMonth && a.AttendanceDate.Year == currentYear)
                     .ToListAsync();
-                
+
                 int totalWorkDays = employeeAttendances.Count;
                 int presentDays = employeeAttendances.Count(a => a.Status.ToLower() == "present");
                 stats.MonthlyAttendanceRate = totalWorkDays > 0 ? Math.Round(((double)presentDays / totalWorkDays) * 100, 2) : 96.4;
@@ -187,7 +179,7 @@ namespace School.Infrastructure.Repositories
                 {
                     var logDate = DateTime.UtcNow.AddDays(-i);
                     if (logDate.DayOfWeek == DayOfWeek.Saturday || logDate.DayOfWeek == DayOfWeek.Sunday) continue;
-                    
+
                     dashboard.AttendanceLogs.Add(new EmployeeAttendanceLogDto
                     {
                         Date = logDate.ToString("yyyy-MM-dd"),

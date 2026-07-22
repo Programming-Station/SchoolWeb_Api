@@ -1,12 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static School.Domain.BaseEntity;
-using School.Domain.School;
 using School.Domain.Auth;
 using School.Domain.Hr.Attendance;
 using School.Domain.Hr.LeaveManagement;
-using School.Domain.Hr.Timesheet;
-using School.Domain.Auth;
+using School.Domain.School;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain.Hr
 {
@@ -93,7 +91,7 @@ namespace School.Domain.Hr
         public int SchoolRegistrationId { get; set; }
         [ForeignKey(nameof(SchoolRegistrationId))]
         public virtual SchoolRegistration SchoolRegistration { get; set; } = null!;
-        
+
         // Navigation Properties for details
         public virtual EmployeeDetail? EmployeeDetail { get; set; }
         public virtual ICollection<EmployeeDocument> Documents { get; set; } = new List<EmployeeDocument>();
@@ -106,7 +104,7 @@ namespace School.Domain.Hr
         // Leave Management Navigation
         [InverseProperty(nameof(LeaveRequest.Employee))]
         public virtual ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
-        
+
         [InverseProperty(nameof(LeaveRequest.ApprovedBy))]
         public virtual ICollection<LeaveRequest> ApprovedLeaveRequests { get; set; } = new List<LeaveRequest>();
 

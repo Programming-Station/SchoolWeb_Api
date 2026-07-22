@@ -2,12 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
 using School.Domain.School;
-using School.Utilities.Constants;
 using School.Utilities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -305,10 +300,10 @@ namespace School.Infrastructure.Seeds
                     await context.SaveChangesAsync();
 
                     // Assign Owner role
-                    var ownerRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
+                    var ownerRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "OWNER");
                     if (ownerRole != null)
                     {
-                        context.UserRoles.Add(new IdentityUserRole<string>
+                        context.Set<IdentityUserRole<string>>().Add(new IdentityUserRole<string>
                         {
                             UserId = ownerUser.Id,
                             RoleId = ownerRole.Id

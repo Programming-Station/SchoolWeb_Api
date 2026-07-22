@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
@@ -47,9 +43,9 @@ namespace School.Infrastructure.Repositories
                 .Include(x => x.Batch)
                 .Include(x => x.FeeStructureItems)
                     .ThenInclude(i => i.FeeType)
-                .FirstOrDefaultAsync(x => x.CampusId == campusId && 
-                                           x.ProgramId == programId && 
-                                           x.BatchId == batchId && 
+                .FirstOrDefaultAsync(x => x.CampusId == campusId &&
+                                           x.ProgramId == programId &&
+                                           x.BatchId == batchId &&
                                            x.IsActive && !x.IsDeleted);
         }
 
@@ -94,7 +90,7 @@ namespace School.Infrastructure.Repositories
             var items = await _context.FeeStructureItems
                 .Where(x => x.FeeStructureId == feeStructureId)
                 .ToListAsync();
-            
+
             if (items.Any())
             {
                 _context.FeeStructureItems.RemoveRange(items);

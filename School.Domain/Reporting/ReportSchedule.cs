@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -9,8 +9,9 @@ namespace School.Domain.Reporting
     /// Database-driven report schedule.
     /// Each record defines a cron-based schedule that auto-generates and emails a report.
     /// </summary>
-    [Table("ReportSchedules" , Schema = "Reporting")]
-    public class ReportSchedule : AuditEntity<int>, ITenantEntity{
+    [Table("ReportSchedules", Schema = "Reporting")]
+    public class ReportSchedule : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

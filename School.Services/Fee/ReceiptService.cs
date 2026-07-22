@@ -3,13 +3,9 @@ using QRCoder;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using School.Domain.FeeManagnment;
 using School.Infrastructure;
 using School.Services.Interfaces;
 using School.Services.School.ISchoolServices;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace School.Services.Fee
 {

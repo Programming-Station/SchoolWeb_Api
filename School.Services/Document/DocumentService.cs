@@ -1,18 +1,14 @@
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using School.Services.Interfaces;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using System;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text.Json;
-using System.Threading.Tasks;
+using SixLabors.ImageSharp.Processing;
 
 namespace School.Services.DocumentManagement
 {
@@ -40,8 +36,8 @@ namespace School.Services.DocumentManagement
         private const int DefaultQuality = 80;
 
         public DocumentService(
-            IWebHostEnvironment environment, 
-            ILogger<DocumentService> logger, 
+            IWebHostEnvironment environment,
+            ILogger<DocumentService> logger,
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor)
         {
@@ -92,12 +88,12 @@ namespace School.Services.DocumentManagement
                     }
                 }
 
-                if (httpContext.Request.Headers.TryGetValue("X-Branch-Id", out var branchHeader) && 
+                if (httpContext.Request.Headers.TryGetValue("X-Branch-Id", out var branchHeader) &&
                     int.TryParse(branchHeader.ToString(), out int bId))
                 {
                     branchId = bId;
                 }
-                else if (httpContext.Request.Query.TryGetValue("branchId", out var branchQuery) && 
+                else if (httpContext.Request.Query.TryGetValue("branchId", out var branchQuery) &&
                          int.TryParse(branchQuery.ToString(), out int bIdQuery))
                 {
                     branchId = bIdQuery;
@@ -150,7 +146,7 @@ namespace School.Services.DocumentManagement
                 if (isImage && (compress || targetWidth.HasValue || targetHeight.HasValue))
                 {
                     using var image = await Image.LoadAsync(fileStream);
-                    
+
                     if (targetWidth.HasValue || targetHeight.HasValue)
                     {
                         int w = targetWidth ?? image.Width;
@@ -193,7 +189,7 @@ namespace School.Services.DocumentManagement
                 await File.WriteAllTextAsync(metadataPath, json);
 
                 _logger.LogInformation($"File and metadata uploaded successfully: {filePath}");
-                
+
                 // Return web relative path starting with /uploads/
                 var relativePath = Path.GetRelativePath(_storagePath, filePath).Replace('\\', '/');
                 return $"/uploads/{relativePath}";
@@ -258,7 +254,7 @@ namespace School.Services.DocumentManagement
         public async Task<string> ReplaceAsync(string existingFilePath, IFormFile newFile, bool compress = false)
         {
             await DeleteAsync(existingFilePath);
-            
+
             string folderName = "Documents";
             if (!string.IsNullOrEmpty(existingFilePath))
             {
@@ -293,7 +289,7 @@ namespace School.Services.DocumentManagement
 
                     var fileName = Path.GetFileName(fullPath);
                     var trashPath = Path.Combine(trashDir, fileName);
-                    
+
                     if (File.Exists(trashPath))
                     {
                         File.Delete(trashPath);
@@ -396,8 +392,8 @@ namespace School.Services.DocumentManagement
                 throw new ArgumentException($"File size exceeds maximum allowed limit of {MaxFileSizeBytes / 1024 / 1024}MB");
             }
 
-            var allowedExtensions = new[] 
-            { 
+            var allowedExtensions = new[]
+            {
                 ".jpg", ".jpeg", ".png", ".gif", ".webp",
                 ".pdf", ".doc", ".docx", ".xls", ".xlsx",
                 ".ppt", ".pptx", ".zip", ".rar", ".txt",
@@ -445,7 +441,7 @@ namespace School.Services.DocumentManagement
                     var newMetadataPath = $"{newPath}.metadata.json";
                     File.Move(metadataPath, newMetadataPath);
                 }
-                
+
                 var relativePath = Path.GetRelativePath(_storagePath, newPath).Replace('\\', '/');
                 return $"/uploads/{relativePath}";
             }

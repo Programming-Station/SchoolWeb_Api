@@ -1,14 +1,14 @@
+using System.Net;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using School.Domain;
+using School.Infrastructure;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.AffiliationCollege;
 using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.AffiliationCollege;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using School.Infrastructure;
 
 namespace School.Services
 {

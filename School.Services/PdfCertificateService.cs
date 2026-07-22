@@ -1,17 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using School.Domain.FeeManagnment;
-using School.Infrastructure;
+using QRCoder;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using School.Infrastructure;
 using School.Services.Interfaces;
-using School_DTOs.Student;
-using QRCoder;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using School.Services.School.ISchoolServices;
+using School_DTOs.Student;
 
 namespace School.Services
 {
@@ -202,7 +197,7 @@ namespace School.Services
         {
             return container
                 .PaddingVertical(8)
-                .PaddingHorizontal(5); 
+                .PaddingHorizontal(5);
         }
 
         public async Task<byte[]> GenerateFeeReceiptPdfAsync(int paymentId, string baseUrl)

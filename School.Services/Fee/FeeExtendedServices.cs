@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using School.Domain.FeeManagnment;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Services.Interfaces;
@@ -120,11 +116,16 @@ namespace School.Services.Fee
         {
             var f = new FeeFine
             {
-                FeeInstallmentId = dto.FeeInstallmentId, StudentId = dto.StudentId,
-                FineAmount = dto.FineAmount, FineType = dto.FineType,
-                DaysLate = dto.DaysLate, Reason = dto.Reason,
-                Status = "Pending", AppliedBy = appliedBy,
-                SchoolRegistrationId = schoolId, CreatedBy = appliedBy
+                FeeInstallmentId = dto.FeeInstallmentId,
+                StudentId = dto.StudentId,
+                FineAmount = dto.FineAmount,
+                FineType = dto.FineType,
+                DaysLate = dto.DaysLate,
+                Reason = dto.Reason,
+                Status = "Pending",
+                AppliedBy = appliedBy,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = appliedBy
             };
             await _repo.AddAsync(f);
             dto.Id = f.Id;
@@ -148,11 +149,17 @@ namespace School.Services.Fee
 
         private static FeeFineDto Map(FeeFine f) => new()
         {
-            Id = f.Id, FeeInstallmentId = f.FeeInstallmentId,
+            Id = f.Id,
+            FeeInstallmentId = f.FeeInstallmentId,
             InstallmentName = f.FeeInstallment?.InstallmentName,
-            StudentId = f.StudentId, StudentName = f.Student?.Name ?? "",
-            FineAmount = f.FineAmount, FineType = f.FineType,
-            DaysLate = f.DaysLate, Reason = f.Reason, Status = f.Status, AppliedBy = f.AppliedBy
+            StudentId = f.StudentId,
+            StudentName = f.Student?.Name ?? "",
+            FineAmount = f.FineAmount,
+            FineType = f.FineType,
+            DaysLate = f.DaysLate,
+            Reason = f.Reason,
+            Status = f.Status,
+            AppliedBy = f.AppliedBy
         };
     }
 
@@ -165,11 +172,18 @@ namespace School.Services.Fee
         {
             var s = new StudentScholarship
             {
-                StudentId = dto.StudentId, ScholarshipName = dto.ScholarshipName,
-                Description = dto.Description, DiscountType = dto.DiscountType,
-                DiscountValue = dto.DiscountValue, ValidFrom = dto.ValidFrom, ValidTo = dto.ValidTo,
-                Status = "Active", ApprovedBy = dto.ApprovedBy, Remarks = dto.Remarks,
-                SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                StudentId = dto.StudentId,
+                ScholarshipName = dto.ScholarshipName,
+                Description = dto.Description,
+                DiscountType = dto.DiscountType,
+                DiscountValue = dto.DiscountValue,
+                ValidFrom = dto.ValidFrom,
+                ValidTo = dto.ValidTo,
+                Status = "Active",
+                ApprovedBy = dto.ApprovedBy,
+                Remarks = dto.Remarks,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddAsync(s);
             dto.Id = s.Id;
@@ -204,11 +218,18 @@ namespace School.Services.Fee
 
         private static ScholarshipDto Map(StudentScholarship s) => new()
         {
-            Id = s.Id, StudentId = s.StudentId, StudentName = s.Student?.Name ?? "",
-            ScholarshipName = s.ScholarshipName, Description = s.Description,
-            DiscountType = s.DiscountType, DiscountValue = s.DiscountValue,
-            ValidFrom = s.ValidFrom, ValidTo = s.ValidTo, Status = s.Status,
-            ApprovedBy = s.ApprovedBy, Remarks = s.Remarks
+            Id = s.Id,
+            StudentId = s.StudentId,
+            StudentName = s.Student?.Name ?? "",
+            ScholarshipName = s.ScholarshipName,
+            Description = s.Description,
+            DiscountType = s.DiscountType,
+            DiscountValue = s.DiscountValue,
+            ValidFrom = s.ValidFrom,
+            ValidTo = s.ValidTo,
+            Status = s.Status,
+            ApprovedBy = s.ApprovedBy,
+            Remarks = s.Remarks
         };
     }
 
@@ -227,11 +248,16 @@ namespace School.Services.Fee
         {
             var r = new FeeRefund
             {
-                FeePaymentId = dto.FeePaymentId, StudentId = dto.StudentId,
-                RefundAmount = dto.RefundAmount, Reason = dto.Reason,
-                RefundMode = dto.RefundMode, RefundDate = dto.RefundDate == default ? DateTime.Today : dto.RefundDate,
-                Status = "Pending", Remarks = dto.Remarks,
-                SchoolRegistrationId = schoolId, CreatedBy = requestedBy
+                FeePaymentId = dto.FeePaymentId,
+                StudentId = dto.StudentId,
+                RefundAmount = dto.RefundAmount,
+                Reason = dto.Reason,
+                RefundMode = dto.RefundMode,
+                RefundDate = dto.RefundDate == default ? DateTime.Today : dto.RefundDate,
+                Status = "Pending",
+                Remarks = dto.Remarks,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = requestedBy
             };
             await _repo.AddAsync(r);
             dto.Id = r.Id;
@@ -289,11 +315,19 @@ namespace School.Services.Fee
 
         private static FeeRefundDto Map(FeeRefund r) => new()
         {
-            Id = r.Id, FeePaymentId = r.FeePaymentId, ReceiptNo = r.FeePayment?.ReceiptNo,
-            StudentId = r.StudentId, StudentName = r.Student?.Name ?? "",
-            RefundAmount = r.RefundAmount, Reason = r.Reason, RefundMode = r.RefundMode,
-            RefundRef = r.RefundRef, RefundDate = r.RefundDate, Status = r.Status,
-            ApprovedBy = r.ApprovedBy, Remarks = r.Remarks
+            Id = r.Id,
+            FeePaymentId = r.FeePaymentId,
+            ReceiptNo = r.FeePayment?.ReceiptNo,
+            StudentId = r.StudentId,
+            StudentName = r.Student?.Name ?? "",
+            RefundAmount = r.RefundAmount,
+            Reason = r.Reason,
+            RefundMode = r.RefundMode,
+            RefundRef = r.RefundRef,
+            RefundDate = r.RefundDate,
+            Status = r.Status,
+            ApprovedBy = r.ApprovedBy,
+            Remarks = r.Remarks
         };
     }
 }

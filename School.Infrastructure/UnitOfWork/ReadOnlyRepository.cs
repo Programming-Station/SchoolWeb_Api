@@ -1,7 +1,6 @@
-using School.Infrastructure;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.UnitOfWork
 {

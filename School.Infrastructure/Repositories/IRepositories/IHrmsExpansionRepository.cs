@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using School.Domain.Hr.Recruitment;
-using School.Domain.Hr.Performance;
-using School.Domain.Hr.Training;
-using School.Domain.Hr.Assets;
 using School.Domain.Hr;
+using School.Domain.Hr.Assets;
+using School.Domain.Hr.Performance;
+using School.Domain.Hr.Recruitment;
+using School.Domain.Hr.Training;
 using School.Infrastructure.UnitOfWork.Interfaces;
 
 namespace School.Infrastructure.Repositories.IRepositories

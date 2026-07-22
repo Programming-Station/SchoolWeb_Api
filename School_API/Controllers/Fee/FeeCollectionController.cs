@@ -15,7 +15,7 @@ namespace School_API.Controllers.Fee
             : base(currentUser)
         {
             _service = service;
-            _tenant  = tenant;
+            _tenant = tenant;
             _pdfService = pdfService;
         }
 

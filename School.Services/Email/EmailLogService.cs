@@ -1,10 +1,10 @@
+using System.Net;
 using AutoMapper;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Services.Interfaces.Email;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Email;
-using System.Net;
 
 namespace School.Services.Email
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -19,8 +19,9 @@ namespace School.Domain.Reporting
     /// Audit log of every report generation event in the system.
     /// Supports history browsing, re-download, and usage analytics.
     /// </summary>
-    [Table("ReportHistories" , Schema = "Reporting")]
-    public class ReportHistory : AuditEntity<int>, ITenantEntity{
+    [Table("ReportHistories", Schema = "Reporting")]
+    public class ReportHistory : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

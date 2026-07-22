@@ -1,12 +1,11 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Security.Claims;
-using School.Models.Account;
-using School_DTOs;
-using School.Infrastructure.JWTAuthenticationManager.Interfaces;
-using School.Services.Interfaces;
 using Microsoft.AspNetCore.RateLimiting;
+using School.Infrastructure.JWTAuthenticationManager.Interfaces;
+using School.Models.Account;
+using School.Services.Interfaces;
+using School_DTOs;
 
 namespace School_API.Controllers
 {
@@ -206,7 +205,7 @@ namespace School_API.Controllers
         public async Task<IActionResult> GetLoginHistory([FromQuery] LoginHistoryFilter filter)
         {
             var result = await _accountService.GetLoginHistoryAsync(filter);
-            
+
             if (result.Success)
             {
                 return Ok(result);
@@ -224,7 +223,7 @@ namespace School_API.Controllers
         public async Task<IActionResult> GetUsersByRole(string roleName = "Admin")
         {
             var result = await _accountService.GetUsersByRoleAsync(roleName);
-            
+
             if (result.Success)
             {
                 return Ok(result);

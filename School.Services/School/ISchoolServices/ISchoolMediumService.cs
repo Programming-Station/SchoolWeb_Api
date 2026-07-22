@@ -1,6 +1,5 @@
 using School_DTOs;
 using School_DTOs.School;
-using System.Threading.Tasks;
 
 namespace School.Services.School.ISchoolServices
 {

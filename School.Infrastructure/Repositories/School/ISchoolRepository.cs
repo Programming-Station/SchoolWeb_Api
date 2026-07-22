@@ -1,7 +1,4 @@
 using School.Domain.School;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace School.Infrastructure.Repositories.School
 {

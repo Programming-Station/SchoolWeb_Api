@@ -1,7 +1,5 @@
-using System;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using School.Domain.Email;
 
@@ -26,11 +24,11 @@ namespace School.Infrastructure.Email
             using (var message = new MailMessage())
             {
                 message.To.Add(new MailAddress(recipientEmail));
-                
-                string fromDisplayName = !string.IsNullOrWhiteSpace(setting.DisplayName) 
-                     ? setting.DisplayName 
+
+                string fromDisplayName = !string.IsNullOrWhiteSpace(setting.DisplayName)
+                     ? setting.DisplayName
                      : setting.FromEmail;
-                
+
                 message.From = new MailAddress(setting.FromEmail, fromDisplayName);
                 message.Subject = subject;
                 message.Body = bodyHtml;
@@ -44,7 +42,7 @@ namespace School.Infrastructure.Email
                 using (var client = new SmtpClient(setting.HostName, setting.Port))
                 {
                     client.EnableSsl = setting.EnableSSL;
-                    
+
                     if (setting.UseDefaultCredential)
                     {
                         client.UseDefaultCredentials = true;
@@ -56,7 +54,7 @@ namespace School.Infrastructure.Email
                     }
 
                     // Security check: Log host and port, but never log credentials or password.
-                    _logger.LogInformation("Sending SMTP email from {FromEmail} to {Recipient} via {Host}:{Port} (SSL={SSL})", 
+                    _logger.LogInformation("Sending SMTP email from {FromEmail} to {Recipient} via {Host}:{Port} (SSL={SSL})",
                         setting.FromEmail, recipientEmail, setting.HostName, setting.Port, setting.EnableSSL);
 
                     await client.SendMailAsync(message);

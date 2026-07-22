@@ -1,5 +1,3 @@
-using System.Drawing;
-using System.Drawing.Imaging;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using QRCoder;
@@ -7,7 +5,6 @@ using School.Infrastructure;
 using School.Services.Interfaces;
 using ZXing;
 using ZXing.Common;
-using ZXing.Rendering;
 
 namespace School.Services.Reporting
 {

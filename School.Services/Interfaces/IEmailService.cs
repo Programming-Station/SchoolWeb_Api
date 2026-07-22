@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace School.Services.Interfaces
 {
     public interface IEmailService
@@ -12,10 +9,10 @@ namespace School.Services.Interfaces
         Task<bool> SendOtpAsync(string recipientEmail, string userName, string otp);
         Task<bool> SendVerificationAsync(string recipientEmail, string userName, string verificationLink);
         Task<bool> SendGenericTemplateAsync(string recipientEmail, string templateName, Dictionary<string, string>? placeholders);
-        
+
         // Background Queueing
         void QueueTemplateEmail(string recipientEmail, string templateName, Dictionary<string, string>? placeholders, byte[]? attachmentBytes = null, string? attachmentName = null);
-        
+
         // Cache Invalidation
         void InvalidateTemplateCache(string templateName);
         void InvalidateSmtpCache();

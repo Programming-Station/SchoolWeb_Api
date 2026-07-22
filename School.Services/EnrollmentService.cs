@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using School.Domain;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
 using School.Domain.Student;
 using School.Infrastructure;
@@ -79,8 +74,8 @@ namespace School.Services
                 string stdPrefix = $"STU-{yearStr}-";
 
                 var config = await _context.AdmissionFormConfigs
-                    .FirstOrDefaultAsync(c => c.CampusId == application.CampusId && 
-                                              c.EducationLevelId == application.EducationLevelId && 
+                    .FirstOrDefaultAsync(c => c.CampusId == application.CampusId &&
+                                              c.EducationLevelId == application.EducationLevelId &&
                                               (c.ProgramId == application.ProgramId || c.ProgramId == null));
 
                 if (config != null && !string.IsNullOrEmpty(config.AutoGenRulesJson))

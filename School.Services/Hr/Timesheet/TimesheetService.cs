@@ -1,15 +1,9 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.Timesheet;
-using School_DTOs.Common;
-using School_DTOs.Hr.Timesheet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using School_DTOs;
+using School_DTOs.Hr.Timesheet;
 
 namespace School.Services.Hr.Timesheet
 {
@@ -30,7 +24,11 @@ namespace School.Services.Hr.Timesheet
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, ApprovedById = x.ApprovedById, TotalHours = x.TotalHours
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                Status = x.Status,
+                ApprovedById = x.ApprovedById,
+                TotalHours = x.TotalHours
             }).ToListAsync();
 
             return new APIResponse<List<TimesheetDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -42,7 +40,11 @@ namespace School.Services.Hr.Timesheet
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                StartDate = x.StartDate, EndDate = x.EndDate, Status = x.Status, ApprovedById = x.ApprovedById, TotalHours = x.TotalHours
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                Status = x.Status,
+                ApprovedById = x.ApprovedById,
+                TotalHours = x.TotalHours
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<TimesheetDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -54,7 +56,11 @@ namespace School.Services.Hr.Timesheet
             var entity = new global::School.Domain.Hr.Timesheet.Timesheet
             {
                 EmployeeId = dto.EmployeeId,
-                StartDate = dto.StartDate, EndDate = dto.EndDate, Status = dto.Status, ApprovedById = dto.ApprovedById, TotalHours = dto.TotalHours,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                Status = dto.Status,
+                ApprovedById = dto.ApprovedById,
+                TotalHours = dto.TotalHours,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

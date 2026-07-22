@@ -1,8 +1,6 @@
-using System;
-
 namespace School_DTOs.Fee
 {
-    #nullable disable
+#nullable disable
 
     public class FinanceCollectionSummaryDto
     {

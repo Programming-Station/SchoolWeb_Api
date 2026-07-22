@@ -1,7 +1,5 @@
 using School_DTOs;
 using School_DTOs.Communication.Recipients;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School.Services.Interfaces
 {

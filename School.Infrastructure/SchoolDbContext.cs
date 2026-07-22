@@ -1,38 +1,39 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using School.Domain.Auth;
 using School.Domain;
-using School.Domain.Administration;
-using School.Domain.Student;
-using School.Domain.FeeManagnment;
-using School.Domain.School;
-using School.Domain.AccessControl;
-using School.Domain.Location;
-using School.Domain.Hr;
-using School.Domain.Hr.LeaveManagement;
-using School.Domain.Hr.Timesheet;
-using School.Domain.Hr.Attendance;
-using School.Infrastructure.Interfaces;
-using School.Domain.Email;
 using School.Domain.Academic;
-using School.Domain.Hr.Recruitment;
-using School.Domain.Hr.Performance;
-using School.Domain.Hr.Training;
-using School.Domain.Hostel;
-using School.Domain.Hr.Assets;
-using School.Domain.Payroll;
-using School.Domain.Transport;
-using School.Domain.Library;
-using School.Domain.Finance;
-using School.Domain.Inventory;
+using School.Domain.AccessControl;
+using School.Domain.Administration;
+// Duplicate removed
+using School.Domain.AI;
+using School.Domain.Analytics;
+using School.Domain.Auth;
 using School.Domain.Communication;
 using School.Domain.Communication.Recipients;
-using School.Domain.Analytics;
-using School.Domain.Administration;
-using School.Domain.AI;
+using School.Domain.Email;
+using School.Domain.Entities;
+using School.Domain.FeeManagnment;
+using School.Domain.Finance;
+using School.Domain.Hostel;
+using School.Domain.Hr;
+using School.Domain.Hr.Assets;
+using School.Domain.Hr.Attendance;
+using School.Domain.Hr.LeaveManagement;
+using School.Domain.Hr.Performance;
+using School.Domain.Hr.Recruitment;
+using School.Domain.Hr.Timesheet;
+using School.Domain.Hr.Training;
+using School.Domain.Inventory;
+using School.Domain.Library;
+using School.Domain.Location;
+using School.Domain.Payroll;
 using School.Domain.Reporting;
+using School.Domain.School;
+using School.Domain.Student;
+using School.Domain.Transport;
+using School.Infrastructure.Interfaces;
 using ReportingTemplate = School.Domain.Reporting.ReportTemplate;
 
 namespace School.Infrastructure
@@ -44,7 +45,7 @@ namespace School.Infrastructure
         public int? CurrentTenantId => _tenantService?.GetTenantId();
 
         public SchoolDbContext(
-            DbContextOptions<SchoolDbContext> options, 
+            DbContextOptions<SchoolDbContext> options,
             ITenantService tenantService = null,
             IHttpContextAccessor httpContextAccessor = null) : base(options)
         {
@@ -54,6 +55,7 @@ namespace School.Infrastructure
 
         public DbSet<AutoNumberSetting> AutoNumberSettings { get; set; } = null!;
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+        public DbSet<AuditLog> AuditLogs { get; set; } = null!;
         public DbSet<Menu> Menus { get; set; } = null!;
         public DbSet<SubMenu> SubMenus { get; set; } = null!;
         public DbSet<Status> Statuses { get; set; } = null!;
@@ -61,6 +63,8 @@ namespace School.Infrastructure
         public DbSet<LoginHistory> LoginHistories { get; set; } = null!;
         public DbSet<Module> Modules { get; set; } = null!;
         public DbSet<ModulePermission> ModulePermissions { get; set; } = null!;
+        public DbSet<Permission> Permissions { get; set; } = null!;
+        public DbSet<RolePermission> RolePermissions { get; set; } = null!;
         public DbSet<CategoryModule> CategoryModules { get; set; } = null!;
         public DbSet<Course> Courses { get; set; } = null!;
         public DbSet<Class> Classes { get; set; } = null!;
@@ -84,7 +88,7 @@ namespace School.Infrastructure
         public DbSet<EmailTemplate> EmailTemplates { get; set; } = null!;
         public DbSet<EmailBranding> EmailBrandings { get; set; } = null!;
         public DbSet<EmailLog> EmailLogs { get; set; } = null!;
-        
+
         public DbSet<Subject> Subjects { get; set; } = null!;
         public DbSet<Exam> Exams { get; set; } = null!;
         public DbSet<ExamResult> ExamResults { get; set; } = null!;

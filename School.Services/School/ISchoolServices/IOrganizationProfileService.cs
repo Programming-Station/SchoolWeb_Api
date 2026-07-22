@@ -1,7 +1,6 @@
+using School.Models.School;
 using School_DTOs;
 using School_DTOs.School;
-using School.Models.School;
-using System.Threading.Tasks;
 
 namespace School.Services.School.ISchoolServices
 {

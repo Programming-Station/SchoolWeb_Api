@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Reporting.NETCore;
 using QRCoder;
 using School.Services.Interfaces;
@@ -32,13 +28,13 @@ namespace School.Services
         private string GetBase64FromFile(string? path)
         {
             if (string.IsNullOrWhiteSpace(path)) return string.Empty;
-            
+
             if (path.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
             {
                 var parts = path.Split(',');
                 return parts.Length > 1 ? parts[1] : parts[0];
             }
-            
+
             try
             {
                 string physicalPath;
@@ -55,25 +51,25 @@ namespace School.Services
                 {
                     physicalPath = path;
                 }
-                    
+
                 if (File.Exists(physicalPath))
                 {
                     return Convert.ToBase64String(File.ReadAllBytes(physicalPath));
                 }
             }
-            catch {}
+            catch { }
             return string.Empty;
         }
 
         public async Task<byte[]> RenderReportAsync(
-            string reportName, 
-            string renderType, 
-            Dictionary<string, object> dataSources, 
+            string reportName,
+            string renderType,
+            Dictionary<string, object> dataSources,
             Dictionary<string, string> parameters)
         {
             var report = new LocalReport();
             var reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RdlcFiles", $"{reportName}.rdlc");
-            
+
             EnsureReportFileExists(reportPath, reportName);
             report.ReportPath = reportPath;
 
@@ -88,8 +84,8 @@ namespace School.Services
                 expectedParams.Add(pInfo.Name);
             }
 
-            var mergedParameters = parameters != null 
-                ? new Dictionary<string, string>(parameters, StringComparer.OrdinalIgnoreCase) 
+            var mergedParameters = parameters != null
+                ? new Dictionary<string, string>(parameters, StringComparer.OrdinalIgnoreCase)
                 : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             void TryAddParam(string key, string? value)

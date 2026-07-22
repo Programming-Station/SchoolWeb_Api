@@ -1,14 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Common;
-using School_DTOs.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
+using School_DTOs.Hr;
 
 namespace School.Services.Hr
 {
@@ -29,7 +23,11 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Company = x.Company, Designation = x.Designation, JoiningDate = x.JoiningDate, LeavingDate = x.LeavingDate, Salary = x.Salary
+                Company = x.Company,
+                Designation = x.Designation,
+                JoiningDate = x.JoiningDate,
+                LeavingDate = x.LeavingDate,
+                Salary = x.Salary
             }).ToListAsync();
 
             return new APIResponse<List<EmployeeExperienceDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -41,7 +39,11 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Company = x.Company, Designation = x.Designation, JoiningDate = x.JoiningDate, LeavingDate = x.LeavingDate, Salary = x.Salary
+                Company = x.Company,
+                Designation = x.Designation,
+                JoiningDate = x.JoiningDate,
+                LeavingDate = x.LeavingDate,
+                Salary = x.Salary
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<EmployeeExperienceDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -53,7 +55,11 @@ namespace School.Services.Hr
             var entity = new global::School.Domain.Hr.EmployeeExperience
             {
                 EmployeeId = dto.EmployeeId,
-                Company = dto.Company, Designation = dto.Designation, JoiningDate = dto.JoiningDate, LeavingDate = dto.LeavingDate, Salary = dto.Salary,
+                Company = dto.Company,
+                Designation = dto.Designation,
+                JoiningDate = dto.JoiningDate,
+                LeavingDate = dto.LeavingDate,
+                Salary = dto.Salary,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

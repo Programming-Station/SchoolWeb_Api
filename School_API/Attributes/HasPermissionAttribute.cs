@@ -1,5 +1,3 @@
-using System;
-
 namespace School_API.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = true)]

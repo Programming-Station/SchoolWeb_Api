@@ -9,17 +9,17 @@ namespace School.Domain.AccessControl
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         [MaxLength(100)]
         public string Name { get; set; } = null!;
-        
+
         [MaxLength(500)]
         public string? Description { get; set; }
-        
+
         public int Order { get; set; } = 0;
-        
-        public bool IsActive { get; set; } = true; 
+
+        public bool IsActive { get; set; } = true;
 
         public int? SchoolRegistrationId { get; set; }
 

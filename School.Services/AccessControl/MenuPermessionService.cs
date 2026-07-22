@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using School.Domain.AccessControl;
 using School.Infrastructure.Repositories.AccessControl;
@@ -6,7 +7,6 @@ using School.Services.AccessControl.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Menu;
-using System.Net;
 
 namespace School.Services.AccessControl
 {

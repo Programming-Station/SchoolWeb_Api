@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text.Encodings.Web;
 using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace School_API.Middleware
 {
@@ -42,8 +42,8 @@ namespace School_API.Middleware
 
                 if (username == basicAuthUsername && password == basicAuthPassword)
                 {
-                    var claims = new[] 
-                    { 
+                    var claims = new[]
+                    {
                         new Claim(ClaimTypes.Name, username),
                         new Claim(ClaimTypes.AuthenticationMethod, "Basic")
                     };

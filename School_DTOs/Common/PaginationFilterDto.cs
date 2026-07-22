@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace School_DTOs.Common
 {
     public class PaginationFilterDto

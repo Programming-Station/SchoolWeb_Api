@@ -17,12 +17,12 @@ namespace School.Infrastructure.Repositories.AccessControl
 
         public async Task<MenuPermession> AddMenuPermissionAsync(MenuPermession entity)
         {
-            var alreadyExists = await DbSet.AnyAsync(x => x.RoleId == entity.RoleId 
-                                && x.MenuId == entity.MenuId 
-                                && x.SubMenuId == entity.SubMenuId 
+            var alreadyExists = await DbSet.AnyAsync(x => x.RoleId == entity.RoleId
+                                && x.MenuId == entity.MenuId
+                                && x.SubMenuId == entity.SubMenuId
                                 && !x.IsDeleted);
             if (alreadyExists) return new MenuPermession { Id = 0 };
-            
+
             entity.IsDeleted = false;
             await base.AddAsync(entity);
             await _context.SaveChangesAsync();

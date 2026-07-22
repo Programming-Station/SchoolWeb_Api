@@ -4,7 +4,7 @@ using School_DTOs.Account;
 namespace School.Services.Interfaces
 {
     public interface IMasterService
-    { 
+    {
         Task<APIResponse<IEnumerable<DropdownDto>>> GetStatesAsync(int id);
         Task<APIResponse<IEnumerable<DropdownDto>>> GetCitiesAsync(int id);
         Task<APIResponse<IEnumerable<DropdownDto>>> GetStatusAsync();
@@ -61,8 +61,8 @@ namespace School.Services.Interfaces
         // Transport
         Task<APIResponse<IEnumerable<DropdownDto>>> GetTransportRoutesAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetVehiclesAsync();
-    
-Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync();
+
+        Task<APIResponse<IEnumerable<DropdownDto>>> GetStudentsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolRegistrationsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolProfileSettingsAsync();
         Task<APIResponse<IEnumerable<DropdownDto>>> GetSchoolSubscriptionsAsync();

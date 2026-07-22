@@ -1,14 +1,9 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
 using School_DTOs.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Services.Hr
 {
@@ -32,14 +27,14 @@ namespace School.Services.Hr
             if (!string.IsNullOrEmpty(filter.SearchText))
             {
                 var lowerSearch = filter.SearchText.ToLower();
-                query = query.Where(e => EF.Property<string>(e, "Name").ToLower().Contains(lowerSearch) || 
+                query = query.Where(e => EF.Property<string>(e, "Name").ToLower().Contains(lowerSearch) ||
                                          EF.Property<string>(e, "Code").ToLower().Contains(lowerSearch));
             }
 
             if (!string.IsNullOrEmpty(filter.SortBy))
             {
                 bool isDesc = filter.SortDirection?.ToLower() == "desc";
-                query = isDesc 
+                query = isDesc
                     ? query.OrderByDescending(e => EF.Property<object>(e, filter.SortBy))
                     : query.OrderBy(e => EF.Property<object>(e, filter.SortBy));
             }
@@ -60,7 +55,7 @@ namespace School.Services.Hr
                 CurrentPage = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalRecords = totalRecords,
-                
+
             };
 
             return new APIResponse<PagedResponse<object>> { Success = true, StatusCode = HttpStatusCode.OK, Data = pagedResponse };
@@ -79,7 +74,7 @@ namespace School.Services.Hr
         {
             var entity = _mapper.Map<TEntity>(dto);
             entity.CreatedBy = username;
-            
+
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
 
@@ -126,10 +121,10 @@ namespace School.Services.Hr
 
             var currentStatus = EF.Property<string>(entity, "Status");
             var newStatus = currentStatus == "active" ? "inactive" : "active";
-            
+
             // Set property value using reflection if possible or EF Core tracking
             entity.GetType().GetProperty("Status")?.SetValue(entity, newStatus);
-            
+
             entity.UpdatedBy = username;
             entity.UpdatedDate = DateTime.Now;
 

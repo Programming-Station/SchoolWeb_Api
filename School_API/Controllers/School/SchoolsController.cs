@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Models.School;
 using School.Services.School.ISchoolServices;
+using School_API.Common.Interface;
 using School_DTOs;
 using School_DTOs.School;
-using System.Threading.Tasks;
-using School_API.Common.Interface;
-using System.Collections.Generic;
 
 namespace School_API.Controllers.School
 {
@@ -45,7 +42,7 @@ namespace School_API.Controllers.School
             var response = await _schoolService.AddAsync(model);
             if (response.Success)
                 return CreatedAtAction(nameof(GetById), new { id = response.Data?.Id }, response);
-            
+
             return BadRequest(response);
         }
 

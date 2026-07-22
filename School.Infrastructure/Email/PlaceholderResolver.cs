@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace School.Infrastructure.Email
@@ -14,7 +12,7 @@ namespace School.Infrastructure.Email
 
             // Merge user placeholders with auto-generated system placeholders
             var allPlaceholders = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            
+
             // Standard system variables
             allPlaceholders["CurrentDate"] = DateTime.Now.ToString("yyyy-MM-dd");
             allPlaceholders["CurrentTime"] = DateTime.Now.ToString("HH:mm:ss");

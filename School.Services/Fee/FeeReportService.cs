@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Infrastructure;
-using School_DTOs.Fee;
 using School.Services.Interfaces;
+using School_DTOs.Fee;
 
 namespace School.Services.Fee
 {

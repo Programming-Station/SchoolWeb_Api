@@ -240,9 +240,13 @@ namespace School.Services.Reporting
             var cats = await _repo.GetCategoriesAsync(tenantId);
             return cats.Select(c => new ReportCategoryDto
             {
-                Id = c.Id, Code = c.Code, Name = c.Name,
-                IconClass = c.IconClass, ColorHex = c.ColorHex,
-                Description = c.Description, SortOrder = c.SortOrder,
+                Id = c.Id,
+                Code = c.Code,
+                Name = c.Name,
+                IconClass = c.IconClass,
+                ColorHex = c.ColorHex,
+                Description = c.Description,
+                SortOrder = c.SortOrder,
                 IsActive = c.IsActive
             }).ToList();
         }
@@ -253,8 +257,12 @@ namespace School.Services.Reporting
             if (c == null) return null;
             return new ReportCategoryDto
             {
-                Id = c.Id, Code = c.Code, Name = c.Name,
-                IconClass = c.IconClass, ColorHex = c.ColorHex, IsActive = c.IsActive
+                Id = c.Id,
+                Code = c.Code,
+                Name = c.Name,
+                IconClass = c.IconClass,
+                ColorHex = c.ColorHex,
+                IsActive = c.IsActive
             };
         }
 
@@ -274,8 +282,12 @@ namespace School.Services.Reporting
             var saved = await _repo.CreateCategoryAsync(entity);
             return new ReportCategoryDto
             {
-                Id = saved.Id, Code = saved.Code, Name = saved.Name,
-                IconClass = saved.IconClass, ColorHex = saved.ColorHex, IsActive = true
+                Id = saved.Id,
+                Code = saved.Code,
+                Name = saved.Name,
+                IconClass = saved.IconClass,
+                ColorHex = saved.ColorHex,
+                IsActive = true
             };
         }
 

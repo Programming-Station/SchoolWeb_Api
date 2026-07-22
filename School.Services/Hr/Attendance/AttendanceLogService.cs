@@ -1,15 +1,9 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.Attendance;
-using School_DTOs.Common;
-using School_DTOs.Hr.Attendance;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using School_DTOs;
+using School_DTOs.Hr.Attendance;
 
 namespace School.Services.Hr.Attendance
 {
@@ -30,7 +24,10 @@ namespace School.Services.Hr.Attendance
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                LogTime = x.LogTime, LogType = x.LogType, Source = x.Source, DeviceId = x.DeviceId
+                LogTime = x.LogTime,
+                LogType = x.LogType,
+                Source = x.Source,
+                DeviceId = x.DeviceId
             }).ToListAsync();
 
             return new APIResponse<List<AttendanceLogDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -42,7 +39,10 @@ namespace School.Services.Hr.Attendance
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                LogTime = x.LogTime, LogType = x.LogType, Source = x.Source, DeviceId = x.DeviceId
+                LogTime = x.LogTime,
+                LogType = x.LogType,
+                Source = x.Source,
+                DeviceId = x.DeviceId
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<AttendanceLogDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -54,7 +54,10 @@ namespace School.Services.Hr.Attendance
             var entity = new global::School.Domain.Hr.Attendance.AttendanceLog
             {
                 EmployeeId = dto.EmployeeId,
-                LogTime = dto.LogTime, LogType = dto.LogType, Source = dto.Source, DeviceId = dto.DeviceId,
+                LogTime = dto.LogTime,
+                LogType = dto.LogType,
+                Source = dto.Source,
+                DeviceId = dto.DeviceId,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

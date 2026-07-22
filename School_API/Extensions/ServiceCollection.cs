@@ -1,54 +1,52 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using School.Infrastructure.JWTAuthenticationManager.Interfaces;
-using School.Infrastructure.JWTAuthenticationManager;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.Repositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School.Infrastructure.Interfaces;
-using School.Services.Interfaces;
-using School.Services;
-using School_API.Filters;
-using School.Infrastructure.UnitOfWork;
-using School_API;
 using School.Infrastructure;
-using School.Models.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using School_API.Common.Interface;
-using School_API.Common;
-using School_API.Middleware;
+using School.Infrastructure.Interfaces;
+using School.Infrastructure.JWTAuthenticationManager;
+using School.Infrastructure.JWTAuthenticationManager.Interfaces;
+using School.Infrastructure.Repositories;
 using School.Infrastructure.Repositories.AccessControl;
-using School.Services.AccessControl;
-using School.Services.AccessControl.Interfaces;
+using School.Infrastructure.Repositories.Email;
 using School.Infrastructure.Repositories.Hr.Attendance;
 using School.Infrastructure.Repositories.Hr.LeaveManagement;
 using School.Infrastructure.Repositories.Hr.Timesheet;
+using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.Repositories.School;
-using School.Services.Hr.Attendance;
-using School.Services.Hr.LeaveManagement;
-using School.Services.Hr.Timesheet;
-using School.Services.Interfaces.Hr.LeaveManagement;
-using School.Services.Interfaces.Hr.Attendance;
-using School.Services.Interfaces.Hr.Timesheet;
-using School.Services.Hr;
-using School.Services.Library;
-using School.Services.Interfaces.Payroll;
-using School.Services.Interfaces.Academic;
-using School.Infrastructure.Repositories.Email;
-using School.Services.Email;
-using School.Services.Interfaces.Email;
-using School.Services.Location;
-using School.Services.Hostel;
-using School.Services.Finance;
-using School.Services.Inventory;
-using School.Services.Communication;
-using School.Services.Analytics;
+using School.Infrastructure.UnitOfWork;
+using School.Infrastructure.UnitOfWork.Interfaces;
+using School.Models.Configuration;
+using School.Services;
+using School.Services.AccessControl;
+using School.Services.AccessControl.Interfaces;
 using School.Services.Administration;
 using School.Services.AI;
+using School.Services.Analytics;
+using School.Services.Communication;
+using School.Services.Email;
+using School.Services.Finance;
+using School.Services.Hostel;
+using School.Services.Hr;
+using School.Services.Hr.Attendance;
+using School.Services.Hr.LeaveManagement;
+using School.Services.Interfaces;
+using School.Services.Interfaces.Academic;
+using School.Services.Interfaces.Email;
+using School.Services.Interfaces.Hr.Attendance;
+using School.Services.Interfaces.Hr.LeaveManagement;
+using School.Services.Interfaces.Hr.Timesheet;
+using School.Services.Interfaces.Payroll;
+using School.Services.Inventory;
+using School.Services.Library;
+using School.Services.Location;
 using School.Services.Reporting;
-using School.Infrastructure.Repositories;
+using School.Services.School.ISchoolServices;
+using School_API;
+using School_API.Common;
+using School_API.Common.Interface;
+using School_API.Middleware;
 
 
 namespace School_API
@@ -134,12 +132,12 @@ namespace School_API
             .AddTransient<ICourseRepository, CourseRepository>()
             .AddTransient<IClassRepository, ClassRepository>()
             .AddTransient<IStudentRepository, StudentRepository>()
-         
+
             .AddTransient<ICityRepository, CityRepository>()
             .AddTransient<IStateRepository, StateRepository>()
             .AddTransient<IAffiliatedRepository, AffiliatedRepository>()
             .AddTransient<IAcademicYearRepository, AcademicYearRepository>()
-       
+
             .AddTransient<IEventRepository, EventRepository>()
             .AddTransient<IDashboardRepository, DashboardRepository>()
             .AddTransient<ISuperAdminDashboardRepository, SuperAdminDashboardRepository>()
@@ -164,20 +162,20 @@ namespace School_API
             .AddTransient<IEmailLogRepository, EmailLogRepository>()
             // HR Master Generic
             .AddScoped(typeof(IHrMasterService<>), typeof(School.Services.Hr.HrMasterService<>))
-            
+
             // Leave Management
 
             .AddTransient<ILeaveBalanceRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveBalanceRepository>()
             .AddTransient<ILeaveRequestRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveRequestRepository>()
             .AddTransient<ILeaveSettingRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveSettingRepository>()
             .AddTransient<ILeaveTypeRepository, School.Infrastructure.Repositories.Hr.LeaveManagement.LeaveTypeRepository>()
-            
+
             // Attendance
             .AddTransient<IAttendanceRepository, School.Infrastructure.Repositories.Hr.Attendance.AttendanceRepository>()
 
             .AddTransient<IShiftMasterRepository, School.Infrastructure.Repositories.Hr.Attendance.ShiftMasterRepository>()
             .AddTransient<IWeekOffRepository, School.Infrastructure.Repositories.Hr.Attendance.WeekOffRepository>()
-            
+
             // Timesheet
             .AddTransient<ITimesheetRepository, School.Infrastructure.Repositories.Hr.Timesheet.TimesheetRepository>()
             .AddTransient<IHrmsExpansionRepository, HrmsExpansionRepository>()
@@ -212,7 +210,7 @@ namespace School_API
             .AddTransient<ITransportAllocationRepository, TransportAllocationRepository>()
             // Parent Portal
             .AddTransient<IParentRepository, ParentRepository>()
-            
+
             // Admission Module Repositories
             .AddTransient<ICampusRepository, CampusRepository>()
             .AddTransient<IEducationLevelRepository, EducationLevelRepository>()
@@ -250,7 +248,7 @@ namespace School_API
 
             return services
             .AddSingleton<School.Infrastructure.Email.PlaceholderResolver>()
-            .AddScoped<IRecipientService, School.Services.Communication.RecipientService>()
+            .AddScoped<IRecipientService, RecipientService>()
             .AddSingleton<School.Infrastructure.Email.ITemplateRenderer, School.Infrastructure.Email.EmailTemplateRenderer>()
             .AddScoped<School.Infrastructure.Email.SmtpEmailProvider>()
             .AddScoped<IEmailService, EmailService>()
@@ -258,6 +256,8 @@ namespace School_API
             .AddScoped<IMessageService, MessageService>()
             .AddScoped<IEmailServerSettingService, EmailServerSettingService>()
             .AddScoped<IEmailTemplateService, EmailTemplateService>()
+            .AddScoped<IReportBrandingService, ReportBrandingService>()
+            .AddScoped<IAuditService, AuditService>()
             .AddScoped<IEmailBrandingService, EmailBrandingService>()
             .AddScoped<IEmailLogService, EmailLogService>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
@@ -276,7 +276,7 @@ namespace School_API
             .AddScoped<IClassService, ClassService>()
             .AddScoped<IStudentService, StudentService>()
             .AddScoped<IEmployeeService, EmployeeService>()
-           
+
             .AddScoped<IImageService, ImageService>()
             .AddScoped<IDocumentService, School.Services.DocumentManagement.DocumentService>()
             .AddScoped<ICityService, CityService>()
@@ -284,7 +284,7 @@ namespace School_API
             .AddScoped<IAffiliatedService, AffiliatedService>()
             .AddScoped<IMasterService, MasterService>()
             .AddScoped<IAcademicYearService, AcademicYearService>()
-           
+
             .AddScoped<IEventService, EventService>()
             .AddScoped<IDashboardService, DashboardService>()
             .AddScoped<ISuperAdminDashboardService, SuperAdminDashboardService>()
@@ -330,13 +330,13 @@ namespace School_API
             .AddScoped<ILeaveRequestService, School.Services.Hr.LeaveManagement.LeaveRequestService>()
             .AddScoped<ILeaveSettingService, School.Services.Hr.LeaveManagement.LeaveSettingService>()
             .AddScoped<ILeaveTypeService, School.Services.Hr.LeaveManagement.LeaveTypeService>()
-            
+
             // Attendance
             .AddScoped<IAttendanceService, School.Services.Hr.Attendance.AttendanceService>()
 
             .AddScoped<IShiftMasterService, School.Services.Hr.Attendance.ShiftMasterService>()
             .AddScoped<IWeekOffService, School.Services.Hr.Attendance.WeekOffService>()
-            
+
             // Timesheet
             .AddScoped<ITimesheetService, School.Services.Hr.Timesheet.TimesheetService>()
             .AddScoped<ITimesheetEntryService, School.Services.Hr.Timesheet.TimesheetEntryService>()
@@ -400,7 +400,7 @@ namespace School_API
             .AddScoped<ICountryService, CountryService>()
             .AddScoped<IStateLocationService, StateLocationService>()
             .AddScoped<ICityLocationService, CityLocationService>()
-            
+
             // Admission & Enrollment Services
             .AddScoped<IAdmissionService, AdmissionService>()
             .AddScoped<IEnrollmentService, EnrollmentService>()

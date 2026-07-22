@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using School.Infrastructure.Interfaces;
-using School.Services.Interfaces;
-using System.Linq;
 
 namespace School.Services
 {
@@ -31,7 +29,7 @@ namespace School.Services
             if (user == null) return null;
 
             var tenantClaim = user.Claims.FirstOrDefault(c => c.Type == "TenantId" || c.Type == "SchoolRegistrationId");
-            
+
             if (tenantClaim != null && int.TryParse(tenantClaim.Value, out int tenantId))
             {
                 return tenantId;

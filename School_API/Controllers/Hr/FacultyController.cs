@@ -1,8 +1,7 @@
-using School.Domain;
 using Microsoft.AspNetCore.Mvc;
-using School.Domain.Hr;
-using School_API.Common.Interface;
+using School.Domain;
 using School.Services.Hr;
+using School_API.Common.Interface;
 
 namespace School_API.Controllers.Hr
 {

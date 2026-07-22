@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School_DTOs;
 using School_DTOs.Finance;
 
@@ -31,7 +28,7 @@ namespace School.Services.Interfaces
         // Bank / Cash book & Reconciliation & Cheque Books
         Task<APIResponse<List<CashBankTransactionDto>>> GetBankTransactionsAsync(int schoolId, int accountId, bool? reconciled);
         Task<APIResponse<bool>> ReconcileTransactionAsync(int schoolId, int txnId, DateTime reconciledDate, string user);
-        
+
         // Cheque Books
         Task<APIResponse<List<ChequeBookDto>>> GetChequeBooksAsync(int schoolId, int? accountId = null, bool? isExhausted = null);
         Task<APIResponse<ChequeBookDto>> GetChequeBookByIdAsync(int schoolId, int id);

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces.Payroll;
 using School_API.Common.Interface;
 using School_DTOs.Payroll;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers.Payroll
 {

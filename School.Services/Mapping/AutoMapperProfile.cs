@@ -1,11 +1,11 @@
-using AutoMapper; 
 using System.Reflection;
+using AutoMapper;
 namespace School.Services.Mapping
 {
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
-        { 
+        {
 
 
             var domainAssembly = Assembly.Load("School.Domain");  // Domain project assembly
@@ -49,11 +49,11 @@ namespace School.Services.Mapping
                     {
                         var createdDateProp = destination.GetProperty("CreatedDate");
                         var updatedDateProp = destination.GetProperty("UpdatedDate");
-                        
+
                         if (createdDateProp != null || updatedDateProp != null)
                         {
                             var mapConfig = CreateMap(source, destination);
-                            
+
                             if (createdDateProp != null && createdDateProp.PropertyType == typeof(string))
                             {
                                 mapConfig.ForMember("CreatedDate",
@@ -66,7 +66,7 @@ namespace School.Services.Mapping
                                     }
                                 ));
                             }
-                            
+
                             if (updatedDateProp != null && updatedDateProp.PropertyType == typeof(string))
                             {
                                 mapConfig.ForMember("UpdatedDate",
@@ -93,8 +93,8 @@ namespace School.Services.Mapping
             }
 
             // Register mappings for generic HR Master entities to HrMasterDto, CreateHrMasterDto, and UpdateHrMasterDto
-            var hrMasterTypes = sourceTypes.Where(t => 
-                t.IsClass && 
+            var hrMasterTypes = sourceTypes.Where(t =>
+                t.IsClass &&
                 !t.IsAbstract &&
                 typeof(global::School.Domain.BaseEntity.IAuditEntity<int>).IsAssignableFrom(t) &&
                 typeof(global::School.Domain.BaseEntity.ITenantEntity).IsAssignableFrom(t));
@@ -105,11 +105,11 @@ namespace School.Services.Mapping
                 CreateMap(typeof(global::School_DTOs.Hr.CreateHrMasterDto), type);
                 CreateMap(typeof(global::School_DTOs.Hr.UpdateHrMasterDto), type);
             }
-             
+
 
             CreateMap<global::School.Domain.Event, global::School_DTOs.Event.EventDto>()
                 .ForMember(dest => dest.EventDate,
-                    opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));  
+                    opt => opt.MapFrom(src => src.EventDate.ToString("dd-MM-yyyy hh:mm:ss tt")));
 
             CreateMap<global::School.Domain.School.SchoolOwner, global::School_DTOs.School.SchoolOwnerDto>()
                 .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.SchoolRegistration != null ? src.SchoolRegistration.SchoolName : string.Empty))
@@ -397,13 +397,13 @@ namespace School.Services.Mapping
         {
             if (string.IsNullOrEmpty(dateOfBirth))
                 return DateTime.MinValue;
-            
+
             if (DateTime.TryParseExact(dateOfBirth, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
                 return parsedDate;
-            
+
             if (DateTime.TryParse(dateOfBirth, out DateTime parsedDate2))
                 return parsedDate2;
-            
+
             return DateTime.MinValue;
         }
     }

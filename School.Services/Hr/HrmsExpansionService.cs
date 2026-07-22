@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using School.Domain.Hr.Recruitment;
-using School.Domain.Hr.Performance;
-using School.Domain.Hr.Training;
 using School.Domain.Hr.Assets;
+using School.Domain.Hr.Performance;
+using School.Domain.Hr.Recruitment;
+using School.Domain.Hr.Training;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School_DTOs;
-using School_DTOs.Common;
 using School_DTOs.Hr;
 
 namespace School.Services.Hr

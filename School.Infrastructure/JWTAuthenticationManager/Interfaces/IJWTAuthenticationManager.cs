@@ -1,7 +1,7 @@
+using System.Security.Claims;
 using School.Models.Account;
 using School_DTOs;
 using School_DTOs.Account;
-using System.Security.Claims;
 
 namespace School.Infrastructure.JWTAuthenticationManager.Interfaces
 {

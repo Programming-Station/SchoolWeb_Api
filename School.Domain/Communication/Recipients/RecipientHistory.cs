@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,7 +8,7 @@ namespace School.Domain.Communication.Recipients
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public int SchoolRegistrationId { get; set; }
 
@@ -32,7 +30,7 @@ namespace School.Domain.Communication.Recipients
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveredAt { get; set; }
         public DateTime? ReadAt { get; set; }
-        
+
         [StringLength(1000)]
         public string? ErrorReason { get; set; }
     }

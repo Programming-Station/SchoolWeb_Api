@@ -1,14 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Common;
-using School_DTOs.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
+using School_DTOs.Hr;
 
 namespace School.Services.Hr
 {
@@ -29,7 +23,11 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Degree = x.Degree, Board = x.Board, University = x.University, PassingYear = x.PassingYear, Percentage = x.Percentage
+                Degree = x.Degree,
+                Board = x.Board,
+                University = x.University,
+                PassingYear = x.PassingYear,
+                Percentage = x.Percentage
             }).ToListAsync();
 
             return new APIResponse<List<EmployeeEducationDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -41,7 +39,11 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Degree = x.Degree, Board = x.Board, University = x.University, PassingYear = x.PassingYear, Percentage = x.Percentage
+                Degree = x.Degree,
+                Board = x.Board,
+                University = x.University,
+                PassingYear = x.PassingYear,
+                Percentage = x.Percentage
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<EmployeeEducationDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -53,7 +55,11 @@ namespace School.Services.Hr
             var entity = new global::School.Domain.Hr.EmployeeEducation
             {
                 EmployeeId = dto.EmployeeId,
-                Degree = dto.Degree, Board = dto.Board, University = dto.University, PassingYear = dto.PassingYear, Percentage = dto.Percentage,
+                Degree = dto.Degree,
+                Board = dto.Board,
+                University = dto.University,
+                PassingYear = dto.PassingYear,
+                Percentage = dto.Percentage,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

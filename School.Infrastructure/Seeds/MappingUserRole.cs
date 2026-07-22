@@ -1,5 +1,5 @@
-using School.Utilities.Constants;
 using Microsoft.AspNetCore.Identity;
+using School.Utilities.Constants;
 
 namespace School.Infrastructure.Seeds
 {

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Hr;
-using School.Domain.Hr.Recruitment;
-using School.Domain.Hr.Performance;
-using School.Domain.Hr.Training;
 using School.Domain.Hr.Assets;
+using School.Domain.Hr.Performance;
+using School.Domain.Hr.Recruitment;
+using School.Domain.Hr.Training;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork;
 

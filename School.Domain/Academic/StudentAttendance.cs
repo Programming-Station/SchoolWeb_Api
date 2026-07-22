@@ -1,13 +1,11 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.Academic;
 using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Academic
 {
-    #nullable disable
+#nullable disable
     public class StudentAttendance : AuditEntity<int>, ITenantEntity
     {
         [Key]

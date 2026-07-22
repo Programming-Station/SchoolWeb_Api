@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.School;
 using School.Domain.Hr;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Academic
 {
-    #nullable disable
+#nullable disable
     /// <summary>4.3 — Timetable period slot</summary>
     public class TimetablePeriod : AuditEntity<int>, ITenantEntity
     {
@@ -28,7 +26,7 @@ namespace School.Domain.Academic
 
         [Required] public int PeriodNo { get; set; }
         [Required, MaxLength(10)] public string StartTime { get; set; } = "08:00";
-        [Required, MaxLength(10)] public string EndTime   { get; set; } = "09:00";
+        [Required, MaxLength(10)] public string EndTime { get; set; } = "09:00";
 
         [MaxLength(100)] public string RoomNo { get; set; }
 

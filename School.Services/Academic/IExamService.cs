@@ -1,8 +1,5 @@
 using School_DTOs;
 using School_DTOs.Academic;
-using School_DTOs.Common;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 namespace School.Services.Interfaces.Academic
 {
     public interface IExamService

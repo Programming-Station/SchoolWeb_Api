@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using School_DTOs;
 using School_DTOs.Communication;
 
 namespace School_API.Controllers.Communication

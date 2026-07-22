@@ -1,6 +1,4 @@
 using School_DTOs.Student;
-using System;
-using System.Threading.Tasks;
 
 namespace School.Services.Interfaces
 {
@@ -8,7 +6,7 @@ namespace School.Services.Interfaces
     {
         Task<byte[]> GenerateRegistrationCertificateAsync(AdmissionApplicationDto registration, string baseUrl);
         Task<byte[]> GenerateFeeReceiptPdfAsync(int paymentId, string baseUrl);
-        
+
         // ── New Student Domain Reports ──────────────────────────────────────────
         Task<byte[]> GenerateAdmissionApplicationSummaryAsync(int applicationId);
         Task<byte[]> GenerateAdmissionsPipelineReportAsync(string? status, string? courseName, DateTime? fromDate, DateTime? toDate);

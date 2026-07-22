@@ -1,9 +1,6 @@
 using School.Models.Fee;
-using School_DTOs; 
+using School_DTOs;
 using School_DTOs.Fee;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace School.Services.Interfaces
 {

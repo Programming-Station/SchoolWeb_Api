@@ -1,6 +1,6 @@
+using School.Models.Account;
 using School_DTOs;
 using School_DTOs.Account;
-using School.Models.Account;
 
 namespace School.Services.Interfaces
 {

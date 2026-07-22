@@ -1,18 +1,11 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain;
-using School.Domain.Hr;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
+using School_DTOs;
 using School_DTOs.Common;
 using School_DTOs.Hr;
-using School.Services.Interfaces.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using School_DTOs;
 
 namespace School.Services.Hr
 {
@@ -36,7 +29,7 @@ namespace School.Services.Hr
                 query = query.Where(x => x.Name.Contains(filter.SearchText) || (x.Code != null && x.Code.Contains(filter.SearchText)));
 
             // if (!string.IsNullOrEmpty(filter.Status))
-                // query = query.Where(x => x.Status == filter.Status);
+            // query = query.Where(x => x.Status == filter.Status);
 
             var totalRecords = await query.CountAsync();
             var data = await query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Name)

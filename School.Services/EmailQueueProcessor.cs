@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -121,15 +117,15 @@ namespace School.Services
                         if (isSuccess)
                         {
                             smtpResponse = "250 OK - Message accepted for delivery";
-                            
+
                             // Re-query or construct subject and body to save in audit logs
                             var renderer = scope.ServiceProvider.GetRequiredService<global::School.Infrastructure.Email.ITemplateRenderer>();
-                            
+
                             // Load branding options to mock placeholders
                             var school = await dbContext.SchoolRegistrations.FindAsync(item.TenantId)
                                          ?? await dbContext.SchoolRegistrations.IgnoreQueryFilters().FirstOrDefaultAsync(s => s.SchoolCode == "DEF001");
 
-                            var finalPlaceholders = item.Placeholders != null 
+                            var finalPlaceholders = item.Placeholders != null
                                 ? new Dictionary<string, string>(item.Placeholders, StringComparer.OrdinalIgnoreCase)
                                 : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -150,7 +146,7 @@ namespace School.Services
                             log.Status = "Sent";
                             log.SentTime = DateTime.UtcNow;
                             log.SmtpResponse = smtpResponse;
-                            
+
                             break;
                         }
                         else
@@ -172,7 +168,7 @@ namespace School.Services
                     if (attempt < maxRetries)
                     {
                         // Exponential backoff: 5s, 15s, 45s
-                        int backoffSeconds = (int)Math.Pow(3, attempt) * 2; 
+                        int backoffSeconds = (int)Math.Pow(3, attempt) * 2;
                         await Task.Delay(TimeSpan.FromSeconds(backoffSeconds));
                     }
                 }

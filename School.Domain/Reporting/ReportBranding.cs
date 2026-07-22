@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -10,8 +10,9 @@ namespace School.Domain.Reporting
     /// Every report uses these settings for logo, signature, colors, watermark etc.
     /// One record per tenant (TenantId is unique).
     /// </summary>
-    [Table("ReportBrandings" , Schema = "Reporting")]
-    public class ReportBranding : AuditEntity<int>, ITenantEntity{
+    [Table("ReportBrandings", Schema = "Reporting")]
+    public class ReportBranding : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

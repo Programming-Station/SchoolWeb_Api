@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace School.Services.Interfaces
 {
     public interface IAutoNumberService

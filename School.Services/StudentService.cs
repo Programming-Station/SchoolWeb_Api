@@ -1,18 +1,16 @@
+using System.Net;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Student;
-using School.Domain;
+using School.Infrastructure;
+using School.Infrastructure.Interfaces;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Models.Student;
 using School.Services.Interfaces;
-using School.Utilities.Resources;
 using School.Utilities.Enums;
+using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Student;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using School.Infrastructure;
-
-using School.Infrastructure.Interfaces;
 
 namespace School.Services
 {
@@ -70,7 +68,7 @@ namespace School.Services
                 }
 
                 var entity = _mapper.Map<Student>(model);
-                
+
                 if (entity.CourseId <= 0)
                 {
                     if (model.CourseType.HasValue)

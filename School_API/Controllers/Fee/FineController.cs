@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_DTOs.Fee;
-using System.Threading.Tasks;
-using School.Infrastructure.Interfaces;
 
 namespace School_API.Controllers.Fee
 {

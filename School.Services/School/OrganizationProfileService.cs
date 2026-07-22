@@ -1,24 +1,19 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using School.Domain.School;
 using School.Infrastructure;
+using School.Infrastructure.Interfaces;
 using School.Infrastructure.Repositories.School;
 using School.Models.School;
-using School.Infrastructure.Interfaces;
 using School.Services.Interfaces;
 using School.Services.School.ISchoolServices;
 using School_DTOs;
 using School_DTOs.School;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace School.Services.School
 {
@@ -175,7 +170,7 @@ namespace School.Services.School
                     newProfile.CreatedBy = "System";
 
                     newProfile = await _profileRepo.AddAsync(newProfile);
-                    
+
                     // Log creation audit
                     await LogChangeAsync(tenantId.Value, "Create", "OrganizationProfile", null, newProfile.OrganizationName, "Initial setup");
                     await _dbContext.SaveChangesAsync();
@@ -246,7 +241,7 @@ namespace School.Services.School
             try
             {
                 var tenantId = _tenantService.GetTenantId() ?? 1;
-                
+
                 var base64Parts = base64Data.Split(',');
                 string cleanBase64 = base64Parts.Length > 1 ? base64Parts[1] : base64Parts[0];
                 byte[] bytes = Convert.FromBase64String(cleanBase64);
@@ -547,7 +542,7 @@ namespace School.Services.School
                 throw new Exception($"File format '{extension}' is not supported. Supported extensions: PNG, SVG, JPEG, WEBP, ICO, PDF");
             }
 
-            if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) || 
+            if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
                 extension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) ||
                 extension.Equals(".ico", StringComparison.OrdinalIgnoreCase))
             {
@@ -570,7 +565,7 @@ namespace School.Services.School
 
         private void GenerateThumbnail(byte[] bytes, string uploadFolder, string safeFileName, string extension)
         {
-            if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) || 
+            if (extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
                 extension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) ||
                 extension.Equals(".ico", StringComparison.OrdinalIgnoreCase))
             {
@@ -815,7 +810,7 @@ namespace School.Services.School
         {
             var tenantId = _tenantService.GetTenantId() ?? 1;
             var response = await _profileService.GetByTenantIdAsync(tenantId);
-            
+
             if (response.Success && response.Data != null)
             {
                 return response.Data;

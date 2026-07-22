@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Hostel;
@@ -10,7 +6,7 @@ using School_DTOs.Hostel;
 
 namespace School.Services.Hostel
 {
-    #nullable disable
+#nullable disable
 
     public class HostelService : IHostelService
     {

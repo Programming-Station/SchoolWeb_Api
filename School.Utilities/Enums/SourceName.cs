@@ -53,7 +53,7 @@
         // Transport
         TransportRoute,
         Vehicle,
-Student,
+        Student,
         SchoolRegistration,
         SchoolProfileSetting,
         SchoolSubscription,

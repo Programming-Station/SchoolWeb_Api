@@ -5,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Student
 {
-    public class EducationalDetail :AuditEntity<int>, ITenantEntity
+    public class EducationalDetail : AuditEntity<int>, ITenantEntity
     {
         [Key]
         public int Id { get; set; }

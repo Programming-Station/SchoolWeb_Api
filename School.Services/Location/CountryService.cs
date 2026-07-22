@@ -1,10 +1,10 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Location;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
 using School_DTOs.Common;
 using School_DTOs.Location;
-using System.Net;
 
 namespace School.Services.Location
 {

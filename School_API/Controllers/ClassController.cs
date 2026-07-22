@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using School.Models.Class;
 using School.Services.Interfaces;
-using School_API.Common.Interface; 
-using Microsoft.AspNetCore.Mvc;
+using School_API.Common.Interface;
 
 namespace School_API.Controllers
 {
@@ -94,7 +94,7 @@ namespace School_API.Controllers
 
             return StatusCode((int)result.StatusCode, result);
         }
-            
+
         [HttpPatch]
         public async Task<IActionResult> UpdateClassStrength(int id, [FromBody] int newStrength)
         {

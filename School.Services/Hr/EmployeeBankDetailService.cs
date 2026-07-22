@@ -1,14 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Common;
-using School_DTOs.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
+using School_DTOs.Hr;
 
 namespace School.Services.Hr
 {
@@ -29,7 +23,10 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                BankName = x.BankName, AccountNumber = x.AccountNumber, IFSC = x.IFSC, Branch = x.Branch
+                BankName = x.BankName,
+                AccountNumber = x.AccountNumber,
+                IFSC = x.IFSC,
+                Branch = x.Branch
             }).ToListAsync();
 
             return new APIResponse<List<EmployeeBankDetailDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -41,7 +38,10 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                BankName = x.BankName, AccountNumber = x.AccountNumber, IFSC = x.IFSC, Branch = x.Branch
+                BankName = x.BankName,
+                AccountNumber = x.AccountNumber,
+                IFSC = x.IFSC,
+                Branch = x.Branch
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<EmployeeBankDetailDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -53,7 +53,10 @@ namespace School.Services.Hr
             var entity = new global::School.Domain.Hr.EmployeeBankDetail
             {
                 EmployeeId = dto.EmployeeId,
-                BankName = dto.BankName, AccountNumber = dto.AccountNumber, IFSC = dto.IFSC, Branch = dto.Branch,
+                BankName = dto.BankName,
+                AccountNumber = dto.AccountNumber,
+                IFSC = dto.IFSC,
+                Branch = dto.Branch,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

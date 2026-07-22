@@ -1,5 +1,5 @@
-using School.Utilities.Enums;
 using System.ComponentModel.DataAnnotations;
+using School.Utilities.Enums;
 
 namespace School.Models.Course
 {

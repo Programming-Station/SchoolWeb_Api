@@ -1,13 +1,12 @@
+using System.Text.Json;
 using Cronos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using School.Domain.Reporting;
-using School.Infrastructure;
 using School.Infrastructure.Repositories;
 using School.Services.Interfaces;
 using School_DTOs.Reporting;
-using System.Text.Json;
 
 namespace School.Services.Reporting
 {

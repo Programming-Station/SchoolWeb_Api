@@ -6,7 +6,7 @@ namespace School.Infrastructure.Repositories.IRepositories
     {
         Task<City> AddCityAsync(City entity);
 
-        Task<City> GetCityByIdAsync(int id); 
+        Task<City> GetCityByIdAsync(int id);
 
         Task<IEnumerable<City>> GetAllAsync(int? stateId = null);
 

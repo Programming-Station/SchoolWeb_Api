@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace School.Services.Interfaces
 {
     public class EmailQueueItem

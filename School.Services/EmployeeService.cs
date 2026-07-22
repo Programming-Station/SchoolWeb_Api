@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,14 +9,8 @@ using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School_DTOs;
-
-using School_DTOs.Hr;
 using School_DTOs.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using School_DTOs.Hr;
 
 namespace School.Services
 {
@@ -55,7 +50,7 @@ namespace School.Services
 
                 var entity = _mapper.Map<Employee>(model);
                 entity.CreatedBy = username;
-                
+
                 // Auto generate Employee Code logic here
                 string generatedCode = "EMP" + DateTime.Now.ToString("yyyyMMddHHmmss");
                 entity.EmployeeCode = generatedCode;
@@ -198,7 +193,7 @@ namespace School.Services
             if (!string.IsNullOrEmpty(filter.SearchText))
             {
                 var lowerSearch = filter.SearchText.ToLower();
-                query = query.Where(e => e.FirstName.ToLower().Contains(lowerSearch) || 
+                query = query.Where(e => e.FirstName.ToLower().Contains(lowerSearch) ||
                                          e.LastName.ToLower().Contains(lowerSearch) ||
                                          e.EmployeeCode.ToLower().Contains(lowerSearch) ||
                                          e.Email.ToLower().Contains(lowerSearch));
@@ -208,14 +203,14 @@ namespace School.Services
             bool isDesc = filter.SortDirection?.ToLower() == "desc";
             query = (filter.SortBy?.ToLower()) switch
             {
-                "firstname"       => isDesc ? query.OrderByDescending(e => e.FirstName)      : query.OrderBy(e => e.FirstName),
-                "lastname"        => isDesc ? query.OrderByDescending(e => e.LastName)       : query.OrderBy(e => e.LastName),
-                "employeecode"    => isDesc ? query.OrderByDescending(e => e.EmployeeCode)   : query.OrderBy(e => e.EmployeeCode),
-                "email"           => isDesc ? query.OrderByDescending(e => e.Email)          : query.OrderBy(e => e.Email),
-                "mobilenumber"    => isDesc ? query.OrderByDescending(e => e.MobileNumber)   : query.OrderBy(e => e.MobileNumber),
-                "status"          => isDesc ? query.OrderByDescending(e => e.Status)         : query.OrderBy(e => e.Status),
-                "joiningdate"     => isDesc ? query.OrderByDescending(e => e.JoiningDate)    : query.OrderBy(e => e.JoiningDate),
-                "createddate"     => isDesc ? query.OrderByDescending(e => e.CreatedDate)    : query.OrderBy(e => e.CreatedDate),
+                "firstname" => isDesc ? query.OrderByDescending(e => e.FirstName) : query.OrderBy(e => e.FirstName),
+                "lastname" => isDesc ? query.OrderByDescending(e => e.LastName) : query.OrderBy(e => e.LastName),
+                "employeecode" => isDesc ? query.OrderByDescending(e => e.EmployeeCode) : query.OrderBy(e => e.EmployeeCode),
+                "email" => isDesc ? query.OrderByDescending(e => e.Email) : query.OrderBy(e => e.Email),
+                "mobilenumber" => isDesc ? query.OrderByDescending(e => e.MobileNumber) : query.OrderBy(e => e.MobileNumber),
+                "status" => isDesc ? query.OrderByDescending(e => e.Status) : query.OrderBy(e => e.Status),
+                "joiningdate" => isDesc ? query.OrderByDescending(e => e.JoiningDate) : query.OrderBy(e => e.JoiningDate),
+                "createddate" => isDesc ? query.OrderByDescending(e => e.CreatedDate) : query.OrderBy(e => e.CreatedDate),
                 "designationname" or "designation" =>
                     isDesc ? query.OrderByDescending(e => e.Designation != null ? e.Designation.Name : "")
                            : query.OrderBy(e => e.Designation != null ? e.Designation.Name : ""),
@@ -242,7 +237,7 @@ namespace School.Services
                 CurrentPage = filter.PageNumber,
                 PageSize = filter.PageSize,
                 TotalRecords = totalRecords,
-                
+
             };
 
             return new APIResponse<PagedResponse<EmployeeDto>> { Success = true, StatusCode = HttpStatusCode.OK, Data = pagedResponse };
@@ -306,21 +301,21 @@ namespace School.Services
         /// </summary>
         private static string GenerateSecurePassword()
         {
-            const string upper   = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-            const string lower   = "abcdefghjkmnpqrstuvwxyz";
-            const string digits  = "23456789";
+            const string upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+            const string lower = "abcdefghjkmnpqrstuvwxyz";
+            const string digits = "23456789";
             const string special = "!@#$%^&*";
-            const string all     = upper + lower + digits + special;
+            const string all = upper + lower + digits + special;
 
-            var rng   = System.Security.Cryptography.RandomNumberGenerator.Create();
+            var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
             var bytes = new byte[18];
             rng.GetBytes(bytes);
 
             // Guarantee at least one character from each required set
             var pwd = new System.Text.StringBuilder();
-            pwd.Append(upper[bytes[0]   % upper.Length]);
-            pwd.Append(lower[bytes[1]   % lower.Length]);
-            pwd.Append(digits[bytes[2]  % digits.Length]);
+            pwd.Append(upper[bytes[0] % upper.Length]);
+            pwd.Append(lower[bytes[1] % lower.Length]);
+            pwd.Append(digits[bytes[2] % digits.Length]);
             pwd.Append(special[bytes[3] % special.Length]);
 
             // Fill remaining 8 characters from the full set

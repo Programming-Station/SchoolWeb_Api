@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static School.Domain.BaseEntity;
 using School.Domain.School;
-using School.Domain;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain.Inventory
 {

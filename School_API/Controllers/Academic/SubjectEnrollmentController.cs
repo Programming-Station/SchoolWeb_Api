@@ -14,7 +14,7 @@ namespace School_API.Controllers.Academic
             : base(currentUser)
         {
             _service = service;
-            _tenant  = tenant;
+            _tenant = tenant;
         }
 
         [HttpPost]

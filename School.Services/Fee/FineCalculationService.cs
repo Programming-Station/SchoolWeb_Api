@@ -5,10 +5,6 @@ using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School_DTOs.Fee;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Services.Fee
 {
@@ -156,9 +152,9 @@ namespace School.Services.Fee
             var overdueInstallments = await _dbContext.FeeInstallments
                 .Include(i => i.FeeStructure)
                     .ThenInclude(fs => fs.FeeStructureItems)
-                .Where(i => i.SchoolRegistrationId == schoolId 
-                       && (i.Status == "Pending" || i.Status == "PartiallyPaid" || i.Status == "Overdue") 
-                       && i.DueDate < DateTime.Today 
+                .Where(i => i.SchoolRegistrationId == schoolId
+                       && (i.Status == "Pending" || i.Status == "PartiallyPaid" || i.Status == "Overdue")
+                       && i.DueDate < DateTime.Today
                        && !i.IsDeleted)
                 .ToListAsync();
 
@@ -176,7 +172,7 @@ namespace School.Services.Fee
                 if (daysLate <= rule.GraceDays) continue;
 
                 int activeDays = daysLate - rule.GraceDays;
-                decimal fineCalculated = rule.FineType == "Percentage" 
+                decimal fineCalculated = rule.FineType == "Percentage"
                     ? (inst.Amount * rule.FineAmount / 100) * activeDays
                     : rule.FineAmount * activeDays;
 

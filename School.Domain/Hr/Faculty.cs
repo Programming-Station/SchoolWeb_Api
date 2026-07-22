@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations; 
-using static School.Domain.BaseEntity;
+using System.ComponentModel.DataAnnotations;
 using School.Domain.School;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain
 {

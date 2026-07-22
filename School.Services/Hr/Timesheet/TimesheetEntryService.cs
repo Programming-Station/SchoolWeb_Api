@@ -1,15 +1,9 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.Timesheet;
-using School_DTOs.Common;
-using School_DTOs.Hr.Timesheet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using School_DTOs;
+using School_DTOs.Hr.Timesheet;
 
 namespace School.Services.Hr.Timesheet
 {
@@ -29,7 +23,12 @@ namespace School.Services.Hr.Timesheet
             var data = await _repository.List().Where(x => x.TimesheetId == fkId).Select(x => new TimesheetEntryDto
             {
                 Id = x.Id,
-                TimesheetId = x.TimesheetId, EntryDate = x.EntryDate, TaskName = x.TaskName, ProjectName = x.ProjectName, HoursWorked = x.HoursWorked, Description = x.Description
+                TimesheetId = x.TimesheetId,
+                EntryDate = x.EntryDate,
+                TaskName = x.TaskName,
+                ProjectName = x.ProjectName,
+                HoursWorked = x.HoursWorked,
+                Description = x.Description
             }).ToListAsync();
 
             return new APIResponse<List<TimesheetEntryDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -40,7 +39,12 @@ namespace School.Services.Hr.Timesheet
             var data = await _repository.List().Where(x => x.Id == id).Select(x => new TimesheetEntryDto
             {
                 Id = x.Id,
-                TimesheetId = x.TimesheetId, EntryDate = x.EntryDate, TaskName = x.TaskName, ProjectName = x.ProjectName, HoursWorked = x.HoursWorked, Description = x.Description
+                TimesheetId = x.TimesheetId,
+                EntryDate = x.EntryDate,
+                TaskName = x.TaskName,
+                ProjectName = x.ProjectName,
+                HoursWorked = x.HoursWorked,
+                Description = x.Description
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<TimesheetEntryDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -51,7 +55,12 @@ namespace School.Services.Hr.Timesheet
         {
             var entity = new global::School.Domain.Hr.Timesheet.TimesheetEntry
             {
-                TimesheetId = dto.TimesheetId, EntryDate = dto.EntryDate, TaskName = dto.TaskName, ProjectName = dto.ProjectName, HoursWorked = dto.HoursWorked, Description = dto.Description,
+                TimesheetId = dto.TimesheetId,
+                EntryDate = dto.EntryDate,
+                TaskName = dto.TaskName,
+                ProjectName = dto.ProjectName,
+                HoursWorked = dto.HoursWorked,
+                Description = dto.Description,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

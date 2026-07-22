@@ -1,8 +1,7 @@
-using School_DTOs;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-using System.Net;
+using School_DTOs;
 
 namespace School_API
 {

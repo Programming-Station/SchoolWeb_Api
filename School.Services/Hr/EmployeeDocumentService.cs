@@ -1,14 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Common;
-using School_DTOs.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
+using School_DTOs.Hr;
 
 namespace School.Services.Hr
 {
@@ -29,7 +23,9 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                DocumentName = x.DocumentName, DocumentType = x.DocumentType, FilePath = x.FilePath
+                DocumentName = x.DocumentName,
+                DocumentType = x.DocumentType,
+                FilePath = x.FilePath
             }).ToListAsync();
 
             return new APIResponse<List<EmployeeDocumentDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -41,7 +37,9 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                DocumentName = x.DocumentName, DocumentType = x.DocumentType, FilePath = x.FilePath
+                DocumentName = x.DocumentName,
+                DocumentType = x.DocumentType,
+                FilePath = x.FilePath
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<EmployeeDocumentDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -53,7 +51,9 @@ namespace School.Services.Hr
             var entity = new global::School.Domain.Hr.EmployeeDocument
             {
                 EmployeeId = dto.EmployeeId,
-                DocumentName = dto.DocumentName, DocumentType = dto.DocumentType, FilePath = dto.FilePath,
+                DocumentName = dto.DocumentName,
+                DocumentType = dto.DocumentType,
+                FilePath = dto.FilePath,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

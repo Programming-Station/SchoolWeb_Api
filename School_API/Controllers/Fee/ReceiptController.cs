@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace School_API.Controllers.Fee
 {

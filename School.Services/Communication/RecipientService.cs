@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using School.Domain.Communication.Recipients;
@@ -6,11 +7,6 @@ using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School_DTOs;
 using School_DTOs.Communication.Recipients;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Services.Communication
 {

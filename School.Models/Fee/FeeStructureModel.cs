@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace School.Models.Fee
@@ -33,7 +32,7 @@ namespace School.Models.Fee
     public class FeeStructureItemModel
     {
         public int? Id { get; set; }
-        
+
         [Required(ErrorMessage = "Fee Type selection is required")]
         public int FeeTypeId { get; set; }
 

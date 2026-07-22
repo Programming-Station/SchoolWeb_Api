@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -10,7 +10,8 @@ namespace School.Domain.Reporting
     /// Tracks each stage (data fetch, RDLC render, export, email) with timing.
     /// </summary>
     [Table("ReportExecutions")]
-    public class ReportExecution : AuditEntity<int>, ITenantEntity{
+    public class ReportExecution : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

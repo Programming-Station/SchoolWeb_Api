@@ -1,5 +1,5 @@
-using School.Utilities.Enums;
 using System.ComponentModel.DataAnnotations;
+using School.Utilities.Enums;
 
 namespace School.Models.Student
 {
@@ -41,8 +41,8 @@ namespace School.Models.Student
         public string? Nationality { get; set; }
 
         [MaxLength(100)]
-        public string? Occupation { get; set; } 
-        public string? DateOfBirth { get; set; }  
+        public string? Occupation { get; set; }
+        public string? DateOfBirth { get; set; }
 
         [MaxLength(200)]
         public string? SchoolCollege { get; set; }
@@ -51,8 +51,8 @@ namespace School.Models.Student
         public string? QualificationDetails { get; set; }
 
         [MaxLength(500)]
-        public string? PostalAddress { get; set; } 
-        public int? CityId { get; set; } 
+        public string? PostalAddress { get; set; }
+        public int? CityId { get; set; }
         public int? StateId { get; set; }
 
         [MaxLength(10)]

@@ -1,18 +1,12 @@
-using School_DTOs;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
 using School.Infrastructure;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School.Services.Interfaces.Academic;
+using School_DTOs;
 using School_DTOs.Academic;
-using School_DTOs.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Services.Academic
 {

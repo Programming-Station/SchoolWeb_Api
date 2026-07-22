@@ -1,4 +1,3 @@
-using School.Domain.Hr.Timesheet;
 using School.Infrastructure.UnitOfWork;
 
 namespace School.Infrastructure.Repositories.Hr.Timesheet

@@ -1,9 +1,6 @@
 using School.Models.City;
 using School_DTOs;
 using School_DTOs.City;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace School.Services.Interfaces
 {

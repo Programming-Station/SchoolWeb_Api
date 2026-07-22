@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using School.Domain.School;
@@ -6,7 +5,7 @@ using static School.Domain.BaseEntity;
 
 namespace School.Domain.Academic
 {
-    #nullable disable
+#nullable disable
     /// <summary>4.5 — Assignment (graded project/task)</summary>
     public class Assignment : AuditEntity<int>, ITenantEntity
     {
@@ -25,7 +24,7 @@ namespace School.Domain.Academic
         [ForeignKey(nameof(BatchId))] public virtual Batch Batch { get; set; }
 
         [Required] public DateTime StartDate { get; set; }
-        [Required] public DateTime EndDate   { get; set; }
+        [Required] public DateTime EndDate { get; set; }
 
         [Column(TypeName = "decimal(5,2)")] public decimal MaxMarks { get; set; } = 100;
 

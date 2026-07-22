@@ -1,9 +1,8 @@
-using School_DTOs;
-using School.Models.Configuration;
-using Microsoft.Extensions.Options;
 using System.Net;
-using System.Text.Json; 
-using System.IO; 
+using System.Text.Json;
+using Microsoft.Extensions.Options;
+using School.Models.Configuration;
+using School_DTOs;
 
 namespace School_API.Middleware
 {
@@ -15,7 +14,7 @@ namespace School_API.Middleware
         private readonly AppSettings? _appSettings;
 
         public CustomExceptionHandlerMiddleware(
-            RequestDelegate next, 
+            RequestDelegate next,
             ILogger<CustomExceptionHandlerMiddleware> logger,
             IWebHostEnvironment environment,
             IOptions<AppSettings>? appSettings = null)
@@ -96,7 +95,7 @@ namespace School_API.Middleware
                 case ArgumentException argEx:
                     code = HttpStatusCode.BadRequest;
                     response.Message = argEx.Message ?? "Invalid argument";
-                    break; 
+                    break;
 
                 case KeyNotFoundException:
                     code = HttpStatusCode.NotFound;
@@ -146,7 +145,7 @@ namespace School_API.Middleware
             response.RequestId = requestId;
 
             var errorMessage = exception.Message;
-            
+
             if (exception.InnerException != null)
             {
                 errorMessage += $" | Inner: {exception.InnerException.Message}";
@@ -249,7 +248,7 @@ namespace School_API.Middleware
             var swaggerUsername = Environment.GetEnvironmentVariable("SWAGGER_USERNAME") ?? "admin";
             var swaggerPassword = Environment.GetEnvironmentVariable("SWAGGER_PASSWORD") ?? "admin123";
 
-            return username.Equals(swaggerUsername, StringComparison.OrdinalIgnoreCase) 
+            return username.Equals(swaggerUsername, StringComparison.OrdinalIgnoreCase)
                 && password.Equals(swaggerPassword, StringComparison.Ordinal);
         }
     }

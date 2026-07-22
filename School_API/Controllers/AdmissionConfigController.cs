@@ -1,16 +1,10 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using School.Models.School;
 using School.Models.Academic;
-using School.Models.Student;
 using School.Models.Fee;
+using School.Models.School;
+using School.Models.Student;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using School_DTOs.School;
-using School_DTOs.Academic;
-using School_DTOs.Student;
-using School_DTOs.Fee;
 
 namespace School_API.Controllers
 {

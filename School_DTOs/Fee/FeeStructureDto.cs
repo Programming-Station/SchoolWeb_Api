@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace School_DTOs.Fee
 {
     public class FeeStructureDto : BaseDto

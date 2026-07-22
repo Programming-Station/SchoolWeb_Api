@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using School.Domain.Academic;
 using School.Infrastructure.Repositories.IRepositories;
 using School.Services.Interfaces.Academic;
@@ -30,16 +26,16 @@ namespace School.Services.Academic
 
                 toAdd.Add(new StudentAttendance
                 {
-                    StudentId          = entry.StudentId,
-                    SubjectId          = request.SubjectId,
-                    ClassId            = request.ClassId,
-                    AttendanceDate     = request.Date.Date,
-                    Status             = entry.Status,
-                    PeriodNo           = request.PeriodNo,
-                    MarkedBy           = markedBy,
-                    Remarks            = entry.Remarks,
+                    StudentId = entry.StudentId,
+                    SubjectId = request.SubjectId,
+                    ClassId = request.ClassId,
+                    AttendanceDate = request.Date.Date,
+                    Status = entry.Status,
+                    PeriodNo = request.PeriodNo,
+                    MarkedBy = markedBy,
+                    Remarks = entry.Remarks,
                     SchoolRegistrationId = schoolRegistrationId,
-                    CreatedBy          = markedBy
+                    CreatedBy = markedBy
                 });
             }
 
@@ -72,11 +68,11 @@ namespace School.Services.Academic
             return new AttendanceSummaryDto
             {
                 StudentId = studentId,
-                Present   = present,
-                Absent    = absent,
-                Late      = late,
-                Leave     = leave,
-                Total     = total
+                Present = present,
+                Absent = absent,
+                Late = late,
+                Leave = leave,
+                Total = total
             };
         }
 
@@ -89,13 +85,13 @@ namespace School.Services.Academic
                 .GroupBy(r => new { r.StudentId, r.Student?.Name })
                 .Select(g => new AttendanceSummaryDto
                 {
-                    StudentId   = g.Key.StudentId,
+                    StudentId = g.Key.StudentId,
                     StudentName = g.Key.Name ?? string.Empty,
-                    Present     = g.Count(x => x.Status == "Present"),
-                    Absent      = g.Count(x => x.Status == "Absent"),
-                    Late        = g.Count(x => x.Status == "Late"),
-                    Leave       = g.Count(x => x.Status == "Leave"),
-                    Total       = g.Count()
+                    Present = g.Count(x => x.Status == "Present"),
+                    Absent = g.Count(x => x.Status == "Absent"),
+                    Late = g.Count(x => x.Status == "Late"),
+                    Leave = g.Count(x => x.Status == "Leave"),
+                    Total = g.Count()
                 })
                 .OrderBy(x => x.StudentName)
                 .ToList();
@@ -108,7 +104,7 @@ namespace School.Services.Academic
             if (record == null || record.SchoolRegistrationId != schoolRegistrationId)
                 return (false, "Record not found.");
 
-            record.Status  = status;
+            record.Status = status;
             record.Remarks = remarks;
             await _repo.UpdateAsync(record);
             return (true, "Attendance updated.");
@@ -116,18 +112,18 @@ namespace School.Services.Academic
 
         private static AttendanceRecordDto MapToDto(StudentAttendance a) => new()
         {
-            Id             = a.Id,
-            StudentId      = a.StudentId,
-            StudentName    = a.Student?.Name ?? string.Empty,
-            StudentCode    = a.Student?.StudentId ?? string.Empty,
-            SubjectId      = a.SubjectId,
-            SubjectName    = a.Subject?.Name,
-            ClassId        = a.ClassId,
-            ClassName      = a.Class?.Name,
+            Id = a.Id,
+            StudentId = a.StudentId,
+            StudentName = a.Student?.Name ?? string.Empty,
+            StudentCode = a.Student?.StudentId ?? string.Empty,
+            SubjectId = a.SubjectId,
+            SubjectName = a.Subject?.Name,
+            ClassId = a.ClassId,
+            ClassName = a.Class?.Name,
             AttendanceDate = a.AttendanceDate,
-            Status         = a.Status,
-            PeriodNo       = a.PeriodNo,
-            Remarks        = a.Remarks
+            Status = a.Status,
+            PeriodNo = a.PeriodNo,
+            Remarks = a.Remarks
         };
     }
 }

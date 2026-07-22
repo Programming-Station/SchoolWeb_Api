@@ -16,7 +16,7 @@ namespace School_DTOs.Module
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
     }
-    
+
     public class ModulePermissionDto
     {
         public int Id { get; set; }
@@ -29,7 +29,7 @@ namespace School_DTOs.Module
         public string? RoleName { get; set; }
         public bool IsActive { get; set; }
     }
-    
+
     public class UserModulesDto
     {
         public string UserId { get; set; } = null!;

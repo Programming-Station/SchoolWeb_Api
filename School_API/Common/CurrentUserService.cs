@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using School.Utilities.Constants;
 using School_API.Common.Interface;
-using System.Security.Claims;
 
 namespace School_API.Common
 {

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using School_DTOs;
 
 namespace School.Services.Interfaces

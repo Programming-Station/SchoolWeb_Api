@@ -1,21 +1,12 @@
-using School_DTOs;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Payroll;
-using School.Domain.Hr;
-using School.Domain.Hr.Attendance;
-using School.Domain.Hr.LeaveManagement;
 using School.Infrastructure;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces;
 using School.Services.Interfaces.Payroll;
+using School_DTOs;
 using School_DTOs.Payroll;
-using School_DTOs.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace School.Services.Payroll
 {
@@ -234,7 +225,7 @@ namespace School.Services.Payroll
             int daysInMonth = DateTime.DaysInMonth(monthDate.Year, monthDate.Month);
 
             // 2. Fetch compliance configs
-            var compliance = await _dbContext.StatutoryComplianceConfigs.FirstOrDefaultAsync() 
+            var compliance = await _dbContext.StatutoryComplianceConfigs.FirstOrDefaultAsync()
                              ?? new StatutoryComplianceConfig();
 
             using var transaction = await _uow.BeginTransactionAsync();
@@ -1453,7 +1444,7 @@ namespace School.Services.Payroll
                 {
                     var coaResponse = await _accountingService.GetChartOfAccountsAsync(e.SchoolRegistrationId);
                     var coaList = coaResponse?.Data;
-                    
+
                     var expenseAcc = coaList?.FirstOrDefault(a => a.Code == "50000") ?? coaList?.FirstOrDefault(a => a.AccountType.Equals("Expense", StringComparison.OrdinalIgnoreCase));
                     var assetAcc = coaList?.FirstOrDefault(a => a.Code == "11000") ?? coaList?.FirstOrDefault(a => a.Code == "10000") ?? coaList?.FirstOrDefault(a => a.AccountType.Equals("Asset", StringComparison.OrdinalIgnoreCase));
 

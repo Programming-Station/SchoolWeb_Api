@@ -8,7 +8,7 @@ namespace School.Services.AccessControl.Interfaces
     {
         Task<APIResponse> GiveMenuPermissionAsync(MenuPermissionModel model);
         Task<APIResponse<MenuPermissionsDto>> GetMenuPermissionAsync(string? roleId);
-        
+
         // Basic CRUD support for MenuPermission entity
         Task<APIResponse> AddMenuPermissionAsync(MenuPermissionModel model);
         Task<APIResponse> DeleteMenuPermissionAsync(int id);

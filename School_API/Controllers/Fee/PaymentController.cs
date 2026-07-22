@@ -1,12 +1,10 @@
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Infrastructure.Interfaces;
 using School.Services.Fee;
 using School.Services.Interfaces;
 using School_API.Common.Interface;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers.Fee
 {

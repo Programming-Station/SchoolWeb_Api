@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static School.Domain.BaseEntity;
 using School.Domain.School;
+using static School.Domain.BaseEntity;
 
 namespace School.Domain.Hr.Timesheet
 {
@@ -15,7 +15,7 @@ namespace School.Domain.Hr.Timesheet
         public virtual Employee Employee { get; set; } = null!;
 
         public DateTime StartDate { get; set; }
-        
+
         public DateTime EndDate { get; set; }
 
         [MaxLength(50)]

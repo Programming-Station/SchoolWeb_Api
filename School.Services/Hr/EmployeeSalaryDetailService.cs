@@ -1,14 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Common;
-using School_DTOs.Hr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using School.Infrastructure.UnitOfWork.Interfaces;
 using School_DTOs;
+using School_DTOs.Hr;
 
 namespace School.Services.Hr
 {
@@ -29,7 +23,12 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Basic = x.Basic, HRA = x.HRA, DA = x.DA, PF = x.PF, ESI = x.ESI, NetSalary = x.NetSalary
+                Basic = x.Basic,
+                HRA = x.HRA,
+                DA = x.DA,
+                PF = x.PF,
+                ESI = x.ESI,
+                NetSalary = x.NetSalary
             }).ToListAsync();
 
             return new APIResponse<List<EmployeeSalaryDetailDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -41,7 +40,12 @@ namespace School.Services.Hr
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                Basic = x.Basic, HRA = x.HRA, DA = x.DA, PF = x.PF, ESI = x.ESI, NetSalary = x.NetSalary
+                Basic = x.Basic,
+                HRA = x.HRA,
+                DA = x.DA,
+                PF = x.PF,
+                ESI = x.ESI,
+                NetSalary = x.NetSalary
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<EmployeeSalaryDetailDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -53,7 +57,12 @@ namespace School.Services.Hr
             var entity = new global::School.Domain.Hr.EmployeeSalaryDetail
             {
                 EmployeeId = dto.EmployeeId,
-                Basic = dto.Basic, HRA = dto.HRA, DA = dto.DA, PF = dto.PF, ESI = dto.ESI, NetSalary = dto.NetSalary,
+                Basic = dto.Basic,
+                HRA = dto.HRA,
+                DA = dto.DA,
+                PF = dto.PF,
+                ESI = dto.ESI,
+                NetSalary = dto.NetSalary,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

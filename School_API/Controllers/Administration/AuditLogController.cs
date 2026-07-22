@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using School.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using School.Infrastructure.Interfaces;
+using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_DTOs.Administration;
 

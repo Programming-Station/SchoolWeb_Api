@@ -1,20 +1,20 @@
-using System.Net;
 using System.Data;
+using System.Net;
 using System.Security.Claims;
-using School.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using School.Domain.Auth;
 using School.Infrastructure.JWTAuthenticationManager.Interfaces;
 using School.Infrastructure.Repositories.IRepositories;
+using School.Infrastructure.UnitOfWork;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using School_DTOs.Account;
 using School.Models.Account;
-using School.Domain.Auth;
-using Microsoft.AspNetCore.Identity;
 using School.Models.Configuration;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using School_DTOs;
 using School.Utilities.Resources;
-using Microsoft.EntityFrameworkCore;
+using School_DTOs;
+using School_DTOs.Account;
 
 namespace School.Infrastructure.Repositories
 {
@@ -485,7 +485,7 @@ namespace School.Infrastructure.Repositories
                     StatusCode = HttpStatusCode.Unauthorized,
                 };
             }
-            
+
             // Security: Revoke all existing refresh tokens so other active sessions are logged out
             var tokens = await _context.RefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
             if (tokens.Any())
@@ -571,7 +571,7 @@ namespace School.Infrastructure.Repositories
                     Success = false
                 };
             }
-            
+
             // Security: Revoke all existing refresh tokens so other active sessions are logged out
             var tokens = await _context.RefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
             if (tokens.Any())

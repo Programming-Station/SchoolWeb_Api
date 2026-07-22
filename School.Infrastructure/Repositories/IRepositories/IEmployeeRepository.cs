@@ -1,7 +1,5 @@
 using School.Domain.Hr;
 using School.Infrastructure.UnitOfWork.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories.IRepositories
 {

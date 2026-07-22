@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School.Domain.FeeManagnment;
 
 namespace School.Infrastructure.Repositories.IRepositories

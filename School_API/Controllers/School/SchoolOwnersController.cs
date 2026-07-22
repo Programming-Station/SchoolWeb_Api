@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Services.School.ISchoolServices;
+using School_API.Common.Interface;
 using School_DTOs;
 using School_DTOs.School;
-using System.Threading.Tasks;
-using School_API.Common.Interface;
 
 namespace School_API.Controllers.School
 {

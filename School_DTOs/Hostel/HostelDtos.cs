@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Hostel
 {
-    #nullable disable
+#nullable disable
 
     // ════════════════════════════════════════════════════════════════════════
     // HOSTEL DTOs
@@ -623,7 +620,7 @@ namespace School_DTOs.Hostel
         public int VisitorsToday { get; set; }
         public int PendingComplaints { get; set; }
         public int ActiveGatePasses { get; set; }
-        
+
         public List<HostelOccupancyStatDto> HostelOccupancyStats { get; set; } = new();
         public List<MonthlyAdmissionsStatDto> MonthlyAdmissionsStats { get; set; } = new();
         public List<ComplaintCategoryStatDto> ComplaintCategoryStats { get; set; } = new();

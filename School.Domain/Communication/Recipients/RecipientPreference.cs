@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,7 +8,7 @@ namespace School.Domain.Communication.Recipients
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public int SchoolRegistrationId { get; set; }
 
@@ -20,7 +18,7 @@ namespace School.Domain.Communication.Recipients
 
         [Required, StringLength(50)]
         public string ChannelType { get; set; } = null!; // Email, SMS, WhatsApp, Push
-        
+
         [Required, StringLength(50)]
         public string MessageCategory { get; set; } = null!; // Circular, Alert, Marketing
 

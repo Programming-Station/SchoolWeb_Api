@@ -1,25 +1,20 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using School.Domain.Auth;
 using School.Domain.School;
+using School.Infrastructure.Repositories.School;
 using School.Models.School;
+using School.Services.Interfaces;
 using School.Services.School.ISchoolServices;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.School;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.School;
-using School.Services.Interfaces;
 
 namespace School.Services.School
 {
-    public class SchoolService:ISchoolService
+    public class SchoolService : ISchoolService
     {
         private readonly ISchoolRepository _schoolRepo;
         private readonly IMapper _mapper;
@@ -32,7 +27,7 @@ namespace School.Services.School
         private readonly global::School.Infrastructure.SchoolDbContext _dbContext;
 
         public SchoolService(
-            ISchoolRepository schoolRepo, 
+            ISchoolRepository schoolRepo,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -43,7 +38,7 @@ namespace School.Services.School
             global::School.Infrastructure.SchoolDbContext dbContext)
         {
             _schoolRepo = schoolRepo;
-            _mapper = mapper;  
+            _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
             _schoolOwnerRepo = schoolOwnerRepo;
@@ -81,7 +76,7 @@ namespace School.Services.School
                     if (!string.IsNullOrWhiteSpace(model.ContactPersonName))
                     {
                         var nameParts = model.ContactPersonName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-                        
+
                         var prefixesToIgnore = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                         {
                             "mr", "mr.", "mrs", "mrs.", "ms", "ms.", "dr", "dr.", "miss", "prof", "prof.", "shri", "shri.", "smt", "smt.", "sir"
@@ -155,76 +150,76 @@ namespace School.Services.School
                         });
                     }
 
-                        // Create SchoolSubscription (Default 1-month trial) first to get its database ID
-                        var subscription = new SchoolSubscription
-                        {
-                            SchoolRegistrationId = entity.Id,
-                            SubscriptionPlanId = 1, // Default Plan
-                            StartDate = DateTime.UtcNow,
-                            EndDate = DateTime.UtcNow.AddMonths(1),
-                            AmountPaid = 0,
-                            PaymentStatus = "Free",
-                            IsActive = true,
-                            CreatedDate=DateTime.UtcNow,
-                            CreatedBy="Superadmin",
-                        };
-                        await _schoolSubscriptionRepo.AddAsync(subscription);
+                    // Create SchoolSubscription (Default 1-month trial) first to get its database ID
+                    var subscription = new SchoolSubscription
+                    {
+                        SchoolRegistrationId = entity.Id,
+                        SubscriptionPlanId = 1, // Default Plan
+                        StartDate = DateTime.UtcNow,
+                        EndDate = DateTime.UtcNow.AddMonths(1),
+                        AmountPaid = 0,
+                        PaymentStatus = "Free",
+                        IsActive = true,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedBy = "Superadmin",
+                    };
+                    await _schoolSubscriptionRepo.AddAsync(subscription);
 
-                        // Create SchoolOwner referencing the newly created subscription ID
-                        var owner = new SchoolOwner
-                        {
-                            SchoolRegistrationId = entity.Id,
-                            ApplicationUserId = user.Id,
-                            StatusId = 1, // Assuming 1 is Active status ID
-                            EmailVerified = true,
-                            MobileVerified = true,
-                            IsLocked = false,
-                            CreatedDate = DateTime.UtcNow,
-                            CreatedBy = "Superadmin",
-                            SchoolSubscriptionId = subscription.Id
-                        };
-                        await _schoolOwnerRepo.AddAsync(owner);
+                    // Create SchoolOwner referencing the newly created subscription ID
+                    var owner = new SchoolOwner
+                    {
+                        SchoolRegistrationId = entity.Id,
+                        ApplicationUserId = user.Id,
+                        StatusId = 1, // Assuming 1 is Active status ID
+                        EmailVerified = true,
+                        MobileVerified = true,
+                        IsLocked = false,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedBy = "Superadmin",
+                        SchoolSubscriptionId = subscription.Id
+                    };
+                    await _schoolOwnerRepo.AddAsync(owner);
 
-                        // Fetch names of Country, State, City, and Board to store in OrganizationProfile
-                        var countryName = await _dbContext.Countries.Where(c => c.Id == entity.CountryId).Select(c => c.Name).FirstOrDefaultAsync();
-                        var stateName = await _dbContext.States.Where(s => s.Id == entity.StateId).Select(s => s.Name).FirstOrDefaultAsync();
-                        var cityName = await _dbContext.Cities.Where(c => c.Id == entity.CityId).Select(c => c.Name).FirstOrDefaultAsync();
-                        var boardName = entity.AffiliationBoardId.HasValue 
-                            ? await _dbContext.AffiliationBoards.Where(b => b.Id == entity.AffiliationBoardId.Value).Select(b => b.Name).FirstOrDefaultAsync()
-                            : null;
+                    // Fetch names of Country, State, City, and Board to store in OrganizationProfile
+                    var countryName = await _dbContext.Countries.Where(c => c.Id == entity.CountryId).Select(c => c.Name).FirstOrDefaultAsync();
+                    var stateName = await _dbContext.States.Where(s => s.Id == entity.StateId).Select(s => s.Name).FirstOrDefaultAsync();
+                    var cityName = await _dbContext.Cities.Where(c => c.Id == entity.CityId).Select(c => c.Name).FirstOrDefaultAsync();
+                    var boardName = entity.AffiliationBoardId.HasValue
+                        ? await _dbContext.AffiliationBoards.Where(b => b.Id == entity.AffiliationBoardId.Value).Select(b => b.Name).FirstOrDefaultAsync()
+                        : null;
 
-                        // Create OrganizationProfile
-                        var orgProfile = new global::School.Domain.School.OrganizationProfile
-                        {
-                            SchoolRegistrationId = entity.Id,
-                            OrganizationName = entity.SchoolName,
-                            SchoolName = entity.SchoolName,
-                            SchoolCode = entity.SchoolCode,
-                            ShortName = string.Join("", entity.SchoolName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(w => w[0])).ToUpper(),
-                            Email = entity.Email,
-                            Phone = entity.PhoneNumber,
-                            Mobile = entity.PhoneNumber,
-                            Status = true,
-                            CreatedDate = DateTime.UtcNow,
-                            CreatedBy = "Superadmin",
-                            AffiliationNumber = entity.AffiliationNumber,
-                            AddressLine1 = entity.Address,    
-                            PANNumber = entity.PANNumber,
-                            Board = boardName,
-                            GSTNumber = entity.GSTNumber,
-                            Country = countryName,
-                            State = stateName,
-                            City = cityName,
-                            Pincode=entity.Pincode,
-                            PrimaryColor= "#1e3a8a",
-                            SecondaryColor= "#0d9488",
-                            Theme="Light",
-                            FontFamily= "Inter",
-                            FontSize= "14px",
-                            AccentColor= "#3b82f6",
-                        };
-                        await _profileRepo.AddAsync(orgProfile);
-                    
+                    // Create OrganizationProfile
+                    var orgProfile = new global::School.Domain.School.OrganizationProfile
+                    {
+                        SchoolRegistrationId = entity.Id,
+                        OrganizationName = entity.SchoolName,
+                        SchoolName = entity.SchoolName,
+                        SchoolCode = entity.SchoolCode,
+                        ShortName = string.Join("", entity.SchoolName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(w => w[0])).ToUpper(),
+                        Email = entity.Email,
+                        Phone = entity.PhoneNumber,
+                        Mobile = entity.PhoneNumber,
+                        Status = true,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedBy = "Superadmin",
+                        AffiliationNumber = entity.AffiliationNumber,
+                        AddressLine1 = entity.Address,
+                        PANNumber = entity.PANNumber,
+                        Board = boardName,
+                        GSTNumber = entity.GSTNumber,
+                        Country = countryName,
+                        State = stateName,
+                        City = cityName,
+                        Pincode = entity.Pincode,
+                        PrimaryColor = "#1e3a8a",
+                        SecondaryColor = "#0d9488",
+                        Theme = "Light",
+                        FontFamily = "Inter",
+                        FontSize = "14px",
+                        AccentColor = "#3b82f6",
+                    };
+                    await _profileRepo.AddAsync(orgProfile);
+
                     return new APIResponse<SchoolRegistrationDto>
                     {
                         Data = _mapper.Map<SchoolRegistrationDto>(entity),
@@ -274,7 +269,7 @@ namespace School.Services.School
                 }
                 return apiResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 apiResponse.Success = false;
                 apiResponse.Error = new APIException(ex.Message, ex.InnerException);
@@ -296,7 +291,7 @@ namespace School.Services.School
                     {
                         Data = _mapper.Map<SchoolRegistrationDto>(model),
                         Success = true,
-                        Message= CommonResource.UpdateSuccess,
+                        Message = CommonResource.UpdateSuccess,
                         StatusCode = HttpStatusCode.OK,
                     };
                 }
@@ -329,8 +324,8 @@ namespace School.Services.School
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     searchTerm = searchTerm.ToLower();
-                    query = query.Where(s => 
-                        s.SchoolName.ToLower().Contains(searchTerm) || 
+                    query = query.Where(s =>
+                        s.SchoolName.ToLower().Contains(searchTerm) ||
                         s.SchoolCode.ToLower().Contains(searchTerm) ||
                         s.Address.ToLower().Contains(searchTerm)
                     );
@@ -425,7 +420,8 @@ namespace School.Services.School
                 var matchingNums = allCodes
                     .Select(c => c.Trim())
                     .Where(c => c.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                    .Select(c => {
+                    .Select(c =>
+                    {
                         var numStr = c.Substring(prefix.Length);
                         return int.TryParse(numStr, out int parsed) ? parsed : 0;
                     })

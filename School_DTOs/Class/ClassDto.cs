@@ -1,6 +1,6 @@
 namespace School_DTOs.Class
 {
-    public class ClassDto: BaseDto
+    public class ClassDto : BaseDto
     {
         public string Name { get; set; } = null!;
         public string? Section { get; set; }
@@ -13,7 +13,7 @@ namespace School_DTOs.Class
         public int? ClassTeacherId { get; set; }
         public string? ClassTeacherName { get; set; }
         public string? RoomNumber { get; set; }
-        public string Status { get; set; } = null!; 
+        public string Status { get; set; } = null!;
     }
 }
 

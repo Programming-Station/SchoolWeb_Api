@@ -1,5 +1,3 @@
-using System;
-
 namespace School_DTOs.School
 {
     public class SchoolProfileSettingDto
@@ -25,7 +23,7 @@ namespace School_DTOs.School
 
         // Other
         public string? Tagline { get; set; }
-        
+
         public int? PrimaryMediumId { get; set; }
         public string? PrimaryMediumName { get; set; }
     }

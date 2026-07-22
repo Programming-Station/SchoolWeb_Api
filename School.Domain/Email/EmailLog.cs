@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using School.Domain.School;
 using School.Domain.Communication.Recipients;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Email

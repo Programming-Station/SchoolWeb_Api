@@ -1,5 +1,3 @@
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using School.Domain.Reporting;

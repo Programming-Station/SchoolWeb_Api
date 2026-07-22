@@ -10,7 +10,7 @@ namespace School.Infrastructure.Seeds
             {
                 new EmailServerSetting
                 {
-                  
+
                     CreatedDate = DateTime.Now,
                     DisplayName= "SchoolSaaas Support",
                     EnableSSL= true,
@@ -23,7 +23,7 @@ namespace School.Infrastructure.Seeds
                     UseDefaultCredential= false,
                     UserName= "titwig365@gmail.com",
                 },
-               
+
             };
         }
     }

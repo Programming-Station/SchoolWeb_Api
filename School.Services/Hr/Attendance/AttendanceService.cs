@@ -1,15 +1,9 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.Attendance;
-using School_DTOs.Common;
-using School_DTOs.Hr.Attendance;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using School_DTOs;
+using School_DTOs.Hr.Attendance;
 
 namespace School.Services.Hr.Attendance
 {
@@ -30,7 +24,11 @@ namespace School.Services.Hr.Attendance
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                AttendanceDate = x.AttendanceDate, CheckInTime = x.CheckInTime, CheckOutTime = x.CheckOutTime, Status = x.Status, Remarks = x.Remarks
+                AttendanceDate = x.AttendanceDate,
+                CheckInTime = x.CheckInTime,
+                CheckOutTime = x.CheckOutTime,
+                Status = x.Status,
+                Remarks = x.Remarks
             }).ToListAsync();
 
             return new APIResponse<List<AttendanceDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -42,7 +40,11 @@ namespace School.Services.Hr.Attendance
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                AttendanceDate = x.AttendanceDate, CheckInTime = x.CheckInTime, CheckOutTime = x.CheckOutTime, Status = x.Status, Remarks = x.Remarks
+                AttendanceDate = x.AttendanceDate,
+                CheckInTime = x.CheckInTime,
+                CheckOutTime = x.CheckOutTime,
+                Status = x.Status,
+                Remarks = x.Remarks
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<AttendanceDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -54,7 +56,11 @@ namespace School.Services.Hr.Attendance
             var entity = new global::School.Domain.Hr.Attendance.Attendance
             {
                 EmployeeId = dto.EmployeeId,
-                AttendanceDate = dto.AttendanceDate, CheckInTime = dto.CheckInTime, CheckOutTime = dto.CheckOutTime, Status = dto.Status, Remarks = dto.Remarks,
+                AttendanceDate = dto.AttendanceDate,
+                CheckInTime = dto.CheckInTime,
+                CheckOutTime = dto.CheckOutTime,
+                Status = dto.Status,
+                Remarks = dto.Remarks,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

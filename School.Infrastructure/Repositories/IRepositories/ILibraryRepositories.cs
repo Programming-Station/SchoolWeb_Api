@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using School.Domain.Library;
 using School.Infrastructure.UnitOfWork.Interfaces;
 

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Student;
 using School.Infrastructure.Repositories.IRepositories;
@@ -72,8 +68,8 @@ namespace School.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var term = searchTerm.Trim().ToLower();
-                query = query.Where(x => x.FullName.ToLower().Contains(term) || 
-                                         x.ApplicationNo.ToLower().Contains(term) || 
+                query = query.Where(x => x.FullName.ToLower().Contains(term) ||
+                                         x.ApplicationNo.ToLower().Contains(term) ||
                                          (x.AdmissionNo != null && x.AdmissionNo.ToLower().Contains(term)) ||
                                          (x.EnrollmentNo != null && x.EnrollmentNo.ToLower().Contains(term)) ||
                                          x.Mobile.Contains(term));
@@ -108,8 +104,8 @@ namespace School.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var term = searchTerm.Trim().ToLower();
-                query = query.Where(x => x.FullName.ToLower().Contains(term) || 
-                                         x.ApplicationNo.ToLower().Contains(term) || 
+                query = query.Where(x => x.FullName.ToLower().Contains(term) ||
+                                         x.ApplicationNo.ToLower().Contains(term) ||
                                          (x.AdmissionNo != null && x.AdmissionNo.ToLower().Contains(term)) ||
                                          (x.EnrollmentNo != null && x.EnrollmentNo.ToLower().Contains(term)) ||
                                          x.Mobile.Contains(term));

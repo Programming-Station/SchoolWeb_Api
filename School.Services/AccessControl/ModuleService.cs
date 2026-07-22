@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using School.Domain.AccessControl;
 using School.Infrastructure.Repositories.AccessControl;
@@ -6,7 +7,6 @@ using School.Services.AccessControl.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Module;
-using System.Net;
 
 namespace School.Services.AccessControl
 {
@@ -18,7 +18,7 @@ namespace School.Services.AccessControl
         private readonly IMapper _mapper;
 
         public ModuleService(
-            IModuleRepository moduleRepository, 
+            IModuleRepository moduleRepository,
             ICategoryModuleRepository categoryModuleRepository,
             IMapper mapper,
             global::School.Infrastructure.Interfaces.ITenantService tenantService)

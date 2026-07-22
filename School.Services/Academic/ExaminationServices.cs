@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Academic;
-using School.Domain.FeeManagnment;
 using School.Infrastructure;
 using School.Infrastructure.Repositories.IRepositories;
 
@@ -157,11 +152,18 @@ namespace School.Services.Academic
         {
             var e = new ExamSchedule
             {
-                ExamId = dto.ExamId, SubjectId = dto.SubjectId, ClassId = dto.ClassId,
-                ExamDate = dto.ExamDate, StartTime = dto.StartTime, EndTime = dto.EndTime,
-                MaxMarks = dto.MaxMarks, PassingMarks = dto.PassingMarks,
-                RoomNo = dto.RoomNo, Instructions = dto.Instructions,
-                SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                ExamId = dto.ExamId,
+                SubjectId = dto.SubjectId,
+                ClassId = dto.ClassId,
+                ExamDate = dto.ExamDate,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                MaxMarks = dto.MaxMarks,
+                PassingMarks = dto.PassingMarks,
+                RoomNo = dto.RoomNo,
+                Instructions = dto.Instructions,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddAsync(e);
             dto.Id = e.Id;
@@ -173,11 +175,18 @@ namespace School.Services.Academic
             await _repo.DeleteByExamAsync(examId);
             var list = schedules.Select(dto => new ExamSchedule
             {
-                ExamId = examId, SubjectId = dto.SubjectId, ClassId = dto.ClassId,
-                ExamDate = dto.ExamDate, StartTime = dto.StartTime, EndTime = dto.EndTime,
-                MaxMarks = dto.MaxMarks, PassingMarks = dto.PassingMarks,
-                RoomNo = dto.RoomNo, Instructions = dto.Instructions,
-                SchoolRegistrationId = schoolId, CreatedBy = savedBy
+                ExamId = examId,
+                SubjectId = dto.SubjectId,
+                ClassId = dto.ClassId,
+                ExamDate = dto.ExamDate,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                MaxMarks = dto.MaxMarks,
+                PassingMarks = dto.PassingMarks,
+                RoomNo = dto.RoomNo,
+                Instructions = dto.Instructions,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = savedBy
             }).ToList();
             await _repo.AddRangeAsync(list);
             return (true, $"{list.Count} schedule(s) saved.");
@@ -207,12 +216,20 @@ namespace School.Services.Academic
 
         private static ExamScheduleDto Map(ExamSchedule e) => new()
         {
-            Id = e.Id, ExamId = e.ExamId, ExamName = e.Exam?.Name ?? "",
-            SubjectId = e.SubjectId, SubjectName = e.Subject?.Name ?? "",
-            ClassId = e.ClassId, ClassName = e.Class?.Name,
-            ExamDate = e.ExamDate, StartTime = e.StartTime, EndTime = e.EndTime,
-            MaxMarks = e.MaxMarks, PassingMarks = e.PassingMarks,
-            RoomNo = e.RoomNo, Instructions = e.Instructions
+            Id = e.Id,
+            ExamId = e.ExamId,
+            ExamName = e.Exam?.Name ?? "",
+            SubjectId = e.SubjectId,
+            SubjectName = e.Subject?.Name ?? "",
+            ClassId = e.ClassId,
+            ClassName = e.Class?.Name,
+            ExamDate = e.ExamDate,
+            StartTime = e.StartTime,
+            EndTime = e.EndTime,
+            MaxMarks = e.MaxMarks,
+            PassingMarks = e.PassingMarks,
+            RoomNo = e.RoomNo,
+            Instructions = e.Instructions
         };
     }
 
@@ -226,10 +243,15 @@ namespace School.Services.Academic
             await _repo.DeleteAllAsync(schoolId);
             var list = grades.Select((g, i) => new GradeConfig
             {
-                GradeName = g.GradeName, MinPercent = g.MinPercent, MaxPercent = g.MaxPercent,
-                GradePoint = g.GradePoint, Remark = g.Remark, IsPass = g.IsPass,
+                GradeName = g.GradeName,
+                MinPercent = g.MinPercent,
+                MaxPercent = g.MaxPercent,
+                GradePoint = g.GradePoint,
+                Remark = g.Remark,
+                IsPass = g.IsPass,
                 DisplayOrder = g.DisplayOrder == 0 ? i + 1 : g.DisplayOrder,
-                SchoolRegistrationId = schoolId, CreatedBy = savedBy
+                SchoolRegistrationId = schoolId,
+                CreatedBy = savedBy
             }).ToList();
             await _repo.AddRangeAsync(list);
             return (true, $"{list.Count} grades configured.");
@@ -246,8 +268,14 @@ namespace School.Services.Academic
 
         private static GradeConfigDto Map(GradeConfig g) => new()
         {
-            Id = g.Id, GradeName = g.GradeName, MinPercent = g.MinPercent, MaxPercent = g.MaxPercent,
-            GradePoint = g.GradePoint, Remark = g.Remark, IsPass = g.IsPass, DisplayOrder = g.DisplayOrder
+            Id = g.Id,
+            GradeName = g.GradeName,
+            MinPercent = g.MinPercent,
+            MaxPercent = g.MaxPercent,
+            GradePoint = g.GradePoint,
+            Remark = g.Remark,
+            IsPass = g.IsPass,
+            DisplayOrder = g.DisplayOrder
         };
     }
 
@@ -299,13 +327,23 @@ namespace School.Services.Academic
 
         private static ReportCardDto Map(ReportCard r) => new()
         {
-            Id = r.Id, StudentId = r.StudentId, StudentName = r.Student?.Name ?? "",
-            ExamId = r.ExamId, ExamName = r.Exam?.Name ?? "",
-            ClassName = r.Class?.Name, TotalMarksObtained = r.TotalMarksObtained,
-            TotalMaxMarks = r.TotalMaxMarks, Percentage = r.Percentage,
-            Grade = r.Grade, GradePoint = r.GradePoint, Rank = r.Rank,
-            Status = r.Status, PublishStatus = r.PublishStatus, PublishedDate = r.PublishedDate,
-            Remarks = r.Remarks, PdfPath = r.PdfPath
+            Id = r.Id,
+            StudentId = r.StudentId,
+            StudentName = r.Student?.Name ?? "",
+            ExamId = r.ExamId,
+            ExamName = r.Exam?.Name ?? "",
+            ClassName = r.Class?.Name,
+            TotalMarksObtained = r.TotalMarksObtained,
+            TotalMaxMarks = r.TotalMaxMarks,
+            Percentage = r.Percentage,
+            Grade = r.Grade,
+            GradePoint = r.GradePoint,
+            Rank = r.Rank,
+            Status = r.Status,
+            PublishStatus = r.PublishStatus,
+            PublishedDate = r.PublishedDate,
+            Remarks = r.Remarks,
+            PdfPath = r.PdfPath
         };
     }
 
@@ -401,11 +439,18 @@ namespace School.Services.Academic
 
         private static PromotionDto Map(StudentPromotion p) => new()
         {
-            Id = p.Id, StudentId = p.StudentId, StudentName = p.Student?.Name ?? "",
-            FromClassId = p.FromClassId, FromClassName = p.FromClass?.Name,
-            ToClassId = p.ToClassId, ToClassName = p.ToClass?.Name,
-            FromAcademicYearId = p.FromAcademicYearId, ToAcademicYearId = p.ToAcademicYearId,
-            Status = p.Status, Remarks = p.Remarks, PromotionDate = p.PromotionDate
+            Id = p.Id,
+            StudentId = p.StudentId,
+            StudentName = p.Student?.Name ?? "",
+            FromClassId = p.FromClassId,
+            FromClassName = p.FromClass?.Name,
+            ToClassId = p.ToClassId,
+            ToClassName = p.ToClass?.Name,
+            FromAcademicYearId = p.FromAcademicYearId,
+            ToAcademicYearId = p.ToAcademicYearId,
+            Status = p.Status,
+            Remarks = p.Remarks,
+            PromotionDate = p.PromotionDate
         };
 
         public async Task<IEnumerable<PromotionEligibilityDto>> GetEligibleStudentsAsync(int classId, int examId, int schoolId)

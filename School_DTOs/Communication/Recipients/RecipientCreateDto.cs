@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using School_DTOs.Common;
-
 namespace School_DTOs.Communication.Recipients
 {
     public class RecipientCreateDto

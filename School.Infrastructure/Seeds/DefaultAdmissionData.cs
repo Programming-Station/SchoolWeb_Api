@@ -1,13 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using School.Domain;
+using School.Domain.FeeManagnment;
 using School.Domain.School;
 using School.Domain.Student;
-using School.Domain.FeeManagnment;
-using School.Domain.Academic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -18,7 +13,7 @@ namespace School.Infrastructure.Seeds
             var school = await context.SchoolRegistrations.FirstOrDefaultAsync();
             if (school == null) return;
 
-            var academicYear = await context.AcademicYears.FirstOrDefaultAsync(ay => ay.IsCurrent) 
+            var academicYear = await context.AcademicYears.FirstOrDefaultAsync(ay => ay.IsCurrent)
                                ?? await context.AcademicYears.FirstOrDefaultAsync();
             if (academicYear == null) return;
 

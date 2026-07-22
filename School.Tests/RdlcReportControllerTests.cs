@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using School.Infrastructure;
 using School.Services.Interfaces;
 using School_API.Controllers;
-using Xunit;
 
 namespace School.Tests
 {
@@ -18,7 +13,7 @@ namespace School.Tests
         private readonly Mock<IRdlcReportManager> _mockReportManager;
         private readonly Mock<IMessageService> _mockMessageService;
         private readonly Mock<IEmailService> _mockEmailService;
-        
+
         // We can pass null or mock dbContext if not hit in tested endpoints
         private readonly RdlcReportController _controller;
 

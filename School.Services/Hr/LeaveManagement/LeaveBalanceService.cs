@@ -1,15 +1,9 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using School.Infrastructure.Repositories.IRepositories;
 using School.Infrastructure.UnitOfWork.Interfaces;
 using School.Services.Interfaces.Hr.LeaveManagement;
-using School_DTOs.Common;
-using School_DTOs.Hr.LeaveManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using School_DTOs;
+using School_DTOs.Hr.LeaveManagement;
 
 namespace School.Services.Hr.LeaveManagement
 {
@@ -30,7 +24,11 @@ namespace School.Services.Hr.LeaveManagement
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                LeaveTypeId = x.LeaveTypeId, Year = x.Year, TotalLeaves = x.TotalLeaves, UsedLeaves = x.UsedLeaves, AvailableLeaves = x.AvailableLeaves
+                LeaveTypeId = x.LeaveTypeId,
+                Year = x.Year,
+                TotalLeaves = x.TotalLeaves,
+                UsedLeaves = x.UsedLeaves,
+                AvailableLeaves = x.AvailableLeaves
             }).ToListAsync();
 
             return new APIResponse<List<LeaveBalanceDto>> { StatusCode = HttpStatusCode.OK, Message = "Success", Data = data };
@@ -42,7 +40,11 @@ namespace School.Services.Hr.LeaveManagement
             {
                 Id = x.Id,
                 EmployeeId = x.EmployeeId,
-                LeaveTypeId = x.LeaveTypeId, Year = x.Year, TotalLeaves = x.TotalLeaves, UsedLeaves = x.UsedLeaves, AvailableLeaves = x.AvailableLeaves
+                LeaveTypeId = x.LeaveTypeId,
+                Year = x.Year,
+                TotalLeaves = x.TotalLeaves,
+                UsedLeaves = x.UsedLeaves,
+                AvailableLeaves = x.AvailableLeaves
             }).FirstOrDefaultAsync();
 
             if (data == null) return new APIResponse<LeaveBalanceDto> { StatusCode = HttpStatusCode.NotFound, Message = "Not found" };
@@ -54,7 +56,11 @@ namespace School.Services.Hr.LeaveManagement
             var entity = new global::School.Domain.Hr.LeaveManagement.LeaveBalance
             {
                 EmployeeId = dto.EmployeeId,
-                LeaveTypeId = dto.LeaveTypeId, Year = dto.Year, TotalLeaves = dto.TotalLeaves, UsedLeaves = dto.UsedLeaves, AvailableLeaves = dto.AvailableLeaves,
+                LeaveTypeId = dto.LeaveTypeId,
+                Year = dto.Year,
+                TotalLeaves = dto.TotalLeaves,
+                UsedLeaves = dto.UsedLeaves,
+                AvailableLeaves = dto.AvailableLeaves,
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow
             };

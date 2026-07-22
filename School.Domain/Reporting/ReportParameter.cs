@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using School.Domain.School;
 using System.ComponentModel.DataAnnotations.Schema;
+using School.Domain.School;
 using static School.Domain.BaseEntity;
 
 namespace School.Domain.Reporting
@@ -22,8 +22,9 @@ namespace School.Domain.Reporting
     /// Defines a dynamic parameter for a report template.
     /// At runtime, the Angular UI builds a parameter dialog from these records.
     /// </summary>
-    [Table("ReportParameters" , Schema = "Reporting")]
-    public class ReportParameter : AuditEntity<int>, ITenantEntity{
+    [Table("ReportParameters", Schema = "Reporting")]
+    public class ReportParameter : AuditEntity<int>, ITenantEntity
+    {
         [Key]
         public int Id { get; set; }
 

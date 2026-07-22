@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using School.Services.Interfaces;
 using School_DTOs;
 using School_DTOs.Communication.Recipients;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School_API.Controllers
 {

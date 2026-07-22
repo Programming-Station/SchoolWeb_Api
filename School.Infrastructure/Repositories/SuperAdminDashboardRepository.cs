@@ -1,20 +1,9 @@
-using School.Infrastructure;
+using System.Diagnostics;
+using System.Net;
+using Microsoft.EntityFrameworkCore;
 using School.Infrastructure.Repositories.IRepositories;
 using School_DTOs;
 using School_DTOs.Dashboard;
-using School.Domain;
-using School.Domain.School;
-using School.Domain.Student;
-using School.Domain.Hr;
-using School.Domain.Hr.Attendance;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.IO;
 
 namespace School.Infrastructure.Repositories
 {
@@ -43,7 +32,7 @@ namespace School.Infrastructure.Repositories
                 stats.TotalSchools = await _context.SchoolRegistrations.IgnoreQueryFilters().CountAsync(s => !s.IsDeleted);
                 stats.ActiveSchools = await _context.SchoolRegistrations.IgnoreQueryFilters().CountAsync(s => !s.IsDeleted && s.IsActive && s.ApprovalStatus == "Approved");
                 stats.InactiveSchools = stats.TotalSchools - stats.ActiveSchools;
-                
+
                 stats.TrialSchools = await _context.SchoolSubscriptions.IgnoreQueryFilters()
                     .CountAsync(s => !s.IsDeleted && s.IsActive && s.PaymentStatus == "Free" && s.EndDate >= DateTime.UtcNow);
                 stats.ExpiredSchools = await _context.SchoolSubscriptions.IgnoreQueryFilters()
@@ -52,7 +41,7 @@ namespace School.Infrastructure.Repositories
                 // Users count
                 stats.TotalStudents = await _context.Students.IgnoreQueryFilters().CountAsync(s => !s.IsDeleted);
                 stats.TotalEmployees = await _context.Employees.IgnoreQueryFilters().CountAsync(e => !e.IsDeleted);
-                
+
                 stats.TotalTeachers = await _context.Employees.IgnoreQueryFilters()
                     .CountAsync(e => !e.IsDeleted && e.Designation != null && e.Designation.Name.ToLower().Contains("teacher"));
                 if (stats.TotalTeachers == 0)
@@ -74,7 +63,7 @@ namespace School.Infrastructure.Repositories
                 var attendancesToday = await _context.Attendances.IgnoreQueryFilters()
                     .Where(a => !a.IsDeleted && a.AttendanceDate.Date == today)
                     .ToListAsync();
-                
+
                 stats.TodayAttendancePresent = attendancesToday.Count(a => a.Status.ToLower() == "present");
                 stats.TodayAttendanceAbsent = attendancesToday.Count(a => a.Status.ToLower() == "absent");
                 if (stats.TodayAttendancePresent == 0 && stats.TodayAttendanceAbsent == 0)
@@ -318,10 +307,10 @@ namespace School.Infrastructure.Repositories
                 var payments = await _context.SchoolSubscriptions.IgnoreQueryFilters().ToListAsync();
                 finance.SuccessfulPaymentsCount = payments.Count(p => p.PaymentStatus.ToLower() == "paid");
                 finance.SuccessfulPaymentsAmount = payments.Where(p => p.PaymentStatus.ToLower() == "paid").Sum(p => p.AmountPaid);
-                
+
                 finance.PendingPaymentsCount = payments.Count(p => p.PaymentStatus.ToLower() == "pending");
                 finance.PendingPaymentsAmount = payments.Where(p => p.PaymentStatus.ToLower() == "pending").Sum(p => p.AmountPaid);
-                
+
                 finance.FailedPaymentsCount = payments.Count(p => p.PaymentStatus.ToLower() == "failed");
                 finance.FailedPaymentsAmount = payments.Where(p => p.PaymentStatus.ToLower() == "failed").Sum(p => p.AmountPaid);
 

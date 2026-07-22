@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using School.Domain;
 using School.Domain.Academic;
-using School.Domain.School;
 
 namespace School.Infrastructure.Seeds
 {
@@ -288,10 +283,17 @@ namespace School.Infrastructure.Seeds
                     {
                         periods.Add(new TimetablePeriod
                         {
-                            ClassId = cls.Id, SubjectId = sub.Id, DayOfWeek = d, PeriodNo = p,
-                            StartTime = $"{8 + p}:00", EndTime = $"{8 + p}:45", RoomNo = "101",
-                            AcademicYearId = academicYear.Id, SchoolRegistrationId = schoolId,
-                            CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                            ClassId = cls.Id,
+                            SubjectId = sub.Id,
+                            DayOfWeek = d,
+                            PeriodNo = p,
+                            StartTime = $"{8 + p}:00",
+                            EndTime = $"{8 + p}:45",
+                            RoomNo = "101",
+                            AcademicYearId = academicYear.Id,
+                            SchoolRegistrationId = schoolId,
+                            CreatedBy = "seed",
+                            CreatedDate = DateTime.UtcNow
                         });
                     }
                 }
@@ -307,9 +309,16 @@ namespace School.Infrastructure.Seeds
                 {
                     results.Add(new ExamResult
                     {
-                        ExamId = exam.Id, StudentId = student.Id, SubjectId = sub.Id,
-                        MarksObtained = 40 + i, TotalMarks = 100, Grade = "B", Status = "Pass",
-                        SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                        ExamId = exam.Id,
+                        StudentId = student.Id,
+                        SubjectId = sub.Id,
+                        MarksObtained = 40 + i,
+                        TotalMarks = 100,
+                        Grade = "B",
+                        Status = "Pass",
+                        SchoolRegistrationId = schoolId,
+                        CreatedBy = "seed",
+                        CreatedDate = DateTime.UtcNow
                     });
                 }
                 await context.ExamResults.AddRangeAsync(results);
@@ -324,9 +333,15 @@ namespace School.Infrastructure.Seeds
                 {
                     enrollments.Add(new SubjectEnrollment
                     {
-                        StudentId = student.Id, SubjectId = sub.Id,
-                        YearSemesterId = academicYear.Id, ClassId = cls.Id,
-                        EnrolledDate = DateTime.UtcNow.AddDays(-50), Status = "Enrolled", SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                        StudentId = student.Id,
+                        SubjectId = sub.Id,
+                        YearSemesterId = academicYear.Id,
+                        ClassId = cls.Id,
+                        EnrolledDate = DateTime.UtcNow.AddDays(-50),
+                        Status = "Enrolled",
+                        SchoolRegistrationId = schoolId,
+                        CreatedBy = "seed",
+                        CreatedDate = DateTime.UtcNow
                     });
                 }
                 await context.SubjectEnrollments.AddRangeAsync(enrollments);
@@ -341,9 +356,14 @@ namespace School.Infrastructure.Seeds
                 {
                     attendances.Add(new StudentAttendance
                     {
-                        StudentId = student.Id, ClassId = cls.Id, AttendanceDate = DateTime.Today.AddDays(-i),
-                        Status = i % 10 == 0 ? "Absent" : "Present", Remarks = "",
-                        SchoolRegistrationId = schoolId, CreatedBy = "seed", CreatedDate = DateTime.UtcNow
+                        StudentId = student.Id,
+                        ClassId = cls.Id,
+                        AttendanceDate = DateTime.Today.AddDays(-i),
+                        Status = i % 10 == 0 ? "Absent" : "Present",
+                        Remarks = "",
+                        SchoolRegistrationId = schoolId,
+                        CreatedBy = "seed",
+                        CreatedDate = DateTime.UtcNow
                     });
                 }
                 await context.StudentAttendances.AddRangeAsync(attendances);

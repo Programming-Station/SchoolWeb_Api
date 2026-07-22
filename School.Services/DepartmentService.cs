@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using School.Domain;
 using School.Infrastructure.Repositories.IRepositories;
@@ -6,7 +7,6 @@ using School.Services.Interfaces;
 using School.Utilities.Resources;
 using School_DTOs;
 using School_DTOs.Department;
-using System.Net;
 
 namespace School.Services
 {
@@ -25,7 +25,7 @@ namespace School.Services
         {
             var entity = _mapper.Map<Department>(model);
             entity = await _departmentRepository.AddDepartmentAsync(entity);
-            
+
             if (entity != null && entity.Id == 0)
             {
                 return new APIResponse<DepartmentDto>
@@ -37,7 +37,7 @@ namespace School.Services
                 };
             }
             else if (entity != null && entity.Id > 0)
-            { 
+            {
                 return new APIResponse<DepartmentDto>
                 {
                     Success = true,
@@ -62,7 +62,7 @@ namespace School.Services
             var result = await _departmentRepository.GetDepartmentByIdAsync(id);
 
             if (result != null && result.Id > 0)
-            { 
+            {
                 return new APIResponse<DepartmentDto>
                 {
                     Data = _mapper.Map<DepartmentDto>(result),
@@ -84,9 +84,9 @@ namespace School.Services
         public async Task<APIResponse<IEnumerable<DepartmentDto>>> GetAllDepartmentsAsync()
         {
             var result = await _departmentRepository.GetAllDepartmentsAsync();
-            
+
             if (result != null && result.Any())
-            { 
+            {
 
                 return new APIResponse<IEnumerable<DepartmentDto>>
                 {
@@ -109,9 +109,9 @@ namespace School.Services
         public async Task<APIResponse<IEnumerable<DepartmentDto>>> GetDepartmentsByFacultyIdAsync(int facultyId)
         {
             var result = await _departmentRepository.GetDepartmentsByFacultyIdAsync(facultyId);
-            
+
             if (result != null && result.Any())
-            { 
+            {
 
                 return new APIResponse<IEnumerable<DepartmentDto>>
                 {
@@ -136,7 +136,7 @@ namespace School.Services
         {
             var entity = _mapper.Map<Department>(model);
             var result = await _departmentRepository.UpdateDepartmentAsync(entity);
-            
+
             if (result > 0)
             {
                 return new APIResponse
@@ -190,7 +190,7 @@ namespace School.Services
                     Message = CommonResource.UpdateFailed,
                     StatusCode = HttpStatusCode.BadRequest,
                 };
-        } 
+        }
     }
 }
 

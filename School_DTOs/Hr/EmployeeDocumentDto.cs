@@ -1,4 +1,3 @@
-using System;
 namespace School_DTOs.Hr
 {
     public class EmployeeDocumentDto

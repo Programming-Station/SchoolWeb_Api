@@ -1,10 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using School.Models;
 using School.Services.Interfaces;
 using School.Utilities.Enums;
 using School_API.Common.Interface;
 using School_DTOs;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace School_API.Controllers
 {

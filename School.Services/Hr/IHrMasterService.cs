@@ -1,7 +1,5 @@
 using School_DTOs;
 using School_DTOs.Common;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace School.Services.Hr
 {

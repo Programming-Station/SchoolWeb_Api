@@ -1,5 +1,5 @@
+using System.ComponentModel.DataAnnotations;
 using School.Models.CustomeVailidation;
-using System.ComponentModel.DataAnnotations; 
 
 namespace School.Models.Student
 {

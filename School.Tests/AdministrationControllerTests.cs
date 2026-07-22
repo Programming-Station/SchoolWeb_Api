@@ -1,15 +1,12 @@
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using School.Services.Interfaces;
 using School.Infrastructure.Interfaces;
+using School.Services.Interfaces;
 using School_API.Common.Interface;
 using School_API.Controllers.Administration;
 using School_DTOs;
-using Xunit;
 
 namespace School.Tests
 {

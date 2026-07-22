@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace School_DTOs.Transport
 {
-    #nullable disable
+#nullable disable
 
     // ══════════════════════════════════════════════════════════════════════════
     // VEHICLE DTOs

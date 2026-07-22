@@ -1,10 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using School.Domain.Email;
 using School.Utilities.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -12,8 +8,8 @@ namespace School.Infrastructure.Seeds
     {
         public static async Task SeedAsync(SchoolDbContext context, IEncryptionService encryptionService)
         {
-            var defaultSchool = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DPSVAR001") 
-                                ?? await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001") 
+            var defaultSchool = await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DPSVAR001")
+                                ?? await context.SchoolRegistrations.FirstOrDefaultAsync(s => s.SchoolCode == "DEF001")
                                 ?? await context.SchoolRegistrations.FirstOrDefaultAsync();
             int schoolId = defaultSchool?.Id ?? 1;
 
@@ -50,14 +46,14 @@ namespace School.Infrastructure.Seeds
                 var branding = new EmailBranding
                 {
                     SchoolRegistrationId = schoolId,
-                    ThemeColor           = "#1e40af", // Deep Indigo
-                    SupportEmail         = defaultSchool?.Email ?? "support@schoolsaas.com",
-                    SupportPhone         = defaultSchool?.PhoneNumber ?? "9876543210",
-                    PrincipalName        = defaultSchool?.ContactPersonName ?? "Principal",
-                    HeaderHtml           = @"<div style=""background-color: #1e40af; padding: 20px; text-align: center; border-radius: 4px 4px 0 0;""><h1 style=""color: #ffffff; margin: 0; font-family: Arial, sans-serif;"">{{SchoolName}}</h1></div>",
-                    FooterHtml           = @"<div style=""background-color: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; font-size: 12px; border-radius: 0 0 4px 4px; border-top: 1px solid #e5e7eb;""><p style=""margin: 0 0 8px 0;"">This is an automated notification from {{SchoolName}}.</p><p style=""margin: 0;"">{{SchoolAddress}} | Support: {{SupportEmail}} | Phone: {{SupportPhone}}</p><p style=""margin: 8px 0 0 0;"">&copy; {{CurrentYear}} {{SchoolName}}. All rights reserved.</p></div>",
-                    CreatedBy            = "System",
-                    CreatedDate          = DateTime.UtcNow
+                    ThemeColor = "#1e40af", // Deep Indigo
+                    SupportEmail = defaultSchool?.Email ?? "support@schoolsaas.com",
+                    SupportPhone = defaultSchool?.PhoneNumber ?? "9876543210",
+                    PrincipalName = defaultSchool?.ContactPersonName ?? "Principal",
+                    HeaderHtml = @"<div style=""background-color: #1e40af; padding: 20px; text-align: center; border-radius: 4px 4px 0 0;""><h1 style=""color: #ffffff; margin: 0; font-family: Arial, sans-serif;"">{{SchoolName}}</h1></div>",
+                    FooterHtml = @"<div style=""background-color: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; font-size: 12px; border-radius: 0 0 4px 4px; border-top: 1px solid #e5e7eb;""><p style=""margin: 0 0 8px 0;"">This is an automated notification from {{SchoolName}}.</p><p style=""margin: 0;"">{{SchoolAddress}} | Support: {{SupportEmail}} | Phone: {{SupportPhone}}</p><p style=""margin: 8px 0 0 0;"">&copy; {{CurrentYear}} {{SchoolName}}. All rights reserved.</p></div>",
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow
                 };
 
                 context.EmailBrandings.Add(branding);

@@ -1,15 +1,7 @@
-using School.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using School.Infrastructure.Repositories.IRepositories;
 using School_DTOs;
 using School_DTOs.Dashboard;
-using School.Domain.Student;
-using School.Domain;
-using School.Domain.School;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories
 {
@@ -95,7 +87,7 @@ namespace School.Infrastructure.Repositories
                     {
                         var subject = dbSubjects.FirstOrDefault(sub => sub.Id == s.SubjectId);
                         var subjectName = subject?.Name ?? "General Subject";
-                        
+
                         var startStr = DateTime.Today.Add(s.StartTime).ToString("hh:mm tt");
                         var endStr = DateTime.Today.Add(s.EndTime).ToString("hh:mm tt");
 

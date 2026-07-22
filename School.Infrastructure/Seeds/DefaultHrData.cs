@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using School.Domain;
 using School.Domain.Auth;
 using School.Domain.Hr;
-using School.Domain.School;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {
@@ -277,7 +272,7 @@ namespace School.Infrastructure.Seeds
             await context.SaveChangesAsync();
 
             // Ensure Employee role exists
-            var employeeRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "EMPLOYEE");
+            var employeeRole = await context.Set<IdentityRole>().FirstOrDefaultAsync(r => r.NormalizedName == "EMPLOYEE");
             if (employeeRole == null)
             {
                 employeeRole = new IdentityRole
@@ -286,7 +281,7 @@ namespace School.Infrastructure.Seeds
                     Name = "Employee",
                     NormalizedName = "EMPLOYEE"
                 };
-                context.Roles.Add(employeeRole);
+                context.Set<IdentityRole>().Add(employeeRole);
                 await context.SaveChangesAsync();
             }
 

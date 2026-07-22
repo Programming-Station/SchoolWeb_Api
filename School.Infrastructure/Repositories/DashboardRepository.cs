@@ -1,19 +1,8 @@
-using School.Infrastructure;
+using System.Net;
+using Microsoft.EntityFrameworkCore;
 using School.Infrastructure.Repositories.IRepositories;
 using School_DTOs;
 using School_DTOs.Dashboard;
-using School.Domain;
-using School.Domain.Student;
-using School.Domain.Hr;
-using School.Domain.Hr.LeaveManagement;
-using School.Domain.Hr.Attendance;
-using School.Domain.Academic;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Repositories
 {
@@ -74,7 +63,7 @@ namespace School.Infrastructure.Repositories
                 var eventsResult = await GetUpcomingEventsAsync(10);
                 var feeCollectionResult = await GetFeeCollectionStatsAsync();
                 var attendanceResult = await GetAttendanceStatsAsync();
-                
+
                 var recentAdmissions = await GetRecentAdmissionsAsync(5);
                 var feeDefaulters = await GetPendingFeeDefaultersAsync(5);
                 var leaveRequests = await GetLeaveRequestsAsync(5);
@@ -90,7 +79,7 @@ namespace School.Infrastructure.Repositories
                 dashboard.UpcomingEvents = eventsResult.Data ?? new List<UpcomingEventDto>();
                 dashboard.FeeCollection = feeCollectionResult.Data ?? new FeeCollectionDto();
                 dashboard.AttendanceStats = attendanceResult.Data ?? new AttendanceStatsDto();
-                
+
                 dashboard.RecentAdmissions = recentAdmissions;
                 dashboard.PendingFeeDefaulters = feeDefaulters;
                 dashboard.LeaveRequests = leaveRequests;
@@ -162,7 +151,7 @@ namespace School.Infrastructure.Repositories
                 // Core counts (automatically filtered by SchoolRegistrationId/TenantId in DbContext)
                 stats.TotalStudents = await _context.Students.CountAsync(s => !s.IsDeleted);
                 stats.TotalEmployees = await _context.Employees.CountAsync(e => !e.IsDeleted);
-                
+
                 stats.TotalTeachers = await _context.Employees
                     .CountAsync(e => !e.IsDeleted && e.Designation != null && e.Designation.Name.ToLower() == "teacher");
                 if (stats.TotalTeachers == 0)
@@ -213,7 +202,7 @@ namespace School.Infrastructure.Repositories
                     .CountAsync(a => !a.IsDeleted && a.AttendanceDate.Date == today && a.Status.ToLower() == "present");
                 var todayAbsent = await _context.Attendances
                     .CountAsync(a => !a.IsDeleted && a.AttendanceDate.Date == today && a.Status.ToLower() == "absent");
-                
+
                 if (todayPresent == 0 && todayAbsent == 0)
                 {
                     todayPresent = (int)(stats.TotalEmployees * 0.95);
@@ -221,8 +210,8 @@ namespace School.Infrastructure.Repositories
                 }
                 stats.TodayAttendancePresent = todayPresent;
                 stats.TodayAttendanceAbsent = todayAbsent;
-                stats.TodayAttendanceRate = (todayPresent + todayAbsent) > 0 
-                    ? Math.Round(((double)todayPresent / (todayPresent + todayAbsent)) * 100, 2) 
+                stats.TodayAttendanceRate = (todayPresent + todayAbsent) > 0
+                    ? Math.Round(((double)todayPresent / (todayPresent + todayAbsent)) * 100, 2)
                     : 94.5;
                 stats.AttendanceRate = stats.TodayAttendanceRate;
 
@@ -794,11 +783,11 @@ namespace School.Infrastructure.Repositories
                 {
                     var date = DateTime.UtcNow.AddMonths(-i);
                     var label = date.ToString("MMM yy");
-                    
+
                     var collected = await _context.FeePayments
                         .Where(fp => !fp.IsDeleted && fp.CreatedDate.HasValue && fp.CreatedDate.Value.Month == date.Month && fp.CreatedDate.Value.Year == date.Year)
                         .SumAsync(fp => fp.AmountPaid);
-                        
+
                     if (collected == 0)
                     {
                         collected = 100000 + (i * 25000) + (decimal)(new Random().NextDouble() * 30000);
@@ -829,7 +818,7 @@ namespace School.Infrastructure.Repositories
                 {
                     decimal revVal = 140000 + (m * 20000) + (new Random().Next(10, 30) * 1000);
                     decimal feeVal = 125000 + (m * 18000) + (new Random().Next(8, 25) * 1000);
-                    
+
                     charts.RevenueTrend.Add(new ChartDataPoint<string, decimal> { Label = months[m - 1], Value = revVal });
                     charts.FeeCollectionTrend.Add(new ChartDataPoint<string, decimal> { Label = months[m - 1], Value = feeVal });
                 }

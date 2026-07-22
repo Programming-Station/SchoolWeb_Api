@@ -1,5 +1,3 @@
-using System;
-
 namespace School_DTOs.School
 {
     public class OrganizationProfileDto

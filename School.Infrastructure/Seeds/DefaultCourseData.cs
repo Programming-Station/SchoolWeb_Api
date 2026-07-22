@@ -1,11 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using School.Domain;
-using School.Domain.School;
 using School.Utilities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace School.Infrastructure.Seeds
 {

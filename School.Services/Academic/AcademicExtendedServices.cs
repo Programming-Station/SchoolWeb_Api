@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using School.Domain.Academic;
-using School.Domain.Student;
-using School.Infrastructure.Repositories.IRepositories;
-using School.Services.Interfaces.Academic;
-using School.Services.Interfaces;
-using School.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using School.Domain.Academic;
+using School.Infrastructure;
+using School.Infrastructure.Repositories.IRepositories;
+using School.Services.Interfaces;
+using School.Services.Interfaces.Academic;
 
 namespace School.Services.Academic
 {
@@ -26,16 +21,16 @@ namespace School.Services.Academic
             var periods = req.Periods.Select(p => new TimetablePeriod
             {
                 ClassId = req.ClassId,
-                 SubjectId = p.SubjectId,
-                  TeacherId = p.TeacherId,
+                SubjectId = p.SubjectId,
+                TeacherId = p.TeacherId,
                 DayOfWeek = p.DayOfWeek,
-                 PeriodNo = p.PeriodNo,
+                PeriodNo = p.PeriodNo,
                 StartTime = p.StartTime,
-                 EndTime = p.EndTime,
-                  RoomNo = p.RoomNo,
+                EndTime = p.EndTime,
+                RoomNo = p.RoomNo,
                 AcademicYearId = req.AcademicYearId,
-                 SchoolRegistrationId = schoolId, 
-                 CreatedBy = savedBy
+                SchoolRegistrationId = schoolId,
+                CreatedBy = savedBy
             }).ToList();
             await _repo.AddRangeAsync(periods);
             return (true, $"{periods.Count} period(s) saved.");
@@ -59,12 +54,18 @@ namespace School.Services.Academic
 
         private static TimetablePeriodDto Map(TimetablePeriod p) => new()
         {
-            Id = p.Id, 
-            ClassId = p.ClassId, ClassName = p.Class?.Name ?? "", SubjectId = p.SubjectId,
-            SubjectName = p.Subject?.Name ?? "", TeacherId = p.TeacherId,
+            Id = p.Id,
+            ClassId = p.ClassId,
+            ClassName = p.Class?.Name ?? "",
+            SubjectId = p.SubjectId,
+            SubjectName = p.Subject?.Name ?? "",
+            TeacherId = p.TeacherId,
             TeacherName = p.Teacher != null ? $"{p.Teacher.FirstName} {p.Teacher.LastName}" : null,
-            DayOfWeek = p.DayOfWeek, PeriodNo = p.PeriodNo,
-            StartTime = p.StartTime, EndTime = p.EndTime, RoomNo = p.RoomNo
+            DayOfWeek = p.DayOfWeek,
+            PeriodNo = p.PeriodNo,
+            StartTime = p.StartTime,
+            EndTime = p.EndTime,
+            RoomNo = p.RoomNo
         };
     }
 
@@ -80,12 +81,18 @@ namespace School.Services.Academic
         {
             var hw = new Homework
             {
-                Title = req.Title, Description = req.Description,
-                SubjectId = req.SubjectId, ClassId = req.ClassId, BatchId = req.BatchId,
-                AssignedDate = DateTime.Today, DueDate = req.DueDate,
+                Title = req.Title,
+                Description = req.Description,
+                SubjectId = req.SubjectId,
+                ClassId = req.ClassId,
+                BatchId = req.BatchId,
+                AssignedDate = DateTime.Today,
+                DueDate = req.DueDate,
                 AttachmentPath = req.AttachmentPath,
-                AssignedByUserId = createdBy, AssignedByName = createdBy,
-                SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                AssignedByUserId = createdBy,
+                AssignedByName = createdBy,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddAsync(hw);
             return (true, "Homework created.", MapHw(hw));
@@ -129,9 +136,12 @@ namespace School.Services.Academic
             }
             await _repo.AddSubmissionAsync(new HomeworkSubmission
             {
-                HomeworkId = homeworkId, StudentId = studentId,
-                FilePath = filePath, StudentRemarks = remarks,
-                SubmittedDate = DateTime.Now, Status = "Submitted",
+                HomeworkId = homeworkId,
+                StudentId = studentId,
+                FilePath = filePath,
+                StudentRemarks = remarks,
+                SubmittedDate = DateTime.Now,
+                Status = "Submitted",
                 SchoolRegistrationId = schoolId
             });
             return (true, "Homework submitted successfully.");
@@ -151,20 +161,32 @@ namespace School.Services.Academic
 
         private static HomeworkDto MapHw(Homework h) => new()
         {
-            Id = h.Id, Title = h.Title, Description = h.Description,
-            SubjectId = h.SubjectId, SubjectName = h.Subject?.Name ?? "",
-            ClassId = h.ClassId, ClassName = h.Class?.Name ?? "",
-            BatchId = h.BatchId, AssignedDate = h.AssignedDate, DueDate = h.DueDate,
-            AttachmentPath = h.AttachmentPath, AssignedByName = h.AssignedByName ?? "",
+            Id = h.Id,
+            Title = h.Title,
+            Description = h.Description,
+            SubjectId = h.SubjectId,
+            SubjectName = h.Subject?.Name ?? "",
+            ClassId = h.ClassId,
+            ClassName = h.Class?.Name ?? "",
+            BatchId = h.BatchId,
+            AssignedDate = h.AssignedDate,
+            DueDate = h.DueDate,
+            AttachmentPath = h.AttachmentPath,
+            AssignedByName = h.AssignedByName ?? "",
             Status = h.Status
         };
 
         private static HomeworkSubmissionDto MapSub(HomeworkSubmission s) => new()
         {
-            Id = s.Id, HomeworkId = s.HomeworkId, StudentId = s.StudentId,
+            Id = s.Id,
+            HomeworkId = s.HomeworkId,
+            StudentId = s.StudentId,
             StudentName = s.Student?.Name ?? "",
-            SubmittedDate = s.SubmittedDate, FilePath = s.FilePath,
-            Status = s.Status, Grade = s.Grade, TeacherFeedback = s.TeacherFeedback
+            SubmittedDate = s.SubmittedDate,
+            FilePath = s.FilePath,
+            Status = s.Status,
+            Grade = s.Grade,
+            TeacherFeedback = s.TeacherFeedback
         };
     }
 
@@ -188,11 +210,19 @@ namespace School.Services.Academic
         {
             var a = new Assignment
             {
-                Title = req.Title, Instructions = req.Instructions,
-                SubjectId = req.SubjectId, ClassId = req.ClassId, BatchId = req.BatchId,
-                StartDate = req.StartDate, EndDate = req.EndDate, MaxMarks = req.MaxMarks,
-                AttachmentPath = req.AttachmentPath, Status = "Published",
-                CreatedByUserId = createdBy, SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                Title = req.Title,
+                Instructions = req.Instructions,
+                SubjectId = req.SubjectId,
+                ClassId = req.ClassId,
+                BatchId = req.BatchId,
+                StartDate = req.StartDate,
+                EndDate = req.EndDate,
+                MaxMarks = req.MaxMarks,
+                AttachmentPath = req.AttachmentPath,
+                Status = "Published",
+                CreatedByUserId = createdBy,
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddAsync(a);
 
@@ -273,9 +303,12 @@ namespace School.Services.Academic
             }
             await _repo.AddSubmissionAsync(new AssignmentSubmission
             {
-                AssignmentId = assignmentId, StudentId = studentId,
-                FilePath = filePath, StudentRemarks = remarks,
-                SubmittedDate = DateTime.Now, Status = "Submitted",
+                AssignmentId = assignmentId,
+                StudentId = studentId,
+                FilePath = filePath,
+                StudentRemarks = remarks,
+                SubmittedDate = DateTime.Now,
+                Status = "Submitted",
                 SchoolRegistrationId = schoolId
             });
             return (true, "Submitted.");
@@ -295,19 +328,31 @@ namespace School.Services.Academic
 
         private static AssignmentDto MapA(Assignment a) => new()
         {
-            Id = a.Id, Title = a.Title, Instructions = a.Instructions,
-            SubjectId = a.SubjectId, SubjectName = a.Subject?.Name ?? "",
-            ClassId = a.ClassId, ClassName = a.Class?.Name ?? "",
-            StartDate = a.StartDate, EndDate = a.EndDate,
-            MaxMarks = a.MaxMarks, AttachmentPath = a.AttachmentPath, Status = a.Status
+            Id = a.Id,
+            Title = a.Title,
+            Instructions = a.Instructions,
+            SubjectId = a.SubjectId,
+            SubjectName = a.Subject?.Name ?? "",
+            ClassId = a.ClassId,
+            ClassName = a.Class?.Name ?? "",
+            StartDate = a.StartDate,
+            EndDate = a.EndDate,
+            MaxMarks = a.MaxMarks,
+            AttachmentPath = a.AttachmentPath,
+            Status = a.Status
         };
 
         private static AssignmentSubmissionDto MapSub(AssignmentSubmission s) => new()
         {
-            Id = s.Id, AssignmentId = s.AssignmentId, StudentId = s.StudentId,
+            Id = s.Id,
+            AssignmentId = s.AssignmentId,
+            StudentId = s.StudentId,
             StudentName = s.Student?.Name ?? "",
-            SubmittedDate = s.SubmittedDate, FilePath = s.FilePath,
-            Status = s.Status, MarksObtained = s.MarksObtained, TeacherFeedback = s.TeacherFeedback
+            SubmittedDate = s.SubmittedDate,
+            FilePath = s.FilePath,
+            Status = s.Status,
+            MarksObtained = s.MarksObtained,
+            TeacherFeedback = s.TeacherFeedback
         };
     }
 
@@ -323,12 +368,21 @@ namespace School.Services.Academic
         {
             var oc = new OnlineClass
             {
-                Title = dto.Title, Description = dto.Description,
-                SubjectId = dto.SubjectId, ClassId = dto.ClassId, BatchId = dto.BatchId,
-                TeacherId = dto.TeacherId, ScheduledAt = dto.ScheduledAt,
-                DurationMinutes = dto.DurationMinutes, Platform = dto.Platform,
-                MeetingLink = dto.MeetingLink, MeetingId = dto.MeetingId, MeetingPassword = dto.MeetingPassword,
-                Status = "Scheduled", SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                Title = dto.Title,
+                Description = dto.Description,
+                SubjectId = dto.SubjectId,
+                ClassId = dto.ClassId,
+                BatchId = dto.BatchId,
+                TeacherId = dto.TeacherId,
+                ScheduledAt = dto.ScheduledAt,
+                DurationMinutes = dto.DurationMinutes,
+                Platform = dto.Platform,
+                MeetingLink = dto.MeetingLink,
+                MeetingId = dto.MeetingId,
+                MeetingPassword = dto.MeetingPassword,
+                Status = "Scheduled",
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddAsync(oc);
             dto.Id = oc.Id;
@@ -380,15 +434,23 @@ namespace School.Services.Academic
 
         private static OnlineClassDto Map(OnlineClass oc) => new()
         {
-            Id = oc.Id, Title = oc.Title, Description = oc.Description,
-            SubjectId = oc.SubjectId, SubjectName = oc.Subject?.Name ?? "",
-            ClassId = oc.ClassId, ClassName = oc.Class?.Name ?? "",
+            Id = oc.Id,
+            Title = oc.Title,
+            Description = oc.Description,
+            SubjectId = oc.SubjectId,
+            SubjectName = oc.Subject?.Name ?? "",
+            ClassId = oc.ClassId,
+            ClassName = oc.Class?.Name ?? "",
             TeacherId = oc.TeacherId,
             TeacherName = oc.Teacher != null ? $"{oc.Teacher.FirstName} {oc.Teacher.LastName}" : null,
-            ScheduledAt = oc.ScheduledAt, DurationMinutes = oc.DurationMinutes,
-            Platform = oc.Platform, MeetingLink = oc.MeetingLink,
-            MeetingId = oc.MeetingId, MeetingPassword = oc.MeetingPassword,
-            Status = oc.Status, RecordingLink = oc.RecordingLink
+            ScheduledAt = oc.ScheduledAt,
+            DurationMinutes = oc.DurationMinutes,
+            Platform = oc.Platform,
+            MeetingLink = oc.MeetingLink,
+            MeetingId = oc.MeetingId,
+            MeetingPassword = oc.MeetingPassword,
+            Status = oc.Status,
+            RecordingLink = oc.RecordingLink
         };
     }
 
@@ -404,11 +466,16 @@ namespace School.Services.Academic
         {
             var c = new SyllabusChapter
             {
-                SubjectId = dto.SubjectId, ClassId = dto.ClassId,
-                ChapterNo = dto.ChapterNo, ChapterName = dto.ChapterName,
-                Description = dto.Description, TotalPeriods = dto.TotalPeriods,
-                CompletedPeriods = 0, Status = "NotStarted",
-                SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                SubjectId = dto.SubjectId,
+                ClassId = dto.ClassId,
+                ChapterNo = dto.ChapterNo,
+                ChapterName = dto.ChapterName,
+                Description = dto.Description,
+                TotalPeriods = dto.TotalPeriods,
+                CompletedPeriods = 0,
+                Status = "NotStarted",
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddChapterAsync(c);
             dto.Id = c.Id;
@@ -441,11 +508,18 @@ namespace School.Services.Academic
         {
             var p = new LessonPlan
             {
-                SyllabusChapterId = dto.SyllabusChapterId, SubjectId = dto.SubjectId,
-                ClassId = dto.ClassId, PlannedDate = dto.PlannedDate, Topic = dto.Topic,
-                Objectives = dto.Objectives, TeachingMethod = dto.TeachingMethod,
-                MaterialsRequired = dto.MaterialsRequired, AttachmentPath = dto.AttachmentPath,
-                Status = "Planned", SchoolRegistrationId = schoolId, CreatedBy = createdBy
+                SyllabusChapterId = dto.SyllabusChapterId,
+                SubjectId = dto.SubjectId,
+                ClassId = dto.ClassId,
+                PlannedDate = dto.PlannedDate,
+                Topic = dto.Topic,
+                Objectives = dto.Objectives,
+                TeachingMethod = dto.TeachingMethod,
+                MaterialsRequired = dto.MaterialsRequired,
+                AttachmentPath = dto.AttachmentPath,
+                Status = "Planned",
+                SchoolRegistrationId = schoolId,
+                CreatedBy = createdBy
             };
             await _repo.AddLessonPlanAsync(p);
             dto.Id = p.Id;
@@ -525,23 +599,37 @@ namespace School.Services.Academic
 
         private static SyllabusChapterDto MapC(SyllabusChapter c) => new()
         {
-            Id = c.Id, SubjectId = c.SubjectId, SubjectName = c.Subject?.Name ?? "",
-            ClassId = c.ClassId, ClassName = c.Class?.Name,
-            ChapterNo = c.ChapterNo, ChapterName = c.ChapterName,
-            Description = c.Description, TotalPeriods = c.TotalPeriods,
-            CompletedPeriods = c.CompletedPeriods ?? 0, Status = c.Status,
-            StartedDate = c.StartedDate, CompletedDate = c.CompletedDate
+            Id = c.Id,
+            SubjectId = c.SubjectId,
+            SubjectName = c.Subject?.Name ?? "",
+            ClassId = c.ClassId,
+            ClassName = c.Class?.Name,
+            ChapterNo = c.ChapterNo,
+            ChapterName = c.ChapterName,
+            Description = c.Description,
+            TotalPeriods = c.TotalPeriods,
+            CompletedPeriods = c.CompletedPeriods ?? 0,
+            Status = c.Status,
+            StartedDate = c.StartedDate,
+            CompletedDate = c.CompletedDate
         };
 
         private static LessonPlanDto MapLP(LessonPlan p) => new()
         {
-            Id = p.Id, SyllabusChapterId = p.SyllabusChapterId,
+            Id = p.Id,
+            SyllabusChapterId = p.SyllabusChapterId,
             ChapterName = p.SyllabusChapter?.ChapterName ?? "",
-            SubjectId = p.SubjectId, SubjectName = p.Subject?.Name ?? "",
-            ClassId = p.ClassId, PlannedDate = p.PlannedDate, Topic = p.Topic,
-            Objectives = p.Objectives, TeachingMethod = p.TeachingMethod,
-            MaterialsRequired = p.MaterialsRequired, AttachmentPath = p.AttachmentPath,
-            Status = p.Status, TeacherNotes = p.TeacherNotes
+            SubjectId = p.SubjectId,
+            SubjectName = p.Subject?.Name ?? "",
+            ClassId = p.ClassId,
+            PlannedDate = p.PlannedDate,
+            Topic = p.Topic,
+            Objectives = p.Objectives,
+            TeachingMethod = p.TeachingMethod,
+            MaterialsRequired = p.MaterialsRequired,
+            AttachmentPath = p.AttachmentPath,
+            Status = p.Status,
+            TeacherNotes = p.TeacherNotes
         };
     }
 }
